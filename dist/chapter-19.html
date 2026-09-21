@@ -12,49 +12,859 @@
 <main class="content">
 <article>
 <h1>Chương 19 — Project: Trình biên dịch / Interpreter mini</h1>
-<p>Mục tiêu chương:</p>
+<h2>Mục tiêu chương</h2>
 <ul>
-<li>Xây một mini language step-by-step: lexer → parser → AST → evaluator/codegen.</li>
-<li>Viết tests cho từng bước để đảm bảo đúng và có thể mở rộng.</li>
+<li>Xây dựng từng bước một <strong>trình thông dịch</strong> cho ngôn ngữ nhỏ: <strong>lexer → parser → AST → evaluator</strong>, rồi mở rộng sang <strong>bytecode + máy ảo (VM)</strong>.</li>
+<li>Hiểu <strong>ngữ pháp</strong> (EBNF), <strong>độ ưu tiên toán tử</strong> và cách <strong>đệ quy xuống (recursive descent)</strong> hiện thực chúng.</li>
+<li>Áp dụng những gì đã học: <code>struct</code>, <code>union</code>/tagged, con trỏ, cấp phát động, đệ quy, xử lý lỗi, kiểm thử.</li>
+<li>Quản lý bộ nhớ của cây cú pháp (tạo và giải phóng đúng) và báo lỗi có <strong>vị trí</strong> dễ hiểu.</li>
+<li>Biết hướng mở rộng: biến, <code>if</code>/<code>while</code>, hàm.</li>
 </ul>
-<h2>1. Thiết kế ngôn ngữ con</h2>
+<blockquote>
+<p><strong>Cách làm chương này:</strong> đọc phần thiết kế, rồi <strong>gõ và chạy từng giai đoạn</strong> (lexer trước, parser sau, ...). Mã hoàn chỉnh của cả bốn giai đoạn ở mục 19.7; các phần trước chia nhỏ để bạn hiểu và kiểm thử từng bước.</p>
+</blockquote>
+<h2>19.1. Trình thông dịch hoạt động ra sao?</h2>
+<p>Cả compiler lẫn interpreter đều biến <strong>văn bản chương trình</strong> thành <strong>hành động</strong>. Chúng chia công việc thành nhiều giai đoạn:</p>
+<pre class="hljs"><code>&quot;x = 1 + 2 * 3&quot;
+      │
+      ▼  Lexer (phân tích từ vựng)
+[IDENT x] [ASSIGN] [NUM 1] [PLUS] [NUM 2] [STAR] [NUM 3] [EOF]        ← dãy token
+      │
+      ▼  Parser (phân tích cú pháp)
+            Assign(x)
+                 │
+               Add
+              /    \
+           Num 1    Mul
+                   /   \
+                Num 2  Num 3                                            ← cây cú pháp trừu tượng (AST)
+      │
+      ▼  Evaluator (duyệt cây và tính)          hoặc     Codegen → Bytecode → VM
+   x = 7
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Giai đoạn</th>
+<th>Đầu vào</th>
+<th>Đầu ra</th>
+<th>Việc làm</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Lexer</strong></td>
+<td>chuỗi ký tự</td>
+<td>dãy <strong>token</strong></td>
+<td>gom ký tự thành &quot;từ&quot;: số, tên, toán tử; bỏ khoảng trắng, comment</td>
+</tr>
+<tr>
+<td><strong>Parser</strong></td>
+<td>dãy token</td>
+<td><strong>AST</strong></td>
+<td>kiểm tra cấu trúc đúng ngữ pháp và dựng cây thể hiện cấu trúc/độ ưu tiên</td>
+</tr>
+<tr>
+<td><strong>Evaluator</strong></td>
+<td>AST</td>
+<td>giá trị</td>
+<td>duyệt cây, tính toán (&quot;tree-walking interpreter&quot;)</td>
+</tr>
+<tr>
+<td><strong>Codegen + VM</strong></td>
+<td>AST</td>
+<td>bytecode → chạy</td>
+<td>dịch cây thành lệnh đơn giản rồi chạy trên máy ảo ngăn xếp</td>
+</tr>
+</tbody>
+</table>
+<p>Một <strong>interpreter</strong> chạy chương trình trực tiếp (như trên); một <strong>compiler</strong> dịch nó thành mã đích (mã máy hoặc bytecode) để chạy sau. Phần 19.6 (bytecode + VM) nằm ở giữa: nó biên dịch sang bytecode rồi thông dịch bytecode đó — như Python, Lua, Java.</p>
+<h2>19.2. Thiết kế ngôn ngữ con</h2>
+<p>Ta gọi ngôn ngữ là <strong>Calc</strong>. Bước 1 hỗ trợ:</p>
 <ul>
-<li>Bắt đầu với biểu thức số học, biến, và assignment: e.g., x = 1 + 2 * (3 - 4)</li>
-<li>Quy định grammar đơn giản (EBNF) và precedence.</li>
+<li>Số thực: <code>3</code>, <code>2.5</code></li>
+<li>Toán tử: <code>+ - * /</code>, dấu trừ một ngôi <code>-x</code>, ngoặc <code>( )</code></li>
+<li>Biến và phép gán: <code>x = 1 + 2</code></li>
+<li>Comment bắt đầu bằng <code>#</code></li>
+<li>Mỗi dòng nhập là một lệnh (REPL)</li>
 </ul>
-<h2>2. Lexical analysis</h2>
+<p>Ví dụ phiên làm việc mong muốn:</p>
+<pre class="hljs"><code>&gt; x = 1 + 2 * (3 - 4)
+= -1
+&gt; y = x * 10
+= -10
+&gt; y / 4 + 1
+= -1.5
+&gt; 1 / 0
+loi: chia cho 0
+&gt; 2 +
+loi: cot 4: can mot bieu thuc
+</code></pre>
+<h3>Ngữ pháp (EBNF)</h3>
+<p>Ngữ pháp mô tả <strong>chính xác</strong> những gì hợp lệ. Ký hiệu: <code>{ x }</code> = lặp 0 lần trở lên, <code>|</code> = hoặc, <code>'...'</code> = ký tự thật.</p>
+<pre class="hljs"><code>statement  = IDENT &#x27;=&#x27; expr
+           | expr ;
+
+expr       = term   { ( &#x27;+&#x27; | &#x27;-&#x27; ) term   } ;
+term       = unary  { ( &#x27;*&#x27; | &#x27;/&#x27; ) unary  } ;
+unary      = &#x27;-&#x27; unary
+           | primary ;
+primary    = NUMBER
+           | IDENT
+           | &#x27;(&#x27; expr &#x27;)&#x27; ;
+</code></pre>
+<p><strong>Độ ưu tiên được mã hóa trong cấu trúc ngữ pháp:</strong> <code>*</code> <code>/</code> nằm ở tầng <code>term</code> (sâu hơn) nên gắn chặt hơn <code>+</code> <code>-</code> ở tầng <code>expr</code>. Dấu ngoặc trong <code>primary</code> đưa lại một <code>expr</code> đầy đủ, nên ngoặc thay đổi độ ưu tiên. Vòng lặp <code>{ ... }</code> cho <strong>kết hợp trái</strong>: <code>1 - 2 - 3</code> = <code>(1 - 2) - 3</code> = −4.</p>
+<p>Quy tắc chuyển ngữ pháp thành mã (recursive descent): <strong>mỗi ký hiệu không kết thúc (như <code>expr</code>) là một hàm</strong>; <code>{ ... }</code> thành vòng <code>while</code>; <code>|</code> thành <code>if</code> dựa vào token hiện tại.</p>
+<h2>19.3. Giai đoạn 1: Lexer</h2>
+<h3>Kiểu dữ liệu</h3>
+<pre class="hljs"><code><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">enum</span> {</span>
+    T_NUM, T_IDENT,
+    T_PLUS, T_MINUS, T_STAR, T_SLASH,
+    T_LPAREN, T_RPAREN, T_ASSIGN,
+    T_EOF, T_ERROR
+} TokType;
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span>
+    TokType type;
+    <span class="hljs-type">double</span>  num;          <span class="hljs-comment">// giá trị khi type == T_NUM</span>
+    <span class="hljs-type">char</span>    text[<span class="hljs-number">32</span>];     <span class="hljs-comment">// tên khi type == T_IDENT</span>
+    <span class="hljs-type">size_t</span>  pos;          <span class="hljs-comment">// vị trí (cột) bắt đầu trong dòng, để báo lỗi</span>
+} Token;
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span>
+    <span class="hljs-type">const</span> <span class="hljs-type">char</span> *src;      <span class="hljs-comment">// toàn bộ dòng cần phân tích</span>
+    <span class="hljs-type">size_t</span>      pos;      <span class="hljs-comment">// vị trí hiện tại</span>
+} Lexer;
+</code></pre>
+<p>Lexer là một struct nhỏ có thể <strong>sao chép theo giá trị</strong> — tiện cho việc &quot;nhìn trước&quot; (lookahead) mà không tiêu thụ token.</p>
+<h3>Hàm <code>lex_next</code></h3>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;ctype.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-type">static</span> Token <span class="hljs-title function_">lex_next</span><span class="hljs-params">(Lexer *lx)</span> {
+    Token t;
+    <span class="hljs-built_in">memset</span>(&amp;t, <span class="hljs-number">0</span>, <span class="hljs-keyword">sizeof</span> t);
+
+    <span class="hljs-comment">// 1) bỏ khoảng trắng và comment (&#x27;#&#x27; đến hết dòng)</span>
+    <span class="hljs-keyword">for</span> (;;) {
+        <span class="hljs-keyword">while</span> (<span class="hljs-built_in">isspace</span>((<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>)lx-&gt;src[lx-&gt;pos])) lx-&gt;pos++;
+        <span class="hljs-keyword">if</span> (lx-&gt;src[lx-&gt;pos] == <span class="hljs-string">&#x27;#&#x27;</span>) {
+            <span class="hljs-keyword">while</span> (lx-&gt;src[lx-&gt;pos] != <span class="hljs-string">&#x27;\0&#x27;</span> &amp;&amp; lx-&gt;src[lx-&gt;pos] != <span class="hljs-string">&#x27;\n&#x27;</span>) lx-&gt;pos++;
+        } <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">break</span>;
+        }
+    }
+
+    t.pos = lx-&gt;pos;
+    <span class="hljs-type">char</span> c = lx-&gt;src[lx-&gt;pos];
+
+    <span class="hljs-comment">// 2) hết đầu vào</span>
+    <span class="hljs-keyword">if</span> (c == <span class="hljs-string">&#x27;\0&#x27;</span>) { t.type = T_EOF; <span class="hljs-keyword">return</span> t; }
+
+    <span class="hljs-comment">// 3) số: chữ số, hoặc &#x27;.&#x27; theo sau là chữ số</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isdigit</span>((<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>)c) ||
+        (c == <span class="hljs-string">&#x27;.&#x27;</span> &amp;&amp; <span class="hljs-built_in">isdigit</span>((<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>)lx-&gt;src[lx-&gt;pos + <span class="hljs-number">1</span>]))) {
+        <span class="hljs-type">char</span> *end;
+        t.num = strtod(lx-&gt;src + lx-&gt;pos, &amp;end);        <span class="hljs-comment">// strtod đọc cả phần thập phân/mũ</span>
+        lx-&gt;pos = (<span class="hljs-type">size_t</span>)(end - lx-&gt;src);
+        t.type = T_NUM;
+        <span class="hljs-keyword">return</span> t;
+    }
+
+    <span class="hljs-comment">// 4) định danh: chữ cái hoặc &#x27;_&#x27; rồi chữ/số/&#x27;_&#x27;</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isalpha</span>((<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>)c) || c == <span class="hljs-string">&#x27;_&#x27;</span>) {
+        <span class="hljs-type">size_t</span> n = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">while</span> (<span class="hljs-built_in">isalnum</span>((<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>)lx-&gt;src[lx-&gt;pos]) || lx-&gt;src[lx-&gt;pos] == <span class="hljs-string">&#x27;_&#x27;</span>) {
+            <span class="hljs-keyword">if</span> (n + <span class="hljs-number">1</span> &gt;= <span class="hljs-keyword">sizeof</span> t.text) { t.type = T_ERROR; <span class="hljs-keyword">return</span> t; }   <span class="hljs-comment">// tên quá dài</span>
+            t.text[n++] = lx-&gt;src[lx-&gt;pos++];
+        }
+        t.text[n] = <span class="hljs-string">&#x27;\0&#x27;</span>;
+        t.type = T_IDENT;
+        <span class="hljs-keyword">return</span> t;
+    }
+
+    <span class="hljs-comment">// 5) toán tử và dấu câu một ký tự</span>
+    lx-&gt;pos++;
+    <span class="hljs-keyword">switch</span> (c) {
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;+&#x27;</span>: t.type = T_PLUS;   <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;-&#x27;</span>: t.type = T_MINUS;  <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;*&#x27;</span>: t.type = T_STAR;   <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;/&#x27;</span>: t.type = T_SLASH;  <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;(&#x27;</span>: t.type = T_LPAREN; <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;)&#x27;</span>: t.type = T_RPAREN; <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;=&#x27;</span>: t.type = T_ASSIGN; <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">default</span>:  t.type = T_ERROR;  <span class="hljs-keyword">break</span>;    <span class="hljs-comment">// ký tự lạ</span>
+    }
+    <span class="hljs-keyword">return</span> t;
+}
+</code></pre>
+<p>Các quyết định thiết kế:</p>
 <ul>
-<li>Viết lexer trả về token types: NUMBER, IDENT, PLUS, MINUS, STAR, SLASH, LPAREN, RPAREN, ASSIGN, SEMI.</li>
-<li>Xử lý whitespace và comments.</li>
+<li><strong><code>strtod</code></strong> đọc số thực chuẩn (kể cả <code>1e3</code>) và cho ta biết nó dừng ở đâu (<code>end</code>).</li>
+<li>Ký tự lạ tạo token <code>T_ERROR</code> thay vì dừng chương trình — parser sẽ quyết định báo lỗi thế nào.</li>
+<li>Mỗi token nhớ <code>pos</code> để báo lỗi kiểu &quot;cột 4&quot;.</li>
+<li>Ép <code>unsigned char</code> trước khi gọi <code>isdigit</code>, <code>isalpha</code>... (chương 2).</li>
 </ul>
-<h2>3. Parsing</h2>
+<h3>Kiểm thử lexer riêng</h3>
+<p>Đừng viết parser trước khi chắc chắn lexer đúng. Một hàm in token:</p>
+<pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">char</span> *<span class="hljs-title function_">tok_name</span><span class="hljs-params">(TokType t)</span> {
+    <span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">char</span> *names[] = {
+        <span class="hljs-string">&quot;NUM&quot;</span>, <span class="hljs-string">&quot;IDENT&quot;</span>, <span class="hljs-string">&quot;PLUS&quot;</span>, <span class="hljs-string">&quot;MINUS&quot;</span>, <span class="hljs-string">&quot;STAR&quot;</span>, <span class="hljs-string">&quot;SLASH&quot;</span>, <span class="hljs-string">&quot;LPAREN&quot;</span>, <span class="hljs-string">&quot;RPAREN&quot;</span>, <span class="hljs-string">&quot;ASSIGN&quot;</span>, <span class="hljs-string">&quot;EOF&quot;</span>, <span class="hljs-string">&quot;ERROR&quot;</span>
+    };
+    <span class="hljs-keyword">return</span> names[t];
+}
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">dump_tokens</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *line)</span> {
+    Lexer lx = { line, <span class="hljs-number">0</span> };
+    <span class="hljs-keyword">for</span> (;;) {
+        Token t = lex_next(&amp;lx);
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%s&quot;</span>, tok_name(t.type));
+        <span class="hljs-keyword">if</span> (t.type == T_NUM)   <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;(%g)&quot;</span>, t.num);
+        <span class="hljs-keyword">if</span> (t.type == T_IDENT) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;(%s)&quot;</span>, t.text);
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot; &quot;</span>);
+        <span class="hljs-keyword">if</span> (t.type == T_EOF || t.type == T_ERROR) <span class="hljs-keyword">break</span>;
+    }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n&quot;</span>);
+}
+</code></pre>
+<p>Với <code>dump_tokens(&quot;x = 1.5 * (y + 2)&quot;)</code> phải in:</p>
+<pre class="hljs"><code>IDENT(x) ASSIGN NUM(1.5) STAR LPAREN IDENT(y) PLUS NUM(2) RPAREN EOF
+</code></pre>
+<p>Các trường hợp biên cần thử: chuỗi rỗng, chỉ khoảng trắng, <code>.5</code>, <code>3.</code>, <code>1e3</code>, tên biến dài 40 ký tự, <code>@</code>, comment cuối dòng.</p>
+<h2>19.4. Giai đoạn 2: Parser và AST</h2>
+<h3>AST</h3>
+<p>Mỗi loại nút của cây là một trường hợp của <code>struct Node</code>. Để đơn giản, dùng một struct chung có các trường tùy loại:</p>
+<pre class="hljs"><code><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">enum</span> {</span> N_NUM, N_VAR, N_NEG, N_BINOP, N_ASSIGN } NodeKind;
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Node</span> {</span>
+    NodeKind kind;
+    <span class="hljs-type">double</span>   num;               <span class="hljs-comment">// N_NUM</span>
+    <span class="hljs-type">char</span>     name[<span class="hljs-number">32</span>];          <span class="hljs-comment">// N_VAR, N_ASSIGN</span>
+    <span class="hljs-type">char</span>     op;                <span class="hljs-comment">// N_BINOP: &#x27;+&#x27;, &#x27;-&#x27;, &#x27;*&#x27;, &#x27;/&#x27;</span>
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Node</span> *<span class="hljs-title">lhs</span>, *<span class="hljs-title">rhs</span>;</span>     <span class="hljs-comment">// N_BINOP: hai vế; N_NEG: lhs; N_ASSIGN: lhs = biểu thức giá trị</span>
+} Node;
+</code></pre>
+<p>(Với ngôn ngữ nhiều loại nút hơn, nên dùng <em>tagged union</em> — chương 10 — để tiết kiệm bộ nhớ và rõ ràng.)</p>
+<p>Các hàm dựng nút và <strong>giải phóng cây</strong> (đệ quy, hậu tố):</p>
+<pre class="hljs"><code><span class="hljs-type">static</span> Node *<span class="hljs-title function_">node_new</span><span class="hljs-params">(NodeKind kind)</span> {
+    Node *n = <span class="hljs-built_in">calloc</span>(<span class="hljs-number">1</span>, <span class="hljs-keyword">sizeof</span> *n);          <span class="hljs-comment">// calloc: mọi trường bằng 0/NULL</span>
+    <span class="hljs-keyword">if</span> (n) n-&gt;kind = kind;
+    <span class="hljs-keyword">return</span> n;
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">node_free</span><span class="hljs-params">(Node *n)</span> {
+    <span class="hljs-keyword">if</span> (!n) <span class="hljs-keyword">return</span>;
+    node_free(n-&gt;lhs);
+    node_free(n-&gt;rhs);
+    <span class="hljs-built_in">free</span>(n);
+}
+
+<span class="hljs-comment">// Dựng nút hai ngôi. Nếu hết bộ nhớ, giải phóng luôn hai vế để không rò rỉ.</span>
+<span class="hljs-type">static</span> Node *<span class="hljs-title function_">node_binop</span><span class="hljs-params">(<span class="hljs-type">char</span> op, Node *l, Node *r)</span> {
+    Node *n = node_new(N_BINOP);
+    <span class="hljs-keyword">if</span> (!n) { node_free(l); node_free(r); <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>; }
+    n-&gt;op = op; n-&gt;lhs = l; n-&gt;rhs = r;
+    <span class="hljs-keyword">return</span> n;
+}
+</code></pre>
+<p><strong>Quy ước sở hữu:</strong> khi <code>node_binop</code> thành công, nút mới <strong>sở hữu</strong> <code>l</code> và <code>r</code>; khi thất bại nó giải phóng chúng — nên người gọi không phải lo. Đây là ví dụ ownership rõ ràng (chương 9).</p>
+<h3>Parser: trạng thái và báo lỗi</h3>
+<pre class="hljs"><code><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span>
+    Lexer  lx;
+    Token  cur;                 <span class="hljs-comment">// token hiện tại (đã đọc, chưa &quot;ăn&quot;)</span>
+    <span class="hljs-type">int</span>    failed;
+    <span class="hljs-type">char</span>   msg[<span class="hljs-number">96</span>];
+    <span class="hljs-type">size_t</span> err_pos;
+} Parser;
+
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">advance</span><span class="hljs-params">(Parser *p)</span> { p-&gt;cur = lex_next(&amp;p-&gt;lx); }
+
+<span class="hljs-comment">// Ghi lỗi ĐẦU TIÊN (các lỗi sau chỉ là hệ quả của lỗi đầu)</span>
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">fail</span><span class="hljs-params">(Parser *p, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *msg)</span> {
+    <span class="hljs-keyword">if</span> (p-&gt;failed) <span class="hljs-keyword">return</span>;
+    p-&gt;failed = <span class="hljs-number">1</span>;
+    p-&gt;err_pos = p-&gt;cur.pos;
+    <span class="hljs-built_in">snprintf</span>(p-&gt;msg, <span class="hljs-keyword">sizeof</span> p-&gt;msg, <span class="hljs-string">&quot;%s&quot;</span>, msg);
+}
+</code></pre>
+<h3>Các hàm phân tích — mỗi luật ngữ pháp một hàm</h3>
+<pre class="hljs"><code><span class="hljs-type">static</span> Node *<span class="hljs-title function_">parse_expr</span><span class="hljs-params">(Parser *p)</span>;         <span class="hljs-comment">// khai báo trước vì primary gọi ngược lên expr</span>
+
+<span class="hljs-comment">// primary = NUMBER | IDENT | &#x27;(&#x27; expr &#x27;)&#x27;</span>
+<span class="hljs-type">static</span> Node *<span class="hljs-title function_">parse_primary</span><span class="hljs-params">(Parser *p)</span> {
+    <span class="hljs-keyword">if</span> (p-&gt;cur.type == T_NUM) {
+        Node *n = node_new(N_NUM);
+        <span class="hljs-keyword">if</span> (!n) { fail(p, <span class="hljs-string">&quot;het bo nho&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>; }
+        n-&gt;num = p-&gt;cur.num;
+        advance(p);
+        <span class="hljs-keyword">return</span> n;
+    }
+    <span class="hljs-keyword">if</span> (p-&gt;cur.type == T_IDENT) {
+        Node *n = node_new(N_VAR);
+        <span class="hljs-keyword">if</span> (!n) { fail(p, <span class="hljs-string">&quot;het bo nho&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>; }
+        <span class="hljs-built_in">snprintf</span>(n-&gt;name, <span class="hljs-keyword">sizeof</span> n-&gt;name, <span class="hljs-string">&quot;%s&quot;</span>, p-&gt;cur.text);
+        advance(p);
+        <span class="hljs-keyword">return</span> n;
+    }
+    <span class="hljs-keyword">if</span> (p-&gt;cur.type == T_LPAREN) {
+        advance(p);
+        Node *inner = parse_expr(p);
+        <span class="hljs-keyword">if</span> (!inner) <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+        <span class="hljs-keyword">if</span> (p-&gt;cur.type != T_RPAREN) {
+            fail(p, <span class="hljs-string">&quot;thieu dau &#x27;)&#x27;&quot;</span>);
+            node_free(inner);
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+        }
+        advance(p);
+        <span class="hljs-keyword">return</span> inner;
+    }
+    fail(p, <span class="hljs-string">&quot;can mot bieu thuc&quot;</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+}
+
+<span class="hljs-comment">// unary = &#x27;-&#x27; unary | primary</span>
+<span class="hljs-type">static</span> Node *<span class="hljs-title function_">parse_unary</span><span class="hljs-params">(Parser *p)</span> {
+    <span class="hljs-keyword">if</span> (p-&gt;cur.type == T_MINUS) {
+        advance(p);
+        Node *operand = parse_unary(p);            <span class="hljs-comment">// đệ quy: cho phép &quot;--x&quot;</span>
+        <span class="hljs-keyword">if</span> (!operand) <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+        Node *n = node_new(N_NEG);
+        <span class="hljs-keyword">if</span> (!n) { fail(p, <span class="hljs-string">&quot;het bo nho&quot;</span>); node_free(operand); <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>; }
+        n-&gt;lhs = operand;
+        <span class="hljs-keyword">return</span> n;
+    }
+    <span class="hljs-keyword">return</span> parse_primary(p);
+}
+
+<span class="hljs-comment">// term = unary { (&#x27;*&#x27; | &#x27;/&#x27;) unary }</span>
+<span class="hljs-type">static</span> Node *<span class="hljs-title function_">parse_term</span><span class="hljs-params">(Parser *p)</span> {
+    Node *lhs = parse_unary(p);
+    <span class="hljs-keyword">while</span> (lhs &amp;&amp; (p-&gt;cur.type == T_STAR || p-&gt;cur.type == T_SLASH)) {
+        <span class="hljs-type">char</span> op = (p-&gt;cur.type == T_STAR) ? <span class="hljs-string">&#x27;*&#x27;</span> : <span class="hljs-string">&#x27;/&#x27;</span>;
+        advance(p);
+        Node *rhs = parse_unary(p);
+        <span class="hljs-keyword">if</span> (!rhs) { node_free(lhs); <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>; }
+        lhs = node_binop(op, lhs, rhs);            <span class="hljs-comment">// kết hợp trái: lhs mới chứa lhs cũ</span>
+        <span class="hljs-keyword">if</span> (!lhs) fail(p, <span class="hljs-string">&quot;het bo nho&quot;</span>);
+    }
+    <span class="hljs-keyword">return</span> lhs;
+}
+
+<span class="hljs-comment">// expr = term { (&#x27;+&#x27; | &#x27;-&#x27;) term }</span>
+<span class="hljs-type">static</span> Node *<span class="hljs-title function_">parse_expr</span><span class="hljs-params">(Parser *p)</span> {
+    Node *lhs = parse_term(p);
+    <span class="hljs-keyword">while</span> (lhs &amp;&amp; (p-&gt;cur.type == T_PLUS || p-&gt;cur.type == T_MINUS)) {
+        <span class="hljs-type">char</span> op = (p-&gt;cur.type == T_PLUS) ? <span class="hljs-string">&#x27;+&#x27;</span> : <span class="hljs-string">&#x27;-&#x27;</span>;
+        advance(p);
+        Node *rhs = parse_term(p);
+        <span class="hljs-keyword">if</span> (!rhs) { node_free(lhs); <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>; }
+        lhs = node_binop(op, lhs, rhs);
+        <span class="hljs-keyword">if</span> (!lhs) fail(p, <span class="hljs-string">&quot;het bo nho&quot;</span>);
+    }
+    <span class="hljs-keyword">return</span> lhs;
+}
+
+<span class="hljs-comment">// statement = IDENT &#x27;=&#x27; expr | expr     (cần nhìn trước 1 token để phân biệt)</span>
+<span class="hljs-type">static</span> Node *<span class="hljs-title function_">parse_statement</span><span class="hljs-params">(Parser *p)</span> {
+    <span class="hljs-keyword">if</span> (p-&gt;cur.type == T_IDENT) {
+        Lexer peek = p-&gt;lx;                          <span class="hljs-comment">// sao chép lexer: nhìn trước mà không tiêu thụ</span>
+        <span class="hljs-keyword">if</span> (lex_next(&amp;peek).type == T_ASSIGN) {
+            Node *n = node_new(N_ASSIGN);
+            <span class="hljs-keyword">if</span> (!n) { fail(p, <span class="hljs-string">&quot;het bo nho&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>; }
+            <span class="hljs-built_in">snprintf</span>(n-&gt;name, <span class="hljs-keyword">sizeof</span> n-&gt;name, <span class="hljs-string">&quot;%s&quot;</span>, p-&gt;cur.text);
+            advance(p);                              <span class="hljs-comment">// ăn IDENT</span>
+            advance(p);                              <span class="hljs-comment">// ăn &#x27;=&#x27;</span>
+            n-&gt;lhs = parse_expr(p);
+            <span class="hljs-keyword">if</span> (!n-&gt;lhs) { node_free(n); <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>; }
+            <span class="hljs-keyword">return</span> n;
+        }
+    }
+    <span class="hljs-keyword">return</span> parse_expr(p);
+}
+
+<span class="hljs-comment">// Điểm vào: phân tích cả dòng; trả NULL và điền *err/*err_pos nếu lỗi</span>
+<span class="hljs-type">static</span> Node *<span class="hljs-title function_">parse_line</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *line, <span class="hljs-type">char</span> *err, <span class="hljs-type">size_t</span> err_cap, <span class="hljs-type">size_t</span> *err_pos)</span> {
+    Parser p;
+    <span class="hljs-built_in">memset</span>(&amp;p, <span class="hljs-number">0</span>, <span class="hljs-keyword">sizeof</span> p);
+    p.lx.src = line;
+    advance(&amp;p);                                     <span class="hljs-comment">// nạp token đầu tiên</span>
+
+    Node *n = parse_statement(&amp;p);
+    <span class="hljs-keyword">if</span> (n &amp;&amp; p.cur.type != T_EOF) {                  <span class="hljs-comment">// còn token thừa: &quot;1 2&quot;, &quot;1 )&quot;</span>
+        fail(&amp;p, <span class="hljs-string">&quot;ky tu thua sau bieu thuc&quot;</span>);
+        node_free(n);
+        n = <span class="hljs-literal">NULL</span>;
+    }
+    <span class="hljs-keyword">if</span> (!n) {
+        <span class="hljs-built_in">snprintf</span>(err, err_cap, <span class="hljs-string">&quot;%s&quot;</span>, p.failed ? p.msg : <span class="hljs-string">&quot;loi khong ro&quot;</span>);
+        *err_pos = p.err_pos;
+    }
+    <span class="hljs-keyword">return</span> n;
+}
+</code></pre>
+<h3>Vì sao recursive descent xử lý đúng độ ưu tiên?</h3>
+<p>Phân tích <code>1 + 2 * 3</code>:</p>
+<ol>
+<li><code>parse_expr</code> gọi <code>parse_term</code> → <code>parse_unary</code> → <code>parse_primary</code> đọc <code>1</code>.</li>
+<li>Trong <code>parse_term</code>, token kế là <code>+</code> (không phải <code>*</code>/<code>/</code>) nên trả <code>1</code> về <code>parse_expr</code>.</li>
+<li><code>parse_expr</code> thấy <code>+</code>, đọc phần phải bằng <code>parse_term</code>: <code>parse_term</code> đọc <code>2</code>, thấy <code>*</code>, đọc <code>3</code>, dựng <code>Mul(2, 3)</code>.</li>
+<li><code>parse_expr</code> dựng <code>Add(1, Mul(2, 3))</code>.</li>
+</ol>
+<p>Nhờ <code>*</code> được xử lý ở tầng sâu hơn, phép nhân &quot;chiếm&quot; toán hạng của nó trước phép cộng. <strong>Kết hợp trái</strong> đến từ vòng <code>while</code> (<code>lhs = binop(lhs, rhs)</code>): <code>8 - 3 - 2</code> dựng <code>Sub(Sub(8, 3), 2)</code> = 3, không phải <code>Sub(8, Sub(3, 2))</code> = 7.</p>
+<h3>Hiển thị AST để kiểm thử</h3>
+<p>Kiểm thử parser bằng cách in cây dưới dạng chuỗi có ngoặc đầy đủ (S-expression):</p>
+<pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">ast_print</span><span class="hljs-params">(<span class="hljs-type">const</span> Node *n)</span> {
+    <span class="hljs-keyword">switch</span> (n-&gt;kind) {
+        <span class="hljs-keyword">case</span> N_NUM:    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%g&quot;</span>, n-&gt;num); <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> N_VAR:    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%s&quot;</span>, n-&gt;name); <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> N_NEG:    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;(neg &quot;</span>); ast_print(n-&gt;lhs); <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;)&quot;</span>); <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> N_BINOP:  <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;(%c &quot;</span>, n-&gt;op); ast_print(n-&gt;lhs); <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot; &quot;</span>); ast_print(n-&gt;rhs); <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;)&quot;</span>); <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> N_ASSIGN: <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;(= %s &quot;</span>, n-&gt;name); ast_print(n-&gt;lhs); <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;)&quot;</span>); <span class="hljs-keyword">break</span>;
+    }
+}
+</code></pre>
+<p>Bảng kiểm thử (đầu vào → AST mong đợi):</p>
+<table>
+<thead>
+<tr>
+<th>Đầu vào</th>
+<th>AST</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>1 + 2 * 3</code></td>
+<td><code>(+ 1 (* 2 3))</code></td>
+</tr>
+<tr>
+<td><code>(1 + 2) * 3</code></td>
+<td><code>(* (+ 1 2) 3)</code></td>
+</tr>
+<tr>
+<td><code>8 - 3 - 2</code></td>
+<td><code>(- (- 8 3) 2)</code></td>
+</tr>
+<tr>
+<td><code>-2 * 3</code></td>
+<td><code>(* (neg 2) 3)</code></td>
+</tr>
+<tr>
+<td><code>x = 1 + 2</code></td>
+<td><code>(= x (+ 1 2))</code></td>
+</tr>
+<tr>
+<td><code>2 +</code></td>
+<td>lỗi: cần một biểu thức</td>
+</tr>
+<tr>
+<td><code>(1 + 2</code></td>
+<td>lỗi: thiếu <code>)</code></td>
+</tr>
+<tr>
+<td><code>1 2</code></td>
+<td>lỗi: ký tự thừa</td>
+</tr>
+</tbody>
+</table>
+<h2>19.5. Giai đoạn 3: Evaluator (duyệt cây)</h2>
+<p>Cần một <strong>môi trường (environment)</strong> ánh xạ tên biến → giá trị:</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> MAX_VARS 64</span>
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span> <span class="hljs-type">char</span> name[<span class="hljs-number">32</span>]; <span class="hljs-type">double</span> value; } Var;
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span> Var vars[MAX_VARS]; <span class="hljs-type">size_t</span> count; } Env;
+
+<span class="hljs-type">static</span> Var *<span class="hljs-title function_">env_find</span><span class="hljs-params">(Env *e, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *name)</span> {
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; e-&gt;count; i++)
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strcmp</span>(e-&gt;vars[i].name, name) == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> &amp;e-&gt;vars[i];
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+}
+
+<span class="hljs-comment">// Trả 0 nếu thành công, -1 nếu môi trường đầy</span>
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">env_set</span><span class="hljs-params">(Env *e, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *name, <span class="hljs-type">double</span> value)</span> {
+    Var *v = env_find(e, name);
+    <span class="hljs-keyword">if</span> (!v) {
+        <span class="hljs-keyword">if</span> (e-&gt;count == MAX_VARS) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+        v = &amp;e-&gt;vars[e-&gt;count++];
+        <span class="hljs-built_in">snprintf</span>(v-&gt;name, <span class="hljs-keyword">sizeof</span> v-&gt;name, <span class="hljs-string">&quot;%s&quot;</span>, name);
+    }
+    v-&gt;value = value;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>(Tìm tuyến tính O(n) là đủ cho 64 biến; nếu cần nhiều hơn, dùng bảng băm — bài tập chương 10.)</p>
+<p>Hàm <code>eval</code> <strong>đệ quy theo hình dạng của cây</strong>: giá trị của một nút được tính từ giá trị các con.</p>
+<pre class="hljs"><code><span class="hljs-comment">// Trả 0 và ghi kết quả vào *out nếu thành công; trả -1 và *err trỏ tới chuỗi hằng mô tả lỗi.</span>
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">eval</span><span class="hljs-params">(<span class="hljs-type">const</span> Node *n, Env *env, <span class="hljs-type">double</span> *out, <span class="hljs-type">const</span> <span class="hljs-type">char</span> **err)</span> {
+    <span class="hljs-keyword">switch</span> (n-&gt;kind) {
+        <span class="hljs-keyword">case</span> N_NUM:
+            *out = n-&gt;num;
+            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+
+        <span class="hljs-keyword">case</span> N_VAR: {
+            Var *v = env_find(env, n-&gt;name);
+            <span class="hljs-keyword">if</span> (!v) { *err = <span class="hljs-string">&quot;bien chua duoc dinh nghia&quot;</span>; <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>; }
+            *out = v-&gt;value;
+            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+        }
+
+        <span class="hljs-keyword">case</span> N_NEG: {
+            <span class="hljs-type">double</span> x;
+            <span class="hljs-keyword">if</span> (eval(n-&gt;lhs, env, &amp;x, err) != <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+            *out = -x;
+            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+        }
+
+        <span class="hljs-keyword">case</span> N_BINOP: {
+            <span class="hljs-type">double</span> a, b;
+            <span class="hljs-keyword">if</span> (eval(n-&gt;lhs, env, &amp;a, err) != <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;      <span class="hljs-comment">// đánh giá vế trái trước</span>
+            <span class="hljs-keyword">if</span> (eval(n-&gt;rhs, env, &amp;b, err) != <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+            <span class="hljs-keyword">switch</span> (n-&gt;op) {
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;+&#x27;</span>: *out = a + b; <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;-&#x27;</span>: *out = a - b; <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;*&#x27;</span>: *out = a * b; <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;/&#x27;</span>:
+                    <span class="hljs-keyword">if</span> (b == <span class="hljs-number">0.0</span>) { *err = <span class="hljs-string">&quot;chia cho 0&quot;</span>; <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>; }
+                    *out = a / b;
+                    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+            }
+            *err = <span class="hljs-string">&quot;toan tu khong hop le&quot;</span>;
+            <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+        }
+
+        <span class="hljs-keyword">case</span> N_ASSIGN: {
+            <span class="hljs-type">double</span> v;
+            <span class="hljs-keyword">if</span> (eval(n-&gt;lhs, env, &amp;v, err) != <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+            <span class="hljs-keyword">if</span> (env_set(env, n-&gt;name, v) != <span class="hljs-number">0</span>) { *err = <span class="hljs-string">&quot;qua nhieu bien&quot;</span>; <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>; }
+            *out = v;
+            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+        }
+    }
+    *err = <span class="hljs-string">&quot;nut khong hop le&quot;</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+}
+</code></pre>
+<p>Lưu ý <strong>mẫu xử lý lỗi</strong>: mọi hàm trả <code>0</code>/<code>-1</code>, kết quả qua tham số đầu ra (chương 13); lỗi lan truyền lên trên từng tầng cho tới REPL — không dùng <code>exit()</code> sâu bên trong.</p>
+<h2>19.6. Giai đoạn 4: Bytecode và máy ảo ngăn xếp</h2>
+<p>Trình duyệt cây chạy chậm vì mỗi phép tính đi qua nhiều lời gọi hàm đệ quy và con trỏ. Cách phổ biến để nhanh hơn: <strong>biên dịch AST thành bytecode tuyến tính</strong> rồi chạy bằng một vòng lặp đơn giản trên <strong>máy ảo ngăn xếp (stack VM)</strong>.</p>
+<p>Ý tưởng: biểu thức hậu tố. <code>1 + 2 * 3</code> → <code>PUSH 1, PUSH 2, PUSH 3, MUL, ADD</code>:</p>
+<pre class="hljs"><code>lệnh       ngăn xếp sau khi chạy
+PUSH 1     [1]
+PUSH 2     [1, 2]
+PUSH 3     [1, 2, 3]
+MUL        [1, 6]        (lấy 3 và 2, đẩy 2*3)
+ADD        [7]           (lấy 6 và 1, đẩy 1+6)
+</code></pre>
+<p>Duyệt AST theo <strong>thứ tự hậu tố</strong> (con trước, nút sau) sinh đúng chuỗi này.</p>
+<pre class="hljs"><code><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">enum</span> {</span> OP_PUSH, OP_LOAD, OP_STORE, OP_ADD, OP_SUB, OP_MUL, OP_DIV, OP_NEG, OP_HALT } OpCode;
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span>
+    OpCode op;
+    <span class="hljs-type">double</span> num;         <span class="hljs-comment">// OP_PUSH</span>
+    <span class="hljs-type">int</span>    slot;        <span class="hljs-comment">// OP_LOAD / OP_STORE: chỉ số biến (đã đổi từ tên -&gt; số lúc biên dịch)</span>
+} Instr;
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span>
+    Instr  code[<span class="hljs-number">256</span>];
+    <span class="hljs-type">size_t</span> len;
+    <span class="hljs-type">char</span>   names[MAX_VARS][<span class="hljs-number">32</span>];     <span class="hljs-comment">// slot -&gt; tên biến</span>
+    <span class="hljs-type">size_t</span> nnames;
+} Program;
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">emit</span><span class="hljs-params">(Program *p, Instr in)</span> {
+    <span class="hljs-keyword">if</span> (p-&gt;len == <span class="hljs-keyword">sizeof</span> p-&gt;code / <span class="hljs-keyword">sizeof</span> p-&gt;code[<span class="hljs-number">0</span>]) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;   <span class="hljs-comment">// chương trình quá dài</span>
+    p-&gt;code[p-&gt;len++] = in;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">slot_of</span><span class="hljs-params">(Program *p, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *name)</span> {
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; p-&gt;nnames; i++)
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strcmp</span>(p-&gt;names[i], name) == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> (<span class="hljs-type">int</span>)i;
+    <span class="hljs-keyword">if</span> (p-&gt;nnames == MAX_VARS) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    <span class="hljs-built_in">snprintf</span>(p-&gt;names[p-&gt;nnames], <span class="hljs-keyword">sizeof</span> p-&gt;names[<span class="hljs-number">0</span>], <span class="hljs-string">&quot;%s&quot;</span>, name);
+    <span class="hljs-keyword">return</span> (<span class="hljs-type">int</span>)p-&gt;nnames++;
+}
+
+<span class="hljs-comment">// Sinh mã cho nút n. Trả 0 nếu thành công.</span>
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">compile</span><span class="hljs-params">(<span class="hljs-type">const</span> Node *n, Program *p)</span> {
+    <span class="hljs-keyword">switch</span> (n-&gt;kind) {
+        <span class="hljs-keyword">case</span> N_NUM:  <span class="hljs-keyword">return</span> emit(p, (Instr){ .op = OP_PUSH, .num = n-&gt;num });
+        <span class="hljs-keyword">case</span> N_VAR: {
+            <span class="hljs-type">int</span> s = slot_of(p, n-&gt;name);
+            <span class="hljs-keyword">return</span> s &lt; <span class="hljs-number">0</span> ? <span class="hljs-number">-1</span> : emit(p, (Instr){ .op = OP_LOAD, .slot = s });
+        }
+        <span class="hljs-keyword">case</span> N_NEG:
+            <span class="hljs-keyword">if</span> (compile(n-&gt;lhs, p) != <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+            <span class="hljs-keyword">return</span> emit(p, (Instr){ .op = OP_NEG });
+        <span class="hljs-keyword">case</span> N_BINOP: {
+            <span class="hljs-keyword">if</span> (compile(n-&gt;lhs, p) != <span class="hljs-number">0</span> || compile(n-&gt;rhs, p) != <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+            OpCode op = n-&gt;op == <span class="hljs-string">&#x27;+&#x27;</span> ? OP_ADD : n-&gt;op == <span class="hljs-string">&#x27;-&#x27;</span> ? OP_SUB : n-&gt;op == <span class="hljs-string">&#x27;*&#x27;</span> ? OP_MUL : OP_DIV;
+            <span class="hljs-keyword">return</span> emit(p, (Instr){ .op = op });
+        }
+        <span class="hljs-keyword">case</span> N_ASSIGN: {
+            <span class="hljs-keyword">if</span> (compile(n-&gt;lhs, p) != <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+            <span class="hljs-type">int</span> s = slot_of(p, n-&gt;name);
+            <span class="hljs-keyword">if</span> (s &lt; <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+            <span class="hljs-comment">// STORE lấy đỉnh ngăn xếp đặt vào biến nhưng KHÔNG pop, để kết quả phép gán còn lại làm giá trị biểu thức</span>
+            <span class="hljs-keyword">return</span> emit(p, (Instr){ .op = OP_STORE, .slot = s });
+        }
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+}
+
+<span class="hljs-comment">// Máy ảo: vòng lặp đọc-giải mã-thực thi</span>
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">run</span><span class="hljs-params">(<span class="hljs-type">const</span> Program *p, <span class="hljs-type">double</span> vars[], <span class="hljs-type">double</span> *result, <span class="hljs-type">const</span> <span class="hljs-type">char</span> **err)</span> {
+    <span class="hljs-type">double</span> <span class="hljs-built_in">stack</span>[<span class="hljs-number">64</span>];
+    <span class="hljs-type">size_t</span> sp = <span class="hljs-number">0</span>;                                   <span class="hljs-comment">// sp = số phần tử đang có</span>
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> pc = <span class="hljs-number">0</span>; pc &lt; p-&gt;len; pc++) {
+        <span class="hljs-type">const</span> Instr *in = &amp;p-&gt;code[pc];
+        <span class="hljs-keyword">switch</span> (in-&gt;op) {
+            <span class="hljs-keyword">case</span> OP_PUSH:  <span class="hljs-keyword">if</span> (sp == <span class="hljs-number">64</span>) { *err = <span class="hljs-string">&quot;tran ngan xep&quot;</span>; <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>; }
+                           <span class="hljs-built_in">stack</span>[sp++] = in-&gt;num; <span class="hljs-keyword">break</span>;
+            <span class="hljs-keyword">case</span> OP_LOAD:  <span class="hljs-keyword">if</span> (sp == <span class="hljs-number">64</span>) { *err = <span class="hljs-string">&quot;tran ngan xep&quot;</span>; <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>; }
+                           <span class="hljs-built_in">stack</span>[sp++] = vars[in-&gt;slot]; <span class="hljs-keyword">break</span>;
+            <span class="hljs-keyword">case</span> OP_STORE: vars[in-&gt;slot] = <span class="hljs-built_in">stack</span>[sp - <span class="hljs-number">1</span>]; <span class="hljs-keyword">break</span>;
+            <span class="hljs-keyword">case</span> OP_NEG:   <span class="hljs-built_in">stack</span>[sp - <span class="hljs-number">1</span>] = -<span class="hljs-built_in">stack</span>[sp - <span class="hljs-number">1</span>]; <span class="hljs-keyword">break</span>;
+            <span class="hljs-keyword">case</span> OP_ADD: <span class="hljs-keyword">case</span> OP_SUB: <span class="hljs-keyword">case</span> OP_MUL: <span class="hljs-keyword">case</span> OP_DIV: {
+                <span class="hljs-type">double</span> b = <span class="hljs-built_in">stack</span>[--sp], a = <span class="hljs-built_in">stack</span>[sp - <span class="hljs-number">1</span>];
+                <span class="hljs-keyword">switch</span> (in-&gt;op) {
+                    <span class="hljs-keyword">case</span> OP_ADD: a += b; <span class="hljs-keyword">break</span>;
+                    <span class="hljs-keyword">case</span> OP_SUB: a -= b; <span class="hljs-keyword">break</span>;
+                    <span class="hljs-keyword">case</span> OP_MUL: a *= b; <span class="hljs-keyword">break</span>;
+                    <span class="hljs-keyword">default</span>:
+                        <span class="hljs-keyword">if</span> (b == <span class="hljs-number">0.0</span>) { *err = <span class="hljs-string">&quot;chia cho 0&quot;</span>; <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>; }
+                        a /= b;
+                }
+                <span class="hljs-built_in">stack</span>[sp - <span class="hljs-number">1</span>] = a;
+                <span class="hljs-keyword">break</span>;
+            }
+            <span class="hljs-keyword">case</span> OP_HALT: pc = p-&gt;len; <span class="hljs-keyword">break</span>;
+        }
+    }
+    <span class="hljs-keyword">if</span> (sp != <span class="hljs-number">1</span>) { *err = <span class="hljs-string">&quot;loi noi bo: ngan xep khong khop&quot;</span>; <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>; }
+    *result = <span class="hljs-built_in">stack</span>[<span class="hljs-number">0</span>];
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Điểm đáng chú ý:</p>
 <ul>
-<li>Dùng recursive-descent parser: expr -&gt; term { (+|-) term }</li>
-<li>Xây AST nodes: Number, BinaryOp, Variable, Assign</li>
+<li>Tên biến được đổi thành <strong>chỉ số (slot)</strong> lúc biên dịch → truy cập biến là <code>vars[slot]</code> (O(1)) thay vì so chuỗi.</li>
+<li>Vòng lặp <code>run</code> là &quot;trái tim&quot; của mọi VM: <strong>fetch–decode–execute</strong>. Các VM thực tế dùng kỹ thuật như <em>computed goto</em> để nhanh hơn.</li>
+<li>Hằng số lưu trực tiếp trong lệnh; VM thực tế có bảng hằng và lệnh có độ dài thay đổi.</li>
+<li>Một bất biến cần kiểm tra: sau khi chạy xong một biểu thức, ngăn xếp có <strong>đúng 1</strong> phần tử.</li>
+<li>Ở bản này, trạng thái biến giữa các dòng REPL thuộc mảng <code>vars</code> chung với các <code>slot</code> được duy trì qua <code>Program</code> — xem cách ghép trong mục 19.7 (dùng <code>Env</code> với evaluator; phần VM là bài tập nâng cao).</li>
 </ul>
-<h2>4. Evaluation / Codegen</h2>
+<h2>19.7. Chương trình hoàn chỉnh (REPL)</h2>
+<p>Ghép tất cả thành <code>calc.c</code>. Bạn đã có các phần: kiểu token, <code>lex_next</code>, <code>Node</code>, parser, <code>Env</code>, <code>eval</code>. Thêm hàm <code>main</code> dưới đây và xếp mã theo thứ tự: <code>#include</code> → kiểu token &amp; lexer → AST &amp; parser → môi trường &amp; <code>eval</code> → <code>main</code>.</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;ctype.h&gt;</span></span>
+
+<span class="hljs-comment">/* ... dán vào: TokType, Token, Lexer, lex_next ... */</span>
+<span class="hljs-comment">/* ... dán vào: Node, node_new, node_free, node_binop, Parser, advance, fail, parse_* , parse_line ... */</span>
+<span class="hljs-comment">/* ... dán vào: Var, Env, env_find, env_set, eval ... */</span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    Env env;
+    <span class="hljs-built_in">memset</span>(&amp;env, <span class="hljs-number">0</span>, <span class="hljs-keyword">sizeof</span> env);
+
+    <span class="hljs-type">char</span> line[<span class="hljs-number">256</span>];
+    <span class="hljs-keyword">for</span> (;;) {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;&gt; &quot;</span>);
+        fflush(<span class="hljs-built_in">stdout</span>);
+        <span class="hljs-keyword">if</span> (!fgets(line, <span class="hljs-keyword">sizeof</span> line, <span class="hljs-built_in">stdin</span>)) <span class="hljs-keyword">break</span>;                 <span class="hljs-comment">// EOF (Ctrl+D / Ctrl+Z)</span>
+
+        line[<span class="hljs-built_in">strcspn</span>(line, <span class="hljs-string">&quot;\r\n&quot;</span>)] = <span class="hljs-string">&#x27;\0&#x27;</span>;
+        <span class="hljs-keyword">if</span> (line[<span class="hljs-number">0</span>] == <span class="hljs-string">&#x27;\0&#x27;</span>) <span class="hljs-keyword">continue</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strcmp</span>(line, <span class="hljs-string">&quot;quit&quot;</span>) == <span class="hljs-number">0</span> || <span class="hljs-built_in">strcmp</span>(line, <span class="hljs-string">&quot;exit&quot;</span>) == <span class="hljs-number">0</span>) <span class="hljs-keyword">break</span>;
+
+        <span class="hljs-type">char</span> err[<span class="hljs-number">96</span>];
+        <span class="hljs-type">size_t</span> err_pos = <span class="hljs-number">0</span>;
+        Node *ast = parse_line(line, err, <span class="hljs-keyword">sizeof</span> err, &amp;err_pos);
+        <span class="hljs-keyword">if</span> (!ast) {
+            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;loi: cot %zu: %s\n&quot;</span>, err_pos + <span class="hljs-number">1</span>, err);
+            <span class="hljs-keyword">continue</span>;
+        }
+
+        <span class="hljs-type">double</span> value;
+        <span class="hljs-type">const</span> <span class="hljs-type">char</span> *rt_err = <span class="hljs-literal">NULL</span>;
+        <span class="hljs-keyword">if</span> (eval(ast, &amp;env, &amp;value, &amp;rt_err) == <span class="hljs-number">0</span>) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;= %g\n&quot;</span>, value);
+        <span class="hljs-keyword">else</span>                                       <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;loi: %s\n&quot;</span>, rt_err);
+
+        node_free(ast);                                              <span class="hljs-comment">// luôn giải phóng cây sau mỗi dòng</span>
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Biên dịch và kiểm tra bộ nhớ:</p>
+<pre class="hljs"><code>gcc -std=c11 -Wall -Wextra -g -fsanitize=address,undefined -o calc calc.c
+./calc
+&gt; x = 1 + 2 * (3 - 4)
+= -1
+&gt; y = x * 10
+= -10
+&gt; y / 4 + 1
+= -1.5
+&gt; 1 / 0
+loi: chia cho 0
+&gt; 2 +
+loi: cot 4: can mot bieu thuc
+</code></pre>
+<p>Chạy dưới ASan/LeakSanitizer bảo đảm cây được giải phóng đầy đủ trên mọi đường (thành công, lỗi cú pháp, lỗi chạy).</p>
+<h2>19.8. Kiểm thử từng giai đoạn</h2>
+<p>Phát triển ngôn ngữ là lĩnh vực <strong>rất hợp với kiểm thử tự động</strong>: đầu vào và đầu ra rõ ràng. Với <code>tiny_test.h</code> (chương 14) hoặc khung Unity (chương 21):</p>
+<pre class="hljs"><code><span class="hljs-comment">// test_calc.c (ý tưởng)</span>
+<span class="hljs-type">static</span> <span class="hljs-type">double</span> <span class="hljs-title function_">run_expr</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *src, Env *env, <span class="hljs-type">int</span> *ok)</span> {
+    <span class="hljs-type">char</span> err[<span class="hljs-number">96</span>]; <span class="hljs-type">size_t</span> pos;
+    Node *ast = parse_line(src, err, <span class="hljs-keyword">sizeof</span> err, &amp;pos);
+    <span class="hljs-keyword">if</span> (!ast) { *ok = <span class="hljs-number">0</span>; <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>; }
+    <span class="hljs-type">double</span> v = <span class="hljs-number">0</span>; <span class="hljs-type">const</span> <span class="hljs-type">char</span> *e;
+    *ok = (eval(ast, env, &amp;v, &amp;e) == <span class="hljs-number">0</span>);
+    node_free(ast);
+    <span class="hljs-keyword">return</span> v;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    Env env = {<span class="hljs-number">0</span>};
+    <span class="hljs-type">int</span> ok;
+    CHECK_EQ_INT((<span class="hljs-type">long</span> <span class="hljs-type">long</span>)run_expr(<span class="hljs-string">&quot;1 + 2 * 3&quot;</span>, &amp;env, &amp;ok), <span class="hljs-number">7</span>);
+    CHECK(ok);
+    CHECK_EQ_INT((<span class="hljs-type">long</span> <span class="hljs-type">long</span>)run_expr(<span class="hljs-string">&quot;(1 + 2) * 3&quot;</span>, &amp;env, &amp;ok), <span class="hljs-number">9</span>);
+    CHECK_EQ_INT((<span class="hljs-type">long</span> <span class="hljs-type">long</span>)run_expr(<span class="hljs-string">&quot;8 - 3 - 2&quot;</span>, &amp;env, &amp;ok), <span class="hljs-number">3</span>);       <span class="hljs-comment">// kết hợp trái</span>
+    CHECK_EQ_INT((<span class="hljs-type">long</span> <span class="hljs-type">long</span>)run_expr(<span class="hljs-string">&quot;-2 * -3&quot;</span>, &amp;env, &amp;ok), <span class="hljs-number">6</span>);
+    run_expr(<span class="hljs-string">&quot;1 / 0&quot;</span>, &amp;env, &amp;ok);        CHECK(!ok);                     <span class="hljs-comment">// lỗi chạy</span>
+    run_expr(<span class="hljs-string">&quot;2 +&quot;</span>, &amp;env, &amp;ok);          CHECK(!ok);                     <span class="hljs-comment">// lỗi cú pháp</span>
+    run_expr(<span class="hljs-string">&quot;x = 5&quot;</span>, &amp;env, &amp;ok);        CHECK(ok);
+    CHECK_EQ_INT((<span class="hljs-type">long</span> <span class="hljs-type">long</span>)run_expr(<span class="hljs-string">&quot;x * x&quot;</span>, &amp;env, &amp;ok), <span class="hljs-number">25</span>);
+    run_expr(<span class="hljs-string">&quot;undefined_var&quot;</span>, &amp;env, &amp;ok); CHECK(!ok);
+    <span class="hljs-keyword">return</span> TEST_SUMMARY();
+}
+</code></pre>
+<p>Kỹ thuật kiểm thử tốt cho parser/interpreter:</p>
 <ul>
-<li>Interpreter: traverse AST và evaluate; giữ environment (map var-&gt;value).</li>
-<li>Optionally: codegen to stack bytecode and implement VM loop.</li>
+<li><strong>Bảng (input, expected)</strong>, thêm mỗi lần tìm ra lỗi mới (kiểm thử hồi quy).</li>
+<li><strong>Kiểm thử lỗi:</strong> đầu vào sai có báo lỗi <em>đúng loại, đúng vị trí</em> và không crash/rò rỉ.</li>
+<li><strong>So sánh hai cách chạy:</strong> kết quả của <strong>evaluator</strong> và <strong>VM</strong> phải giống nhau trên mọi biểu thức — cách bắt lỗi rất mạnh (kiểm thử vi sai, <em>differential testing</em>).</li>
+<li><strong>Fuzz</strong> <code>parse_line</code> (chương 18) để bảo đảm không crash với đầu vào bất kỳ.</li>
 </ul>
-<h2>5. Testing &amp; incremental development</h2>
+<h2>19.9. Mở rộng ngôn ngữ</h2>
+<p>Mỗi bước thêm một tính năng theo cùng khuôn: <strong>ngữ pháp → lexer → parser → AST → eval → kiểm thử</strong>.</p>
+<h3>Bước A: hàm dựng sẵn (<code>sqrt</code>, <code>sin</code>) và lũy thừa</h3>
 <ul>
-<li>TDD: viết tests cho lexer, parser and evaluator.</li>
-<li>Keep interfaces small and well-documented.</li>
+<li>Lexer: thêm token <code>T_COMMA</code>, <code>T_CARET</code>.</li>
+<li>Ngữ pháp: <code>primary = IDENT '(' [ expr { ',' expr } ] ')'</code>, và <code>power = unary [ '^' power ]</code> (kết hợp <strong>phải</strong>: <code>2^3^2 = 2^9</code>).</li>
+<li>Nút <code>N_CALL</code> chứa tên hàm và mảng đối số; <code>eval</code> tra bảng <code>{ &quot;sqrt&quot;, sqrt }</code>.</li>
 </ul>
-<h2>6. Ví dụ thực hành</h2>
+<h3>Bước B: so sánh, <code>if</code> và <code>while</code></h3>
+<pre class="hljs"><code>statement = &#x27;if&#x27; expr block [ &#x27;else&#x27; block ]
+          | &#x27;while&#x27; expr block
+          | IDENT &#x27;=&#x27; expr
+          | expr ;
+block     = &#x27;{&#x27; { statement &#x27;;&#x27; } &#x27;}&#x27; ;
+compare   = expr [ ( &#x27;&lt;&#x27; | &#x27;&gt;&#x27; | &#x27;==&#x27; | &#x27;!=&#x27; ) expr ] ;
+</code></pre>
 <ul>
-<li><a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-19">code/chapter-19</a>/lexer.c</li>
-<li><a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-19">code/chapter-19</a>/parser.c</li>
-<li><a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-19">code/chapter-19</a>/eval.c (main runs REPL)</li>
+<li>Từ khóa: sau khi đọc IDENT, kiểm tra có phải <code>if</code>/<code>while</code>/<code>else</code> không.</li>
+<li>AST: <code>N_IF(cond, then, else)</code>, <code>N_WHILE(cond, body)</code>, <code>N_BLOCK(list)</code>.</li>
+<li>Với VM: cần lệnh <strong>nhảy</strong> <code>OP_JMP</code>, <code>OP_JMPZ</code> (nhảy nếu bằng 0). Dịch <code>while</code> thành:</li>
 </ul>
-<p>Bài tập dự án</p>
+<pre class="hljs"><code>L1:  &lt;điều kiện&gt;
+     JMPZ L2
+     &lt;thân&gt;
+     JMP L1
+L2:
+</code></pre>
+<h3>Bước C: hàm do người dùng định nghĩa</h3>
+<pre class="hljs"><code>def add(a, b) { return a + b; }
+</code></pre>
+<p>Cần: <strong>phạm vi biến</strong> (mỗi lần gọi hàm có môi trường riêng — ngăn xếp các <code>Env</code>), <strong>khung gọi (call frame)</strong>, lệnh <code>return</code>, và (trên VM) lệnh <code>CALL</code>/<code>RET</code> với địa chỉ trở về. Đệ quy hoạt động &quot;miễn phí&quot; nếu mỗi lần gọi có frame riêng.</p>
+<h3>Bước D: kiểu dữ liệu</h3>
+<p>Thay <code>double</code> bằng <strong>tagged union</strong> <code>Value { type; union { double d; char *s; bool b; } }</code> để có chuỗi/boolean. Chuỗi kéo theo <strong>quản lý bộ nhớ</strong> — bài toán thú vị: đếm tham chiếu hay bộ gom rác (mark-and-sweep)?</p>
+<h3>Hướng xa hơn</h3>
 <ul>
-<li>Bước 1: implement lexer and unit tests.</li>
-<li>Bước 2: parser + AST + evaluator; support variables.</li>
-<li>Bước 3: extend language: functions, if/else, while.</li>
+<li><strong>Báo lỗi tốt hơn:</strong> in dòng nguồn với dấu <code>^</code> chỉ đúng cột.</li>
+<li><strong>Tối ưu:</strong> <em>constant folding</em> (<code>2 * 3</code> thành <code>6</code> ngay lúc biên dịch), loại bỏ mã chết.</li>
+<li><strong>Sinh mã máy thật:</strong> xuất assembly x86-64/ARM hoặc LLVM IR; xem <code>Crafting Interpreters</code> (Robert Nystrom) và &quot;Writing an Interpreter in Go&quot; để tìm hiểu tiếp.</li>
+<li><strong>Công cụ sinh parser:</strong> <code>flex</code>/<code>bison</code>, <code>ANTLR</code>, <code>re2c</code> — tốt cho ngôn ngữ lớn; viết tay recursive descent (như trên) vẫn được dùng trong nhiều compiler thực tế (GCC, Clang, V8...) vì kiểm soát lỗi tốt.</li>
 </ul>
-<p>Ghi chú: kèm Makefile và test scripts in <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-19">code/chapter-19</a>.</p>
+<h2>19.10. Lỗi thường gặp</h2>
+<table>
+<thead>
+<tr>
+<th>Lỗi</th>
+<th>Triệu chứng</th>
+<th>Cách tránh</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Quên <code>advance()</code> sau khi dùng token</td>
+<td>Parser lặp vô hạn hoặc phân tích sai</td>
+<td>Mỗi lần khớp token phải &quot;ăn&quot; nó</td>
+</tr>
+<tr>
+<td>Ngữ pháp đệ quy trái (<code>expr = expr '+' term</code>)</td>
+<td>Đệ quy vô hạn, tràn stack</td>
+<td>Viết lại thành vòng lặp <code>{ ... }</code></td>
+</tr>
+<tr>
+<td>Dùng đệ quy cho phép toán kết hợp trái</td>
+<td><code>8 - 3 - 2</code> ra 7 thay vì 3</td>
+<td>Dùng <code>while</code> và dựng cây tích lũy</td>
+</tr>
+<tr>
+<td>Rò rỉ AST khi lỗi giữa chừng</td>
+<td>LeakSanitizer báo <code>definitely lost</code></td>
+<td>Ownership rõ; giải phóng trên mọi đường lỗi</td>
+</tr>
+<tr>
+<td>Không kiểm tra hết bộ nhớ khi dựng nút</td>
+<td>Crash dưới <code>malloc</code> lỗi</td>
+<td><code>node_new</code> trả NULL, lan truyền</td>
+</tr>
+<tr>
+<td>Chia cho 0 (<code>double</code>) cho <code>inf</code> thay vì lỗi</td>
+<td>Kết quả lạ</td>
+<td>Kiểm tra mẫu số</td>
+</tr>
+<tr>
+<td>Báo nhiều lỗi dây chuyền cho một lỗi gốc</td>
+<td>Thông báo khó hiểu</td>
+<td>Chỉ giữ lỗi đầu tiên</td>
+</tr>
+<tr>
+<td>Tràn ngăn xếp VM với biểu thức lồng sâu</td>
+<td>Ghi ngoài mảng</td>
+<td>Kiểm tra <code>sp</code> hoặc tính độ sâu tối đa lúc biên dịch</td>
+</tr>
+<tr>
+<td>Không giới hạn độ sâu đệ quy của parser</td>
+<td>Tràn stack với <code>((((...</code></td>
+<td>Đếm và từ chối độ sâu quá lớn</td>
+</tr>
+</tbody>
+</table>
+<h2>19.11. Tóm tắt</h2>
+<ul>
+<li>Trình thông dịch gồm <strong>lexer → parser → AST → evaluator</strong> (hoặc <strong>codegen → VM</strong>).</li>
+<li><strong>Ngữ pháp EBNF</strong> mô tả ngôn ngữ; <strong>recursive descent</strong> biến mỗi luật thành một hàm, vòng <code>{ }</code> thành <code>while</code>, và độ ưu tiên đến từ việc phân tầng luật.</li>
+<li>AST là cây các <code>struct</code> cấp phát động: cần hàm giải phóng đệ quy và ownership rõ ràng.</li>
+<li>Evaluator đệ quy theo cấu trúc cây; lỗi lan truyền bằng mã trả về, không <code>exit()</code> sâu.</li>
+<li>Bytecode + VM ngăn xếp nhanh hơn duyệt cây; đổi tên biến thành chỉ số lúc biên dịch.</li>
+<li>Kiểm thử từng giai đoạn, kiểm thử lỗi, kiểm thử vi sai và fuzz giúp ngôn ngữ đáng tin cậy.</li>
+</ul>
+<h2>19.12. Bài tập dự án</h2>
+<p><strong>Bước 1 — Lexer.</strong> Hoàn thiện <code>lex_next</code> và <code>dump_tokens</code>; viết bảng kiểm thử ít nhất 15 trường hợp (kể cả các trường hợp biên đã nêu). Thêm token cho số nguyên hex <code>0x1F</code> và chuỗi trong nháy kép.</p>
+<p><strong>Bước 2 — Parser + AST + evaluator.</strong> Ghép <code>calc.c</code> từ các mảnh trong chương; dùng ASan/LeakSanitizer để bảo đảm không rò rỉ; thêm <code>ast_print</code> và chế độ <code>:ast</code> in cây thay vì tính.</p>
+<p><strong>Bước 3 — Cải thiện báo lỗi.</strong> In dòng nhập kèm dấu <code>^</code> trỏ vào cột lỗi; phân biệt lỗi từ vựng, cú pháp, chạy.</p>
+<p><strong>Bước 4 — Mở rộng biểu thức.</strong> Thêm toán tử <code>%</code>, <code>^</code> (kết hợp phải), so sánh, hằng <code>pi</code>, và các hàm <code>sqrt</code>, <code>abs</code>, <code>min</code>, <code>max</code>.</p>
+<p><strong>Bước 5 — Điều khiển luồng.</strong> Thêm <code>if/else</code>, <code>while</code>, khối <code>{ }</code> và đọc chương trình nhiều dòng từ file (<code>./calc script.calc</code>).</p>
+<p><strong>Bước 6 — Hàm.</strong> Thêm <code>def</code>, tham số, <code>return</code>, phạm vi cục bộ; kiểm thử với <code>fib(n)</code> đệ quy và <code>gcd</code>.</p>
+<p><strong>Bước 7 — Bytecode VM.</strong> Hoàn thiện đường biên dịch–chạy ở 19.6 với cả biến, <code>if</code>, <code>while</code>; so sánh kết quả và <strong>tốc độ</strong> với evaluator trên vòng lặp 10 triệu lần; dùng <code>perf</code>/<code>gprof</code> (chương 17) để xem đâu là hot spot.</p>
+<p><strong>Bước 8 — (Thử thách)</strong> Thêm <strong>constant folding</strong> và chế độ <code>--dump-bytecode</code> in ra chương trình dưới dạng assembly dễ đọc; hoặc sinh mã C từ AST rồi gọi <code>gcc</code> biên dịch (một <em>transpiler</em>).</p>
+<p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-19">code/chapter-19</a></p>
 
 </article>
 <div class="chapter-nav"><a class="nav-prev" href="chapter-18.html">&larr; Bảo mật & an toàn bộ nhớ</a><a class="nav-next" href="chapter-20.html">Project: Web server đơn giản &rarr;</a></div>

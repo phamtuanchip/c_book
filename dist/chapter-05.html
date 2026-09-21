@@ -12,66 +12,583 @@
 <main class="content">
 <article>
 <h1>Chương 5 — Điều khiển luồng (Control Flow)</h1>
-<p>Mục tiêu chương:</p>
+<h2>Mục tiêu chương</h2>
 <ul>
-<li>Hiểu và phân biệt if/else, switch, for, while, do-while.</li>
-<li>Biết dùng break và continue hợp lý.</li>
-<li>Viết chương trình kiểm soát luồng với input hợp lệ và tránh infinite loop.</li>
+<li>Hiểu <strong>luồng thực thi</strong> của chương trình và vì sao cần cấu trúc điều khiển.</li>
+<li>Dùng thành thạo <code>if / else if / else</code>, <code>switch</code>, <code>for</code>, <code>while</code>, <code>do-while</code>.</li>
+<li>Dùng <code>break</code>, <code>continue</code> và (hạn chế) <code>goto</code> đúng chỗ.</li>
+<li>Nhận diện và tránh lỗi kinh điển: vòng lặp vô hạn, lỗi lệch một (<em>off-by-one</em>), <code>switch</code> thiếu <code>break</code>, <code>unsigned</code> trong điều kiện lặp.</li>
+<li>Áp dụng vào bài toán thực tế: kiểm tra số nguyên tố, bảng cửu chương, menu tương tác, đọc đến hết đầu vào.</li>
 </ul>
-<h2>1. If / else</h2>
-<p>Cấu trúc:</p>
-<pre class="hljs"><code><span class="hljs-keyword">if</span> (condition) {
-    <span class="hljs-comment">// code</span>
-} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (other_condition) {
-    <span class="hljs-comment">// code</span>
+<h2>5.1. Luồng thực thi là gì?</h2>
+<p>Mặc định, chương trình chạy <strong>tuần tự</strong> từ trên xuống dưới. Cấu trúc điều khiển cho phép:</p>
+<ul>
+<li><strong>Rẽ nhánh (selection):</strong> làm việc này <em>hoặc</em> việc kia tùy điều kiện — <code>if</code>, <code>switch</code>.</li>
+<li><strong>Lặp (iteration):</strong> làm đi làm lại một việc — <code>for</code>, <code>while</code>, <code>do-while</code>.</li>
+<li><strong>Nhảy (jump):</strong> chuyển luồng đến nơi khác — <code>break</code>, <code>continue</code>, <code>return</code>, <code>goto</code>.</li>
+</ul>
+<pre class="hljs"><code>          ┌─────────┐
+          │ điều kiện? │──đúng──► [làm A] ──┐
+          └────┬────┘                     │
+               │sai                        ▼
+               └──────────► [làm B] ──► tiếp tục
+</code></pre>
+<h3>&quot;Đúng&quot; và &quot;sai&quot; trong C</h3>
+<p>C (trước C23) không có kiểu boolean nguyên thủy trong điều kiện: <strong>giá trị <code>0</code> là sai, mọi giá trị khác 0 là đúng.</strong> Các toán tử so sánh và logic trả về <code>1</code> hoặc <code>0</code>.</p>
+<pre class="hljs"><code><span class="hljs-keyword">if</span> (<span class="hljs-number">5</span>)       { <span class="hljs-comment">/* luôn chạy */</span> }
+<span class="hljs-keyword">if</span> (<span class="hljs-number">0</span>)       { <span class="hljs-comment">/* không bao giờ chạy */</span> }
+<span class="hljs-keyword">if</span> (<span class="hljs-number">-3</span>)      { <span class="hljs-comment">/* chạy: -3 khác 0 */</span> }
+<span class="hljs-type">int</span> *p = <span class="hljs-literal">NULL</span>;
+<span class="hljs-keyword">if</span> (p)       { <span class="hljs-comment">/* không chạy: NULL bằng 0 */</span> }
+<span class="hljs-keyword">if</span> (!p)      { <span class="hljs-comment">/* chạy: p là NULL */</span> }
+</code></pre>
+<h2>5.2. Câu lệnh <code>if</code> / <code>else</code></h2>
+<h3>Cú pháp</h3>
+<pre class="hljs"><code><span class="hljs-keyword">if</span> (điều_kiện) {
+    <span class="hljs-comment">// chạy khi điều kiện đúng</span>
+} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (điều_kiện_khác) {
+    <span class="hljs-comment">// chạy khi điều kiện đầu sai và điều kiện này đúng</span>
 } <span class="hljs-keyword">else</span> {
-    <span class="hljs-comment">// code</span>
+    <span class="hljs-comment">// chạy khi tất cả điều kiện trên đều sai</span>
 }
 </code></pre>
-<ul>
-<li>Condition là biểu thức trả về giá trị boolean (trong C, 0 = false, khác 0 = true).</li>
-<li>Short-circuit: với &amp;&amp; và ||, C sẽ không đánh giá biểu thức phải nếu kết quả đã rõ.</li>
-</ul>
-<p>Ví dụ: phân loại số</p>
-<h2>2. Switch</h2>
-<pre class="hljs"><code><span class="hljs-keyword">switch</span> (expr) {
-    <span class="hljs-keyword">case</span> <span class="hljs-number">1</span>: <span class="hljs-comment">/* ... */</span> <span class="hljs-keyword">break</span>;
-    <span class="hljs-keyword">case</span> <span class="hljs-number">2</span>: <span class="hljs-comment">/* ... */</span> <span class="hljs-keyword">break</span>;
-    <span class="hljs-keyword">default</span>: <span class="hljs-comment">/* ... */</span>
+<p>Các điều kiện được xét <strong>từ trên xuống</strong>, nhánh đầu tiên đúng sẽ chạy và những nhánh còn lại bị bỏ qua.</p>
+<h3>Ví dụ: phân loại số</h3>
+<pre class="hljs"><code><span class="hljs-comment">// classify.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> n;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Nhap mot so nguyen: &quot;</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;n) != <span class="hljs-number">1</span>) {
+        <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;Khong phai so nguyen\n&quot;</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    }
+
+    <span class="hljs-keyword">if</span> (n &gt; <span class="hljs-number">0</span>) {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d la so duong\n&quot;</span>, n);
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (n &lt; <span class="hljs-number">0</span>) {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d la so am\n&quot;</span>, n);
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;So 0\n&quot;</span>);
+    }
+
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d la so %s\n&quot;</span>, n, (n % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>) ? <span class="hljs-string">&quot;chan&quot;</span> : <span class="hljs-string">&quot;le&quot;</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </code></pre>
-<ul>
-<li>Lưu ý fall-through: nếu thiếu break, execution sẽ tiếp tục case tiếp theo.</li>
-<li>Thường dùng cho lựa chọn rời rạc (menu, xử lý enum).</li>
-</ul>
-<h2>3. Vòng lặp: for, while, do-while</h2>
-<pre class="hljs"><code><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) { <span class="hljs-comment">/* ... */</span> }
-<span class="hljs-keyword">while</span> (condition) { <span class="hljs-comment">/* ... */</span> }
-<span class="hljs-keyword">do</span> { <span class="hljs-comment">/* ... */</span> } <span class="hljs-keyword">while</span> (condition);
+<h3>Luôn dùng dấu ngoặc nhọn</h3>
+<p>C cho phép bỏ <code>{ }</code> khi chỉ có một câu lệnh, nhưng điều này rất dễ gây lỗi khi sửa mã:</p>
+<pre class="hljs"><code><span class="hljs-keyword">if</span> (x &gt; <span class="hljs-number">0</span>)
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;duong\n&quot;</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;kiem tra xong\n&quot;</span>);   <span class="hljs-comment">// KHÔNG thuộc if dù thụt lề: luôn chạy!</span>
 </code></pre>
+<p>Trường hợp còn nguy hiểm hơn là &quot;dangling else&quot; — <code>else</code> gắn với <code>if</code> <strong>gần nhất</strong>:</p>
+<pre class="hljs"><code><span class="hljs-keyword">if</span> (a &gt; <span class="hljs-number">0</span>)
+    <span class="hljs-keyword">if</span> (b &gt; <span class="hljs-number">0</span>)
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;a, b duong\n&quot;</span>);
+<span class="hljs-keyword">else</span>                              <span class="hljs-comment">// else này thuộc về if (b &gt; 0), không phải if (a &gt; 0)!</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;a khong duong\n&quot;</span>);
+</code></pre>
+<p>Nếu luôn dùng <code>{ }</code>, cả hai vấn đề này không xảy ra. Đó là quy tắc bắt buộc trong nhiều chuẩn mã hóa (MISRA, CERT C).</p>
+<h3>Điều kiện phức hợp và đánh giá tắt</h3>
+<pre class="hljs"><code><span class="hljs-keyword">if</span> (age &gt;= <span class="hljs-number">18</span> &amp;&amp; age &lt;= <span class="hljs-number">65</span>) { ... }            <span class="hljs-comment">// trong khoảng 18..65</span>
+<span class="hljs-keyword">if</span> (c == <span class="hljs-string">&#x27;y&#x27;</span> || c == <span class="hljs-string">&#x27;Y&#x27;</span>) { ... }               <span class="hljs-comment">// một trong hai</span>
+<span class="hljs-keyword">if</span> (!(x &gt; <span class="hljs-number">0</span>)) { ... }                           <span class="hljs-comment">// tương đương x &lt;= 0</span>
+</code></pre>
+<p>Vì <code>&amp;&amp;</code>/<code>||</code> đánh giá tắt, thứ tự có ý nghĩa: đặt điều kiện &quot;bảo vệ&quot; <strong>trước</strong>.</p>
+<pre class="hljs"><code><span class="hljs-keyword">if</span> (i &lt; n &amp;&amp; arr[i] == target) { ... }   <span class="hljs-comment">// đúng: chỉ đọc arr[i] khi i hợp lệ</span>
+<span class="hljs-keyword">if</span> (arr[i] == target &amp;&amp; i &lt; n) { ... }   <span class="hljs-comment">// SAI: có thể đọc ngoài mảng trước khi kiểm tra i</span>
+</code></pre>
+<h3>Các lỗi thường gặp với <code>if</code></h3>
+<pre class="hljs"><code><span class="hljs-keyword">if</span> (x = <span class="hljs-number">5</span>)          <span class="hljs-comment">// gán thay vì so sánh; luôn đúng vì 5 khác 0</span>
+<span class="hljs-keyword">if</span> (x == <span class="hljs-number">5</span>);        <span class="hljs-comment">// dấu ; thừa: thân if rỗng</span>
+{ <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;...&quot;</span>); }  <span class="hljs-comment">// khối này luôn chạy</span>
+<span class="hljs-keyword">if</span> (<span class="hljs-number">0</span> &lt; x &lt; <span class="hljs-number">10</span>)     <span class="hljs-comment">// KHÔNG như toán học: (0 &lt; x) cho 0 hoặc 1, rồi so sánh với 10 -&gt; luôn đúng</span>
+<span class="hljs-keyword">if</span> (<span class="hljs-number">0</span> &lt; x &amp;&amp; x &lt; <span class="hljs-number">10</span>) <span class="hljs-comment">// đúng</span>
+</code></pre>
+<h3>Cách viết <code>if</code> lồng nhau gọn hơn</h3>
+<p>Thay vì lồng sâu, dùng <strong>thoát sớm (early return / guard clause)</strong>:</p>
+<pre class="hljs"><code><span class="hljs-comment">// Lồng sâu: khó đọc</span>
+<span class="hljs-type">int</span> <span class="hljs-title function_">process</span><span class="hljs-params">(FILE *f, <span class="hljs-type">char</span> *buf)</span> {
+    <span class="hljs-keyword">if</span> (f != <span class="hljs-literal">NULL</span>) {
+        <span class="hljs-keyword">if</span> (buf != <span class="hljs-literal">NULL</span>) {
+            <span class="hljs-comment">// ... việc chính ...</span>
+            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+        } <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+        }
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    }
+}
+
+<span class="hljs-comment">// Thoát sớm: phẳng và dễ đọc</span>
+<span class="hljs-type">int</span> <span class="hljs-title function_">process2</span><span class="hljs-params">(FILE *f, <span class="hljs-type">char</span> *buf)</span> {
+    <span class="hljs-keyword">if</span> (f == <span class="hljs-literal">NULL</span>)   <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    <span class="hljs-keyword">if</span> (buf == <span class="hljs-literal">NULL</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    <span class="hljs-comment">// ... việc chính ...</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<h2>5.3. Câu lệnh <code>switch</code></h2>
+<p><code>switch</code> chọn một trong nhiều nhánh dựa trên giá trị <strong>nguyên</strong> (kể cả <code>char</code>, <code>enum</code>) của một biểu thức.</p>
+<pre class="hljs"><code><span class="hljs-keyword">switch</span> (biểu_thức) {
+    <span class="hljs-keyword">case</span> giá_trị_1:
+        <span class="hljs-comment">// ...</span>
+        <span class="hljs-keyword">break</span>;
+    <span class="hljs-keyword">case</span> giá_trị_2:
+    <span class="hljs-keyword">case</span> giá_trị_3:        <span class="hljs-comment">// nhiều giá trị dùng chung một nhánh</span>
+        <span class="hljs-comment">// ...</span>
+        <span class="hljs-keyword">break</span>;
+    <span class="hljs-keyword">default</span>:
+        <span class="hljs-comment">// không khớp case nào</span>
+        <span class="hljs-keyword">break</span>;
+}
+</code></pre>
+<p>Quy tắc:</p>
 <ul>
-<li>for thích hợp khi biết số lần lặp. while/do-while dùng cho lặp theo điều kiện.</li>
-<li>break: thoát vòng lặp; continue: bỏ phần còn lại và sang lần lặp tiếp theo.</li>
+<li>Biểu thức và mọi <code>case</code> phải là <strong>kiểu nguyên</strong> (không dùng được <code>double</code> hay chuỗi). Nhãn <code>case</code> phải là <strong>hằng số lúc biên dịch</strong> (<code>case 3:</code>, <code>case 'a':</code>, <code>case MAX:</code> với <code>MAX</code> là <code>enum</code>/<code>#define</code>, <strong>không</strong> phải biến <code>const int</code> trong C).</li>
+<li>Không có hai <code>case</code> trùng giá trị.</li>
+<li><code>default</code> là tùy chọn, nhưng nên có để xử lý giá trị bất ngờ.</li>
 </ul>
-<h2>4. Tránh infinite loop và lỗi logic</h2>
+<h3>Fall-through (rơi xuyên)</h3>
+<p>Khi chương trình vào một <code>case</code>, nó chạy <strong>tiếp qua các case bên dưới</strong> cho đến khi gặp <code>break</code> (hoặc <code>return</code>, hoặc hết <code>switch</code>). Đây là hành vi <em>mặc định</em> của C.</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> n = <span class="hljs-number">2</span>;
+<span class="hljs-keyword">switch</span> (n) {
+    <span class="hljs-keyword">case</span> <span class="hljs-number">1</span>: <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;mot\n&quot;</span>);
+    <span class="hljs-keyword">case</span> <span class="hljs-number">2</span>: <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;hai\n&quot;</span>);     <span class="hljs-comment">// vào đây</span>
+    <span class="hljs-keyword">case</span> <span class="hljs-number">3</span>: <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;ba\n&quot;</span>);      <span class="hljs-comment">// rơi xuống, vẫn chạy</span>
+    <span class="hljs-keyword">default</span>: <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;khac\n&quot;</span>);   <span class="hljs-comment">// rơi xuống, vẫn chạy</span>
+}
+<span class="hljs-comment">// In ra: hai / ba / khac</span>
+</code></pre>
+<p>Thiếu <code>break</code> là lỗi phổ biến. Nếu cố ý rơi xuyên, hãy ghi chú rõ (và với gcc 7+, dùng <code>__attribute__((fallthrough));</code> hoặc comment <code>/* fall through */</code> để tắt cảnh báo <code>-Wimplicit-fallthrough</code>).</p>
+<p>Dùng fall-through <strong>có chủ đích</strong> để gom nhóm:</p>
+<pre class="hljs"><code><span class="hljs-comment">// Đếm số ngày trong tháng</span>
+<span class="hljs-type">int</span> <span class="hljs-title function_">days_in_month</span><span class="hljs-params">(<span class="hljs-type">int</span> month, <span class="hljs-type">int</span> year)</span> {
+    <span class="hljs-keyword">switch</span> (month) {
+        <span class="hljs-keyword">case</span> <span class="hljs-number">4</span>: <span class="hljs-keyword">case</span> <span class="hljs-number">6</span>: <span class="hljs-keyword">case</span> <span class="hljs-number">9</span>: <span class="hljs-keyword">case</span> <span class="hljs-number">11</span>:
+            <span class="hljs-keyword">return</span> <span class="hljs-number">30</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-number">2</span>: {
+            <span class="hljs-type">int</span> leap = (year % <span class="hljs-number">4</span> == <span class="hljs-number">0</span> &amp;&amp; year % <span class="hljs-number">100</span> != <span class="hljs-number">0</span>) || (year % <span class="hljs-number">400</span> == <span class="hljs-number">0</span>);
+            <span class="hljs-keyword">return</span> leap ? <span class="hljs-number">29</span> : <span class="hljs-number">28</span>;
+        }
+        <span class="hljs-keyword">case</span> <span class="hljs-number">1</span>: <span class="hljs-keyword">case</span> <span class="hljs-number">3</span>: <span class="hljs-keyword">case</span> <span class="hljs-number">5</span>: <span class="hljs-keyword">case</span> <span class="hljs-number">7</span>: <span class="hljs-keyword">case</span> <span class="hljs-number">8</span>: <span class="hljs-keyword">case</span> <span class="hljs-number">10</span>: <span class="hljs-keyword">case</span> <span class="hljs-number">12</span>:
+            <span class="hljs-keyword">return</span> <span class="hljs-number">31</span>;
+        <span class="hljs-keyword">default</span>:
+            <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;             <span class="hljs-comment">// tháng không hợp lệ</span>
+    }
+}
+</code></pre>
+<p>Ghi chú: nếu cần khai báo biến bên trong một <code>case</code>, hãy bọc nhánh đó trong <code>{ }</code> như <code>case 2</code> ở trên (nhãn <code>case</code> không thể đứng ngay trước một khai báo và biến sẽ &quot;tràn&quot; sang các case sau).</p>
+<h3><code>switch</code> với <code>enum</code></h3>
+<pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">Color</span> {</span> RED, GREEN, BLUE };
+
+<span class="hljs-type">const</span> <span class="hljs-type">char</span> *<span class="hljs-title function_">color_name</span><span class="hljs-params">(<span class="hljs-keyword">enum</span> Color c)</span> {
+    <span class="hljs-keyword">switch</span> (c) {
+        <span class="hljs-keyword">case</span> RED:   <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;do&quot;</span>;
+        <span class="hljs-keyword">case</span> GREEN: <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;xanh la&quot;</span>;
+        <span class="hljs-keyword">case</span> BLUE:  <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;xanh duong&quot;</span>;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;khong ro&quot;</span>;
+}
+</code></pre>
+<p>Nếu bạn liệt kê <strong>không đủ</strong> các giá trị <code>enum</code> và <strong>không</strong> có <code>default</code>, gcc với <code>-Wall</code> cảnh báo <code>-Wswitch</code> — rất hữu ích khi sau này bạn thêm một giá trị <code>enum</code> mới.</p>
+<h3>Khi nào dùng <code>switch</code>, khi nào dùng <code>if-else</code>?</h3>
 <ul>
-<li>Đảm bảo điều kiện vòng lặp sẽ thay đổi theo cách dẫn tới kết thúc.</li>
-<li>Thận trọng khi dùng biến unsigned trong phép so sánh (có thể vòng lặp không kết thúc).</li>
+<li>Dùng <code>switch</code> khi so sánh <strong>một biểu thức nguyên</strong> với <strong>nhiều hằng cụ thể</strong> (menu, mã lệnh, trạng thái).</li>
+<li>Dùng <code>if-else</code> khi điều kiện là khoảng (<code>x &gt; 10</code>), so sánh chuỗi, hoặc điều kiện phức hợp.</li>
 </ul>
-<h2>5. Ví dụ thực hành</h2>
-<ul>
-<li>In bảng cửu chương (for)</li>
-<li>Kiểm tra số nguyên tố (for with early exit)</li>
-<li>Menu đơn giản dùng switch</li>
-</ul>
-<h2>6. Bài tập</h2>
+<h2>5.4. Vòng lặp <code>while</code></h2>
+<pre class="hljs"><code><span class="hljs-keyword">while</span> (điều_kiện) {
+    <span class="hljs-comment">// thân vòng lặp</span>
+}
+</code></pre>
+<p>Kiểm tra điều kiện <strong>trước</strong> mỗi lần lặp. Nếu ngay từ đầu điều kiện sai, thân vòng lặp chạy <strong>0 lần</strong>.</p>
+<pre class="hljs"><code><span class="hljs-comment">// Tính tổng các chữ số của n (n &gt;= 0)</span>
+<span class="hljs-type">int</span> <span class="hljs-title function_">digit_sum</span><span class="hljs-params">(<span class="hljs-type">int</span> n)</span> {
+    <span class="hljs-type">int</span> sum = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">while</span> (n &gt; <span class="hljs-number">0</span>) {
+        sum += n % <span class="hljs-number">10</span>;     <span class="hljs-comment">// lấy chữ số hàng đơn vị</span>
+        n /= <span class="hljs-number">10</span>;           <span class="hljs-comment">// bỏ chữ số đó</span>
+    }
+    <span class="hljs-keyword">return</span> sum;
+}
+<span class="hljs-comment">// digit_sum(1234) = 4 + 3 + 2 + 1 = 10</span>
+</code></pre>
+<p>Theo dõi từng bước với <code>n = 1234</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Lần lặp</th>
+<th><code>n</code> trước</th>
+<th><code>n % 10</code></th>
+<th><code>sum</code> sau</th>
+<th><code>n</code> sau</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>1234</td>
+<td>4</td>
+<td>4</td>
+<td>123</td>
+</tr>
+<tr>
+<td>2</td>
+<td>123</td>
+<td>3</td>
+<td>7</td>
+<td>12</td>
+</tr>
+<tr>
+<td>3</td>
+<td>12</td>
+<td>2</td>
+<td>9</td>
+<td>1</td>
+</tr>
+<tr>
+<td>4</td>
+<td>1</td>
+<td>1</td>
+<td>10</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p><code>n</code> bằng 0 nên điều kiện <code>n &gt; 0</code> sai và vòng lặp dừng. <strong>Kỹ thuật &quot;chạy tay&quot; (trace)</strong> như bảng trên là cách tốt nhất để hiểu và kiểm tra vòng lặp — hãy làm nó mỗi khi bạn viết một vòng lặp mới.</p>
+<h3>Vòng lặp theo điều kiện chưa biết trước số lần</h3>
+<pre class="hljs"><code><span class="hljs-comment">// Thuật toán Euclid: ước chung lớn nhất</span>
+<span class="hljs-type">int</span> <span class="hljs-title function_">gcd</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span> {
+    <span class="hljs-keyword">while</span> (b != <span class="hljs-number">0</span>) {
+        <span class="hljs-type">int</span> t = b;
+        b = a % b;
+        a = t;
+    }
+    <span class="hljs-keyword">return</span> a;
+}
+</code></pre>
+<h2>5.5. Vòng lặp <code>do-while</code></h2>
+<pre class="hljs"><code><span class="hljs-keyword">do</span> {
+    <span class="hljs-comment">// thân vòng lặp</span>
+} <span class="hljs-keyword">while</span> (điều_kiện);      <span class="hljs-comment">// chú ý dấu ; ở cuối</span>
+</code></pre>
+<p>Kiểm tra điều kiện <strong>sau</strong> mỗi lần lặp, nên thân chạy <strong>ít nhất một lần</strong>. Rất phù hợp cho việc &quot;hỏi người dùng cho đến khi nhập đúng&quot;:</p>
+<pre class="hljs"><code><span class="hljs-comment">// Hỏi cho đến khi người dùng nhập số trong 1..10</span>
+<span class="hljs-type">int</span> n;
+<span class="hljs-keyword">do</span> {
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Nhap so tu 1 den 10: &quot;</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;n) != <span class="hljs-number">1</span>) {
+        <span class="hljs-comment">// xóa đầu vào lỗi, tránh lặp vô hạn</span>
+        <span class="hljs-type">int</span> c;
+        <span class="hljs-keyword">while</span> ((c = getchar()) != <span class="hljs-string">&#x27;\n&#x27;</span> &amp;&amp; c != EOF) { }
+        <span class="hljs-keyword">if</span> (c == EOF) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+        n = <span class="hljs-number">0</span>;                   <span class="hljs-comment">// buộc hỏi lại</span>
+    }
+} <span class="hljs-keyword">while</span> (n &lt; <span class="hljs-number">1</span> || n &gt; <span class="hljs-number">10</span>);
+<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Ban da nhap %d\n&quot;</span>, n);
+</code></pre>
+<p>Đoạn xóa đầu vào ở trên <strong>rất quan trọng</strong>: nếu người dùng gõ chữ <code>abc</code>, <code>scanf</code> không đọc được và để lại <code>abc</code> trong bộ đệm; nếu không xóa, lần lặp sau <code>scanf</code> lại thất bại ngay và chương trình lặp vô hạn.</p>
+<h2>5.6. Vòng lặp <code>for</code></h2>
+<pre class="hljs"><code><span class="hljs-keyword">for</span> (khở<span class="hljs-type">i_t</span>ạo; điều_kiện; cập_nhật) {
+    <span class="hljs-comment">// thân vòng lặp</span>
+}
+</code></pre>
+<p>Tương đương với:</p>
+<pre class="hljs"><code>khở<span class="hljs-type">i_t</span>ạo;
+<span class="hljs-keyword">while</span> (điều_kiện) {
+    <span class="hljs-comment">// thân</span>
+    cập_nhật;
+}
+</code></pre>
+<p>Thứ tự thực hiện: (1) <code>khởi_tạo</code> chạy <strong>một lần</strong>; (2) kiểm tra <code>điều_kiện</code>, sai thì thoát; (3) chạy thân; (4) chạy <code>cập_nhật</code>; quay lại bước 2.</p>
+<pre class="hljs"><code><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; i++) {
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d &quot;</span>, i);
+}
+<span class="hljs-comment">// In: 0 1 2 3 4</span>
+</code></pre>
+<p><code>for</code> phù hợp khi <strong>biết trước số lần lặp</strong> (đi qua mảng, đếm). Từ C99 có thể khai báo biến trong phần khởi tạo (<code>int i = 0</code>), biến đó chỉ tồn tại trong vòng lặp.</p>
+<h3>Quy ước &quot;nửa mở&quot; và lỗi lệch một</h3>
+<p>Với mảng <code>n</code> phần tử, chỉ số hợp lệ là <code>0 .. n-1</code>. Cách viết chuẩn: <code>for (i = 0; i &lt; n; i++)</code>.</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> a[<span class="hljs-number">5</span>];
+<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt;= <span class="hljs-number">5</span>; i++) {   <span class="hljs-comment">// SAI: i = 5 ghi ngoài mảng (off-by-one) -&gt; UB</span>
+    a[i] = <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Lỗi <em>off-by-one</em> (lệch một) là một trong các lỗi phổ biến nhất. Hãy luôn tự hỏi ở lần lặp đầu và cuối, <code>i</code> bằng bao nhiêu và có truy cập ngoài giới hạn không.</p>
+<h3>Biến thể của <code>for</code></h3>
+<pre class="hljs"><code><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">10</span>; i &gt; <span class="hljs-number">0</span>; i--)         <span class="hljs-comment">// đếm ngược</span>
+<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i += <span class="hljs-number">2</span>)       <span class="hljs-comment">// bước nhảy 2</span>
+<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>, j = n - <span class="hljs-number">1</span>; i &lt; j; i++, j--) {  <span class="hljs-comment">// hai biến chạy từ hai đầu</span>
+    <span class="hljs-comment">// hoán đổi a[i] và a[j] để đảo mảng</span>
+}
+<span class="hljs-keyword">for</span> (;;) { ... }                     <span class="hljs-comment">// vòng lặp vô hạn (mọi phần đều được bỏ trống)</span>
+</code></pre>
+<h3>Vòng lặp lồng nhau</h3>
+<pre class="hljs"><code><span class="hljs-comment">// Bảng cửu chương</span>
+<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= <span class="hljs-number">9</span>; i++) {
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">1</span>; j &lt;= <span class="hljs-number">10</span>; j++) {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d x %2d = %3d\n&quot;</span>, i, j, i * j);
+    }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n&quot;</span>);
+}
+</code></pre>
+<p>Số lần chạy thân vòng trong là tích (9 × 10 = 90). Với vòng lặp lồng nhau <code>n</code> mức, độ phức tạp có thể tăng theo lũy thừa — cần lưu ý khi dữ liệu lớn.</p>
+<p>Ví dụ vẽ tam giác:</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> n = <span class="hljs-number">5</span>;
+<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> row = <span class="hljs-number">1</span>; row &lt;= n; row++) {
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> col = <span class="hljs-number">0</span>; col &lt; n - row; col++) <span class="hljs-built_in">putchar</span>(<span class="hljs-string">&#x27; &#x27;</span>);
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> col = <span class="hljs-number">0</span>; col &lt; <span class="hljs-number">2</span> * row - <span class="hljs-number">1</span>; col++) <span class="hljs-built_in">putchar</span>(<span class="hljs-string">&#x27;*&#x27;</span>);
+    <span class="hljs-built_in">putchar</span>(<span class="hljs-string">&#x27;\n&#x27;</span>);
+}
+</code></pre>
+<pre class="hljs"><code>    *
+   ***
+  *****
+ *******
+*********
+</code></pre>
+<h2>5.7. <code>break</code>, <code>continue</code> và <code>goto</code></h2>
+<h3><code>break</code></h3>
+<p>Thoát <strong>ngay</strong> khỏi vòng lặp (hoặc <code>switch</code>) gần nhất bên trong.</p>
+<pre class="hljs"><code><span class="hljs-comment">// Tìm phần tử đầu tiên bằng target</span>
+<span class="hljs-type">int</span> index = <span class="hljs-number">-1</span>;
+<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) {
+    <span class="hljs-keyword">if</span> (a[i] == target) {
+        index = i;
+        <span class="hljs-keyword">break</span>;             <span class="hljs-comment">// đã tìm thấy, không cần duyệt tiếp</span>
+    }
+}
+</code></pre>
+<p><code>break</code> chỉ thoát <strong>một tầng</strong>. Để thoát khỏi nhiều vòng lồng nhau, dùng cờ hoặc tách thành hàm và <code>return</code>:</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> <span class="hljs-title function_">find_pair</span><span class="hljs-params">(<span class="hljs-type">int</span> a[], <span class="hljs-type">int</span> n, <span class="hljs-type">int</span> target, <span class="hljs-type">int</span> *x, <span class="hljs-type">int</span> *y)</span> {
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = i + <span class="hljs-number">1</span>; j &lt; n; j++) {
+            <span class="hljs-keyword">if</span> (a[i] + a[j] == target) {
+                *x = i; *y = j;
+                <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;          <span class="hljs-comment">// thoát cả hai vòng</span>
+            }
+        }
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<h3><code>continue</code></h3>
+<p>Bỏ qua phần còn lại của lần lặp hiện tại và chuyển sang lần lặp tiếp theo (với <code>for</code>, bước <code>cập_nhật</code> vẫn chạy).</p>
+<pre class="hljs"><code><span class="hljs-comment">// In các số lẻ từ 1 đến 10</span>
+<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= <span class="hljs-number">10</span>; i++) {
+    <span class="hljs-keyword">if</span> (i % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>) <span class="hljs-keyword">continue</span>;     <span class="hljs-comment">// bỏ qua số chẵn</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d &quot;</span>, i);
+}
+</code></pre>
+<p>Cẩn thận khi dùng <code>continue</code> trong <code>while</code>: nếu bước cập nhật nằm <strong>sau</strong> <code>continue</code>, nó sẽ bị bỏ qua và gây vòng lặp vô hạn.</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> i = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">while</span> (i &lt; <span class="hljs-number">10</span>) {
+    <span class="hljs-keyword">if</span> (i % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>) <span class="hljs-keyword">continue</span>;   <span class="hljs-comment">// <span class="hljs-doctag">BUG:</span> i không bao giờ tăng nếu i chẵn -&gt; lặp vô hạn</span>
+    i++;
+}
+</code></pre>
+<h3><code>goto</code></h3>
+<p><code>goto nhãn;</code> nhảy đến <code>nhãn:</code> trong cùng hàm. Nói chung nên <strong>tránh</strong> vì làm luồng khó theo dõi. Tuy nhiên có một trường hợp được chấp nhận rộng rãi trong C: <strong>dọn dẹp tài nguyên khi có lỗi</strong> (vì C không có ngoại lệ).</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> <span class="hljs-title function_">do_work</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> rc = <span class="hljs-number">-1</span>;
+    <span class="hljs-type">char</span> *buf = <span class="hljs-literal">NULL</span>;
+    FILE *f = <span class="hljs-literal">NULL</span>;
+
+    buf = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">1024</span>);
+    <span class="hljs-keyword">if</span> (!buf) <span class="hljs-keyword">goto</span> cleanup;
+
+    f = fopen(<span class="hljs-string">&quot;data.txt&quot;</span>, <span class="hljs-string">&quot;r&quot;</span>);
+    <span class="hljs-keyword">if</span> (!f) <span class="hljs-keyword">goto</span> cleanup;
+
+    <span class="hljs-comment">// ... dùng buf và f ...</span>
+    rc = <span class="hljs-number">0</span>;
+
+cleanup:
+    <span class="hljs-keyword">if</span> (f) fclose(f);
+    <span class="hljs-built_in">free</span>(buf);         <span class="hljs-comment">// free(NULL) an toàn</span>
+    <span class="hljs-keyword">return</span> rc;
+}
+</code></pre>
+<p>Mẫu này (một điểm dọn dẹp duy nhất) sẽ xuất hiện lại ở chương 13.</p>
+<h2>5.8. Vòng lặp vô hạn và cách tránh</h2>
+<p>Một vòng lặp vô hạn xảy ra khi điều kiện không bao giờ trở thành sai. Một số <strong>cố ý</strong> (server chờ kết nối, vòng lặp game):</p>
+<pre class="hljs"><code><span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>) {
+    <span class="hljs-comment">// xử lý sự kiện...</span>
+    <span class="hljs-keyword">if</span> (should_quit) <span class="hljs-keyword">break</span>;
+}
+</code></pre>
+<p>Nhưng phần lớn là <strong>vô ý</strong>. Các nguyên nhân thường gặp:</p>
 <ol>
-<li>Viết chương trình in bảng cửu chương của 1..9 dùng for.</li>
-<li>Viết hàm is_prime(int n) và test từ 2..100.</li>
-<li>Viết menu: [1] In bảng cửu chương, [2] Kiểm tra số nguyên tố, [0] Thoát.</li>
+<li><strong>Quên cập nhật biến điều kiện:</strong><pre class="hljs"><code>
+</code></pre>
+</li>
 </ol>
-<p>Gợi ý biên dịch: gcc -std=c11 -Wall -Wextra -o prog file.c</p>
-<p>Ghi chú: kèm file mẫu trong <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-05">code/chapter-05</a> có README hướng dẫn và test cases.</p>
+<pre class="hljs"><code>   <span class="hljs-type">int</span> i = <span class="hljs-number">0</span>;
+</code></pre>
+<p>while (i &lt; 10) { printf(&quot;%d\n&quot;, i); }   // thiếu i++</p>
+<pre class="hljs"><code>2. **Cập nhật sai hướng:** `for (int i = 10; i &gt; 0; i++)`.
+3. **Điều kiện luôn đúng với `unsigned`:**
+```c
+for (unsigned int i = 5; i &gt;= 0; i--) { ... }   // i &gt;= 0 luôn đúng: 0 - 1 quay vòng thành 4294967295
+</code></pre>
+<p>Sửa: dùng kiểu có dấu, hoặc viết <code>for (unsigned i = 5; i-- &gt; 0; )</code> (mẹo &quot;i tiến tới 0&quot;).
+4. <strong>So sánh số thực với <code>==</code>:</strong> <code>for (double x = 0.0; x != 1.0; x += 0.1)</code> — vì 0.1 không biểu diễn chính xác nên <code>x</code> không bao giờ đúng bằng <code>1.0</code>. Dùng biến đếm nguyên: <code>for (int k = 0; k &lt;= 10; k++) { double x = k / 10.0; ... }</code>.
+5. <strong>Đầu vào lỗi không được xử lý</strong> (xem 5.5).</p>
+<p>Để dừng chương trình đang chạy vô hạn trong terminal: nhấn <strong>Ctrl+C</strong>.</p>
+<h2>5.9. Đọc đến hết đầu vào</h2>
+<p>Mẫu rất thường gặp: đọc dữ liệu cho tới khi hết (EOF). Trên terminal, nhấn Ctrl+D (Linux/macOS) hoặc Ctrl+Z rồi Enter (Windows) để phát tín hiệu EOF; khi chuyển hướng file (<code>./prog &lt; data.txt</code>), EOF tự đến cuối file.</p>
+<pre class="hljs"><code><span class="hljs-comment">// sum_input.c — cộng tất cả số nguyên được nhập</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">long</span> sum = <span class="hljs-number">0</span>;
+    <span class="hljs-type">int</span> x;
+    <span class="hljs-type">int</span> count = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">while</span> (<span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;x) == <span class="hljs-number">1</span>) {      <span class="hljs-comment">// dừng khi không đọc được số nữa (EOF hoặc chữ)</span>
+        sum += x;
+        count++;
+    }
+
+    <span class="hljs-keyword">if</span> (count &gt; <span class="hljs-number">0</span>) {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;count = %d, sum = %ld, average = %.2f\n&quot;</span>, count, sum, (<span class="hljs-type">double</span>)sum / count);
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;khong co so nao\n&quot;</span>);
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Đọc từng ký tự:</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> c;                                   <span class="hljs-comment">// phải là int, không phải char, để phân biệt được EOF (-1)</span>
+<span class="hljs-type">int</span> lines = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">while</span> ((c = getchar()) != EOF) {
+    <span class="hljs-keyword">if</span> (c == <span class="hljs-string">&#x27;\n&#x27;</span>) lines++;
+}
+</code></pre>
+<h2>5.10. Ví dụ thực hành đầy đủ</h2>
+<h3>Kiểm tra số nguyên tố</h3>
+<p>Ý tưởng: một số <code>n &gt; 1</code> là nguyên tố nếu không có ước nào trong khoảng <code>2 .. √n</code>. Nếu <code>n = a × b</code> với <code>a ≤ b</code> thì <code>a ≤ √n</code>, nên chỉ cần thử đến <code>√n</code>.</p>
+<pre class="hljs"><code><span class="hljs-comment">// prime_check.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdbool.h&gt;</span></span>
+
+<span class="hljs-type">bool</span> <span class="hljs-title function_">is_prime</span><span class="hljs-params">(<span class="hljs-type">long</span> n)</span> {
+    <span class="hljs-keyword">if</span> (n &lt; <span class="hljs-number">2</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">if</span> (n &lt; <span class="hljs-number">4</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;               <span class="hljs-comment">// 2 và 3</span>
+    <span class="hljs-keyword">if</span> (n % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;         <span class="hljs-comment">// loại số chẵn</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">long</span> i = <span class="hljs-number">3</span>; i * i &lt;= n; i += <span class="hljs-number">2</span>) { <span class="hljs-comment">// chỉ thử ước lẻ; i*i &lt;= n thay cho sqrt, tránh dùng số thực</span>
+        <span class="hljs-keyword">if</span> (n % i == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;     <span class="hljs-comment">// thoát sớm khi tìm thấy ước</span>
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Cac so nguyen to tu 2 den 100:\n&quot;</span>);
+    <span class="hljs-type">int</span> count = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> n = <span class="hljs-number">2</span>; n &lt;= <span class="hljs-number">100</span>; n++) {
+        <span class="hljs-keyword">if</span> (is_prime(n)) {
+            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d &quot;</span>, n);
+            count++;
+        }
+    }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n(%d so)\n&quot;</span>, count);        <span class="hljs-comment">// 25 số</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Điều kiện <code>i * i &lt;= n</code> tránh dùng <code>sqrt</code> (tránh sai số số thực và không cần <code>-lm</code>). Với <code>n</code> rất lớn, <code>i * i</code> có thể tràn; ở mức bài tập này chấp nhận được.</p>
+<h3>Menu tương tác</h3>
+<pre class="hljs"><code><span class="hljs-comment">// menu.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdbool.h&gt;</span></span>
+
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">print_table</span><span class="hljs-params">(<span class="hljs-type">int</span> n)</span> {
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= <span class="hljs-number">10</span>; i++) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d x %2d = %3d\n&quot;</span>, n, i, n * i);
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">bool</span> <span class="hljs-title function_">is_prime</span><span class="hljs-params">(<span class="hljs-type">long</span> n)</span> {
+    <span class="hljs-keyword">if</span> (n &lt; <span class="hljs-number">2</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">long</span> i = <span class="hljs-number">2</span>; i * i &lt;= n; i++) <span class="hljs-keyword">if</span> (n % i == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> choice;
+    <span class="hljs-keyword">do</span> {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n===== MENU =====\n&quot;</span>);
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;[1] In bang cuu chuong\n&quot;</span>);
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;[2] Kiem tra so nguyen to\n&quot;</span>);
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;[0] Thoat\n&quot;</span>);
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Chon: &quot;</span>);
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;choice) != <span class="hljs-number">1</span>) {           <span class="hljs-comment">// người dùng nhập chữ</span>
+            <span class="hljs-type">int</span> c;
+            <span class="hljs-keyword">while</span> ((c = getchar()) != <span class="hljs-string">&#x27;\n&#x27;</span> &amp;&amp; c != EOF) { }
+            <span class="hljs-keyword">if</span> (c == EOF) <span class="hljs-keyword">break</span>;
+            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Lua chon khong hop le.\n&quot;</span>);
+            choice = <span class="hljs-number">-1</span>;
+            <span class="hljs-keyword">continue</span>;                              <span class="hljs-comment">// trong do-while, continue nhảy tới kiểm tra điều kiện</span>
+        }
+
+        <span class="hljs-keyword">switch</span> (choice) {
+            <span class="hljs-keyword">case</span> <span class="hljs-number">1</span>: {
+                <span class="hljs-type">int</span> n;
+                <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Nhap so: &quot;</span>);
+                <span class="hljs-keyword">if</span> (<span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;n) == <span class="hljs-number">1</span>) print_table(n);
+                <span class="hljs-keyword">break</span>;
+            }
+            <span class="hljs-keyword">case</span> <span class="hljs-number">2</span>: {
+                <span class="hljs-type">long</span> n;
+                <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Nhap so: &quot;</span>);
+                <span class="hljs-keyword">if</span> (<span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%ld&quot;</span>, &amp;n) == <span class="hljs-number">1</span>)
+                    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%ld %s so nguyen to\n&quot;</span>, n, is_prime(n) ? <span class="hljs-string">&quot;la&quot;</span> : <span class="hljs-string">&quot;khong phai la&quot;</span>);
+                <span class="hljs-keyword">break</span>;
+            }
+            <span class="hljs-keyword">case</span> <span class="hljs-number">0</span>:
+                <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Tam biet!\n&quot;</span>);
+                <span class="hljs-keyword">break</span>;
+            <span class="hljs-keyword">default</span>:
+                <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Lua chon khong hop le.\n&quot;</span>);
+        }
+    } <span class="hljs-keyword">while</span> (choice != <span class="hljs-number">0</span>);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Lưu ý: trong <code>do-while</code>, <code>continue</code> nhảy đến phần <strong>kiểm tra điều kiện</strong> (<code>choice != 0</code>), chứ không phải đầu thân vòng lặp. Vì đặt <code>choice = -1</code> trước <code>continue</code> nên vòng lặp tiếp tục.</p>
+<h2>5.11. Tóm tắt</h2>
+<ul>
+<li><code>0</code> là sai, khác 0 là đúng. Luôn dùng <code>{ }</code> cho thân <code>if</code>/vòng lặp.</li>
+<li><code>switch</code> chỉ cho giá trị nguyên và hằng lúc biên dịch; nhớ <code>break</code>, ghi chú fall-through cố ý.</li>
+<li><code>while</code> kiểm tra trước; <code>do-while</code> chạy ít nhất một lần; <code>for</code> dành cho số lần lặp biết trước.</li>
+<li>Cẩn thận với: off-by-one, <code>unsigned</code> với <code>&gt;= 0</code>, <code>continue</code> bỏ qua bước cập nhật, đầu vào lỗi gây lặp vô hạn.</li>
+<li>Chạy tay (trace) vòng lặp để kiểm tra; dùng thoát sớm để tránh lồng <code>if</code> sâu.</li>
+<li><code>goto cleanup</code> là mẫu dọn dẹp được chấp nhận trong C.</li>
+</ul>
+<h2>5.12. Bài tập</h2>
+<ol>
+<li>Viết chương trình in bảng cửu chương 1–9 (mỗi bảng 10 dòng) bằng vòng <code>for</code> lồng nhau, căn cột bằng <code>%2d</code>, <code>%3d</code>.</li>
+<li>Viết <code>bool is_prime(int n)</code> và in tất cả số nguyên tố trong 2..100. Sau đó tìm số nguyên tố lớn nhất nhỏ hơn 1.000.000.</li>
+<li>Viết menu có ba lựa chọn: [1] In bảng cửu chương, [2] Kiểm tra số nguyên tố, [0] Thoát. Xử lý được khi người dùng nhập chữ.</li>
+<li>Viết chương trình đoán số: máy chọn ngẫu nhiên số 1..100 (<code>rand()</code>), người chơi đoán, chương trình báo &quot;lớn hơn/nhỏ hơn&quot; và đếm số lần đoán.</li>
+<li>Viết chương trình in dãy Fibonacci nhỏ hơn 1000, và chương trình tính <code>n!</code> (kiểm tra tràn số ở <code>n</code> nào với <code>int</code>, với <code>unsigned long long</code>).</li>
+<li>Viết chương trình đọc các số đến hết đầu vào, in ra số nhỏ nhất, lớn nhất và trung bình.</li>
+<li>Viết chương trình in tam giác Pascal 8 dòng (gợi ý: <code>C(n,k) = C(n,k-1) × (n-k+1) / k</code>).</li>
+<li>Tìm lỗi: đoạn mã sau định in các số chẵn từ 0 đến 10, nhưng lặp vô hạn. Giải thích và sửa.</li>
+</ol>
+<pre class="hljs"><code><span class="hljs-type">int</span> i = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">while</span> (i &lt;= <span class="hljs-number">10</span>) {
+    <span class="hljs-keyword">if</span> (i % <span class="hljs-number">2</span> != <span class="hljs-number">0</span>) <span class="hljs-keyword">continue</span>;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, i);
+    i++;
+}
+</code></pre>
+<h2>9. (Thử thách) Viết chương trình chuyển số nguyên thập phân sang nhị phân bằng vòng lặp chia 2, in kết quả đúng thứ tự.</h2>
+<p>Lời giải gợi ý: xem thư mục code và Lời giải ở cuối sách.</p>
+<p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-05">code/chapter-05</a></p>
 
 </article>
 <div class="chapter-nav"><a class="nav-prev" href="chapter-04.html">&larr; Cú pháp & cấu trúc chương trình C</a><a class="nav-next" href="chapter-06.html">Hàm & phạm vi biến (Functions & Scope) &rarr;</a></div>

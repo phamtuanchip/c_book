@@ -12,56 +12,344 @@
 <main class="content">
 <article>
 <h1>Chương 3 — Lịch sử và triết lý của ngôn ngữ C</h1>
-<p>Mục tiêu chương:</p>
+<h2>Mục tiêu chương</h2>
 <ul>
-<li>Hiểu nguồn gốc, bối cảnh phát triển và các chuẩn chính của C.</li>
-<li>Nhận diện điểm khác biệt quan trọng giữa các chuẩn (K&amp;R, C89/C90, C99, C11, C17) và ảnh hưởng tới code khi di chuyển.</li>
-<li>Biết cách chọn cờ biên dịch để tương thích và tránh undefined behavior.</li>
+<li>Biết C ra đời trong bối cảnh nào và vì sao nó được thiết kế như vậy.</li>
+<li>Phân biệt các chuẩn C: K&amp;R, C89/C90, C99, C11, C17, C23 và biết mỗi chuẩn thêm gì.</li>
+<li>Chọn đúng cờ <code>-std</code> khi biên dịch và hiểu vì sao nó quan trọng.</li>
+<li>Hiểu <strong>hành vi không xác định (undefined behavior)</strong>, <strong>hành vi do triển khai (implementation-defined)</strong> và <strong>hành vi chưa chỉ định (unspecified)</strong> — những khái niệm khó nhất và quan trọng nhất của C.</li>
+<li>Nắm triết lý &quot;tin tưởng lập trình viên&quot; và hệ quả thực tế của nó.</li>
 </ul>
-<h2>1. Tóm tắt lịch sử</h2>
+<p>Chương này ít mã hơn các chương khác, nhưng những khái niệm về hành vi không xác định sẽ giải thích <strong>vì sao</strong> những lỗi kỳ lạ trong C xảy ra.</p>
+<h2>3.1. Lịch sử ngắn gọn</h2>
+<h3>Bối cảnh: từ assembly đến ngôn ngữ cấp cao</h3>
+<p>Cuối thập niên 1960, hệ điều hành thường được viết bằng <strong>assembly</strong> — nhanh nhưng gắn chặt với một loại CPU, mỗi lần đổi máy phải viết lại. Ken Thompson và Dennis Ritchie tại Bell Labs muốn viết UNIX theo cách <strong>có thể chuyển sang máy khác</strong>.</p>
+<pre class="hljs"><code>1966  BCPL   (Martin Richards)   — ngôn ngữ không có kiểu dữ liệu
+1969  B      (Ken Thompson)      — rút gọn từ BCPL, dùng cho UNIX đầu tiên trên PDP-7
+1972  C      (Dennis Ritchie)    — thêm kiểu dữ liệu (int, char, con trỏ, struct) vào B
+1973  Nhân UNIX được viết lại phần lớn bằng C — một bước ngoặt
+1978  K&amp;R: &quot;The C Programming Language&quot; xuất bản — định nghĩa &quot;C của K&amp;R&quot;
+1989  ANSI C (C89), chuẩn hóa lần đầu; 1990 thành ISO C90
+1999  C99
+2011  C11
+2018  C17 (bản sửa lỗi của C11, không thêm tính năng mới)
+2024  C23
+</code></pre>
+<p>Điểm mấu chốt: C ra đời từ nhu cầu thực tế — viết một hệ điều hành — chứ không phải từ lý thuyết. Đó là lý do nó gọn, thực dụng và &quot;gần máy&quot;.</p>
+<h3>Vì sao C tồn tại lâu đến vậy?</h3>
 <ul>
-<li>1970s: Dennis Ritchie phát triển C tại Bell Labs để viết hệ điều hành (Unix). C ra đời từ ngôn ngữ B và ảnh hưởng bởi ASSEMBLY nhưng có tính trừu tượng hơn.</li>
-<li>1978: K&amp;R (Kernighan &amp; Ritchie) xuất bản cuốn &quot;The C Programming Language&quot; — tài liệu tham khảo ban đầu.</li>
-<li>1989/1990: ANSI C (C89/C90) tiêu chuẩn hóa cú pháp và thư viện chuẩn, giúp code di động hơn.</li>
-<li>1999: C99 thêm nhiều tính năng hiện đại (long long, // comment, restrict, inline, VLA).</li>
-<li>2011: C11 thêm atomic và multi-thread hỗ trợ; C17 sửa lỗi và ổn định.</li>
+<li><strong>Di động:</strong> chỉ cần có compiler C cho một CPU mới là chạy được phần lớn phần mềm.</li>
+<li><strong>Hiệu năng:</strong> ít chi phí ẩn; những gì bạn viết gần như tương ứng trực tiếp với lệnh máy.</li>
+<li><strong>Nhỏ gọn:</strong> ngôn ngữ có ít từ khóa; có thể nắm toàn bộ trong vài tuần.</li>
+<li><strong>Hệ sinh thái:</strong> hệ điều hành, thư viện, driver hiện có đều viết bằng C nên mọi ngôn ngữ khác đều cần &quot;nói chuyện&quot; được với C (qua <em>C ABI</em> / <em>FFI</em>).</li>
 </ul>
-<h2>2. Triết lý thiết kế của C</h2>
+<h2>3.2. Các phiên bản chuẩn của C</h2>
+<table>
+<thead>
+<tr>
+<th>Chuẩn</th>
+<th>Cờ gcc</th>
+<th>Tính năng đáng chú ý</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>K&amp;R C (1978)</td>
+<td><code>-traditional</code> (cũ)</td>
+<td>Khai báo hàm kiểu cũ, không có prototype</td>
+</tr>
+<tr>
+<td><strong>C89/C90</strong> (ANSI)</td>
+<td><code>-std=c89</code></td>
+<td>Prototype hàm, <code>void</code>, <code>const</code>, <code>volatile</code>, thư viện chuẩn</td>
+</tr>
+<tr>
+<td><strong>C99</strong></td>
+<td><code>-std=c99</code></td>
+<td>Comment <code>//</code>, khai báo biến ở giữa khối lệnh, <code>for (int i...)</code>, <code>long long</code>, <code>&lt;stdint.h&gt;</code>, <code>&lt;stdbool.h&gt;</code>, <code>inline</code>, <code>restrict</code>, mảng độ dài biến đổi (VLA), designated initializers, <code>snprintf</code></td>
+</tr>
+<tr>
+<td><strong>C11</strong></td>
+<td><code>-std=c11</code></td>
+<td><code>_Atomic</code>, <code>&lt;threads.h&gt;</code>, <code>_Generic</code>, <code>_Static_assert</code>, <code>_Alignof</code>, ký tự Unicode (<code>char16_t</code>, <code>char32_t</code>), loại bỏ <code>gets</code></td>
+</tr>
+<tr>
+<td><strong>C17/C18</strong></td>
+<td><code>-std=c17</code></td>
+<td>Chỉ sửa lỗi kỹ thuật của C11</td>
+</tr>
+<tr>
+<td><strong>C23</strong></td>
+<td><code>-std=c2x</code> / <code>c23</code></td>
+<td><code>nullptr</code>, <code>bool</code>/<code>true</code>/<code>false</code> là từ khóa, <code>constexpr</code>, <code>#embed</code>, <code>typeof</code>, số nhị phân <code>0b...</code>, dấu nháy tách số <code>1'000'000</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Ví dụ: cùng một ý, khác chuẩn</h3>
+<pre class="hljs"><code><span class="hljs-comment">/* Kiểu C89: khai báo biến phải ở đầu khối, không có // */</span>
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> i;
+    <span class="hljs-type">int</span> sum = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; i++) {
+        sum += i;
+    }
+    <span class="hljs-keyword">return</span> sum;
+}
+</code></pre>
+<pre class="hljs"><code><span class="hljs-comment">// Kiểu C99 trở lên: khai báo biến ngay chỗ dùng, phạm vi hẹp hơn</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdbool.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdint.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int32_t</span> sum = <span class="hljs-number">0</span>;
+    <span class="hljs-type">bool</span> found = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; i++) {   <span class="hljs-comment">// i chỉ tồn tại trong vòng for</span>
+        sum += i;
+        <span class="hljs-keyword">if</span> (i == <span class="hljs-number">3</span>) found = <span class="hljs-literal">true</span>;
+    }
+    <span class="hljs-keyword">return</span> found ? sum : <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p><strong>Khuyến nghị của sách:</strong> dùng <strong>C11</strong> (<code>-std=c11</code>). Nó đủ hiện đại, được mọi compiler chính hỗ trợ. Đoạn mã C89 phía trên vẫn biên dịch được với <code>-std=c11</code> (C là gần như tương thích ngược), nhưng phong cách C99 rõ ràng hơn.</p>
+<h3>Thử nghiệm với các chuẩn khác nhau</h3>
+<pre class="hljs"><code><span class="hljs-comment">// compat_test.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-comment">// &quot;long long&quot; và &quot;//&quot; comment: C99 trở lên</span>
+    <span class="hljs-type">long</span> <span class="hljs-type">long</span> big = <span class="hljs-number">9000000000LL</span>;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;big = %lld\n&quot;</span>, big);
+
+    <span class="hljs-comment">// Macro cho biết chuẩn mà compiler đang dùng</span>
+    <span class="hljs-meta">#<span class="hljs-keyword">ifdef</span> __STDC_VERSION__</span>
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;__STDC_VERSION__ = %ld\n&quot;</span>, __STDC_VERSION__);
+    <span class="hljs-meta">#<span class="hljs-keyword">else</span></span>
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;C89/C90 (khong co __STDC_VERSION__)\n&quot;</span>);
+    <span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Biên dịch với từng chuẩn và quan sát:</p>
+<pre class="hljs"><code>gcc -std=c89 -pedantic -Wall compat_test.c -o t89    <span class="hljs-comment"># cảnh báo: dùng &quot;long long&quot; và &quot;//&quot; không có trong C89</span>
+gcc -std=c99 -Wall compat_test.c -o t99              <span class="hljs-comment"># __STDC_VERSION__ = 199901</span>
+gcc -std=c11 -Wall compat_test.c -o t11              <span class="hljs-comment"># __STDC_VERSION__ = 201112</span>
+gcc -std=c17 -Wall compat_test.c -o t17              <span class="hljs-comment"># __STDC_VERSION__ = 201710</span>
+</code></pre>
+<p>Cờ <code>-pedantic</code> yêu cầu compiler cảnh báo mọi thứ <strong>không đúng chuẩn</strong> đã chọn; nếu không có nó, gcc dùng nhiều &quot;mở rộng GNU&quot; nên lẫn lộn giữa chuẩn và mở rộng. Cờ <code>-pedantic-errors</code> biến các cảnh báo đó thành lỗi.</p>
+<h3>Mở rộng của compiler</h3>
+<p>GCC/Clang có thêm nhiều tính năng ngoài chuẩn (<code>__attribute__</code>, <code>typeof</code>, statement expressions...). Chúng tiện nhưng <strong>làm mã không di động</strong> sang MSVC. Nếu cần chạy trên nhiều compiler, hãy giữ trong chuẩn và dùng <code>-std=c11 -pedantic</code>. (Ghi chú: <code>-std=gnu11</code> là chuẩn C11 kèm mở rộng GNU, và là mặc định của gcc.)</p>
+<h2>3.3. Triết lý thiết kế của C</h2>
+<p>Dennis Ritchie và cộng sự thiết kế C với vài nguyên tắc thường được tóm tắt là &quot;<em>spirit of C</em>&quot;:</p>
+<ol>
+<li><strong>Tin tưởng lập trình viên (trust the programmer).</strong> C giả định bạn biết mình làm gì. Nó không chặn bạn ghi ra ngoài mảng hay ép kiểu tùy ý.</li>
+<li><strong>Không ngăn lập trình viên làm điều cần thiết.</strong> Nếu việc đó cần thiết cho hệ thống (như truy cập trực tiếp bộ nhớ), C cho phép.</li>
+<li><strong>Giữ ngôn ngữ nhỏ và đơn giản.</strong></li>
+<li><strong>Chỉ có một cách để làm một việc.</strong> (Mục tiêu, dù không phải lúc nào cũng đạt.)</li>
+<li><strong>Làm cho nó nhanh, ngay cả khi không được dễ chuyển sang máy khác.</strong> Nói cách khác: <em>không trả chi phí cho thứ bạn không dùng</em> (no hidden cost).</li>
+</ol>
+<h3>Hệ quả thực tế</h3>
+<table>
+<thead>
+<tr>
+<th>Ngôn ngữ an toàn (Python, Java)</th>
+<th>C</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Truy cập <code>a[10]</code> trong mảng 5 phần tử → ném ngoại lệ</td>
+<td>Đọc/ghi vào bộ nhớ nào đó bên cạnh mảng, <strong>không báo lỗi</strong></td>
+</tr>
+<tr>
+<td>Bộ nhớ được thu gom tự động</td>
+<td>Bạn tự <code>malloc</code>/<code>free</code></td>
+</tr>
+<tr>
+<td>Kiểu dữ liệu kiểm tra khi chạy</td>
+<td>Không kiểm tra khi chạy; ép kiểu tùy ý</td>
+</tr>
+<tr>
+<td>Chương trình sai → dừng với thông báo rõ</td>
+<td>Chương trình sai → có thể <em>có vẻ</em> chạy bình thường, sau đó hỏng ở nơi khác</td>
+</tr>
+</tbody>
+</table>
+<p>Đổi lại, C cho hiệu năng cao và khả năng kiểm soát tuyệt đối. Kỹ năng cần rèn: <strong>tự đóng vai người kiểm tra</strong> — mỗi dòng bạn viết, hãy hỏi &quot;nếu đầu vào sai/quá lớn/NULL thì sao?&quot;.</p>
+<h2>3.4. Ba loại &quot;hành vi không chắc chắn&quot;</h2>
+<p>Chuẩn C phân biệt ba khái niệm dễ nhầm. Chúng cực kỳ quan trọng nên cần hiểu kỹ.</p>
+<h3>1. Implementation-defined behavior (do triển khai quy định)</h3>
+<p>Chuẩn cho phép nhiều lựa chọn, nhưng <strong>mỗi compiler phải chọn một và ghi tài liệu</strong>. Chương trình vẫn hợp lệ, nhưng kết quả có thể khác nhau giữa các compiler/nền tảng.</p>
+<p>Ví dụ: <code>sizeof(int)</code>, <code>char</code> có dấu hay không, kết quả dịch phải số nguyên âm (<code>-8 &gt;&gt; 1</code>), kích thước <code>long</code>.</p>
+<h3>2. Unspecified behavior (chưa chỉ định)</h3>
+<p>Chuẩn cho vài khả năng hợp lệ nhưng <strong>không bắt compiler ghi lại lựa chọn</strong>, thậm chí nó có thể đổi giữa các lần biên dịch.</p>
+<p>Ví dụ kinh điển: <strong>thứ tự đánh giá các tham số của hàm</strong>.</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">f</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> { <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;f &quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+<span class="hljs-type">int</span> <span class="hljs-title function_">g</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> { <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;g &quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">2</span>; }
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;ket qua = %d\n&quot;</span>, f() + g());
+    <span class="hljs-comment">// có thể in &quot;f g&quot; hoặc &quot;g f&quot; — chuẩn không quy định thứ tự</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<h3>3. Undefined behavior (UB — hành vi không xác định)</h3>
+<p>Chuẩn <strong>không đặt bất kỳ yêu cầu nào</strong> khi UB xảy ra. Chương trình có thể: chạy đúng, in kết quả sai, crash, treo, hoặc — nguy hiểm nhất — <em>có vẻ đúng hôm nay và sai khi đổi compiler hoặc bật tối ưu hóa</em>.</p>
+<p>Các nguồn UB phổ biến:</p>
+<table>
+<thead>
+<tr>
+<th>Nguồn UB</th>
+<th>Ví dụ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tràn số nguyên <strong>có dấu</strong></td>
+<td><code>INT_MAX + 1</code></td>
+</tr>
+<tr>
+<td>Truy cập ngoài giới hạn mảng</td>
+<td><code>int a[3]; a[5] = 1;</code></td>
+</tr>
+<tr>
+<td>Dereference con trỏ <code>NULL</code> hoặc con trỏ không hợp lệ</td>
+<td><code>int *p = NULL; *p = 1;</code></td>
+</tr>
+<tr>
+<td>Dùng bộ nhớ đã <code>free</code> (<em>use-after-free</em>)</td>
+<td><code>free(p); *p = 1;</code></td>
+</tr>
+<tr>
+<td><code>free</code> hai lần (<em>double free</em>)</td>
+<td><code>free(p); free(p);</code></td>
+</tr>
+<tr>
+<td>Đọc biến cục bộ chưa khởi tạo</td>
+<td><code>int x; printf(&quot;%d&quot;, x);</code></td>
+</tr>
+<tr>
+<td>Chia cho 0 (số nguyên)</td>
+<td><code>1 / 0</code></td>
+</tr>
+<tr>
+<td>Dịch bit với số lượng ≥ số bit của kiểu hoặc âm</td>
+<td><code>1 &lt;&lt; 32</code> với <code>int</code> 32 bit</td>
+</tr>
+<tr>
+<td>Sửa một biến hai lần giữa hai <em>sequence point</em></td>
+<td><code>i = i++ + ++i;</code></td>
+</tr>
+<tr>
+<td>Ghi vào chuỗi literal</td>
+<td><code>char *s = &quot;abc&quot;; s[0] = 'x';</code></td>
+</tr>
+<tr>
+<td>Truyền sai định dạng cho <code>printf</code></td>
+<td><code>printf(&quot;%d&quot;, 3.14);</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Vì sao UB nguy hiểm? Ví dụ về tối ưu hóa</h3>
+<p>Compiler giả định rằng <strong>UB không bao giờ xảy ra</strong>, và dùng giả định đó để tối ưu.</p>
+<pre class="hljs"><code><span class="hljs-comment">// ub_demo.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;limits.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">is_next_bigger</span><span class="hljs-params">(<span class="hljs-type">int</span> x)</span> {
+    <span class="hljs-keyword">return</span> x + <span class="hljs-number">1</span> &gt; x;      <span class="hljs-comment">// với số có dấu, tràn số là UB</span>
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, is_next_bigger(INT_MAX));
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
 <ul>
-<li>C theo đuổi hiệu năng và kiểm soát tài nguyên: cho phép thao tác gần phần cứng.</li>
-<li>Đơn giản về ngữ pháp nhưng mạnh mẽ về khả năng biểu diễn.</li>
-<li>Thiết kế theo kiểu &quot;một số công cụ cho lập trình viên&quot; thay vì che giấu mọi chi tiết.</li>
+<li>Biên dịch <code>gcc -O0</code>: thường in <code>0</code> (vì <code>INT_MAX + 1</code> quay vòng thành số âm).</li>
+<li>Biên dịch <code>gcc -O2</code>: thường in <code>1</code>, vì compiler lập luận &quot;<code>x + 1</code> luôn lớn hơn <code>x</code> vì tràn số không xảy ra&quot; và thay cả biểu thức bằng hằng <code>1</code>.</li>
 </ul>
-<h2>3. Chuẩn C và tương thích</h2>
+<p>Cùng một mã nguồn, hai kết quả khác nhau. Đây là lý do UB được coi là lỗi nghiêm trọng ngay cả khi &quot;chạy thử thấy đúng&quot;.</p>
+<h3>Cách chống UB</h3>
+<ol>
+<li><strong>Bật cảnh báo:</strong> <code>-Wall -Wextra</code>.</li>
+<li><strong>Dùng sanitizer</strong> (rất hiệu quả, sẽ học ở chương 9 và 18):</li>
+</ol>
+<pre class="hljs"><code>gcc -std=c11 -g -O1 -fsanitize=address,undefined -fno-omit-frame-pointer ub_demo.c -o ub_demo
+./ub_demo
+</code></pre>
+<p>UBSan sẽ báo <code>runtime error: signed integer overflow: 2147483647 + 1 cannot be represented in type 'int'</code>.</p>
+<ol start="3">
+<li><strong>Kiểm tra trước khi thao tác:</strong> chỉ số mảng, con trỏ NULL, tràn số.</li>
+<li><strong>Viết code đơn giản, dễ kiểm chứng.</strong></li>
+</ol>
+<h2>3.5. Viết mã di động</h2>
+<p>Để mã chạy được trên nhiều nền tảng:</p>
+<ol>
+<li><strong>Đừng giả định kích thước kiểu.</strong> Dùng <code>int32_t</code>, <code>uint64_t</code>, <code>size_t</code>.</li>
+<li><strong>Đừng giả định endianness</strong> khi ghi dữ liệu nhị phân ra file/mạng; hãy tuần tự hóa từng byte theo thứ tự cố định.</li>
+<li><strong>Đừng giả định <code>char</code> có dấu hay không.</strong> Dùng <code>unsigned char</code> khi làm việc với byte thô.</li>
+<li><strong>Dùng <code>size_t</code> và <code>%zu</code></strong> cho kích thước; <code>PRId64</code> (từ <code>&lt;inttypes.h&gt;</code>) để in <code>int64_t</code>.</li>
+<li><strong>Dùng macro của compiler để tách mã theo nền tảng</strong> khi bắt buộc:</li>
+</ol>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">if</span> defined(_WIN32)</span>
+    <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;windows.h&gt;</span></span>
+    <span class="hljs-meta">#<span class="hljs-keyword">define</span> PLATFORM <span class="hljs-string">&quot;Windows&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">elif</span> defined(__linux__)</span>
+    <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span>
+    <span class="hljs-meta">#<span class="hljs-keyword">define</span> PLATFORM <span class="hljs-string">&quot;Linux&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">elif</span> defined(__APPLE__)</span>
+    <span class="hljs-meta">#<span class="hljs-keyword">define</span> PLATFORM <span class="hljs-string">&quot;macOS&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">else</span></span>
+    <span class="hljs-meta">#<span class="hljs-keyword">define</span> PLATFORM <span class="hljs-string">&quot;khong ro&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+</code></pre>
+<h2>6. <strong>Biên dịch bằng nhiều compiler</strong> (gcc, clang) và nhiều mức cảnh báo — mỗi compiler phát hiện được các lỗi khác nhau.</h2>
+<p>Ví dụ in số 64 bit di động:</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;inttypes.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int64_t</span> big = <span class="hljs-number">9000000000LL</span>;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;big = %&quot;</span> PRId64 <span class="hljs-string">&quot;\n&quot;</span>, big);     <span class="hljs-comment">// PRId64 mở rộng thành &quot;ld&quot; hoặc &quot;lld&quot; tùy nền tảng</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<h2>3.6. Lời khuyên cho người mới</h2>
 <ul>
-<li>Khi viết mã để chạy trên nhiều nền tảng, luôn xác định chuẩn biên dịch: gcc -std=c11 -Wall -Wextra</li>
-<li>Một số tính năng mới (VLA, long long) yêu cầu chuẩn tương ứng; nếu cần hỗ trợ compiler cũ, tránh hoặc viết fallback.</li>
-<li>Undefined behavior: hành vi không xác định (ví dụ: dereference NULL, buffer overflow) cần tránh — compiler có thể tạo ra các tối ưu khiến lỗi khó dò.</li>
+<li><strong>Luôn đọc cảnh báo</strong> và sửa hết. Cảnh báo thường chỉ ra UB tiềm ẩn.</li>
+<li><strong>Chọn một chuẩn và ghi rõ</strong> trong Makefile (<code>-std=c11</code>). Đừng để mặc định.</li>
+<li><strong>Không tin &quot;chạy được trên máy tôi&quot;.</strong> UB có thể chạy đúng ở máy bạn và sai ở máy khác.</li>
+<li><strong>Đọc chuẩn hoặc cppreference</strong> khi nghi ngờ. <code>https://en.cppreference.com/w/c/language/behavior</code> là nơi bắt đầu tốt cho UB.</li>
+<li><strong>Học sanitizer sớm.</strong> Nó biến những lỗi bộ nhớ &quot;khó thấy&quot; thành thông báo rõ ràng.</li>
 </ul>
-<h2>4. Ví dụ minh họa</h2>
+<h2>3.7. Tóm tắt</h2>
 <ul>
-<li>compatibility_test.c: minh họa dùng long long và các macro kiểm tra kích thước kiểu.</li>
-<li>Dùng gcc -std=c99 compatibility_test.c -o test để nhận biết khác biệt.</li>
+<li>C ra đời từ nhu cầu viết UNIX di động; triết lý là hiệu năng, đơn giản, và tin tưởng lập trình viên.</li>
+<li>Các chuẩn: C89 → C99 → C11 → C17 → C23. Sách dùng <code>-std=c11</code>.</li>
+<li>Có ba dạng hành vi &quot;không chắc chắn&quot;: <em>implementation-defined</em>, <em>unspecified</em>, <em>undefined</em>. UB là nguy hiểm nhất vì compiler có quyền giả định nó không xảy ra.</li>
+<li>Viết mã di động bằng kiểu có kích thước cố định, tránh giả định nền tảng.</li>
+<li>Dùng cảnh báo và sanitizer để phát hiện UB sớm.</li>
 </ul>
-<h2>5. Bài tập và thí nghiệm</h2>
+<h2>3.8. Bài tập</h2>
+<ol>
+<li>Biên dịch <code>compat_test.c</code> với <code>-std=c89 -pedantic</code>, <code>-std=c99</code>, <code>-std=c11</code>. Ghi lại từng thông báo và giải thích tại sao có khác biệt.</li>
+<li>Chạy <code>ub_demo.c</code> với <code>-O0</code> và <code>-O2</code>. Ghi kết quả. Sau đó thêm <code>-fsanitize=undefined</code> và đọc thông báo lỗi.</li>
+<li>Với mỗi nguồn UB trong bảng ở mục 3.4, tự viết một đoạn mã ngắn (khoảng 3–5 dòng) gây ra nó và chạy với <code>-fsanitize=address,undefined</code> xem sanitizer báo gì. (Thực hiện trong thư mục thử nghiệm riêng.)</li>
+<li>Phân loại các hành vi sau là <em>implementation-defined</em>, <em>unspecified</em> hay <em>undefined</em>: (a) <code>sizeof(long)</code>; (b) <code>a[i] = i++;</code> (c) <code>int x = 5 / 0;</code> (d) thứ tự đánh giá <code>f() + g()</code>; (e) <code>-7 / 2</code>, biết C99 quy định làm tròn về 0.</li>
+<li>Viết chương trình in tên hệ điều hành đang chạy dựa trên macro <code>_WIN32</code>, <code>__linux__</code>, <code>__APPLE__</code>.</li>
+<li>Viết chương trình in <code>INT_MAX</code>, <code>INT_MIN</code>, <code>LONG_MAX</code>, <code>SIZE_MAX</code> và giải thích vì sao <code>LONG_MAX</code> khác nhau giữa Windows và Linux.</li>
+</ol>
+<h2>3.9. Tài nguyên</h2>
 <ul>
-<li>Thử biên dịch cùng file với -std=c89, -std=c99, -std=c11 và ghi lại lỗi/cảnh báo.</li>
-<li>Dùng gcc -S để sinh assembly và đọc phần prologue/epilogue của hàm.</li>
+<li>Kernighan &amp; Ritchie, <em>The C Programming Language</em>, 2nd ed.</li>
+<li>Dennis Ritchie, <em>The Development of the C Language</em> (bài viết lịch sử, tìm trên mạng).</li>
+<li><a href="https://en.cppreference.com/w/c">https://en.cppreference.com/w/c</a> — tra cứu chuẩn.</li>
+<li><a href="https://gcc.gnu.org/onlinedocs/gcc/Standards.html">https://gcc.gnu.org/onlinedocs/gcc/Standards.html</a> — chuẩn C được gcc hỗ trợ.</li>
+<li>John Regehr, <em>A Guide to Undefined Behavior in C and C++</em> (blog) — giải thích rất rõ vì sao UB nguy hiểm.</li>
 </ul>
-<h2>6. Lời khuyên cho lập trình viên mới</h2>
-<ul>
-<li>Luôn đọc cảnh báo và sửa. Cảnh báo thường chỉ ra vấn đề tiềm ẩn.</li>
-<li>Tránh viết mã phụ thuộc vào kích thước kiểu (ví dụ assume int = 4 bytes). Dùng các kiểu cố định như int32_t khi cần.</li>
-</ul>
-<p>Tài nguyên</p>
-<ul>
-<li>K&amp;R &quot;The C Programming Language&quot;</li>
-<li><a href="http://cppreference.com">cppreference.com</a> và tài liệu GNU cho gcc</li>
-</ul>
-<p>Ghi chú: thêm bảng so sánh tính năng giữa các chuẩn và timeline minh hoạ.</p>
-<ul>
-<li>Lưu ý rõ các ví dụ lịch sử có thể không biên dịch trên compiler mặc định; ghi cách biên dịch (cờ -std) và mục đích giáo dục.</li>
-</ul>
+<p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-03">code/chapter-03</a></p>
 
 </article>
 <div class="chapter-nav"><a class="nav-prev" href="chapter-02.html">&larr; Máy tính và lập trình cơ bản</a><a class="nav-next" href="chapter-04.html">Cú pháp & cấu trúc chương trình C &rarr;</a></div>

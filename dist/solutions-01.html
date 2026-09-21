@@ -11,24 +11,133 @@
 <nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link active" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
 <main class="content">
 <article>
-<h1>Chapter 1 — Solutions (tóm tắt)</h1>
-<p>Bài tập 1: Hello, [Tên bạn]</p>
-<p>Sử dụng fgets để đọc tên và printf để in:</p>
+<h1>Chương 1 — Lời giải bài tập</h1>
+<blockquote>
+<p>Hãy tự làm trước khi xem lời giải. Biên dịch mọi bài bằng <code>gcc -std=c11 -Wall -Wextra -g -o prog prog.c</code>.</p>
+</blockquote>
+<h2>Bài 1: in tên, năm sinh, quê quán</h2>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Ten:\t\tNguyen Van A\n&quot;</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Nam sinh:\t2000\n&quot;</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Que quan:\tHa Noi\n&quot;</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p><code>\t</code> đưa con trỏ tới vị trí tab kế tiếp nên các giá trị thẳng hàng; <code>\n</code> xuống dòng.</p>
+<h2>Bài 2: đọc tên bằng <code>fgets</code> và chào</h2>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
 <span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
     <span class="hljs-type">char</span> name[<span class="hljs-number">100</span>];
-    <span class="hljs-keyword">if</span> (fgets(name, <span class="hljs-keyword">sizeof</span>(name), <span class="hljs-built_in">stdin</span>)) {
-        <span class="hljs-comment">// xóa newline</span>
-        <span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; <span class="hljs-keyword">while</span> (name[i] &amp;&amp; name[i] != <span class="hljs-string">&#x27;\n&#x27;</span>) i++; <span class="hljs-keyword">if</span> (name[i] == <span class="hljs-string">&#x27;\n&#x27;</span>) name[i] = <span class="hljs-string">&#x27;\0&#x27;</span>;
-        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Hello, %s!\n&quot;</span>, name);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Nhap ten: &quot;</span>);
+    <span class="hljs-keyword">if</span> (fgets(name, <span class="hljs-keyword">sizeof</span> name, <span class="hljs-built_in">stdin</span>) == <span class="hljs-literal">NULL</span>) {
+        <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;Khong doc duoc du lieu\n&quot;</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    }
+    name[<span class="hljs-built_in">strcspn</span>(name, <span class="hljs-string">&quot;\r\n&quot;</span>)] = <span class="hljs-string">&#x27;\0&#x27;</span>;     <span class="hljs-comment">// bỏ ký tự xuống dòng (cả \r nếu file từ Windows)</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Hello, %s!\n&quot;</span>, name);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p><code>strcspn(name, &quot;\r\n&quot;)</code> trả về vị trí của ký tự xuống dòng đầu tiên (hoặc độ dài chuỗi nếu không có), nên câu lệnh gán an toàn ở cả hai trường hợp.</p>
+<h2>Bài 3: bốn phép toán, xử lý chia cho 0</h2>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;limits.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;errno.h&gt;</span></span>
+
+<span class="hljs-comment">// Đọc một số nguyên từ một dòng; trả 0 nếu hợp lệ</span>
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">read_int</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *prompt, <span class="hljs-type">int</span> *out)</span> {
+    <span class="hljs-type">char</span> buf[<span class="hljs-number">64</span>];
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%s&quot;</span>, prompt);
+    <span class="hljs-keyword">if</span> (fgets(buf, <span class="hljs-keyword">sizeof</span> buf, <span class="hljs-built_in">stdin</span>) == <span class="hljs-literal">NULL</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+
+    <span class="hljs-type">char</span> *end;
+    errno = <span class="hljs-number">0</span>;
+    <span class="hljs-type">long</span> v = strtol(buf, &amp;end, <span class="hljs-number">10</span>);
+    <span class="hljs-keyword">if</span> (end == buf || (*end != <span class="hljs-string">&#x27;\n&#x27;</span> &amp;&amp; *end != <span class="hljs-string">&#x27;\0&#x27;</span>)) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;   <span class="hljs-comment">// không phải số / có ký tự thừa</span>
+    <span class="hljs-keyword">if</span> (errno == ERANGE || v &lt; INT_MIN || v &gt; INT_MAX) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;  <span class="hljs-comment">// ngoài phạm vi int</span>
+    *out = (<span class="hljs-type">int</span>)v;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> a, b;
+    <span class="hljs-keyword">if</span> (read_int(<span class="hljs-string">&quot;a = &quot;</span>, &amp;a) != <span class="hljs-number">0</span> || read_int(<span class="hljs-string">&quot;b = &quot;</span>, &amp;b) != <span class="hljs-number">0</span>) {
+        <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;Du lieu khong hop le\n&quot;</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    }
+
+    <span class="hljs-comment">// Dùng long long để phép tính không tràn với a, b lớn</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d + %d = %lld\n&quot;</span>, a, b, (<span class="hljs-type">long</span> <span class="hljs-type">long</span>)a + b);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d - %d = %lld\n&quot;</span>, a, b, (<span class="hljs-type">long</span> <span class="hljs-type">long</span>)a - b);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d * %d = %lld\n&quot;</span>, a, b, (<span class="hljs-type">long</span> <span class="hljs-type">long</span>)a * b);
+
+    <span class="hljs-keyword">if</span> (b == <span class="hljs-number">0</span>) {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Khong the chia cho 0\n&quot;</span>);
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d / %d = %d (phan nguyen)\n&quot;</span>, a, b, a / b);
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d %% %d = %d (phan du)\n&quot;</span>, a, b, a % b);
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d / %d = %.3f (so thuc)\n&quot;</span>, a, b, (<span class="hljs-type">double</span>)a / b);
     }
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </code></pre>
-<p>Bài tập 2: Hai số nguyên</p>
-<p>Sử dụng fgets + strtol để an toàn; kiểm tra chia cho 0 trước khi in thương.</p>
-<p>Bài tập 3: Độ dài chuỗi</p>
-<p>Sử dụng strlen (string.h) hoặc đếm bằng vòng lặp.</p>
+<p>Điểm đáng chú ý: (1) dùng <code>fgets</code> + <code>strtol</code> thay cho <code>scanf</code> để bắt được đầu vào sai như <code>12abc</code>; (2) ép sang <code>long long</code> trước khi cộng/trừ/nhân để không bị tràn số <code>int</code> (tràn số có dấu là UB); (3) kiểm tra <code>b == 0</code> <strong>trước</strong> khi chia hoặc lấy dư (chia số nguyên cho 0 là UB); (4) <code>INT_MIN / -1</code> cũng tràn; nếu muốn xử lý triệt để, kiểm tra thêm trường hợp <code>a == INT_MIN &amp;&amp; b == -1</code>.</p>
+<h2>Bài 4: độ dài chuỗi bằng <code>strlen</code> và bằng vòng lặp</h2>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-type">static</span> <span class="hljs-type">size_t</span> <span class="hljs-title function_">my_strlen</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *s)</span> {
+    <span class="hljs-type">size_t</span> n = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">while</span> (s[n] != <span class="hljs-string">&#x27;\0&#x27;</span>) n++;
+    <span class="hljs-keyword">return</span> n;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">char</span> line[<span class="hljs-number">256</span>];
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Nhap mot dong: &quot;</span>);
+    <span class="hljs-keyword">if</span> (fgets(line, <span class="hljs-keyword">sizeof</span> line, <span class="hljs-built_in">stdin</span>) == <span class="hljs-literal">NULL</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    line[<span class="hljs-built_in">strcspn</span>(line, <span class="hljs-string">&quot;\r\n&quot;</span>)] = <span class="hljs-string">&#x27;\0&#x27;</span>;
+
+    <span class="hljs-type">size_t</span> a = <span class="hljs-built_in">strlen</span>(line);
+    <span class="hljs-type">size_t</span> b = my_strlen(line);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;strlen    = %zu\n&quot;</span>, a);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;my_strlen = %zu\n&quot;</span>, b);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%s\n&quot;</span>, a == b ? <span class="hljs-string">&quot;Hai ket qua giong nhau&quot;</span> : <span class="hljs-string">&quot;KHAC NHAU (co loi!)&quot;</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Với văn bản tiếng Việt có dấu (UTF-8), cả hai hàm đều đếm <strong>byte</strong>, không phải ký tự: <code>&quot;Việt&quot;</code> cho 6 chứ không phải 4 (xem chương 7).</p>
+<h2>Bài 5: quan sát các thông báo lỗi</h2>
+<p>Thử ba chương trình sai dưới đây và đối chiếu với bảng ở mục 1.5.</p>
+<p><strong>(a) Thiếu dấu <code>;</code></strong></p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Hello\n&quot;</span>)
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>gcc báo <code>error: expected ';' before 'return'</code>. Đây là lỗi <strong>biên dịch (compiling)</strong>, cụ thể là lỗi cú pháp. Chú ý dòng được báo là dòng <strong>sau</strong> dòng thiếu <code>;</code>. Sửa: thêm <code>;</code> sau <code>printf(...)</code>.</p>
+<p><strong>(b) Thiếu <code>#include &lt;stdio.h&gt;</code></strong></p>
+<pre class="hljs"><code><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Hello\n&quot;</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>gcc (với <code>-Wall</code>) báo <code>warning: implicit declaration of function 'printf'</code> (từ GCC 14 là <strong>lỗi</strong>). Đây là lỗi ở giai đoạn <strong>biên dịch</strong>, vì compiler chưa thấy khai báo của <code>printf</code> (header chưa được đưa vào ở bước tiền xử lý). Sửa: thêm <code>#include &lt;stdio.h&gt;</code>.</p>
+<p><strong>(c) Gọi hàm không tồn tại</strong></p>
+<pre class="hljs"><code><span class="hljs-type">void</span> <span class="hljs-title function_">khong_ton_tai</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    khong_ton_tai();
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Biên dịch <strong>thành công</strong> (prototype đã cho compiler biết chữ ký), nhưng <strong>liên kết</strong> thất bại: <code>undefined reference to 'khong_ton_tai'</code>. Đây là lỗi ở giai đoạn <strong>liên kết (linking)</strong>: linker không tìm được định nghĩa. Sửa: viết định nghĩa hàm, hoặc liên kết file/thư viện chứa nó.</p>
+<p>Nếu bạn không viết prototype ở (c) và gọi thẳng <code>khong_ton_tai();</code>, C89 chấp nhận (khai báo ngầm) và bạn chỉ thấy lỗi khi liên kết; từ C99, compiler hiện đại cảnh báo/báo lỗi ngay ở bước biên dịch — vì vậy luôn bật <code>-Wall -Wextra</code>.</p>
 
 </article>
 <div class="chapter-nav"><span></span><span></span></div>

@@ -12,76 +12,607 @@
 <main class="content">
 <article>
 <h1>Chương 2 — Máy tính và lập trình cơ bản</h1>
-<p>Mục tiêu chương:</p>
+<h2>Mục tiêu chương</h2>
 <ul>
-<li>Hiểu cách máy tính lưu trữ dữ liệu: bit, byte, biểu diễn số và ký tự.</li>
-<li>Nắm rõ bộ nhớ (stack/heap), kích thước kiểu dữ liệu và ý nghĩa của sizeof.</li>
-<li>Hiểu vòng đời chương trình: tiền xử lý → biên dịch → liên kết → chạy.</li>
-<li>Thực hành: chuyển đổi số sang nhị phân, in bảng ASCII, và dùng malloc/free.</li>
+<li>Hiểu máy tính lưu trữ mọi thứ (số, chữ, hình ảnh) bằng <strong>bit</strong> và <strong>byte</strong> như thế nào.</li>
+<li>Đổi qua lại giữa hệ thập phân, nhị phân và thập lục phân.</li>
+<li>Hiểu cách biểu diễn số nguyên âm (bù hai), số thực và ký tự.</li>
+<li>Hiểu <strong>endianness</strong> và kiểm chứng nó bằng chương trình.</li>
+<li>Hình dung bộ nhớ của một chương trình: <strong>stack</strong>, <strong>heap</strong>, vùng dữ liệu, vùng mã.</li>
+<li>Biết <code>sizeof</code> trả về gì và vì sao kích thước kiểu dữ liệu phụ thuộc nền tảng.</li>
 </ul>
-<h2>1. Bit, byte và biểu diễn số</h2>
+<p>Nếu chương 1 dạy bạn <em>gõ</em> chương trình, chương này dạy bạn <em>máy tính nhìn chương trình đó ra sao</em>. Những khái niệm ở đây là nền của toàn bộ phần con trỏ và bộ nhớ về sau.</p>
+<h2>2.1. Bit, byte và hệ nhị phân</h2>
+<h3>Bit và byte</h3>
 <ul>
-<li>Bit: đơn vị thông tin nhỏ nhất (0 hoặc 1). 1 byte = 8 bit.</li>
-<li>Endianness: little-endian (LSB lưu ở địa chỉ thấp) vs big-endian (MSB ở địa chỉ thấp). Thực hành: in các byte của một int để thấy thứ tự.</li>
-<li>Số nguyên dấu (signed) dùng two's complement để biểu diễn số âm; kích thước phụ thuộc vào nền tảng (sizeof(int)).</li>
+<li><strong>Bit</strong> (<em>binary digit</em>) là đơn vị thông tin nhỏ nhất, chỉ có hai giá trị <code>0</code> hoặc <code>1</code>. Phần cứng dùng hai mức điện áp để biểu diễn chúng.</li>
+<li><strong>Byte</strong> là nhóm <strong>8 bit</strong>. Byte là đơn vị nhỏ nhất mà chương trình C có thể đánh địa chỉ.</li>
+<li>Một byte biểu diễn được 2⁸ = <strong>256</strong> giá trị khác nhau (từ 0 đến 255 nếu không có dấu).</li>
 </ul>
-<p>Ví dụ: kiểm tra sizeof trên nền tảng</p>
-<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
-<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
-    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;sizeof(char)=%zu, sizeof(int)=%zu, sizeof(long)=%zu\n&quot;</span>, <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">char</span>), <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">int</span>), <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">long</span>));
-}
+<p>Các đơn vị lớn hơn:</p>
+<table>
+<thead>
+<tr>
+<th>Đơn vị</th>
+<th>Số byte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 KB (kilobyte)</td>
+<td>1.000 byte (hoặc 1 KiB = 1.024)</td>
+</tr>
+<tr>
+<td>1 MB</td>
+<td>1.000.000 byte (hoặc 1 MiB = 1.048.576)</td>
+</tr>
+<tr>
+<td>1 GB</td>
+<td>1 tỷ byte (hoặc 1 GiB = 2³⁰ byte)</td>
+</tr>
+</tbody>
+</table>
+<h3>Hệ nhị phân hoạt động thế nào</h3>
+<p>Hệ thập phân dùng 10 chữ số; mỗi vị trí có &quot;trọng số&quot; là lũy thừa của 10. Hệ nhị phân làm y hệt, nhưng với 2:</p>
+<pre class="hljs"><code>Số nhị phân 1011 gồm các bit, từ phải sang trái có trọng số 1, 2, 4, 8:
+
+   bit:     1     0     1     1
+   trọng số: 8     4     2     1
+            ────  ────  ────  ────
+   giá trị: 8  +  0  +  2  +  1  = 11 (thập phân)
 </code></pre>
-<h2>2. Ký tự và chuỗi</h2>
-<ul>
-<li>C dùng char (thường 1 byte) để lưu ký tự; ASCII là tập ký tự cơ bản, UTF-8 là encoding phổ biến cho Unicode.</li>
-<li>Hàm tiện ích: isdigit(), isalpha(), isspace() (include &lt;ctype.h&gt;).</li>
-<li>Chuỗi trong C là mảng char kết thúc bởi '\0'.</li>
-</ul>
-<h2>3. Bộ nhớ: stack vs heap</h2>
-<ul>
-<li>Stack: lưu biến cục bộ, tự động cấp phát/giải phóng khi rời scope.</li>
-<li>Heap: cấp phát động qua malloc/calloc/realloc; phải free thủ công.</li>
-</ul>
-<p>Ví dụ phân bổ:</p>
-<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+<p><strong>Đổi thập phân sang nhị phân</strong> bằng cách chia liên tiếp cho 2 và lấy phần dư, đọc từ dưới lên. Ví dụ đổi 13:</p>
+<pre class="hljs"><code>13 / 2 = 6  dư 1   ↑
+ 6 / 2 = 3  dư 0   │  đọc từ dưới lên
+ 3 / 2 = 1  dư 1   │
+ 1 / 2 = 0  dư 1   │
+Kết quả: 1101
+</code></pre>
+<p>Kiểm tra: 8 + 4 + 0 + 1 = 13.</p>
+<h3>Hệ thập lục phân (hexadecimal)</h3>
+<p>Số nhị phân dài rất khó đọc. Vì <strong>4 bit = đúng 1 chữ số hex</strong> nên lập trình viên dùng hệ 16 (chữ số <code>0–9</code> và <code>A–F</code>, với <code>A</code>=10, ..., <code>F</code>=15) để viết gọn:</p>
+<pre class="hljs"><code>Nhị phân:   1111 0000 1010 0101
+Hex:           F    0    A    5      →  0xF0A5
+</code></pre>
+<p>Trong C, số hex viết với tiền tố <code>0x</code> (<code>0xFF</code> = 255), số nhị phân dùng <code>0b</code> là mở rộng của compiler (<code>0b1010</code>, chưa phải chuẩn C11, chuẩn hóa ở C23), số bát phân viết với tiền tố <code>0</code> (<code>017</code> = 15).</p>
+<blockquote>
+<p><strong>Cẩn thận:</strong> <code>int x = 010;</code> là số <strong>8</strong>, không phải 10, vì số bắt đầu bằng <code>0</code> là hệ bát phân. Đây là nguồn lỗi thú vị khi bạn định &quot;căn số cho thẳng hàng&quot;.</p>
+</blockquote>
+<h3>Chương trình in số ở nhiều hệ</h3>
+<pre class="hljs"><code><span class="hljs-comment">// bases.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
 <span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
-    <span class="hljs-type">int</span> *arr = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">10</span> * <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">int</span>));
-    <span class="hljs-keyword">if</span> (!arr) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
-    arr[<span class="hljs-number">0</span>] = <span class="hljs-number">42</span>;
-    <span class="hljs-built_in">free</span>(arr);
+    <span class="hljs-type">int</span> n = <span class="hljs-number">255</span>;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;thap phan: %d\n&quot;</span>, n);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;thap luc : %x (viet hoa: %X, kem tien to: %#x)\n&quot;</span>, n, n, n);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;bat phan : %o\n&quot;</span>, n);
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </code></pre>
-<h2>4. Quá trình build: tiền xử lý → compile → link</h2>
+<p>Kết quả: <code>255</code>, <code>ff (FF, 0xff)</code>, <code>377</code>.</p>
+<h2>2.2. Số nguyên có dấu và bù hai</h2>
+<p>Với <strong>số nguyên không dấu (unsigned)</strong> n bit, các giá trị từ 0 đến 2ⁿ − 1. Với 8 bit là 0..255.</p>
+<p>Với <strong>số nguyên có dấu (signed)</strong>, gần như mọi máy tính hiện nay dùng phương pháp <strong>bù hai (two's complement)</strong>. Bit cao nhất là <strong>bit dấu</strong>: <code>0</code> là số không âm, <code>1</code> là số âm.</p>
+<p>Cách tính giá trị: bit dấu có trọng số <strong>âm</strong>. Ví dụ với 8 bit, trọng số từ trái sang phải là −128, 64, 32, 16, 8, 4, 2, 1.</p>
+<pre class="hljs"><code>0000 0101  =  4 + 1                          =    5
+1111 1011  = -128 + 64+32+16+8 + 2 + 1       =   -5
+1000 0000  = -128                            = -128  (giá trị nhỏ nhất)
+0111 1111  = 64+32+16+8+4+2+1                =  127  (giá trị lớn nhất)
+1111 1111  = -128 + 127                      =   -1
+</code></pre>
+<p><strong>Cách đổi nhanh một số dương sang số âm tương ứng:</strong> <em>đảo tất cả các bit rồi cộng 1</em>.</p>
+<pre class="hljs"><code>   5 =  0000 0101
+đảo bit  1111 1010
+cộng 1   1111 1011  =  -5
+</code></pre>
+<p>Vì sao dùng bù hai? Vì phép cộng phần cứng dùng <strong>chung một mạch</strong> cho cả số âm và số dương: <code>5 + (-5)</code> cho <code>0000 0101 + 1111 1011 = 1 0000 0000</code>, bit thứ 9 bị bỏ đi, còn <code>0000 0000</code> = 0.</p>
+<h3>Khoảng giá trị</h3>
+<table>
+<thead>
+<tr>
+<th>Số bit</th>
+<th>Có dấu</th>
+<th>Không dấu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>8</td>
+<td>−128 … 127</td>
+<td>0 … 255</td>
+</tr>
+<tr>
+<td>16</td>
+<td>−32.768 … 32.767</td>
+<td>0 … 65.535</td>
+</tr>
+<tr>
+<td>32</td>
+<td>−2.147.483.648 … 2.147.483.647</td>
+<td>0 … 4.294.967.295</td>
+</tr>
+<tr>
+<td>64</td>
+<td>−9,22×10¹⁸ … 9,22×10¹⁸</td>
+<td>0 … 1,84×10¹⁹</td>
+</tr>
+</tbody>
+</table>
+<h3>Tràn số (overflow)</h3>
+<p>Điều gì xảy ra khi vượt khoảng giá trị?</p>
 <ul>
-<li>Preprocessing: mở rộng macro, include headers → tạo file tạm (.i)</li>
-<li>Compiling: .i → mã máy trung gian (.s) hoặc object (.o)</li>
-<li>Linking: nhiều .o + thư viện → executable</li>
-<li>Công cụ: gcc -c file.c; gcc -o prog file.o -lm</li>
+<li>Với <strong>số không dấu</strong>, C định nghĩa rõ: giá trị &quot;quay vòng&quot; (modulo 2ⁿ). <code>255 + 1</code> trong <code>unsigned char</code> là <code>0</code>.</li>
+<li>Với <strong>số có dấu</strong>, tràn số là <strong>hành vi không xác định (undefined behavior – UB)</strong>. Compiler được phép giả định nó <em>không bao giờ xảy ra</em> và tối ưu dựa trên giả định đó, dẫn đến kết quả kỳ lạ.</li>
 </ul>
-<h2>5. Assembly và mối liên hệ với C (tóm tắt)</h2>
+<pre class="hljs"><code><span class="hljs-comment">// overflow.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;limits.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> u = <span class="hljs-number">255</span>;
+    u = u + <span class="hljs-number">1</span>;                       <span class="hljs-comment">// quay vòng, hợp lệ</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;unsigned char 255 + 1 = %d\n&quot;</span>, u);   <span class="hljs-comment">// 0</span>
+
+    <span class="hljs-type">int</span> big = INT_MAX;               <span class="hljs-comment">// 2147483647</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;INT_MAX = %d\n&quot;</span>, big);
+    <span class="hljs-comment">// big + 1 là UB: KHÔNG làm điều này trong mã thật.</span>
+    <span class="hljs-comment">// Cách kiểm tra an toàn: kiểm tra TRƯỚC khi cộng</span>
+    <span class="hljs-keyword">if</span> (big &gt; INT_MAX - <span class="hljs-number">1</span>) {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;cong them 1 se bi tran\n&quot;</span>);
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p><code>&lt;limits.h&gt;</code> cung cấp các hằng như <code>INT_MIN</code>, <code>INT_MAX</code>, <code>CHAR_BIT</code> (số bit trong một byte, thường là 8).</p>
+<h2>2.3. Số thực (dấu phẩy động)</h2>
+<p>Số thực như 3,14 được lưu theo chuẩn <strong>IEEE 754</strong>, gồm ba phần: <strong>dấu</strong>, <strong>số mũ</strong> và <strong>phần định trị (mantissa)</strong>, tương tự ký hiệu khoa học <code>1.5 × 10³</code>, nhưng cơ số là 2.</p>
+<table>
+<thead>
+<tr>
+<th>Kiểu</th>
+<th>Số bit</th>
+<th>Độ chính xác xấp xỉ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>float</code></td>
+<td>32</td>
+<td>~7 chữ số thập phân</td>
+</tr>
+<tr>
+<td><code>double</code></td>
+<td>64</td>
+<td>~15–16 chữ số thập phân</td>
+</tr>
+<tr>
+<td><code>long double</code></td>
+<td>80 hoặc 128 (tùy nền tảng)</td>
+<td>nhiều hơn</td>
+</tr>
+</tbody>
+</table>
+<p>Điều <strong>cực kỳ quan trọng</strong>: đa số số thập phân <strong>không biểu diễn chính xác</strong> trong hệ nhị phân, giống như 1/3 không viết chính xác được bằng thập phân hữu hạn.</p>
+<pre class="hljs"><code><span class="hljs-comment">// float_trap.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;math.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">double</span> a = <span class="hljs-number">0.1</span> + <span class="hljs-number">0.2</span>;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;0.1 + 0.2 = %.20f\n&quot;</span>, a);       <span class="hljs-comment">// 0.30000000000000004441</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;a == 0.3 ? %s\n&quot;</span>, a == <span class="hljs-number">0.3</span> ? <span class="hljs-string">&quot;dung&quot;</span> : <span class="hljs-string">&quot;sai&quot;</span>);   <span class="hljs-comment">// sai!</span>
+
+    <span class="hljs-comment">// Cách so sánh đúng: so sánh với một sai số nhỏ (epsilon)</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">fabs</span>(a - <span class="hljs-number">0.3</span>) &lt; <span class="hljs-number">1e-9</span>) {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;gan bang 0.3 (trong sai so cho phep)\n&quot;</span>);
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Biên dịch: <code>gcc -std=c11 -Wall -Wextra float_trap.c -o float_trap -lm</code> (<code>-lm</code> để liên kết thư viện toán <code>fabs</code>).</p>
+<p><strong>Quy tắc:</strong> <em>không bao giờ so sánh hai số thực bằng <code>==</code>.</em> Hãy so sánh giá trị tuyệt đối của hiệu với một ngưỡng sai số. Với tiền tệ, hãy lưu số nguyên (đơn vị nhỏ nhất, ví dụ đồng hoặc xu) thay vì <code>double</code>.</p>
+<h2>2.4. Ký tự và bảng mã</h2>
+<p>Máy tính chỉ hiểu số, nên ký tự được lưu dưới dạng <strong>mã số</strong> theo một bảng mã.</p>
+<h3>ASCII</h3>
+<p><strong>ASCII</strong> là bảng mã 7 bit gồm 128 ký tự (mã 0–127). Vài mã đáng nhớ:</p>
+<table>
+<thead>
+<tr>
+<th>Ký tự</th>
+<th>Mã (thập phân)</th>
+<th>Ghi chú</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>'0'</code> … <code>'9'</code></td>
+<td>48 … 57</td>
+<td>Chữ số liên tiếp nhau</td>
+</tr>
+<tr>
+<td><code>'A'</code> … <code>'Z'</code></td>
+<td>65 … 90</td>
+<td></td>
+</tr>
+<tr>
+<td><code>'a'</code> … <code>'z'</code></td>
+<td>97 … 122</td>
+<td>Chữ thường hơn chữ hoa đúng 32</td>
+</tr>
+<tr>
+<td><code>' '</code> (dấu cách)</td>
+<td>32</td>
+<td></td>
+</tr>
+<tr>
+<td><code>'\n'</code></td>
+<td>10</td>
+<td>Xuống dòng</td>
+</tr>
+<tr>
+<td><code>'\0'</code></td>
+<td>0</td>
+<td>Ký tự null</td>
+</tr>
+</tbody>
+</table>
+<p>Trong C, kiểu <code>char</code> thực chất là một <strong>số nguyên nhỏ</strong> (1 byte). <code>'A'</code> chính là số 65:</p>
+<pre class="hljs"><code><span class="hljs-comment">// char_is_number.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">char</span> c = <span class="hljs-string">&#x27;A&#x27;</span>;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;c = %c, ma = %d\n&quot;</span>, c, c);      <span class="hljs-comment">// c = A, ma = 65</span>
+    c = c + <span class="hljs-number">1</span>;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;c + 1 = %c\n&quot;</span>, c);              <span class="hljs-comment">// B</span>
+
+    <span class="hljs-type">char</span> digit = <span class="hljs-string">&#x27;7&#x27;</span>;
+    <span class="hljs-type">int</span> value = digit - <span class="hljs-string">&#x27;0&#x27;</span>;                <span class="hljs-comment">// 7  (mẹo đổi ký tự số sang giá trị)</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;ky tu &#x27;%c&#x27; co gia tri so %d\n&quot;</span>, digit, value);
+
+    <span class="hljs-type">char</span> lower = <span class="hljs-string">&#x27;g&#x27;</span>;
+    <span class="hljs-type">char</span> upper = lower - (<span class="hljs-string">&#x27;a&#x27;</span> - <span class="hljs-string">&#x27;A&#x27;</span>);       <span class="hljs-comment">// &#x27;G&#x27;</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%c -&gt; %c\n&quot;</span>, lower, upper);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Mẹo <code>digit - '0'</code> hoạt động vì các chữ số có mã liên tiếp.</p>
+<h3>Unicode và UTF-8</h3>
+<p>ASCII không đủ cho tiếng Việt, tiếng Trung, emoji... <strong>Unicode</strong> gán mỗi ký tự một <em>code point</em> (ví dụ <code>ệ</code> là U+1EC7). <strong>UTF-8</strong> là cách mã hóa Unicode thành byte, độ dài <strong>1 đến 4 byte</strong> mỗi ký tự:</p>
 <ul>
-<li>Compiler sinh assembly; dùng gcc -S file.c để xem.</li>
-<li>Hiểu stack frame: lưu return address, local vars, và cách truyền tham số (platform dependent).</li>
+<li>Ký tự ASCII (<code>A</code>, <code>1</code>) chiếm 1 byte, giống hệt ASCII.</li>
+<li>Chữ có dấu tiếng Việt thường chiếm 2 hoặc 3 byte. <code>ệ</code> chiếm 3 byte.</li>
 </ul>
-<h2>6. Bài thực hành</h2>
+<p>Hệ quả cho người viết C: <code>strlen(&quot;Việt&quot;)</code> trả về số <strong>byte</strong>, không phải số ký tự; nó cho 6 chứ không phải 4. Chương 7 sẽ quay lại vấn đề này.</p>
+<h3>Thư viện <code>&lt;ctype.h&gt;</code></h3>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;ctype.h&gt;</span></span>
+
+<span class="hljs-built_in">isdigit</span>(c)   <span class="hljs-comment">// c là chữ số &#x27;0&#x27;..&#x27;9&#x27;?</span>
+<span class="hljs-built_in">isalpha</span>(c)   <span class="hljs-comment">// c là chữ cái (ASCII)?</span>
+<span class="hljs-built_in">isspace</span>(c)   <span class="hljs-comment">// c là khoảng trắng (dấu cách, tab, xuống dòng)?</span>
+<span class="hljs-built_in">toupper</span>(c)   <span class="hljs-comment">// đổi thành chữ hoa</span>
+<span class="hljs-built_in">tolower</span>(c)   <span class="hljs-comment">// đổi thành chữ thường</span>
+</code></pre>
+<p>Các hàm này nhận <code>int</code>. Khi truyền <code>char</code> có thể âm, hãy ép sang <code>unsigned char</code>: <code>isdigit((unsigned char)c)</code>.</p>
+<h2>2.5. Kích thước kiểu dữ liệu và <code>sizeof</code></h2>
+<p>Toán tử <code>sizeof</code> cho biết một kiểu hoặc biến chiếm <strong>bao nhiêu byte</strong>. Kết quả có kiểu <code>size_t</code> (số nguyên không dấu), in bằng <code>%zu</code>.</p>
+<pre class="hljs"><code><span class="hljs-comment">// sizes.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdint.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;char        : %zu\n&quot;</span>, <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">char</span>));         <span class="hljs-comment">// luôn là 1</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;short       : %zu\n&quot;</span>, <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">short</span>));
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;int         : %zu\n&quot;</span>, <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">int</span>));
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;long        : %zu\n&quot;</span>, <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">long</span>));
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;long long   : %zu\n&quot;</span>, <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">long</span> <span class="hljs-type">long</span>));
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;float       : %zu\n&quot;</span>, <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">float</span>));
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;double      : %zu\n&quot;</span>, <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">double</span>));
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;void*       : %zu\n&quot;</span>, <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">void</span> *));       <span class="hljs-comment">// kích thước một con trỏ</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;int32_t     : %zu\n&quot;</span>, <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">int32_t</span>));      <span class="hljs-comment">// luôn là 4</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;int64_t     : %zu\n&quot;</span>, <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">int64_t</span>));      <span class="hljs-comment">// luôn là 8</span>
+
+    <span class="hljs-type">int</span> arr[<span class="hljs-number">10</span>];
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;arr         : %zu byte, %zu phan tu\n&quot;</span>, <span class="hljs-keyword">sizeof</span>(arr), <span class="hljs-keyword">sizeof</span>(arr) / <span class="hljs-keyword">sizeof</span>(arr[<span class="hljs-number">0</span>]));
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Chuẩn C chỉ đảm bảo: <code>sizeof(char)</code> là 1 và <code>sizeof(short) ≤ sizeof(int) ≤ sizeof(long) ≤ sizeof(long long)</code>. Số byte cụ thể <strong>tùy nền tảng</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Kiểu</th>
+<th>Windows 64-bit</th>
+<th>Linux/macOS 64-bit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>int</code></td>
+<td>4</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>long</code></td>
+<td><strong>4</strong></td>
+<td><strong>8</strong></td>
+</tr>
+<tr>
+<td><code>long long</code></td>
+<td>8</td>
+<td>8</td>
+</tr>
+<tr>
+<td>con trỏ</td>
+<td>8</td>
+<td>8</td>
+</tr>
+</tbody>
+</table>
+<p>Điểm khác biệt của <code>long</code> là bẫy kinh điển khi chuyển mã giữa Windows và Linux. Vì vậy, khi cần độ rộng cố định, hãy dùng các kiểu trong <code>&lt;stdint.h&gt;</code>: <code>int8_t</code>, <code>uint8_t</code>, <code>int16_t</code>, <code>int32_t</code>, <code>uint32_t</code>, <code>int64_t</code>, <code>uint64_t</code>. Khi cần một số đo kích thước hoặc chỉ số mảng, dùng <code>size_t</code>.</p>
+<p>Mẹo hay: <code>sizeof(arr) / sizeof(arr[0])</code> cho số phần tử của <strong>mảng</strong> (chỉ đúng khi <code>arr</code> là mảng thực sự, không phải con trỏ — xem chương 7 và 8).</p>
+<h2>2.6. Endianness — thứ tự byte trong bộ nhớ</h2>
+<p>Một <code>int</code> 32 bit gồm 4 byte. Vậy 4 byte đó nằm trong bộ nhớ theo thứ tự nào? Có hai cách:</p>
 <ul>
-<li>bin_convert.c: viết hàm chuyển số nguyên sang chuỗi nhị phân.</li>
-<li>ascii_table.c: in bảng 0..127 với ký tự và mô tả.</li>
-<li>demo_malloc.c: minh hoạ malloc/realloc/free và kiểm tra rò bộ nhớ (dùng valgrind trên Linux).</li>
+<li><strong>Little-endian:</strong> byte <em>ít quan trọng nhất</em> (LSB) lưu ở địa chỉ thấp nhất. Dùng bởi x86, x86-64, đa số ARM.</li>
+<li><strong>Big-endian:</strong> byte <em>quan trọng nhất</em> (MSB) lưu ở địa chỉ thấp nhất. Dùng trong nhiều giao thức mạng (nên còn gọi là <em>network byte order</em>).</li>
 </ul>
-<h2>7. Lưu ý an toàn</h2>
+<p>Ví dụ số <code>0x12345678</code>:</p>
+<pre class="hljs"><code>Địa chỉ:          +0    +1    +2    +3
+Little-endian:    78    56    34    12
+Big-endian:       12    34    56    78
+</code></pre>
+<p>Kiểm chứng trên máy của bạn:</p>
+<pre class="hljs"><code><span class="hljs-comment">// endian.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> x = <span class="hljs-number">0x12345678</span>;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> *p = (<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> *)&amp;x;   <span class="hljs-comment">// nhìn x như dãy byte</span>
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">sizeof</span>(x); i++) {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;byte %zu: 0x%02x\n&quot;</span>, i, p[i]);
+    }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;May nay la %s-endian\n&quot;</span>, p[<span class="hljs-number">0</span>] == <span class="hljs-number">0x78</span> ? <span class="hljs-string">&quot;little&quot;</span> : <span class="hljs-string">&quot;big&quot;</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Trên PC/laptop thông thường bạn sẽ thấy <code>78 56 34 12</code> — little-endian. Đây là lần đầu bạn dùng con trỏ; đừng lo nếu chưa hiểu hết, chương 8 sẽ giải thích. Điều cần nhớ: <strong>endianness quan trọng khi ghi dữ liệu nhị phân ra file hoặc gửi qua mạng</strong> giữa các máy khác nhau.</p>
+<h2>2.7. Bộ nhớ của một chương trình đang chạy</h2>
+<p>Khi chương trình chạy, hệ điều hành cấp cho nó một không gian bộ nhớ ảo, chia thành các vùng. Sơ đồ (địa chỉ thấp ở trên, cao ở dưới; chi tiết bố trí phụ thuộc hệ điều hành):</p>
+<pre class="hljs"><code>địa chỉ thấp
+┌──────────────────────────┐
+│ Vùng mã (text)           │  các lệnh máy của chương trình (chỉ đọc)
+├──────────────────────────┤
+│ Dữ liệu khởi tạo (data)  │  biến toàn cục/static có giá trị ban đầu
+├──────────────────────────┤
+│ BSS                      │  biến toàn cục/static không khởi tạo (=0)
+├──────────────────────────┤
+│ Heap                     │  malloc/calloc/realloc — tăng dần ↓
+│            ↓             │
+│                          │
+│            ↑             │
+│ Stack                    │  biến cục bộ, tham số hàm — tăng dần ↑
+└──────────────────────────┘
+địa chỉ cao
+</code></pre>
+<h3>Stack (ngăn xếp)</h3>
 <ul>
-<li>Tránh buffer overflow: luôn giới hạn kích thước khi đọc chuỗi.</li>
-<li>Sau malloc, kiểm tra con trỏ NULL.</li>
+<li>Lưu <strong>biến cục bộ</strong>, <strong>tham số</strong> và <strong>địa chỉ trở về</strong> của mỗi lần gọi hàm.</li>
+<li>Mỗi lần gọi hàm tạo ra một <strong>stack frame</strong>; khi hàm kết thúc, frame bị hủy. Do đó biến cục bộ <strong>tự động</strong> biến mất.</li>
+<li>Rất nhanh (chỉ dịch chuyển một thanh ghi), nhưng dung lượng <strong>hạn chế</strong> (thường 1–8 MB). Khai báo mảng cục bộ quá lớn hoặc đệ quy quá sâu gây <strong>stack overflow</strong>.</li>
 </ul>
-<p>Tài liệu tham khảo</p>
+<h3>Heap (vùng cấp phát động)</h3>
 <ul>
-<li>K&amp;R, <a href="http://cppreference.com">cppreference.com</a>, tài liệu gcc</li>
+<li>Bộ nhớ bạn xin bằng <code>malloc</code>/<code>calloc</code>, và <strong>phải tự trả</strong> bằng <code>free</code>.</li>
+<li>Tồn tại cho đến khi bạn <code>free</code> (không mất khi hàm kết thúc), dung lượng lớn.</li>
+<li>Chậm hơn stack, và nếu quên <code>free</code> sẽ gây <strong>rò rỉ bộ nhớ (memory leak)</strong>.</li>
 </ul>
-<hr>
-<p>Ghi chú: thêm minh hoạ bằng hình cho endianness và ví dụ gcc -S để sinh assembly.</p>
+<h3>Minh họa</h3>
+<pre class="hljs"><code><span class="hljs-comment">// memory_regions.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-type">int</span> global_init = <span class="hljs-number">42</span>;        <span class="hljs-comment">// vùng data</span>
+<span class="hljs-type">int</span> global_uninit;           <span class="hljs-comment">// vùng BSS (tự động = 0)</span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> local = <span class="hljs-number">7</span>;                                   <span class="hljs-comment">// stack</span>
+    <span class="hljs-type">int</span> *dyn = <span class="hljs-built_in">malloc</span>(<span class="hljs-keyword">sizeof</span>(<span class="hljs-type">int</span>));                  <span class="hljs-comment">// heap</span>
+    <span class="hljs-keyword">if</span> (dyn == <span class="hljs-literal">NULL</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    *dyn = <span class="hljs-number">99</span>;
+
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;ma chuong trinh (main)  : %p\n&quot;</span>, (<span class="hljs-type">void</span> *)main);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;global_init  (data)     : %p\n&quot;</span>, (<span class="hljs-type">void</span> *)&amp;global_init);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;global_uninit (bss)     : %p\n&quot;</span>, (<span class="hljs-type">void</span> *)&amp;global_uninit);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;dyn -&gt; (heap)           : %p\n&quot;</span>, (<span class="hljs-type">void</span> *)dyn);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;local (stack)           : %p\n&quot;</span>, (<span class="hljs-type">void</span> *)&amp;local);
+
+    <span class="hljs-built_in">free</span>(dyn);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Chạy nhiều lần và bạn sẽ thấy các địa chỉ nhóm lại theo vùng (và có thể thay đổi giữa các lần chạy do ASLR — cơ chế bảo mật xáo trộn địa chỉ).</p>
+<p>Hai mô hình sử dụng:</p>
+<pre class="hljs"><code><span class="hljs-comment">// stack: tự động</span>
+<span class="hljs-type">int</span> <span class="hljs-title function_">add</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span> {
+    <span class="hljs-type">int</span> result = a + b;   <span class="hljs-comment">// result nằm trên stack, tự hủy khi hàm trả về</span>
+    <span class="hljs-keyword">return</span> result;
+}
+
+<span class="hljs-comment">// heap: thủ công</span>
+<span class="hljs-type">int</span> *<span class="hljs-title function_">make_array</span><span class="hljs-params">(<span class="hljs-type">size_t</span> n)</span> {
+    <span class="hljs-type">int</span> *arr = <span class="hljs-built_in">malloc</span>(n * <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">int</span>));   <span class="hljs-comment">// xin bộ nhớ trên heap</span>
+    <span class="hljs-keyword">return</span> arr;                           <span class="hljs-comment">// người gọi phải free(arr)</span>
+}
+</code></pre>
+<p>Chương 9 sẽ đi sâu vào quản lý bộ nhớ động.</p>
+<h2>2.8. Bức tranh về assembly và stack frame</h2>
+<p>Bạn không cần viết assembly, nhưng nhìn qua nó giúp hiểu C &quot;dịch&quot; thành gì. Tạo file:</p>
+<pre class="hljs"><code><span class="hljs-comment">// add.c</span>
+<span class="hljs-type">int</span> <span class="hljs-title function_">add</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span> {
+    <span class="hljs-keyword">return</span> a + b;
+}
+</code></pre>
+<p>Sinh assembly:</p>
+<pre class="hljs"><code>gcc -S -O0 -fno-asynchronous-unwind-tables add.c -o add.s
+</code></pre>
+<p>Trên x86-64 bạn sẽ thấy đại ý (rút gọn):</p>
+<pre class="hljs"><code>add:
+    push rbp           ; lưu frame pointer cũ
+    mov  rbp, rsp      ; tạo frame mới
+    mov  DWORD PTR [rbp-4], edi    ; tham số a (truyền qua thanh ghi edi)
+    mov  DWORD PTR [rbp-8], esi    ; tham số b (thanh ghi esi)
+    mov  edx, DWORD PTR [rbp-4]
+    mov  eax, DWORD PTR [rbp-8]
+    add  eax, edx      ; a + b
+    pop  rbp
+    ret                ; quay về nơi gọi; giá trị trả về nằm trong eax
+</code></pre>
+<p>Ý chính: tham số truyền qua thanh ghi (theo quy ước gọi hàm của nền tảng), biến cục bộ nằm ở địa chỉ tương đối so với <code>rbp</code> trên stack, và giá trị trả về đặt trong thanh ghi <code>eax</code>. Đây là lý do trả về <strong>địa chỉ của biến cục bộ</strong> là lỗi: frame đã biến mất (xem chương 6 và 9).</p>
+<h2>2.9. An toàn khi làm việc với bộ nhớ</h2>
+<p>Ba thói quen phải hình thành ngay:</p>
+<ol>
+<li><strong>Giới hạn khi đọc chuỗi:</strong> dùng <code>fgets(buf, sizeof buf, stdin)</code>, không dùng <code>gets</code>.</li>
+<li><strong>Kiểm tra <code>malloc</code>:</strong> sau <code>malloc</code> phải kiểm tra <code>NULL</code> vì cấp phát có thể thất bại.</li>
+<li><strong>Khởi tạo biến cục bộ:</strong> biến cục bộ không tự động bằng 0; nó chứa &quot;rác&quot; cho đến khi bạn gán. Đọc biến chưa khởi tạo là lỗi.</li>
+</ol>
+<pre class="hljs"><code><span class="hljs-type">int</span> x;               <span class="hljs-comment">// giá trị không xác định</span>
+<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, x);   <span class="hljs-comment">// lỗi: đọc biến chưa khởi tạo (compiler có thể cảnh báo với -Wall)</span>
+
+<span class="hljs-type">int</span> y = <span class="hljs-number">0</span>;           <span class="hljs-comment">// đúng</span>
+</code></pre>
+<h2>2.10. Thực hành</h2>
+<h3>Thực hành 1: đổi số nguyên sang chuỗi nhị phân</h3>
+<pre class="hljs"><code><span class="hljs-comment">// bin_convert.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdint.h&gt;</span></span>
+
+<span class="hljs-comment">// In n dưới dạng 32 bit nhị phân, nhóm mỗi 8 bit cho dễ đọc</span>
+<span class="hljs-type">void</span> <span class="hljs-title function_">print_binary</span><span class="hljs-params">(<span class="hljs-type">uint32_t</span> n)</span> {
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">31</span>; i &gt;= <span class="hljs-number">0</span>; i--) {
+        <span class="hljs-built_in">putchar</span>((n &gt;&gt; i) &amp; <span class="hljs-number">1</span> ? <span class="hljs-string">&#x27;1&#x27;</span> : <span class="hljs-string">&#x27;0&#x27;</span>);   <span class="hljs-comment">// dịch phải i bit, lấy bit thấp nhất</span>
+        <span class="hljs-keyword">if</span> (i % <span class="hljs-number">8</span> == <span class="hljs-number">0</span> &amp;&amp; i != <span class="hljs-number">0</span>) <span class="hljs-built_in">putchar</span>(<span class="hljs-string">&#x27; &#x27;</span>);
+    }
+    <span class="hljs-built_in">putchar</span>(<span class="hljs-string">&#x27;\n&#x27;</span>);
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    print_binary(<span class="hljs-number">13</span>);          <span class="hljs-comment">// 00000000 00000000 00000000 00001101</span>
+    print_binary(<span class="hljs-number">255</span>);
+    print_binary((<span class="hljs-type">uint32_t</span>)<span class="hljs-number">-5</span>);   <span class="hljs-comment">// thấy biểu diễn bù hai của -5</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Điểm học được: <code>n &gt;&gt; i</code> dịch bit sang phải <code>i</code> vị trí; <code>&amp; 1</code> giữ lại bit thấp nhất. Bạn sẽ gặp lại các toán tử bit ở chương 4.</p>
+<h3>Thực hành 2: bảng ASCII</h3>
+<pre class="hljs"><code><span class="hljs-comment">// ascii_table.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;ctype.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Ma  Ky tu\n&quot;</span>);
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> c = <span class="hljs-number">32</span>; c &lt; <span class="hljs-number">127</span>; c++) {       <span class="hljs-comment">// 0..31 là ký tự điều khiển, không in được</span>
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%3d  %c\n&quot;</span>, c, c);
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<h3>Thực hành 3: <code>malloc</code>, <code>realloc</code>, <code>free</code></h3>
+<pre class="hljs"><code><span class="hljs-comment">// demo_malloc.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">size_t</span> n = <span class="hljs-number">5</span>;
+    <span class="hljs-type">int</span> *arr = <span class="hljs-built_in">malloc</span>(n * <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">int</span>));
+    <span class="hljs-keyword">if</span> (arr == <span class="hljs-literal">NULL</span>) { perror(<span class="hljs-string">&quot;malloc&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) arr[i] = (<span class="hljs-type">int</span>)(i * i);
+
+    <span class="hljs-comment">// mở rộng lên 10 phần tử</span>
+    <span class="hljs-type">int</span> *tmp = <span class="hljs-built_in">realloc</span>(arr, <span class="hljs-number">10</span> * <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">int</span>));
+    <span class="hljs-keyword">if</span> (tmp == <span class="hljs-literal">NULL</span>) { <span class="hljs-built_in">free</span>(arr); perror(<span class="hljs-string">&quot;realloc&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+    arr = tmp;                                  <span class="hljs-comment">// chỉ gán lại khi realloc thành công</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = n; i &lt; <span class="hljs-number">10</span>; i++) arr[i] = (<span class="hljs-type">int</span>)(i * i);
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d &quot;</span>, arr[i]);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n&quot;</span>);
+
+    <span class="hljs-built_in">free</span>(arr);
+    arr = <span class="hljs-literal">NULL</span>;             <span class="hljs-comment">// tránh con trỏ &quot;treo&quot; (dangling pointer)</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Trên Linux kiểm tra rò rỉ: <code>gcc -g -o demo demo_malloc.c &amp;&amp; valgrind --leak-check=full ./demo</code>. Kết quả mong đợi: <code>All heap blocks were freed -- no leaks are possible</code>.</p>
+<h2>2.11. Lỗi thường gặp</h2>
+<table>
+<thead>
+<tr>
+<th>Lỗi</th>
+<th>Hậu quả</th>
+<th>Cách tránh</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>So sánh <code>double</code> bằng <code>==</code></td>
+<td>Kết quả sai bất ngờ</td>
+<td>So sánh với epsilon</td>
+</tr>
+<tr>
+<td>Giả định <code>int</code> luôn 32 bit, <code>long</code> luôn 64 bit</td>
+<td>Sai khi đổi nền tảng</td>
+<td>Dùng <code>&lt;stdint.h&gt;</code></td>
+</tr>
+<tr>
+<td>Tràn số nguyên có dấu</td>
+<td>UB, compiler tối ưu sai</td>
+<td>Kiểm tra trước khi tính</td>
+</tr>
+<tr>
+<td><code>unsigned</code> trừ ra số âm</td>
+<td>Kết quả thành số cực lớn</td>
+<td>Cẩn thận khi trừ với <code>size_t</code></td>
+</tr>
+<tr>
+<td>Không kiểm tra <code>malloc</code></td>
+<td>Crash khi hết bộ nhớ</td>
+<td><code>if (p == NULL)</code></td>
+</tr>
+<tr>
+<td>Đọc biến chưa khởi tạo</td>
+<td>Kết quả ngẫu nhiên</td>
+<td>Luôn gán giá trị ban đầu</td>
+</tr>
+<tr>
+<td>Quên <code>-lm</code></td>
+<td><code>undefined reference to 'sqrt'</code></td>
+<td>Thêm <code>-lm</code></td>
+</tr>
+</tbody>
+</table>
+<h2>2.12. Tóm tắt</h2>
+<ul>
+<li>Mọi dữ liệu là các bit; 8 bit = 1 byte; hex là cách viết gọn của nhị phân.</li>
+<li>Số âm dùng bù hai; tràn số có dấu là hành vi không xác định.</li>
+<li>Số thực là xấp xỉ nhị phân; không so sánh bằng <code>==</code>.</li>
+<li><code>char</code> là số nguyên nhỏ; ký tự là mã số theo bảng mã (ASCII/UTF-8).</li>
+<li><code>sizeof</code> cho kích thước theo byte; dùng <code>&lt;stdint.h&gt;</code> khi cần kích thước cố định.</li>
+<li>Stack chứa biến cục bộ (tự động); heap chứa dữ liệu cấp phát bằng <code>malloc</code> (phải <code>free</code>).</li>
+</ul>
+<h2>2.13. Bài tập</h2>
+<ol>
+<li>Đổi bằng tay các số sau sang nhị phân và hex: 10, 100, 255. Kiểm tra bằng chương trình <code>bases.c</code>.</li>
+<li>Viết tay biểu diễn bù hai 8 bit của −1, −10, −128. Xác nhận bằng <code>print_binary</code>.</li>
+<li>Viết chương trình đếm số bit <code>1</code> trong một số nguyên không dấu 32 bit.</li>
+<li>Viết chương trình đọc một ký tự và in ra: là chữ hoa, chữ thường, chữ số hay ký tự khác (dùng <code>&lt;ctype.h&gt;</code>). Sau đó chuyển chữ hoa thành chữ thường <strong>không dùng</strong> <code>tolower</code> (dựa vào chênh lệch 32).</li>
+<li>Chạy <code>sizes.c</code> trên máy của bạn và lập bảng. So sánh với bảng trong sách.</li>
+<li>Sửa <code>endian.c</code> để in cả các byte của một <code>double</code> (ví dụ <code>1.0</code>). Tra cứu định dạng IEEE 754 để giải thích các byte thu được.</li>
+<li>(Thử thách) Viết chương trình chứng minh <code>0.1f + 0.2f</code> khác <code>0.3f</code> và tìm giá trị <code>epsilon</code> nhỏ nhất làm phép so sánh gần đúng thành công.</li>
+</ol>
+<p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-02">code/chapter-02</a></p>
 
 </article>
 <div class="chapter-nav"><a class="nav-prev" href="chapter-01.html">&larr; Giới thiệu và chương trình C đầu tiên</a><a class="nav-next" href="chapter-03.html">Lịch sử và triết lý của ngôn ngữ C &rarr;</a></div>

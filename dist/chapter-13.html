@@ -12,57 +12,706 @@
 <main class="content">
 <article>
 <h1>Chương 13 — Xử lý lỗi &amp; ngoại lệ trong C</h1>
-<p>Mục tiêu chương:</p>
+<h2>Mục tiêu chương</h2>
 <ul>
-<li>Hiểu cách báo lỗi hiệu quả trong C: mã trả về, errno, perror, strerror và assert.</li>
-<li>Thiết kế API có kiểm tra lỗi rõ ràng và logging để dễ debug.</li>
+<li>Hiểu vì sao C <strong>không có ngoại lệ</strong> và các chiến lược thay thế.</li>
+<li>Phân biệt <strong>lỗi lập trình (bug)</strong> với <strong>lỗi vận hành (runtime error)</strong>, và biết xử lý từng loại thế nào.</li>
+<li>Dùng đúng giá trị trả về, <code>errno</code>, <code>perror</code>, <code>strerror</code>, <code>assert</code>.</li>
+<li>Thiết kế API báo lỗi rõ ràng: mã lỗi, <code>enum</code>, tham số đầu ra, struct kết quả.</li>
+<li>Áp dụng mẫu <strong>dọn dẹp bằng <code>goto cleanup</code></strong> để không rò rỉ tài nguyên.</li>
+<li>Dùng <code>setjmp</code>/<code>longjmp</code> (và biết vì sao nên hạn chế), <code>atexit</code>, tín hiệu.</li>
+<li>Xây dựng hệ thống <strong>logging</strong> bằng macro biến thiên (<code>__VA_ARGS__</code>, <code>__FILE__</code>, <code>__LINE__</code>).</li>
+<li>Kiểm thử đường lỗi bằng <strong>fault injection</strong>.</li>
 </ul>
-<h2>1. Kiểm tra giá trị trả về và errno</h2>
-<ul>
-<li>Luôn kiểm tra giá trị trả về của hàm I/O và hệ thống (fopen, malloc, read, write).</li>
-<li>errno (từ &lt;errno.h&gt;) chứa mã lỗi khi hàm hệ thống trả về lỗi; dùng perror hoặc strerror(errno) để in thông báo có nghĩa.</li>
-</ul>
-<p>Ví dụ:</p>
-<pre class="hljs"><code>FILE *f = fopen(path, <span class="hljs-string">&quot;r&quot;</span>);
-<span class="hljs-keyword">if</span> (!f) { perror(<span class="hljs-string">&quot;fopen&quot;</span>); <span class="hljs-comment">/* xử lý lỗi */</span> }
+<h2>13.1. C không có ngoại lệ</h2>
+<p>Java, Python, C++ có <code>try/catch</code>: khi lỗi xảy ra, chương trình &quot;ném&quot; ngoại lệ và luồng điều khiển tự nhảy tới nơi xử lý. <strong>C không có cơ chế đó.</strong> Thay vào đó, mỗi hàm có thể thất bại <strong>phải tự báo</strong> cho người gọi biết, và người gọi <strong>phải chủ động kiểm tra</strong>.</p>
+<p>Hệ quả: <strong>lỗi bị bỏ qua thì không ai báo cho bạn.</strong> Chương trình cứ chạy tiếp với dữ liệu sai, rồi hỏng ở chỗ khác — khó tìm nguyên nhân. Kỷ luật quan trọng nhất của lập trình C là:</p>
+<blockquote>
+<p><strong>Mọi hàm có thể thất bại đều phải được kiểm tra kết quả.</strong></p>
+</blockquote>
+<h3>Hai loại lỗi cần phân biệt</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Lỗi lập trình (bug)</th>
+<th>Lỗi vận hành (runtime error)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ví dụ</td>
+<td>Truyền <code>NULL</code> cho hàm không cho phép NULL; chỉ số ngoài mảng; vi phạm bất biến</td>
+<td>File không tồn tại; mạng đứt; hết bộ nhớ; đầu vào người dùng sai</td>
+</tr>
+<tr>
+<td>Có thể tránh bằng cách viết đúng?</td>
+<td><strong>Có</strong></td>
+<td><strong>Không</strong> — xảy ra do môi trường</td>
+</tr>
+<tr>
+<td>Xử lý</td>
+<td><code>assert</code>, sửa mã</td>
+<td>Kiểm tra và báo lỗi/khôi phục</td>
+</tr>
+<tr>
+<td>Trong bản phát hành</td>
+<td>Không nên xảy ra</td>
+<td>Phải xử lý êm</td>
+</tr>
+</tbody>
+</table>
+<p>Đừng dùng cùng một cơ chế cho hai loại: <code>assert</code> cho bug, mã lỗi cho runtime error.</p>
+<h2>13.2. Giá trị trả về và <code>errno</code></h2>
+<h3>Các quy ước trả về lỗi của thư viện chuẩn</h3>
+<table>
+<thead>
+<tr>
+<th>Hàm</th>
+<th>Dấu hiệu lỗi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>malloc</code>, <code>calloc</code>, <code>realloc</code></td>
+<td>trả <code>NULL</code></td>
+</tr>
+<tr>
+<td><code>fopen</code></td>
+<td>trả <code>NULL</code> (đặt <code>errno</code>)</td>
+</tr>
+<tr>
+<td><code>fgets</code></td>
+<td>trả <code>NULL</code></td>
+</tr>
+<tr>
+<td><code>getchar</code>, <code>fgetc</code></td>
+<td>trả <code>EOF</code></td>
+</tr>
+<tr>
+<td><code>scanf</code></td>
+<td>trả số mục đọc ít hơn mong đợi</td>
+</tr>
+<tr>
+<td><code>printf</code></td>
+<td>trả số âm</td>
+</tr>
+<tr>
+<td><code>strtol</code></td>
+<td><code>errno == ERANGE</code> hoặc <code>end == s</code></td>
+</tr>
+<tr>
+<td>Nhiều lời gọi hệ thống POSIX (<code>open</code>, <code>read</code>, <code>write</code>)</td>
+<td>trả <code>-1</code> (đặt <code>errno</code>)</td>
+</tr>
+</tbody>
+</table>
+<h3><code>errno</code></h3>
+<p><code>errno</code> (trong <code>&lt;errno.h&gt;</code>) là biến toàn cục (thực chất là macro) do hàm thư viện/hệ thống đặt khi thất bại. Các quy tắc bắt buộc nhớ:</p>
+<ol>
+<li><strong>Chỉ đọc <code>errno</code> ngay sau một lời gọi vừa báo lỗi.</strong> Hàm <strong>thành công</strong> <em>không</em> đặt lại <code>errno</code> về 0, nên <code>errno</code> có thể còn &quot;rác&quot; từ lần trước.</li>
+<li>Nếu cần chắc chắn (như với <code>strtol</code>), <strong>gán <code>errno = 0</code> trước khi gọi</strong>.</li>
+<li>Lời gọi khác giữa chừng (kể cả <code>printf</code>) có thể đổi <code>errno</code> → lưu lại ngay: <code>int saved = errno;</code>.</li>
+<li>Với đa luồng, <code>errno</code> là riêng của từng luồng.</li>
+</ol>
+<p>Một số giá trị thường gặp (định nghĩa trong <code>&lt;errno.h&gt;</code>):</p>
+<table>
+<thead>
+<tr>
+<th>Hằng</th>
+<th>Ý nghĩa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ENOENT</code></td>
+<td>file/thư mục không tồn tại</td>
+</tr>
+<tr>
+<td><code>EACCES</code></td>
+<td>không đủ quyền</td>
+</tr>
+<tr>
+<td><code>ENOMEM</code></td>
+<td>hết bộ nhớ</td>
+</tr>
+<tr>
+<td><code>EINVAL</code></td>
+<td>đối số không hợp lệ</td>
+</tr>
+<tr>
+<td><code>EEXIST</code></td>
+<td>đã tồn tại</td>
+</tr>
+<tr>
+<td><code>ERANGE</code></td>
+<td>kết quả ngoài phạm vi (ví dụ <code>strtol</code>)</td>
+</tr>
+<tr>
+<td><code>EINTR</code></td>
+<td>bị gián đoạn bởi tín hiệu</td>
+</tr>
+</tbody>
+</table>
+<h3>In thông báo lỗi có ý nghĩa</h3>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;errno.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+FILE *f = fopen(path, <span class="hljs-string">&quot;r&quot;</span>);
+<span class="hljs-keyword">if</span> (f == <span class="hljs-literal">NULL</span>) {
+    <span class="hljs-type">int</span> saved = errno;                                        <span class="hljs-comment">// lưu lại ngay</span>
+    <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;Khong mo duoc &#x27;%s&#x27;: %s (errno=%d)\n&quot;</span>, path, strerror(saved), saved);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+}
+
+<span class="hljs-comment">// Cách gọn: perror in &quot;tiền tố: thông báo&quot; ra stderr</span>
+perror(<span class="hljs-string">&quot;fopen&quot;</span>);
 </code></pre>
-<h2>2. assert vs runtime error handling</h2>
+<p><code>strerror</code> trả về con trỏ tới bộ đệm tĩnh nên <strong>không an toàn với đa luồng</strong>; dùng <code>strerror_r</code> (POSIX) hoặc <code>strerror_s</code> (C11 Annex K / Windows) khi cần.</p>
+<p><strong>Thông báo lỗi tốt</strong> trả lời ba câu hỏi: <em>cái gì hỏng?</em> (thao tác), <em>với cái gì?</em> (đối tượng: tên file, giá trị), <em>vì sao?</em> (<code>strerror</code>). So sánh:</p>
+<pre class="hljs"><code>Xấu:  Error
+Tốt:  Khong mo duoc &#x27;config.ini&#x27; de doc: No such file or directory
+</code></pre>
+<h3>Ví dụ: <code>strtol</code> với kiểm tra đầy đủ</h3>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;errno.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;limits.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-comment">// Trả về 0 nếu đổi thành công; -1 nếu lỗi (chuỗi rỗng, có ký tự thừa, hoặc tràn)</span>
+<span class="hljs-type">int</span> <span class="hljs-title function_">parse_long</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *s, <span class="hljs-type">long</span> *out)</span> {
+    <span class="hljs-type">char</span> *end;
+    errno = <span class="hljs-number">0</span>;                                   <span class="hljs-comment">// xóa trước khi gọi</span>
+    <span class="hljs-type">long</span> v = strtol(s, &amp;end, <span class="hljs-number">10</span>);
+    <span class="hljs-keyword">if</span> (end == s) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;                     <span class="hljs-comment">// không có chữ số nào</span>
+    <span class="hljs-keyword">if</span> (*end != <span class="hljs-string">&#x27;\0&#x27;</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;                 <span class="hljs-comment">// còn ký tự lạ (&quot;12abc&quot;)</span>
+    <span class="hljs-keyword">if</span> (errno == ERANGE) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;              <span class="hljs-comment">// ngoài phạm vi long</span>
+    *out = v;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<h2>13.3. Thiết kế API báo lỗi</h2>
+<p>Có nhiều cách để hàm báo kết quả, tùy tình huống. Hãy chọn một quy ước và <strong>nhất quán trong toàn dự án</strong>.</p>
+<h3>Cách 1: trả về mã trạng thái, kết quả qua tham số đầu ra</h3>
+<pre class="hljs"><code><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">enum</span> {</span>
+    ERR_OK = <span class="hljs-number">0</span>,
+    ERR_IO,
+    ERR_OOM,
+    ERR_PARSE,
+    ERR_INVALID_ARG
+} ErrorCode;
+
+<span class="hljs-type">const</span> <span class="hljs-type">char</span> *<span class="hljs-title function_">error_string</span><span class="hljs-params">(ErrorCode e)</span> {
+    <span class="hljs-keyword">switch</span> (e) {
+        <span class="hljs-keyword">case</span> ERR_OK:          <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;thanh cong&quot;</span>;
+        <span class="hljs-keyword">case</span> ERR_IO:          <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;loi vao/ra&quot;</span>;
+        <span class="hljs-keyword">case</span> ERR_OOM:         <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;het bo nho&quot;</span>;
+        <span class="hljs-keyword">case</span> ERR_PARSE:       <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;loi phan tich&quot;</span>;
+        <span class="hljs-keyword">case</span> ERR_INVALID_ARG: <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;doi so khong hop le&quot;</span>;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;loi khong ro&quot;</span>;
+}
+
+ErrorCode <span class="hljs-title function_">config_load</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *path, Config **out)</span>;
+</code></pre>
+<p>Người gọi:</p>
+<pre class="hljs"><code>Config *cfg = <span class="hljs-literal">NULL</span>;
+ErrorCode e = config_load(<span class="hljs-string">&quot;app.conf&quot;</span>, &amp;cfg);
+<span class="hljs-keyword">if</span> (e != ERR_OK) {
+    <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;Tai cau hinh that bai: %s\n&quot;</span>, error_string(e));
+    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+}
+</code></pre>
+<p>Ưu điểm: phân biệt được nhiều loại lỗi; giá trị &quot;kết quả&quot; và &quot;lỗi&quot; tách bạch (khắc phục vấn đề &quot;không biết <code>-1</code> là kết quả hay lỗi&quot;).</p>
+<p>Tránh trùng tên: <code>error_t</code> đã là kiểu do POSIX/glibc định nghĩa; hãy đặt tên như <code>ErrorCode</code> hoặc thêm tiền tố dự án (<code>myapp_err_t</code>).</p>
+<h3>Cách 2: trả về con trỏ, <code>NULL</code> là lỗi</h3>
+<pre class="hljs"><code><span class="hljs-type">char</span> *<span class="hljs-title function_">read_file</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *path)</span>;     <span class="hljs-comment">// NULL nếu lỗi; nếu cần lý do, dùng errno hoặc tham số phụ</span>
+</code></pre>
+<p>Phù hợp khi chỉ có &quot;thành công/thất bại&quot;; nếu cần lý do, thêm tham số <code>ErrorCode *err</code> hoặc để <code>errno</code> mang lý do.</p>
+<h3>Cách 3: giá trị trả về đặc biệt (sentinel)</h3>
+<p><code>-1</code>, <code>NULL</code>, <code>EOF</code>. Chỉ dùng khi <strong>giá trị đặc biệt không thể là kết quả hợp lệ</strong>. Hàm trả về <code>int</code> mà <code>-1</code> cũng có thể là kết quả đúng thì không dùng được cách này.</p>
+<h3>Cách 4: struct kết quả</h3>
+<pre class="hljs"><code><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span>
+    <span class="hljs-type">int</span>    ok;              <span class="hljs-comment">// 1 nếu thành công</span>
+    <span class="hljs-type">double</span> value;           <span class="hljs-comment">// hợp lệ khi ok</span>
+    <span class="hljs-type">char</span>   message[<span class="hljs-number">64</span>];     <span class="hljs-comment">// mô tả lỗi khi !ok</span>
+} DivResult;
+
+DivResult <span class="hljs-title function_">safe_divide</span><span class="hljs-params">(<span class="hljs-type">double</span> a, <span class="hljs-type">double</span> b)</span> {
+    DivResult r = {<span class="hljs-number">0</span>};
+    <span class="hljs-keyword">if</span> (b == <span class="hljs-number">0.0</span>) {
+        <span class="hljs-built_in">snprintf</span>(r.message, <span class="hljs-keyword">sizeof</span> r.message, <span class="hljs-string">&quot;chia cho 0&quot;</span>);
+        <span class="hljs-keyword">return</span> r;
+    }
+    r.ok = <span class="hljs-number">1</span>;
+    r.value = a / b;
+    <span class="hljs-keyword">return</span> r;
+}
+</code></pre>
+<h3>Cách 5: bộ đệm thông báo lỗi do người gọi cung cấp</h3>
+<pre class="hljs"><code><span class="hljs-comment">// Trả NULL nếu lỗi và ghi mô tả (có nghĩa với người dùng) vào err_buf</span>
+FILE *<span class="hljs-title function_">safe_fopen</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *path, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *mode, <span class="hljs-type">char</span> *err_buf, <span class="hljs-type">size_t</span> err_size)</span> {
+    FILE *f = fopen(path, mode);
+    <span class="hljs-keyword">if</span> (f == <span class="hljs-literal">NULL</span>) {
+        <span class="hljs-type">int</span> saved = errno;
+        <span class="hljs-keyword">if</span> (err_buf &amp;&amp; err_size &gt; <span class="hljs-number">0</span>)
+            <span class="hljs-built_in">snprintf</span>(err_buf, err_size, <span class="hljs-string">&quot;khong mo duoc &#x27;%s&#x27; (%s): %s&quot;</span>, path, mode, strerror(saved));
+        errno = saved;              <span class="hljs-comment">// giữ lại errno cho người gọi</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+    }
+    <span class="hljs-keyword">if</span> (err_buf &amp;&amp; err_size &gt; <span class="hljs-number">0</span>) err_buf[<span class="hljs-number">0</span>] = <span class="hljs-string">&#x27;\0&#x27;</span>;
+    <span class="hljs-keyword">return</span> f;
+}
+</code></pre>
+<p>Ưu điểm: không dùng bộ nhớ tĩnh (an toàn đa luồng), không cần người gọi <code>free</code>.</p>
+<h3>Nguyên tắc thiết kế</h3>
+<ol>
+<li><strong>Hàm phải nói rõ có thể thất bại thế nào</strong> trong tài liệu (ghi chú trên prototype).</li>
+<li><strong>Không trả kết quả một phần</strong> khi lỗi: nếu thất bại, để trạng thái đầu ra <strong>nguyên vẹn hoặc rõ ràng không hợp lệ</strong> (ví dụ <code>*out</code> không bị đổi).</li>
+<li><strong>Không im lặng nuốt lỗi</strong>. Nếu hàm xử lý được lỗi thì xử lý; nếu không thì trả lên trên.</li>
+<li><strong>Ở tầng thấp: trả lỗi. Ở tầng cao (<code>main</code>): quyết định làm gì</strong> (in thông báo, thử lại, thoát).</li>
+<li><strong>Đừng gọi <code>exit()</code> sâu trong thư viện</strong> — nó tước quyền quyết định của người dùng thư viện. Chỉ <code>main</code> (hoặc lớp ứng dụng) nên thoát.</li>
+<li>Dùng <code>[[nodiscard]]</code>-tương đương: gcc/clang có <code>__attribute__((warn_unused_result))</code> để compiler cảnh báo khi người gọi bỏ qua giá trị trả về; C23 có <code>[[nodiscard]]</code>.</li>
+</ol>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">if</span> defined(__GNUC__)</span>
+<span class="hljs-meta">#  <span class="hljs-keyword">define</span> MUST_CHECK __attribute__((warn_unused_result))</span>
+<span class="hljs-meta">#<span class="hljs-keyword">else</span></span>
+<span class="hljs-meta">#  <span class="hljs-keyword">define</span> MUST_CHECK</span>
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+
+MUST_CHECK ErrorCode <span class="hljs-title function_">config_load</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *path, Config **out)</span>;
+</code></pre>
+<h2>13.4. <code>assert</code> — kiểm tra bất biến của lập trình viên</h2>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;assert.h&gt;</span></span>
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">list_insert</span><span class="hljs-params">(List *l, <span class="hljs-type">size_t</span> index, <span class="hljs-type">int</span> value)</span> {
+    assert(l != <span class="hljs-literal">NULL</span>);                       <span class="hljs-comment">// bất biến: người gọi KHÔNG được truyền NULL</span>
+    assert(index &lt;= l-&gt;size);                <span class="hljs-comment">// bất biến: chỉ số hợp lệ</span>
+    <span class="hljs-comment">/* ... */</span>
+}
+</code></pre>
+<p><code>assert(cond)</code> kiểm tra <code>cond</code>; nếu <strong>sai</strong>, in <code>file:line: function: Assertion 'cond' failed.</code> rồi gọi <code>abort()</code>. Với biên dịch có <code>-DNDEBUG</code>, mọi <code>assert</code> <strong>bị xóa hoàn toàn</strong>.</p>
+<p>Điều đó dẫn tới các quy tắc:</p>
+<h2>1. <strong>Dùng <code>assert</code> cho bug</strong> (giả định nội bộ phải luôn đúng), <strong>không</strong> cho lỗi vận hành.</h2>
+<pre class="hljs"><code>assert(f != <span class="hljs-literal">NULL</span>);          <span class="hljs-comment">// SAI: fopen thất bại là chuyện bình thường, phải kiểm tra bằng if</span>
+<span class="hljs-keyword">if</span> (f == <span class="hljs-literal">NULL</span>) { ... }      <span class="hljs-comment">// ĐÚNG</span>
+</code></pre>
+<h2>2. <strong>Không đặt tác dụng phụ trong <code>assert</code></strong> — nó biến mất khi <code>NDEBUG</code>:</h2>
+<pre class="hljs"><code>assert(fread(buf, <span class="hljs-number">1</span>, n, f) == n);      <span class="hljs-comment">// SAI: bản release không đọc file nữa!</span>
+<span class="hljs-type">size_t</span> got = fread(buf, <span class="hljs-number">1</span>, n, f);      <span class="hljs-comment">// ĐÚNG: thực hiện rồi mới assert</span>
+assert(got == n);
+</code></pre>
+<h2>3. Dữ liệu từ ngoài (người dùng, file, mạng) <strong>luôn</strong> phải kiểm tra bằng <code>if</code>, không bằng <code>assert</code>.</h2>
+<p><strong><code>static_assert</code></strong> (C11, <code>&lt;assert.h&gt;</code> hoặc <code>_Static_assert</code>) kiểm tra <strong>lúc biên dịch</strong>:</p>
+<pre class="hljs"><code><span class="hljs-keyword">_Static_assert</span>(<span class="hljs-keyword">sizeof</span>(<span class="hljs-type">int</span>) == <span class="hljs-number">4</span>, <span class="hljs-string">&quot;code nay gia dinh int 4 byte&quot;</span>);
+<span class="hljs-keyword">_Static_assert</span>(<span class="hljs-keyword">sizeof</span>(Header) == <span class="hljs-number">16</span>, <span class="hljs-string">&quot;Header phai dung 16 byte&quot;</span>);
+</code></pre>
+<h2>13.5. Dọn dẹp tài nguyên với <code>goto cleanup</code></h2>
+<p>Khi hàm lấy nhiều tài nguyên (bộ nhớ, file, khóa), mỗi đường lỗi phải giải phóng những gì <strong>đã</strong> lấy. Viết bằng <code>if</code> lồng nhau rất rối và dễ sót. Mẫu <code>goto cleanup</code> giải quyết gọn:</p>
+<pre class="hljs"><code>ErrorCode <span class="hljs-title function_">process_file</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *in_path, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *out_path)</span> {
+    ErrorCode rc = ERR_OK;
+    FILE *in = <span class="hljs-literal">NULL</span>, *out = <span class="hljs-literal">NULL</span>;
+    <span class="hljs-type">char</span> *buf = <span class="hljs-literal">NULL</span>;
+
+    in = fopen(in_path, <span class="hljs-string">&quot;rb&quot;</span>);
+    <span class="hljs-keyword">if</span> (!in)  { rc = ERR_IO;  <span class="hljs-keyword">goto</span> cleanup; }
+
+    out = fopen(out_path, <span class="hljs-string">&quot;wb&quot;</span>);
+    <span class="hljs-keyword">if</span> (!out) { rc = ERR_IO;  <span class="hljs-keyword">goto</span> cleanup; }
+
+    buf = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">64</span> * <span class="hljs-number">1024</span>);
+    <span class="hljs-keyword">if</span> (!buf) { rc = ERR_OOM; <span class="hljs-keyword">goto</span> cleanup; }
+
+    <span class="hljs-type">size_t</span> n;
+    <span class="hljs-keyword">while</span> ((n = fread(buf, <span class="hljs-number">1</span>, <span class="hljs-number">64</span> * <span class="hljs-number">1024</span>, in)) &gt; <span class="hljs-number">0</span>) {
+        <span class="hljs-keyword">if</span> (fwrite(buf, <span class="hljs-number">1</span>, n, out) != n) { rc = ERR_IO; <span class="hljs-keyword">goto</span> cleanup; }
+    }
+    <span class="hljs-keyword">if</span> (ferror(in)) rc = ERR_IO;
+
+cleanup:                        <span class="hljs-comment">// một điểm dọn dẹp duy nhất</span>
+    <span class="hljs-built_in">free</span>(buf);                  <span class="hljs-comment">// free(NULL) an toàn</span>
+    <span class="hljs-keyword">if</span> (out) { <span class="hljs-keyword">if</span> (fclose(out) != <span class="hljs-number">0</span> &amp;&amp; rc == ERR_OK) rc = ERR_IO; }
+    <span class="hljs-keyword">if</span> (in)  fclose(in);
+    <span class="hljs-keyword">return</span> rc;
+}
+</code></pre>
+<p>Bí quyết: <strong>khởi tạo mọi tài nguyên bằng <code>NULL</code></strong> ở đầu hàm để đoạn <code>cleanup</code> chỉ giải phóng những cái thật sự đã lấy. <code>goto</code> ở đây là công cụ chấp nhận được (dùng trong nhân Linux); quy tắc: chỉ nhảy <strong>về phía trước</strong>, tới <strong>một nhãn dọn dẹp</strong>.</p>
+<h3>Dọn dẹp tự động (GCC/Clang)</h3>
+<p>Mở rộng <code>__attribute__((cleanup(fn)))</code> gọi <code>fn</code> khi biến ra khỏi phạm vi (giống RAII/<code>defer</code>), nhưng không thuộc chuẩn C:</p>
+<pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">free_ptr</span><span class="hljs-params">(<span class="hljs-type">void</span> *p)</span> { <span class="hljs-built_in">free</span>(*(<span class="hljs-type">void</span> **)p); }
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">f</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    __attribute__((cleanup(free_ptr))) <span class="hljs-type">char</span> *buf = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">100</span>);
+    <span class="hljs-keyword">if</span> (!buf) <span class="hljs-keyword">return</span>;
+    <span class="hljs-comment">/* buf tự được free khi f kết thúc, dù thoát ở đường nào */</span>
+}
+</code></pre>
+<h2>13.6. <code>setjmp</code> / <code>longjmp</code> — nhảy không cục bộ</h2>
+<p><code>setjmp</code>/<code>longjmp</code> (<code>&lt;setjmp.h&gt;</code>) cho phép <strong>nhảy ngược ra khỏi nhiều tầng hàm</strong>, gần giống ném/bắt ngoại lệ:</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;setjmp.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">static</span> jmp_buf on_error;
+
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">deep</span><span class="hljs-params">(<span class="hljs-type">int</span> n)</span> {
+    <span class="hljs-keyword">if</span> (n == <span class="hljs-number">0</span>) longjmp(on_error, <span class="hljs-number">1</span>);      <span class="hljs-comment">// &quot;ném&quot;: nhảy về nơi setjmp, trả về 1</span>
+    deep(n - <span class="hljs-number">1</span>);
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-keyword">if</span> (setjmp(on_error) == <span class="hljs-number">0</span>) {           <span class="hljs-comment">// lần đầu: trả về 0 -&gt; đường &quot;try&quot;</span>
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;bat dau\n&quot;</span>);
+        deep(<span class="hljs-number">5</span>);
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;khong toi day\n&quot;</span>);
+    } <span class="hljs-keyword">else</span> {                               <span class="hljs-comment">// sau longjmp: trả về khác 0 -&gt; đường &quot;catch&quot;</span>
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;da nhay ve tu ham sau\n&quot;</span>);
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Nhưng nó rất <strong>nguy hiểm</strong>:</p>
 <ul>
-<li>assert() (từ &lt;assert.h&gt;) dùng để kiểm tra giả thiết nội bộ khi debug; không dùng assert cho kiểm soát luồng hoặc xử lý lỗi từ input.</li>
-<li>assert bị loại bỏ khi biên dịch với NDEBUG; dùng return codes và logging cho runtime.</li>
+<li><strong>Không giải phóng gì cả.</strong> Mọi bộ nhớ/file lấy ở các tầng bị bỏ qua đều <strong>rò rỉ</strong>.</li>
+<li>Giá trị các biến cục bộ thay đổi sau <code>setjmp</code> mà không phải <code>volatile</code> là <strong>không xác định</strong>.</li>
+<li>Không được <code>longjmp</code> vào hàm đã kết thúc.</li>
 </ul>
-<h2>3. Thiết kế mã lỗi và API</h2>
-<ul>
-<li>Trả về int/error enum hoặc struct { int code; char *msg } cho các hàm phức tạp.</li>
-<li>Ví dụ:</li>
-</ul>
-<pre class="hljs"><code><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">enum</span> {</span> ERR_OK = <span class="hljs-number">0</span>, ERR_IO = <span class="hljs-number">1</span>, ERR_OOM = <span class="hljs-number">2</span> } <span class="hljs-type">error_t</span>;
-<span class="hljs-type">error_t</span> <span class="hljs-title function_">read_config</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *path)</span>;
+<p>Chỉ nên dùng ở những nơi hạn chế và có lý do rõ ràng (thư viện phân tích lớn, bộ thông dịch). Với đa số chương trình, <strong><code>goto cleanup</code> + mã lỗi</strong> là đủ và an toàn hơn.</p>
+<h2>13.7. Thoát chương trình và dọn dẹp toàn cục</h2>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">exit</span><span class="hljs-params">(<span class="hljs-type">int</span> status)</span>;         <span class="hljs-comment">// kết thúc êm: chạy hàm atexit, xả và đóng mọi FILE</span>
+<span class="hljs-type">void</span> <span class="hljs-title function_">abort</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;              <span class="hljs-comment">// kết thúc đột ngột (SIGABRT), có thể tạo core dump</span>
+<span class="hljs-type">int</span>  <span class="hljs-title function_">atexit</span><span class="hljs-params">(<span class="hljs-type">void</span> (*fn)(<span class="hljs-type">void</span>))</span>; <span class="hljs-comment">// đăng ký hàm chạy khi exit()/return từ main</span>
+</code></pre>
+<pre class="hljs"><code><span class="hljs-type">static</span> FILE *g_log;
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">close_log</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> { <span class="hljs-keyword">if</span> (g_log) fclose(g_log); }
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    g_log = fopen(<span class="hljs-string">&quot;app.log&quot;</span>, <span class="hljs-string">&quot;a&quot;</span>);
+    atexit(close_log);         <span class="hljs-comment">// đảm bảo đóng file kể cả khi có nơi khác gọi exit()</span>
+    <span class="hljs-comment">/* ... */</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
 </code></pre>
 <ul>
-<li>Document ownership: ai chịu free chuỗi lỗi, ai trả lỗi.</li>
+<li><code>return n</code> trong <code>main</code> tương đương <code>exit(n)</code>.</li>
+<li><code>_Exit(status)</code> thoát ngay, <strong>không</strong> chạy <code>atexit</code> hay xả bộ đệm — dùng trong tiến trình con sau <code>fork</code>.</li>
+<li>Mã thoát: <code>EXIT_SUCCESS</code> (0), <code>EXIT_FAILURE</code> (1).</li>
 </ul>
-<h2>4. Logging và debug macros</h2>
-<ul>
-<li>Dùng macro LOG(level, fmt, ...) để chuẩn hoá thông báo. Ví dụ:</li>
-</ul>
-<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> LOG_ERR(fmt, ...) fprintf(stderr, <span class="hljs-string">&quot;ERROR: &quot;</span> fmt <span class="hljs-string">&quot;\n&quot;</span>, ##__VA_ARGS__)</span>
+<h2>13.8. Tín hiệu (signal) — lỗi từ hệ điều hành</h2>
+<p>Một số lỗi nghiêm trọng khiến hệ điều hành gửi <strong>tín hiệu</strong> cho tiến trình:</p>
+<table>
+<thead>
+<tr>
+<th>Tín hiệu</th>
+<th>Nguyên nhân</th>
+<th>Mặc định</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SIGSEGV</code></td>
+<td>truy cập bộ nhớ không hợp lệ</td>
+<td>dừng, &quot;Segmentation fault&quot;</td>
+</tr>
+<tr>
+<td><code>SIGFPE</code></td>
+<td>lỗi số học (chia nguyên cho 0)</td>
+<td>dừng</td>
+</tr>
+<tr>
+<td><code>SIGABRT</code></td>
+<td><code>abort()</code>/<code>assert</code> thất bại</td>
+<td>dừng</td>
+</tr>
+<tr>
+<td><code>SIGINT</code></td>
+<td>Ctrl+C</td>
+<td>dừng</td>
+</tr>
+<tr>
+<td><code>SIGTERM</code></td>
+<td>yêu cầu kết thúc</td>
+<td>dừng</td>
+</tr>
+</tbody>
+</table>
+<p>Bạn có thể đăng ký hàm xử lý bằng <code>signal</code> (chuẩn C) hoặc <code>sigaction</code> (POSIX, đáng tin hơn):</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;signal.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-type">static</span> <span class="hljs-keyword">volatile</span> <span class="hljs-type">sig_atomic_t</span> g_stop = <span class="hljs-number">0</span>;
+
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">on_sigint</span><span class="hljs-params">(<span class="hljs-type">int</span> sig)</span> {
+    (<span class="hljs-type">void</span>)sig;
+    g_stop = <span class="hljs-number">1</span>;                    <span class="hljs-comment">// chỉ đặt cờ; KHÔNG làm việc phức tạp trong handler</span>
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    signal(SIGINT, on_sigint);
+    <span class="hljs-keyword">while</span> (!g_stop) {
+        <span class="hljs-comment">/* làm việc... */</span>
+    }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;nhan Ctrl+C, dung lai va don dep\n&quot;</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
 </code></pre>
+<p>Quy tắc an toàn: trong signal handler chỉ nên <strong>đặt cờ kiểu <code>volatile sig_atomic_t</code></strong> hoặc gọi các hàm &quot;an toàn với tín hiệu&quot;; <strong>không</strong> <code>printf</code>, <code>malloc</code>, <code>free</code>. Không nên &quot;khôi phục&quot; sau <code>SIGSEGV</code> — trạng thái chương trình đã hỏng; hãy chỉ ghi log nhanh rồi thoát. Chương 18 dùng lại khái niệm này.</p>
+<h2>13.9. Logging</h2>
+<p>Ghi log giúp chẩn đoán lỗi ở nơi không có debugger (máy khách, server). Một hệ thống log tối thiểu dùng <strong>macro biến thiên</strong> (variadic macro):</p>
+<pre class="hljs"><code><span class="hljs-comment">// log.h</span>
+<span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> LOG_H</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> LOG_H</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;time.h&gt;</span></span>
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">enum</span> {</span> LOG_DEBUG, LOG_INFO, LOG_WARN, LOG_ERROR } LogLevel;
+
+<span class="hljs-keyword">extern</span> LogLevel g_log_level;              <span class="hljs-comment">// định nghĩa trong log.c; mức tối thiểu được ghi</span>
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">log_write</span><span class="hljs-params">(LogLevel lvl, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *file, <span class="hljs-type">int</span> line, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *fmt, ...)</span>
+<span class="hljs-meta">#<span class="hljs-keyword">if</span> defined(__GNUC__)</span>
+    __<span class="hljs-title function_">attribute__</span><span class="hljs-params">((format(<span class="hljs-built_in">printf</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>)))</span>  <span class="hljs-comment">// để compiler kiểm tra định dạng như printf</span>
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+;
+
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> LOG_DEBUG_MSG(...) log_write(LOG_DEBUG, __FILE__, __LINE__, __VA_ARGS__)</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> LOG_INFO_MSG(...)  log_write(LOG_INFO,  __FILE__, __LINE__, __VA_ARGS__)</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> LOG_WARN_MSG(...)  log_write(LOG_WARN,  __FILE__, __LINE__, __VA_ARGS__)</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> LOG_ERR_MSG(...)   log_write(LOG_ERROR, __FILE__, __LINE__, __VA_ARGS__)</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+</code></pre>
+<pre class="hljs"><code><span class="hljs-comment">// log.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;log.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdarg.h&gt;</span></span>
+
+LogLevel g_log_level = LOG_INFO;
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">log_write</span><span class="hljs-params">(LogLevel lvl, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *file, <span class="hljs-type">int</span> line, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *fmt, ...)</span> {
+    <span class="hljs-keyword">if</span> (lvl &lt; g_log_level) <span class="hljs-keyword">return</span>;
+
+    <span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">char</span> *names[] = {<span class="hljs-string">&quot;DEBUG&quot;</span>, <span class="hljs-string">&quot;INFO&quot;</span>, <span class="hljs-string">&quot;WARN&quot;</span>, <span class="hljs-string">&quot;ERROR&quot;</span>};
+    <span class="hljs-type">time_t</span> now = time(<span class="hljs-literal">NULL</span>);
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">tm</span> <span class="hljs-title">tmv</span>;</span>
+<span class="hljs-meta">#<span class="hljs-keyword">if</span> defined(_WIN32)</span>
+    localtime_s(&amp;tmv, &amp;now);
+<span class="hljs-meta">#<span class="hljs-keyword">else</span></span>
+    localtime_r(&amp;now, &amp;tmv);
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+    <span class="hljs-type">char</span> ts[<span class="hljs-number">32</span>];
+    strftime(ts, <span class="hljs-keyword">sizeof</span> ts, <span class="hljs-string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>, &amp;tmv);
+
+    <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;%s [%s] %s:%d: &quot;</span>, ts, names[lvl], file, line);
+    va_list ap;
+    va_start(ap, fmt);
+    <span class="hljs-built_in">vfprintf</span>(<span class="hljs-built_in">stderr</span>, fmt, ap);          <span class="hljs-comment">// v-phiên bản nhận va_list</span>
+    va_end(ap);
+    fputc(<span class="hljs-string">&#x27;\n&#x27;</span>, <span class="hljs-built_in">stderr</span>);
+}
+</code></pre>
+<p>Dùng:</p>
+<pre class="hljs"><code>LOG_INFO_MSG(<span class="hljs-string">&quot;mo file %s&quot;</span>, path);
+LOG_ERR_MSG(<span class="hljs-string">&quot;khong doc duoc %s: %s&quot;</span>, path, strerror(errno));
+</code></pre>
+<p>Ghi chú về macro:</p>
 <ul>
-<li>Giữ logging nhẹ ở production hoặc điều khiển bằng macro #ifdef DEBUG.</li>
+<li><code>__FILE__</code>, <code>__LINE__</code> là macro có sẵn: tên file và số dòng <strong>nơi macro được dùng</strong> (vì vậy phải là macro, không phải hàm).</li>
+<li><code>__VA_ARGS__</code> chuyển tiếp mọi đối số. Gắn <code>##__VA_ARGS__</code> (mở rộng của gcc/clang) cho phép gọi macro không có đối số biến thiên: <code>#define LOG(fmt, ...) fprintf(stderr, fmt &quot;\n&quot;, ##__VA_ARGS__)</code>.</li>
+<li><code>__func__</code> (C99) cho tên hàm hiện tại.</li>
 </ul>
-<h2>5. Best practices</h2>
+<p><strong>Quy tắc log:</strong></p>
 <ul>
-<li>Kiểm tra mọi return từ hàm có thể fail.</li>
-<li>Trả mã lỗi rõ ràng, tránh dùng -1/0 nếu không có ý nghĩa.</li>
-<li>Thử nghiệm: viết test cản lỗi (fault injection) để đảm bảo chương trình xử lý hỏng hóc.</li>
+<li>Ghi log ra <strong>stderr</strong> hoặc file, không lẫn với đầu ra chương trình (stdout).</li>
+<li>Log <strong>cái gì hỏng và ngữ cảnh</strong> (id, đường dẫn, mã lỗi), nhưng <strong>không log dữ liệu nhạy cảm</strong> (mật khẩu, khóa, thẻ).</li>
+<li>Có <strong>mức</strong> (DEBUG/INFO/WARN/ERROR) điều chỉnh được lúc chạy hoặc lúc biên dịch.</li>
+<li>Log lỗi <strong>một lần, ở nơi xử lý nó</strong>, đừng vừa log vừa trả lỗi rồi tầng trên lại log tiếp (trùng lặp).</li>
 </ul>
-<p>Bài tập</p>
+<h2>13.10. Kiểm thử đường lỗi — fault injection</h2>
+<p>Mã xử lý lỗi hiếm khi chạy nên thường chứa bug (lỗi trong chính đoạn xử lý lỗi!). Để kiểm thử, <strong>cố ý làm cho lệnh thất bại</strong>.</p>
+<h3>Bọc hàm để chèn lỗi</h3>
+<pre class="hljs"><code><span class="hljs-comment">// fault.h</span>
+<span class="hljs-meta">#<span class="hljs-keyword">ifdef</span> FAULT_INJECTION</span>
+<span class="hljs-keyword">extern</span> <span class="hljs-type">int</span> g_fail_after;               <span class="hljs-comment">// số lần gọi thành công trước khi cấp phát bắt đầu lỗi</span>
+<span class="hljs-type">void</span> *<span class="hljs-title function_">test_malloc</span><span class="hljs-params">(<span class="hljs-type">size_t</span> n)</span>;
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> MALLOC(n) test_malloc(n)</span>
+<span class="hljs-meta">#<span class="hljs-keyword">else</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> MALLOC(n) malloc(n)</span>
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+</code></pre>
+<pre class="hljs"><code><span class="hljs-comment">// fault.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;fault.h&quot;</span></span>
+<span class="hljs-type">int</span> g_fail_after = <span class="hljs-number">-1</span>;                 <span class="hljs-comment">// -1: không chèn lỗi</span>
+
+<span class="hljs-type">void</span> *<span class="hljs-title function_">test_malloc</span><span class="hljs-params">(<span class="hljs-type">size_t</span> n)</span> {
+    <span class="hljs-keyword">if</span> (g_fail_after == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;          <span class="hljs-comment">// giả lập hết bộ nhớ</span>
+    <span class="hljs-keyword">if</span> (g_fail_after &gt; <span class="hljs-number">0</span>) g_fail_after--;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">malloc</span>(n);
+}
+</code></pre>
+<p>Trong bài kiểm thử, lặp qua <code>g_fail_after = 0, 1, 2, ...</code> và kiểm tra rằng hàm cần thử <strong>luôn trả lỗi đúng và không rò rỉ</strong> (chạy dưới ASan/Valgrind) ở mọi điểm cấp phát có thể thất bại.</p>
+<h3>Các cách khác</h3>
 <ul>
-<li>Viết wrapper safe_fopen(path, mode, error_buf, bufsize) — trả NULL on error và ghi thông báo người dùng vào error_buf.</li>
-<li>Viết chương trình demo: cố ý gây lỗi I/O (không tồn tại file) và hiển thị thông báo hữu ích.</li>
+<li><strong>Truyền đường dẫn không tồn tại, file rỗng, file bị cắt cụt, file quá lớn</strong> để kiểm tra đường I/O.</li>
+<li>Dùng <code>ulimit -v</code> (giới hạn bộ nhớ) hoặc <code>ulimit -n</code> (giới hạn file mở) để gây lỗi thật.</li>
+<li>Dùng công cụ như <code>LD_PRELOAD</code> chèn lỗi, hoặc fuzzer (chương 18, 21).</li>
 </ul>
-<p>Ghi chú: kèm ví dụ trong <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-13">code/chapter-13</a> bao gồm safe_fopen và tests.</p>
+<h2>13.11. Ví dụ tổng hợp</h2>
+<p>Chương trình đọc số nguyên từ file, tính tổng, xử lý lỗi đầy đủ:</p>
+<pre class="hljs"><code><span class="hljs-comment">// sum_file.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;errno.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;limits.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">enum</span> {</span> SUM_OK = <span class="hljs-number">0</span>, SUM_ERR_IO, SUM_ERR_PARSE, SUM_ERR_OVERFLOW } SumError;
+
+<span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">char</span> *<span class="hljs-title function_">sum_error_str</span><span class="hljs-params">(SumError e)</span> {
+    <span class="hljs-keyword">switch</span> (e) {
+        <span class="hljs-keyword">case</span> SUM_OK:           <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;thanh cong&quot;</span>;
+        <span class="hljs-keyword">case</span> SUM_ERR_IO:       <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;loi doc file&quot;</span>;
+        <span class="hljs-keyword">case</span> SUM_ERR_PARSE:    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;dong khong phai so nguyen&quot;</span>;
+        <span class="hljs-keyword">case</span> SUM_ERR_OVERFLOW: <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;tong bi tran&quot;</span>;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;?&quot;</span>;
+}
+
+<span class="hljs-comment">// Tính tổng các dòng trong file. *bad_line trả về số dòng lỗi (nếu có).</span>
+<span class="hljs-type">static</span> SumError <span class="hljs-title function_">sum_file</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *path, <span class="hljs-type">long</span> *out_sum, <span class="hljs-type">unsigned</span> *bad_line)</span> {
+    FILE *f = fopen(path, <span class="hljs-string">&quot;r&quot;</span>);
+    <span class="hljs-keyword">if</span> (!f) <span class="hljs-keyword">return</span> SUM_ERR_IO;
+
+    SumError rc = SUM_OK;
+    <span class="hljs-type">long</span> sum = <span class="hljs-number">0</span>;
+    <span class="hljs-type">char</span> line[<span class="hljs-number">128</span>];
+    <span class="hljs-type">unsigned</span> lineno = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">while</span> (fgets(line, <span class="hljs-keyword">sizeof</span> line, f)) {
+        lineno++;
+        <span class="hljs-type">char</span> *end;
+        errno = <span class="hljs-number">0</span>;
+        <span class="hljs-type">long</span> v = strtol(line, &amp;end, <span class="hljs-number">10</span>);
+        <span class="hljs-keyword">if</span> (end == line || (*end != <span class="hljs-string">&#x27;\n&#x27;</span> &amp;&amp; *end != <span class="hljs-string">&#x27;\0&#x27;</span>) || errno == ERANGE) {
+            rc = SUM_ERR_PARSE; *bad_line = lineno; <span class="hljs-keyword">goto</span> done;
+        }
+        <span class="hljs-keyword">if</span> ((v &gt; <span class="hljs-number">0</span> &amp;&amp; sum &gt; LONG_MAX - v) || (v &lt; <span class="hljs-number">0</span> &amp;&amp; sum &lt; LONG_MIN - v)) {
+            rc = SUM_ERR_OVERFLOW; *bad_line = lineno; <span class="hljs-keyword">goto</span> done;
+        }
+        sum += v;
+    }
+    <span class="hljs-keyword">if</span> (ferror(f)) rc = SUM_ERR_IO;
+    <span class="hljs-keyword">else</span> *out_sum = sum;
+
+done:
+    fclose(f);
+    <span class="hljs-keyword">return</span> rc;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> *argv[])</span> {
+    <span class="hljs-keyword">if</span> (argc != <span class="hljs-number">2</span>) { <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;Cach dung: %s &lt;file&gt;\n&quot;</span>, argv[<span class="hljs-number">0</span>]); <span class="hljs-keyword">return</span> <span class="hljs-number">2</span>; }
+
+    <span class="hljs-type">long</span> sum = <span class="hljs-number">0</span>;
+    <span class="hljs-type">unsigned</span> bad = <span class="hljs-number">0</span>;
+    SumError e = sum_file(argv[<span class="hljs-number">1</span>], &amp;sum, &amp;bad);
+    <span class="hljs-keyword">if</span> (e != SUM_OK) {
+        <span class="hljs-keyword">if</span> (e == SUM_ERR_IO)
+            <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;%s: %s: %s\n&quot;</span>, argv[<span class="hljs-number">0</span>], argv[<span class="hljs-number">1</span>], strerror(errno));
+        <span class="hljs-keyword">else</span>
+            <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;%s:%u: %s\n&quot;</span>, argv[<span class="hljs-number">1</span>], bad, sum_error_str(e));
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;tong = %ld\n&quot;</span>, sum);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Chú ý: kiểm tra tràn <strong>trước</strong> khi cộng (<code>sum &gt; LONG_MAX - v</code>) vì tràn số nguyên có dấu là UB; lỗi được trả lên <code>main</code>, nơi duy nhất quyết định in gì và thoát mã nào; tài nguyên (<code>FILE *</code>) được đóng ở một chỗ (<code>done</code>).</p>
+<h2>13.12. Lỗi thường gặp</h2>
+<table>
+<thead>
+<tr>
+<th>Lỗi</th>
+<th>Hậu quả</th>
+<th>Cách tránh</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Không kiểm tra giá trị trả về</td>
+<td>Lỗi im lặng, hỏng dây chuyền</td>
+<td>Kiểm tra mọi hàm có thể lỗi; bật <code>warn_unused_result</code></td>
+</tr>
+<tr>
+<td>Đọc <code>errno</code> khi không có lỗi</td>
+<td>Thông báo sai</td>
+<td>Chỉ đọc ngay sau lời gọi vừa lỗi</td>
+</tr>
+<tr>
+<td><code>errno</code> bị ghi đè bởi <code>printf</code> giữa chừng</td>
+<td>Sai mã lỗi</td>
+<td>Lưu <code>errno</code> ngay vào biến</td>
+</tr>
+<tr>
+<td><code>assert</code> cho dữ liệu vào từ ngoài</td>
+<td>Bản release không kiểm tra</td>
+<td>Dùng <code>if</code></td>
+</tr>
+<tr>
+<td>Tác dụng phụ trong <code>assert</code></td>
+<td>Hành vi khác giữa debug/release</td>
+<td>Tách ra ngoài</td>
+</tr>
+<tr>
+<td><code>exit()</code> sâu trong thư viện</td>
+<td>Người dùng mất quyền xử lý</td>
+<td>Trả lỗi lên trên</td>
+</tr>
+<tr>
+<td>Rò rỉ trên đường lỗi</td>
+<td>Rò rỉ tài nguyên</td>
+<td><code>goto cleanup</code>, khởi tạo con trỏ NULL</td>
+</tr>
+<tr>
+<td>Lạm dụng <code>setjmp/longjmp</code></td>
+<td>Rò rỉ, trạng thái hỏng</td>
+<td>Dùng mã lỗi</td>
+</tr>
+<tr>
+<td><code>printf</code> trong signal handler</td>
+<td>Deadlock/UB</td>
+<td>Chỉ đặt cờ <code>sig_atomic_t</code></td>
+</tr>
+<tr>
+<td>Log dữ liệu nhạy cảm</td>
+<td>Rò rỉ bí mật</td>
+<td>Không log mật khẩu/khóa/token</td>
+</tr>
+</tbody>
+</table>
+<h2>13.13. Tóm tắt</h2>
+<ul>
+<li>C không có ngoại lệ: <strong>hàm báo lỗi qua giá trị trả về, <code>errno</code>, tham số đầu ra</strong>; người gọi phải kiểm tra.</li>
+<li>Phân biệt <strong>bug</strong> (dùng <code>assert</code>, sửa mã) và <strong>lỗi vận hành</strong> (kiểm tra, báo lỗi, khôi phục).</li>
+<li>Thiết kế API báo lỗi nhất quán: <code>enum</code> mã lỗi, <code>NULL</code> cho con trỏ, struct kết quả; ghi tài liệu rõ ràng.</li>
+<li>Dùng <strong><code>goto cleanup</code></strong> với tài nguyên khởi tạo <code>NULL</code> để dọn dẹp trên mọi đường thoát.</li>
+<li>Log có mức, có ngữ cảnh (<code>__FILE__</code>, <code>__LINE__</code>), ra <code>stderr</code>; không log dữ liệu nhạy cảm.</li>
+<li>Kiểm thử đường lỗi bằng fault injection và sanitizer.</li>
+</ul>
+<h2>13.14. Bài tập</h2>
+<ol>
+<li>Viết <code>safe_fopen(path, mode, err_buf, size)</code> như 13.3 và chương trình thử với file không tồn tại, thư mục, file không có quyền. In thông báo thân thiện.</li>
+<li>Viết <code>parse_int(const char *s, int *out)</code> bắt được đầu vào rỗng, ký tự thừa, tràn <code>int</code>. Viết bộ kiểm thử với ít nhất 10 trường hợp biên (<code>&quot;&quot;</code>, <code>&quot; 12&quot;</code>, <code>&quot;12 &quot;</code>, <code>&quot;2147483648&quot;</code>, <code>&quot;-2147483648&quot;</code>...).</li>
+<li>Viết lại một chương trình bất kỳ ở chương 12 để dùng <code>goto cleanup</code> và <code>ErrorCode</code>, đảm bảo Valgrind/ASan không báo rò rỉ trên mọi đường lỗi.</li>
+<li>Cài đặt <code>log.h</code>/<code>log.c</code> như trên; thêm ghi ra file, mức log đặt qua biến môi trường <code>LOG_LEVEL</code>.</li>
+<li>Thêm fault injection vào <code>malloc</code> của <code>Vec</code> (chương 9); viết vòng lặp kiểm thử chứng minh <code>vec_push</code> không rò rỉ và không hỏng khi <code>malloc</code> lỗi ở bất kỳ lần nào.</li>
+<li>Viết chương trình xử lý <code>SIGINT</code>: khi người dùng nhấn Ctrl+C lần đầu thì thông báo và thoát êm (đóng file, xả bộ đệm), lần hai thoát ngay.</li>
+<li>Viết macro <code>CHECK(expr)</code> in <code>file:line</code> và <code>strerror(errno)</code> rồi <code>goto cleanup</code> khi <code>expr</code> là lỗi, và dùng nó để rút gọn mã của bài 3.</li>
+<li>(Thử thách) Cài đặt cơ chế &quot;try/catch&quot; giả bằng <code>setjmp</code>/<code>longjmp</code> có ngăn xếp các <code>jmp_buf</code>, sau đó liệt kê các cách nó có thể rò rỉ tài nguyên và cách bạn sẽ tránh.</li>
+</ol>
+<p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-13">code/chapter-13</a></p>
 
 </article>
 <div class="chapter-nav"><a class="nav-prev" href="chapter-12.html">&larr; File I/O & thao tác hệ thống</a><a class="nav-next" href="chapter-14.html">Tiền xử lý & macro nâng cao &rarr;</a></div>

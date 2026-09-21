@@ -12,65 +12,565 @@
 <main class="content">
 <article>
 <h1>Chương 8 — Con trỏ chi tiết (Pointers Deep Dive)</h1>
-<p>Mục tiêu</p>
+<h2>Mục tiêu chương</h2>
 <ul>
-<li>Hiểu con trỏ: khai báo, dereference (*), address-of (&amp;), pointer arithmetic.</li>
-<li>Biết con trỏ hàm, con trỏ tới mảng và mảng con trỏ.</li>
-<li>Nhận diện lỗi phổ biến: null pointer, uninitialized pointer, pointer to freed memory.</li>
+<li>Hiểu con trỏ là gì: <strong>một biến chứa địa chỉ bộ nhớ</strong>, và vì sao khái niệm này mạnh mẽ.</li>
+<li>Thành thạo hai toán tử <code>&amp;</code> (lấy địa chỉ) và <code>*</code> (giải tham chiếu), đọc được khai báo con trỏ.</li>
+<li>Hiểu <strong>số học con trỏ</strong> và mối quan hệ giữa <strong>mảng và con trỏ</strong>.</li>
+<li>Dùng con trỏ để truyền tham chiếu, trả nhiều giá trị, và xây dựng cấu trúc dữ liệu.</li>
+<li>Dùng <code>const</code> với con trỏ, <code>void *</code>, con trỏ tới con trỏ, con trỏ hàm.</li>
+<li>Nhận diện và tránh các lỗi: con trỏ chưa khởi tạo, <code>NULL</code>, con trỏ treo, tràn giới hạn.</li>
 </ul>
-<p>Tổng quan</p>
-<p>Con trỏ là tính năng mạnh mẽ của C cho phép thao tác trực tiếp với địa chỉ bộ nhớ. Sử dụng con trỏ giúp viết code hiệu năng cao và mô tả cấu trúc dữ liệu động (linked lists, trees), nhưng cũng dễ dẫn đến lỗi nghiêm trọng nếu xử lý không cẩn thận.</p>
-<h2>1. Con trỏ cơ bản</h2>
-<ul>
-<li>Khai báo: int *p; char *s; void *pv;</li>
-<li>Lấy địa chỉ: int x = 5; int *p = &amp;x;</li>
-<li>Dereference: *p để truy cập/gán giá trị; luôn đảm bảo p != NULL trước khi deref.</li>
-</ul>
-<p>Ví dụ:</p>
-<pre class="hljs"><code><span class="hljs-type">int</span> x = <span class="hljs-number">10</span>;
+<blockquote>
+<p>Con trỏ là chủ đề khó nhất của C với người mới, nhưng cũng là thứ làm nên sức mạnh của nó. Hãy đọc chậm, <strong>vẽ sơ đồ bộ nhớ ra giấy</strong> cho mỗi ví dụ và chạy từng ví dụ trên máy của bạn.</p>
+</blockquote>
+<h2>8.1. Bộ nhớ và địa chỉ</h2>
+<p>Hình dung bộ nhớ RAM là một dãy dài các <strong>ô nhớ (byte)</strong> được đánh số liên tiếp. Số thứ tự của mỗi ô là <strong>địa chỉ (address)</strong> của nó (thường in ở dạng hex, ví dụ <code>0x7ffd1234</code>).</p>
+<pre class="hljs"><code>địa chỉ:   0x1000  0x1001  0x1002  0x1003  0x1004  ...
+         ┌───────┬───────┬───────┬───────┬───────┐
+nội dung │  ...  │  ...  │  ...  │  ...  │  ...  │
+         └───────┴───────┴───────┴───────┴───────┘
+</code></pre>
+<p>Mỗi biến là một vùng ô nhớ liên tiếp có <strong>địa chỉ</strong> (ô đầu tiên của vùng) và <strong>kích thước</strong> (theo kiểu). Ví dụ <code>int x = 42;</code> chiếm 4 byte bắt đầu tại địa chỉ <code>0x1000</code>:</p>
+<pre class="hljs"><code>địa chỉ    0x1000            (biến x, kiểu int, 4 byte)
+         ┌──────────────────┐
+         │        42        │
+         └──────────────────┘
+</code></pre>
+<p>Toán tử <strong><code>&amp;</code></strong> trả về địa chỉ của một biến:</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> x = <span class="hljs-number">42</span>;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;gia tri x     : %d\n&quot;</span>, x);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;dia chi cua x : %p\n&quot;</span>, (<span class="hljs-type">void</span> *)&amp;x);     <span class="hljs-comment">// %p in địa chỉ; ép sang void* theo chuẩn</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;kich thuoc x  : %zu byte\n&quot;</span>, <span class="hljs-keyword">sizeof</span> x);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<h2>8.2. Con trỏ là gì?</h2>
+<p><strong>Con trỏ (pointer)</strong> là một biến mà <strong>giá trị của nó là một địa chỉ</strong> bộ nhớ. Kiểu của con trỏ cho biết dữ liệu <strong>tại địa chỉ đó</strong> thuộc kiểu gì.</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> x = <span class="hljs-number">42</span>;
+<span class="hljs-type">int</span> *p = &amp;x;        <span class="hljs-comment">// p là con trỏ tới int; p chứa địa chỉ của x</span>
+</code></pre>
+<p>Cách đọc khai báo: <code>int *p</code> = &quot;<code>p</code> là con trỏ tới <code>int</code>&quot; (hoặc &quot;<code>*p</code> là một <code>int</code>&quot;).</p>
+<pre class="hljs"><code>        biến x                  biến p
+   địa chỉ 0x1000          địa chỉ 0x2000
+     ┌────────┐              ┌────────────┐
+     │   42   │ ◄────────────│   0x1000   │
+     └────────┘   p trỏ tới  └────────────┘
+</code></pre>
+<p><code>p</code> cũng là một biến, có địa chỉ riêng (<code>0x2000</code>) và chiếm bộ nhớ (8 byte trên hệ 64-bit), nhưng giá trị nó lưu là <code>0x1000</code> — địa chỉ của <code>x</code>.</p>
+<h3>Giải tham chiếu (dereference) với <code>*</code></h3>
+<p>Toán tử <code>*</code> đặt <strong>trước một con trỏ</strong> nghĩa là &quot;<strong>truy cập giá trị tại địa chỉ đó</strong>&quot;.</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> x = <span class="hljs-number">42</span>;
 <span class="hljs-type">int</span> *p = &amp;x;
+
+<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, *p);   <span class="hljs-comment">// 42: đọc giá trị tại địa chỉ p</span>
+*p = <span class="hljs-number">100</span>;             <span class="hljs-comment">// ghi 100 vào ô nhớ mà p trỏ tới -&gt; x cũng thành 100</span>
+<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, x);    <span class="hljs-comment">// 100</span>
 </code></pre>
-<p>*p = 20; // x = 20</p>
-<h2>2. Pointer arithmetic và mối quan hệ với mảng</h2>
-<ul>
-<li>Nếu p là int*, thì p + 1 tăng địa chỉ theo sizeof(int) bytes.</li>
-<li>Mảng khi truyền vào hàm sẽ hạ xuống thành pointer tới phần tử đầu; hàm nhận cả kích thước mảng để an toàn.</li>
-</ul>
-<p>Ví dụ:</p>
-<pre class="hljs"><code><span class="hljs-type">void</span> <span class="hljs-title function_">print_array</span><span class="hljs-params">(<span class="hljs-type">int</span> *a, <span class="hljs-type">size_t</span> n)</span> {
-    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d &quot;</span>, a[i]);
+<p>Điều quan trọng cần nhớ: <code>*p</code> <strong>là</strong> <code>x</code> (cùng một ô nhớ, chỉ là một tên khác), không phải bản sao.</p>
+<p><strong>Hai ý nghĩa của dấu <code>*</code></strong> (gây nhầm cho người mới):</p>
+<table>
+<thead>
+<tr>
+<th>Chỗ dùng</th>
+<th>Ý nghĩa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Trong <strong>khai báo</strong> <code>int *p;</code></td>
+<td>&quot;p là con trỏ tới int&quot;</td>
+</tr>
+<tr>
+<td>Trong <strong>biểu thức</strong> <code>*p</code></td>
+<td>&quot;giá trị tại địa chỉ p&quot; (giải tham chiếu)</td>
+</tr>
+<tr>
+<td>Giữa hai biểu thức <code>a * b</code></td>
+<td>phép nhân</td>
+</tr>
+</tbody>
+</table>
+<p>Còn <code>&amp;</code> trong biểu thức một ngôi <code>&amp;x</code> nghĩa là &quot;địa chỉ của x&quot; (khác <code>a &amp; b</code> là AND bit và <code>a &amp;&amp; b</code> là AND logic).</p>
+<h3>Ví dụ tổng hợp</h3>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> a = <span class="hljs-number">10</span>, b = <span class="hljs-number">20</span>;
+    <span class="hljs-type">int</span> *p = &amp;a;
+
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;*p = %d\n&quot;</span>, *p);      <span class="hljs-comment">// 10</span>
+    p = &amp;b;                       <span class="hljs-comment">// đổi p trỏ sang b (không đổi a hay b)</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;*p = %d\n&quot;</span>, *p);      <span class="hljs-comment">// 20</span>
+    *p = *p + <span class="hljs-number">5</span>;                  <span class="hljs-comment">// b = b + 5</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;a = %d, b = %d\n&quot;</span>, a, b);   <span class="hljs-comment">// a = 10, b = 25</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </code></pre>
-<h2>3. Con trỏ hàm</h2>
-<ul>
-<li>Khai báo: int (<em>cmp)(const void</em>, const void*);</li>
-<li>Dùng làm callback: qsort, bsearch, hoặc API event.</li>
-</ul>
-<p>Ví dụ comparator cho qsort:</p>
-<pre class="hljs"><code><span class="hljs-type">int</span> <span class="hljs-title function_">cmp_int</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">void</span> *a, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *b)</span> {
-    <span class="hljs-type">int</span> ia = *(<span class="hljs-type">const</span> <span class="hljs-type">int</span>*)a;
-    <span class="hljs-type">int</span> ib = *(<span class="hljs-type">const</span> <span class="hljs-type">int</span>*)b;
-    <span class="hljs-keyword">return</span> (ia &gt; ib) - (ia &lt; ib);
+<p>Phân biệt hai việc: <strong><code>p = &amp;b</code></strong> đổi <em>con trỏ</em> (nó trỏ nơi khác); <strong><code>*p = 5</code></strong> đổi <em>dữ liệu</em> mà nó trỏ tới.</p>
+<h3><code>NULL</code> — con trỏ &quot;không trỏ tới đâu&quot;</h3>
+<p><code>NULL</code> (trong <code>&lt;stddef.h&gt;</code>, <code>&lt;stdio.h&gt;</code>, <code>&lt;stdlib.h&gt;</code>) là giá trị đặc biệt: con trỏ <strong>không trỏ tới đối tượng hợp lệ nào</strong>.</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> *p = <span class="hljs-literal">NULL</span>;
+<span class="hljs-keyword">if</span> (p == <span class="hljs-literal">NULL</span>) { <span class="hljs-comment">/* chưa có dữ liệu */</span> }
+<span class="hljs-keyword">if</span> (!p)        { <span class="hljs-comment">/* cách viết tương đương */</span> }
+*p = <span class="hljs-number">1</span>;        <span class="hljs-comment">// LỖI: giải tham chiếu NULL -&gt; UB, thường là Segmentation fault</span>
+</code></pre>
+<p><strong>Quy tắc vàng:</strong> <em>luôn khởi tạo con trỏ</em> (bằng địa chỉ hợp lệ hoặc <code>NULL</code>) và <em>kiểm tra <code>NULL</code> trước khi giải tham chiếu</em> khi con trỏ có thể <code>NULL</code> (kết quả <code>malloc</code>, <code>fopen</code>, <code>strchr</code>...).</p>
+<h2>8.3. Con trỏ và hàm: truyền tham chiếu</h2>
+<p>Chương 6 cho thấy C truyền tham số <strong>theo giá trị</strong>. Truyền con trỏ cho phép hàm sửa dữ liệu của người gọi và trả về nhiều kết quả.</p>
+<pre class="hljs"><code><span class="hljs-comment">// Hàm nhận con trỏ để &quot;trả về&quot; thương và dư</span>
+<span class="hljs-type">void</span> <span class="hljs-title function_">divmod</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b, <span class="hljs-type">int</span> *quot, <span class="hljs-type">int</span> *rem)</span> {
+    *quot = a / b;
+    *rem  = a % b;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> q, r;
+    divmod(<span class="hljs-number">17</span>, <span class="hljs-number">5</span>, &amp;q, &amp;r);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;17 = 5 * %d + %d\n&quot;</span>, q, r);   <span class="hljs-comment">// q=3, r=2</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </code></pre>
-<h2>4. Lỗi phổ biến và cách phòng tránh</h2>
+<p>Lợi ích thứ hai: <strong>tránh sao chép dữ liệu lớn</strong>. Truyền con trỏ tới <code>struct</code> lớn tốn 8 byte thay vì hàng trăm byte:</p>
+<pre class="hljs"><code><span class="hljs-type">void</span> <span class="hljs-title function_">print_person</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> Person *p)</span>;   <span class="hljs-comment">// const: hàm hứa không sửa</span>
+</code></pre>
+<p>Hãy sơ đồ hóa <code>divmod(17, 5, &amp;q, &amp;r)</code>:</p>
+<pre class="hljs"><code>main:   q [?]  r [?]           (địa chỉ giả định: q=0x100, r=0x104)
+                 ▲     ▲
+divmod:  quot ───┘     │        quot = 0x100, rem = 0x104 (hai bản sao của địa chỉ)
+         rem ──────────┘        *quot = 3  ghi vào q; *rem = 2 ghi vào r
+</code></pre>
+<h2>8.4. Số học con trỏ</h2>
+<p>Có thể <strong>cộng/trừ một số nguyên</strong> cho con trỏ, hoặc <strong>trừ hai con trỏ</strong> cùng kiểu. Quy tắc quan trọng: <strong>phép cộng được nhân với kích thước kiểu mà con trỏ trỏ tới</strong>.</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> a[<span class="hljs-number">5</span>] = {<span class="hljs-number">10</span>, <span class="hljs-number">20</span>, <span class="hljs-number">30</span>, <span class="hljs-number">40</span>, <span class="hljs-number">50</span>};
+<span class="hljs-type">int</span> *p = &amp;a[<span class="hljs-number">0</span>];         <span class="hljs-comment">// hoặc: int *p = a;</span>
+
+p + <span class="hljs-number">1</span>   <span class="hljs-comment">// địa chỉ của a[1]: cộng 1 × sizeof(int) = 4 byte</span>
+p + <span class="hljs-number">2</span>   <span class="hljs-comment">// địa chỉ của a[2]</span>
+*(p+<span class="hljs-number">2</span>)  <span class="hljs-comment">// giá trị a[2] = 30</span>
+</code></pre>
+<pre class="hljs"><code>địa chỉ:    1000   1004   1008   1012   1016
+          ┌──────┬──────┬──────┬──────┬──────┐
+     a:   │  10  │  20  │  30  │  40  │  50  │
+          └──────┴──────┴──────┴──────┴──────┘
+             ▲      ▲      ▲
+             p     p+1    p+2         (mỗi bước +1 = +4 byte vì kiểu int)
+</code></pre>
+<p>Với <code>char *</code>, <code>p + 1</code> tăng 1 byte; với <code>double *</code>, <code>p + 1</code> tăng 8 byte.</p>
+<h3>Các phép được phép</h3>
+<table>
+<thead>
+<tr>
+<th>Phép toán</th>
+<th>Ý nghĩa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>p + n</code>, <code>p - n</code></td>
+<td>dịch tới/lui <code>n</code> phần tử</td>
+</tr>
+<tr>
+<td><code>p++</code>, <code>p--</code>, <code>p += n</code></td>
+<td>dịch chính <code>p</code></td>
+</tr>
+<tr>
+<td><code>p2 - p1</code></td>
+<td>số <strong>phần tử</strong> giữa hai con trỏ (kiểu <code>ptrdiff_t</code>), cùng một mảng</td>
+</tr>
+<tr>
+<td><code>p1 &lt; p2</code>, <code>==</code>...</td>
+<td>so sánh (chỉ có nghĩa khi cùng một mảng)</td>
+</tr>
+<tr>
+<td><s><code>p1 + p2</code></s>, <s><code>p * 2</code></s></td>
+<td><strong>không hợp lệ</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Chỉ được tính con trỏ <strong>trong phạm vi mảng</strong> hoặc ngay <strong>một vị trí sau phần tử cuối</strong> (<code>a + 5</code> với mảng 5 phần tử là hợp lệ để so sánh nhưng <strong>không được giải tham chiếu</strong>). Đi xa hơn là UB.</p>
+<h3>Duyệt mảng bằng con trỏ</h3>
+<pre class="hljs"><code><span class="hljs-type">int</span> a[<span class="hljs-number">5</span>] = {<span class="hljs-number">10</span>, <span class="hljs-number">20</span>, <span class="hljs-number">30</span>, <span class="hljs-number">40</span>, <span class="hljs-number">50</span>};
+
+<span class="hljs-comment">// Cách 1: chỉ số</span>
+<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; i++) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d &quot;</span>, a[i]);
+
+<span class="hljs-comment">// Cách 2: con trỏ chạy</span>
+<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> *p = a; p &lt; a + <span class="hljs-number">5</span>; p++) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d &quot;</span>, *p);
+</code></pre>
+<p>Hai cách cho kết quả như nhau. Cách 1 dễ đọc hơn trong đa số trường hợp; cách 2 hữu ích khi làm việc với chuỗi hoặc cấu trúc kiểu &quot;con trỏ đầu, con trỏ cuối&quot;.</p>
+<h2>8.5. Mảng và con trỏ</h2>
+<p>Trong hầu hết biểu thức, <strong>tên mảng được tự động chuyển thành con trỏ tới phần tử đầu tiên</strong> (<em>array-to-pointer decay</em>). Và toán tử <code>[]</code> được định nghĩa qua con trỏ:</p>
+<pre class="hljs"><code>a[i]   ≡   *(a + i)
+</code></pre>
+<p>Do đó <code>a[2]</code>, <code>*(a + 2)</code> và (đùa vui) <code>2[a]</code> đều cho cùng kết quả.</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> a[<span class="hljs-number">5</span>] = {<span class="hljs-number">10</span>, <span class="hljs-number">20</span>, <span class="hljs-number">30</span>, <span class="hljs-number">40</span>, <span class="hljs-number">50</span>};
+<span class="hljs-type">int</span> *p = a;
+
+<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d %d %d\n&quot;</span>, a[<span class="hljs-number">2</span>], *(a + <span class="hljs-number">2</span>), p[<span class="hljs-number">2</span>]);   <span class="hljs-comment">// 30 30 30</span>
+</code></pre>
+<p>Tuy nhiên <strong>mảng KHÔNG phải là con trỏ</strong>. Khác biệt:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Mảng <code>int a[5]</code></th>
+<th>Con trỏ <code>int *p</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sizeof</code></td>
+<td>20 (cả mảng)</td>
+<td>8 (chỉ con trỏ)</td>
+</tr>
+<tr>
+<td><code>&amp;</code></td>
+<td><code>&amp;a</code> là địa chỉ của cả mảng</td>
+<td><code>&amp;p</code> là địa chỉ của biến p</td>
+</tr>
+<tr>
+<td>Gán</td>
+<td><code>a = ...</code> <strong>không được</strong></td>
+<td><code>p = ...</code> được</td>
+</tr>
+<tr>
+<td>Bộ nhớ</td>
+<td>vùng dữ liệu nằm ngay trong biến</td>
+<td>chỉ chứa một địa chỉ, dữ liệu ở nơi khác</td>
+</tr>
+</tbody>
+</table>
+<p>Ngoại lệ &quot;phân rã&quot; xảy ra khi tên mảng là toán hạng của <code>sizeof</code> hoặc <code>&amp;</code>, hoặc là chuỗi literal dùng để khởi tạo mảng.</p>
+<h3>Chuỗi và <code>char *</code></h3>
+<pre class="hljs"><code><span class="hljs-type">const</span> <span class="hljs-type">char</span> *s = <span class="hljs-string">&quot;hello&quot;</span>;
+<span class="hljs-keyword">for</span> (<span class="hljs-type">const</span> <span class="hljs-type">char</span> *p = s; *p != <span class="hljs-string">&#x27;\0&#x27;</span>; p++) {
+    <span class="hljs-built_in">putchar</span>(*p);
+}
+
+<span class="hljs-comment">// Đếm độ dài bằng con trỏ</span>
+<span class="hljs-type">size_t</span> <span class="hljs-title function_">my_strlen</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *s)</span> {
+    <span class="hljs-type">const</span> <span class="hljs-type">char</span> *p = s;
+    <span class="hljs-keyword">while</span> (*p) p++;
+    <span class="hljs-keyword">return</span> (<span class="hljs-type">size_t</span>)(p - s);      <span class="hljs-comment">// hiệu hai con trỏ = số phần tử</span>
+}
+</code></pre>
+<p>Các dạng viết cô đọng thường thấy trong mã C, ví dụ sao chép chuỗi:</p>
+<pre class="hljs"><code><span class="hljs-type">void</span> <span class="hljs-title function_">my_strcpy</span><span class="hljs-params">(<span class="hljs-type">char</span> *dst, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *src)</span> {
+    <span class="hljs-keyword">while</span> ((*dst++ = *src++) != <span class="hljs-string">&#x27;\0&#x27;</span>) { }
+}
+</code></pre>
+<p>Giải thích: <code>*dst++ = *src++</code> gán ký tự tại <code>src</code> cho <code>*dst</code>, rồi tăng cả hai con trỏ; giá trị của phép gán là ký tự vừa chép; khi đó là <code>'\0'</code>, vòng lặp dừng (và <code>'\0'</code> đã được chép). Chú ý (như mọi <code>strcpy</code>) nó không kiểm tra kích thước đích.</p>
+<h2>8.6. Con trỏ và <code>const</code></h2>
+<p>Vị trí của <code>const</code> xác định điều gì là &quot;chỉ đọc&quot;. Quy tắc đọc <strong>từ phải sang trái</strong>:</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> x = <span class="hljs-number">1</span>, y = <span class="hljs-number">2</span>;
+
+<span class="hljs-type">const</span> <span class="hljs-type">int</span> *p1 = &amp;x;        <span class="hljs-comment">// p1: con trỏ tới &quot;const int&quot;  -&gt; KHÔNG sửa được *p1, ĐỔI được p1</span>
+<span class="hljs-type">int</span> * <span class="hljs-type">const</span> p2 = &amp;x;       <span class="hljs-comment">// p2: con trỏ hằng tới int    -&gt; sửa được *p2, KHÔNG đổi được p2</span>
+<span class="hljs-type">const</span> <span class="hljs-type">int</span> * <span class="hljs-type">const</span> p3 = &amp;x; <span class="hljs-comment">// cả hai đều không đổi được</span>
+</code></pre>
+<pre class="hljs"><code>*p1 = <span class="hljs-number">5</span>;    <span class="hljs-comment">// LỖI: dữ liệu là const</span>
+p1 = &amp;y;    <span class="hljs-comment">// OK</span>
+
+*p2 = <span class="hljs-number">5</span>;    <span class="hljs-comment">// OK</span>
+p2 = &amp;y;    <span class="hljs-comment">// LỖI: con trỏ là const</span>
+</code></pre>
+<p>Dùng <code>const int *</code> cho tham số của hàm chỉ <strong>đọc</strong>:</p>
+<pre class="hljs"><code><span class="hljs-type">size_t</span> <span class="hljs-title function_">count_char</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *s, <span class="hljs-type">char</span> c)</span>;   <span class="hljs-comment">// hàm hứa không sửa chuỗi</span>
+</code></pre>
+<p>Nhờ vậy người gọi có thể truyền cả chuỗi literal lẫn mảng, và compiler bắt lỗi nếu hàm lỡ sửa dữ liệu.</p>
+<h2>8.7. <code>void *</code> — con trỏ tổng quát</h2>
+<p><code>void *</code> là con trỏ <strong>không gắn với kiểu nào</strong>. Nó có thể chứa địa chỉ của bất kỳ đối tượng nào, nhưng <strong>không thể giải tham chiếu hay làm số học</strong> trực tiếp — phải ép về kiểu cụ thể trước.</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> x = <span class="hljs-number">5</span>;
+<span class="hljs-type">void</span> *v = &amp;x;               <span class="hljs-comment">// OK: gán bất kỳ con trỏ nào cho void*</span>
+<span class="hljs-type">int</span> *ip = v;                <span class="hljs-comment">// OK trong C: void* tự chuyển về kiểu khác (C++ thì phải ép)</span>
+<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, *(<span class="hljs-type">int</span> *)v);  <span class="hljs-comment">// ép rồi giải tham chiếu</span>
+<span class="hljs-comment">// printf(&quot;%d\n&quot;, *v);      // LỖI: không biết đọc bao nhiêu byte</span>
+</code></pre>
+<p><code>malloc</code> trả về <code>void *</code> nên bạn có thể gán nó thẳng vào bất kỳ con trỏ nào. Ví dụ điển hình khác là hàm hoán đổi tổng quát:</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">swap_bytes</span><span class="hljs-params">(<span class="hljs-type">void</span> *a, <span class="hljs-type">void</span> *b, <span class="hljs-type">size_t</span> size)</span> {
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> tmp[<span class="hljs-number">64</span>];                 <span class="hljs-comment">// giả sử size &lt;= 64</span>
+    <span class="hljs-built_in">memcpy</span>(tmp, a, size);
+    <span class="hljs-built_in">memcpy</span>(a, b, size);
+    <span class="hljs-built_in">memcpy</span>(b, tmp, size);
+}
+
+<span class="hljs-type">int</span> x = <span class="hljs-number">1</span>, y = <span class="hljs-number">2</span>;
+swap_bytes(&amp;x, &amp;y, <span class="hljs-keyword">sizeof</span> x);              <span class="hljs-comment">// dùng cho int</span>
+<span class="hljs-type">double</span> d1 = <span class="hljs-number">1.5</span>, d2 = <span class="hljs-number">2.5</span>;
+swap_bytes(&amp;d1, &amp;d2, <span class="hljs-keyword">sizeof</span> d1);           <span class="hljs-comment">// dùng cho double</span>
+</code></pre>
+<p>Đây chính là cách <code>qsort</code> và <code>bsearch</code> hoạt động với mọi kiểu dữ liệu: chúng làm việc với <code>void *</code> và kích thước phần tử.</p>
+<h2>8.8. Con trỏ tới con trỏ</h2>
+<p>Con trỏ cũng là biến nên có địa chỉ, và ta có thể có con trỏ trỏ tới nó.</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> x = <span class="hljs-number">5</span>;
+<span class="hljs-type">int</span> *p = &amp;x;
+<span class="hljs-type">int</span> **pp = &amp;p;            <span class="hljs-comment">// pp là con trỏ tới (con trỏ tới int)</span>
+
+**pp = <span class="hljs-number">9</span>;                 <span class="hljs-comment">// *pp là p; **pp là x  -&gt; x = 9</span>
+</code></pre>
+<pre class="hljs"><code>   pp ──► p ──► x
+ 0x3000  0x2000  0x1000
+   │        │      └─ 5 (sau đó thành 9)
+   │        └─ lưu 0x1000
+   └─ lưu 0x2000
+</code></pre>
+<h3>Ứng dụng 1: hàm sửa được <strong>chính con trỏ</strong> của người gọi</h3>
+<p>Khi hàm cần đổi con trỏ (ví dụ cấp phát bộ nhớ và trả qua tham số), phải nhận <code>T **</code>:</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-comment">// SAI: chỉ sửa bản sao của con trỏ</span>
+<span class="hljs-type">void</span> <span class="hljs-title function_">alloc_bad</span><span class="hljs-params">(<span class="hljs-type">int</span> *p)</span> {
+    p = <span class="hljs-built_in">malloc</span>(<span class="hljs-keyword">sizeof</span>(<span class="hljs-type">int</span>));     <span class="hljs-comment">// p là bản sao; con trỏ ở main không đổi -&gt; rò rỉ bộ nhớ</span>
+}
+
+<span class="hljs-comment">// ĐÚNG: nhận địa chỉ của con trỏ</span>
+<span class="hljs-type">int</span> <span class="hljs-title function_">alloc_good</span><span class="hljs-params">(<span class="hljs-type">int</span> **out)</span> {
+    *out = <span class="hljs-built_in">malloc</span>(<span class="hljs-keyword">sizeof</span>(<span class="hljs-type">int</span>));  <span class="hljs-comment">// sửa con trỏ của người gọi</span>
+    <span class="hljs-keyword">return</span> *out ? <span class="hljs-number">0</span> : <span class="hljs-number">-1</span>;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> *q = <span class="hljs-literal">NULL</span>;
+    <span class="hljs-keyword">if</span> (alloc_good(&amp;q) == <span class="hljs-number">0</span>) {
+        *q = <span class="hljs-number">7</span>;
+        <span class="hljs-built_in">free</span>(q);
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<h3>Ứng dụng 2: mảng các chuỗi (<code>char **</code>)</h3>
+<pre class="hljs"><code><span class="hljs-type">const</span> <span class="hljs-type">char</span> *names[] = {<span class="hljs-string">&quot;An&quot;</span>, <span class="hljs-string">&quot;Binh&quot;</span>, <span class="hljs-string">&quot;Cuong&quot;</span>};   <span class="hljs-comment">// mảng 3 con trỏ tới chuỗi literal</span>
+
+<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">3</span>; i++) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%s\n&quot;</span>, names[i]);
+</code></pre>
+<pre class="hljs"><code>names:  ┌─────┐
+        │  ●──┼──► &quot;An&quot;
+        ├─────┤
+        │  ●──┼──► &quot;Binh&quot;
+        ├─────┤
+        │  ●──┼──► &quot;Cuong&quot;
+        └─────┘
+</code></pre>
+<p>Chính là kiểu của <code>argv</code> trong <code>int main(int argc, char *argv[])</code> — mảng các chuỗi tham số dòng lệnh:</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> *argv[])</span> {
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; argc; i++) {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;argv[%d] = %s\n&quot;</span>, i, argv[i]);   <span class="hljs-comment">// argv[0] là tên chương trình</span>
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Chạy <code>./prog xin chao</code> in <code>argv[0] = ./prog</code>, <code>argv[1] = xin</code>, <code>argv[2] = chao</code>.</p>
+<h2>8.9. Con trỏ tới struct</h2>
+<p>Toán tử <code>-&gt;</code> truy cập thành viên qua con trỏ: <code>p-&gt;x</code> tương đương <code>(*p).x</code>.</p>
+<pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Point</span> {</span> <span class="hljs-type">int</span> x, y; };
+
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Point</span> <span class="hljs-title">pt</span> =</span> {<span class="hljs-number">3</span>, <span class="hljs-number">4</span>};
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Point</span> *<span class="hljs-title">pp</span> =</span> &amp;pt;
+
+<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d %d\n&quot;</span>, pp-&gt;x, pp-&gt;y);
+pp-&gt;x = <span class="hljs-number">10</span>;                       <span class="hljs-comment">// sửa pt.x</span>
+</code></pre>
+<p>Chi tiết <code>struct</code> ở chương 10; ở chương 9 và 10 bạn sẽ dùng nhiều con trỏ tới struct để xây dựng danh sách liên kết và cây.</p>
+<h2>8.10. Con trỏ hàm (ôn lại)</h2>
+<p>Con trỏ có thể trỏ tới <strong>mã</strong> của một hàm (chương 6). Ví dụ bảng phân phối lệnh:</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">cmd_start</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> { <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;start&quot;</span>); }
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">cmd_stop</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>  { <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;stop&quot;</span>); }
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-title function_">void</span> <span class="hljs-params">(*Handler)</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Command</span> {</span> <span class="hljs-type">const</span> <span class="hljs-type">char</span> *name; Handler fn; };
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Command</span> <span class="hljs-title">table</span>[] =</span> { {<span class="hljs-string">&quot;start&quot;</span>, cmd_start}, {<span class="hljs-string">&quot;stop&quot;</span>, cmd_stop} };
+    <span class="hljs-type">size_t</span> n = <span class="hljs-keyword">sizeof</span> table / <span class="hljs-keyword">sizeof</span> table[<span class="hljs-number">0</span>];
+    <span class="hljs-type">const</span> <span class="hljs-type">char</span> *input = <span class="hljs-string">&quot;stop&quot;</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strcmp</span>(table[i].name, input) == <span class="hljs-number">0</span>) { table[i].fn(); <span class="hljs-keyword">break</span>; }
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Mẫu &quot;bảng con trỏ hàm&quot; thay cho chuỗi <code>if/else</code> dài là cách rất phổ biến trong trình thông dịch, giao thức, và máy trạng thái (chương 19).</p>
+<h2>8.11. Cách đọc khai báo phức tạp</h2>
+<p>Quy tắc <strong>&quot;xoắn ốc&quot;/&quot;từ trong ra ngoài&quot;</strong>: bắt đầu từ tên biến, đọc sang phải khi gặp <code>[]</code> hoặc <code>()</code>, sang trái khi gặp <code>*</code>, và lặp lại.</p>
+<table>
+<thead>
+<tr>
+<th>Khai báo</th>
+<th>Đọc là</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>int *p</code></td>
+<td>p là con trỏ tới int</td>
+</tr>
+<tr>
+<td><code>int a[3]</code></td>
+<td>a là mảng 3 int</td>
+</tr>
+<tr>
+<td><code>int *a[3]</code></td>
+<td>a là mảng 3 con trỏ tới int</td>
+</tr>
+<tr>
+<td><code>int (*p)[3]</code></td>
+<td>p là con trỏ tới mảng 3 int</td>
+</tr>
+<tr>
+<td><code>int *f(void)</code></td>
+<td>f là hàm trả về con trỏ tới int</td>
+</tr>
+<tr>
+<td><code>int (*f)(void)</code></td>
+<td>f là con trỏ tới hàm không tham số trả về int</td>
+</tr>
+<tr>
+<td><code>int (*fa[4])(int)</code></td>
+<td>fa là mảng 4 con trỏ tới hàm nhận int, trả về int</td>
+</tr>
+<tr>
+<td><code>const char *s</code></td>
+<td>s là con trỏ tới const char</td>
+</tr>
+<tr>
+<td><code>char * const s</code></td>
+<td>s là hằng con trỏ tới char</td>
+</tr>
+</tbody>
+</table>
+<p>Khi khai báo quá phức tạp, hãy dùng <code>typedef</code> để gọi tên từng phần.</p>
+<h2>8.12. Bộ nhớ động (giới thiệu)</h2>
+<p>Con trỏ là cách duy nhất để dùng bộ nhớ <strong>cấp phát động</strong> trên heap:</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-type">int</span> *arr = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">5</span> * <span class="hljs-keyword">sizeof</span> *arr);        <span class="hljs-comment">// xin 5 int</span>
+<span class="hljs-keyword">if</span> (arr == <span class="hljs-literal">NULL</span>) { <span class="hljs-comment">/* hết bộ nhớ */</span> }
+<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; i++) arr[i] = i * i;
+<span class="hljs-built_in">free</span>(arr);                                  <span class="hljs-comment">// trả lại</span>
+arr = <span class="hljs-literal">NULL</span>;
+</code></pre>
+<p>Mẹo: viết <code>sizeof *arr</code> thay vì <code>sizeof(int)</code> để khi đổi kiểu của <code>arr</code>, kích thước tự cập nhật đúng. Chương 9 nói chi tiết về <code>malloc</code>, <code>realloc</code>, <code>free</code> và các lỗi bộ nhớ.</p>
+<h2>8.13. Các lỗi con trỏ kinh điển</h2>
+<h3>1. Con trỏ chưa khởi tạo (wild pointer)</h3>
+<pre class="hljs"><code><span class="hljs-type">int</span> *p;        <span class="hljs-comment">// giá trị rác — trỏ tới đâu đó ngẫu nhiên</span>
+*p = <span class="hljs-number">42</span>;       <span class="hljs-comment">// ghi vào địa chỉ ngẫu nhiên -&gt; crash hoặc phá dữ liệu</span>
+</code></pre>
+<p>Sửa: luôn khởi tạo (<code>int *p = NULL;</code> hoặc trỏ tới biến thật).</p>
+<h3>2. Giải tham chiếu <code>NULL</code></h3>
+<pre class="hljs"><code><span class="hljs-type">char</span> *s = <span class="hljs-built_in">strchr</span>(<span class="hljs-string">&quot;abc&quot;</span>, <span class="hljs-string">&#x27;x&#x27;</span>);   <span class="hljs-comment">// không tìm thấy -&gt; NULL</span>
+<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%c\n&quot;</span>, *s);             <span class="hljs-comment">// crash</span>
+</code></pre>
+<p>Sửa: kiểm tra <code>if (s != NULL)</code>.</p>
+<h3>3. Con trỏ treo (dangling pointer)</h3>
+<pre class="hljs"><code><span class="hljs-type">int</span> *p = <span class="hljs-built_in">malloc</span>(<span class="hljs-keyword">sizeof</span> *p);
+<span class="hljs-built_in">free</span>(p);
+*p = <span class="hljs-number">1</span>;                  <span class="hljs-comment">// use-after-free: vùng nhớ đã trả lại</span>
+
+<span class="hljs-type">int</span> *<span class="hljs-title function_">f</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> { <span class="hljs-type">int</span> x; <span class="hljs-keyword">return</span> &amp;x; }   <span class="hljs-comment">// trả về địa chỉ biến cục bộ</span>
+</code></pre>
+<p>Sửa: đặt <code>p = NULL</code> ngay sau <code>free</code>; không trả địa chỉ biến cục bộ.</p>
+<h3>4. Nhầm giữa <code>p</code> và <code>*p</code></h3>
+<pre class="hljs"><code><span class="hljs-type">int</span> x = <span class="hljs-number">5</span>;
+<span class="hljs-type">int</span> *p = &amp;x;
+p = <span class="hljs-number">10</span>;         <span class="hljs-comment">// LỖI: gán số 10 cho con trỏ (compiler cảnh báo); ý định thường là *p = 10</span>
+</code></pre>
+<h3>5. Sai kiểu / sai kích thước</h3>
+<pre class="hljs"><code><span class="hljs-type">int</span> *p = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">10</span>);             <span class="hljs-comment">// 10 byte, không phải 10 int</span>
+p[<span class="hljs-number">9</span>] = <span class="hljs-number">0</span>;                        <span class="hljs-comment">// ghi ngoài vùng (cần 40 byte)</span>
+<span class="hljs-type">int</span> *q = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">10</span> * <span class="hljs-keyword">sizeof</span> *q); <span class="hljs-comment">// đúng</span>
+</code></pre>
+<h3>6. Truy cập ngoài giới hạn mảng</h3>
+<pre class="hljs"><code><span class="hljs-type">int</span> a[<span class="hljs-number">3</span>];
+<span class="hljs-type">int</span> *p = a + <span class="hljs-number">5</span>;                  <span class="hljs-comment">// đã UB (đi quá xa)</span>
+</code></pre>
+<h3>7. So sánh con trỏ thay vì nội dung</h3>
+<pre class="hljs"><code><span class="hljs-type">char</span> *a = <span class="hljs-string">&quot;abc&quot;</span>, *b = <span class="hljs-string">&quot;abc&quot;</span>;
+<span class="hljs-keyword">if</span> (a == b) { ... }              <span class="hljs-comment">// so sánh địa chỉ! Dùng strcmp(a, b) == 0</span>
+</code></pre>
+<h3>8. Dùng con trỏ sau <code>realloc</code></h3>
+<pre class="hljs"><code><span class="hljs-type">int</span> *p = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">4</span> * <span class="hljs-keyword">sizeof</span> *p);
+<span class="hljs-type">int</span> *q = p;
+p = <span class="hljs-built_in">realloc</span>(p, <span class="hljs-number">100</span> * <span class="hljs-keyword">sizeof</span> *p);   <span class="hljs-comment">// vùng cũ có thể bị di chuyển</span>
+q[<span class="hljs-number">0</span>] = <span class="hljs-number">1</span>;                          <span class="hljs-comment">// q có thể đã &quot;treo&quot;</span>
+</code></pre>
+<h3>Công cụ bắt lỗi con trỏ</h3>
+<pre class="hljs"><code>gcc -std=c11 -g -fsanitize=address,undefined -o prog prog.c &amp;&amp; ./prog
+valgrind --leak-check=full ./prog     <span class="hljs-comment"># Linux</span>
+</code></pre>
+<p>Sanitizer chỉ ra chính xác dòng gây lỗi và loại lỗi (heap-use-after-free, stack-buffer-overflow, null dereference...).</p>
+<h2>8.14. Thực hành hoàn chỉnh: đảo ngược mảng và tìm chuỗi con bằng con trỏ</h2>
+<pre class="hljs"><code><span class="hljs-comment">// ptr_practice.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-comment">// Đảo mảng bằng hai con trỏ từ hai đầu</span>
+<span class="hljs-type">void</span> <span class="hljs-title function_">reverse_ints</span><span class="hljs-params">(<span class="hljs-type">int</span> *first, <span class="hljs-type">int</span> *last)</span> {     <span class="hljs-comment">// last trỏ tới phần tử cuối</span>
+    <span class="hljs-keyword">while</span> (first &lt; last) {
+        <span class="hljs-type">int</span> t = *first;
+        *first++ = *last;
+        *last-- = t;
+    }
+}
+
+<span class="hljs-comment">// Tìm chuỗi con bằng con trỏ; trả về con trỏ tới lần xuất hiện đầu hoặc NULL</span>
+<span class="hljs-type">const</span> <span class="hljs-type">char</span> *<span class="hljs-title function_">find_sub</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *hay, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *needle)</span> {
+    <span class="hljs-keyword">if</span> (*needle == <span class="hljs-string">&#x27;\0&#x27;</span>) <span class="hljs-keyword">return</span> hay;
+    <span class="hljs-keyword">for</span> (; *hay; hay++) {
+        <span class="hljs-type">const</span> <span class="hljs-type">char</span> *h = hay, *n = needle;
+        <span class="hljs-keyword">while</span> (*h &amp;&amp; *n &amp;&amp; *h == *n) { h++; n++; }
+        <span class="hljs-keyword">if</span> (*n == <span class="hljs-string">&#x27;\0&#x27;</span>) <span class="hljs-keyword">return</span> hay;            <span class="hljs-comment">// khớp hết needle</span>
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> a[] = {<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>};
+    <span class="hljs-type">size_t</span> n = <span class="hljs-keyword">sizeof</span> a / <span class="hljs-keyword">sizeof</span> a[<span class="hljs-number">0</span>];
+    reverse_ints(a, a + n - <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d &quot;</span>, a[i]);     <span class="hljs-comment">// 5 4 3 2 1</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n&quot;</span>);
+
+    <span class="hljs-type">const</span> <span class="hljs-type">char</span> *text = <span class="hljs-string">&quot;the quick brown fox&quot;</span>;
+    <span class="hljs-type">const</span> <span class="hljs-type">char</span> *pos = find_sub(text, <span class="hljs-string">&quot;brown&quot;</span>);
+    <span class="hljs-keyword">if</span> (pos) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;tim thay tai chi so %td: %s\n&quot;</span>, pos - text, pos);   <span class="hljs-comment">// %td cho ptrdiff_t</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<h2>8.15. Tóm tắt</h2>
 <ul>
-<li>Null dereference: luôn kiểm tra p != NULL.</li>
-<li>Use-after-free: sau khi free(p) gán p = NULL.</li>
-<li>Uninitialized pointer: khởi tạo pointer = NULL khi khai báo nếu chưa có địa chỉ.</li>
-<li>Buffer overflow: khi dùng pointer để viết vào vùng nhớ, đảm bảo chỉ ghi trong giới hạn.</li>
+<li>Con trỏ là biến chứa <strong>địa chỉ</strong>; <code>&amp;x</code> lấy địa chỉ, <code>*p</code> truy cập dữ liệu tại địa chỉ.</li>
+<li>Số học con trỏ nhân theo kích thước kiểu; <code>a[i] ≡ *(a + i)</code>.</li>
+<li>Tên mảng phân rã thành con trỏ khi truyền vào hàm, nhưng <strong>mảng không phải con trỏ</strong>.</li>
+<li><code>const</code> đặt trước <code>*</code> bảo vệ dữ liệu; đặt sau <code>*</code> bảo vệ chính con trỏ.</li>
+<li><code>void *</code> là con trỏ tổng quát; <code>T **</code> cho phép hàm đổi con trỏ của người gọi.</li>
+<li>Luôn khởi tạo con trỏ, kiểm tra <code>NULL</code>, tránh con trỏ treo, và dùng sanitizer để bắt lỗi.</li>
 </ul>
-<h2>5. Ví dụ thực hành</h2>
-<ul>
-<li>pointer_examples.c: minh hoạ truy cập, arithmetic, aliasing và cách tránh lỗi.</li>
-<li>linked_list.c: implement linked list với hàm add/remove/print; chú ý quản lý bộ nhớ.</li>
-</ul>
-<h2>6. Công cụ debug và kiểm thử</h2>
-<ul>
-<li>Valgrind (Linux) để dò rò bộ nhớ và use-after-free.</li>
-<li>ASAN (AddressSanitizer) khi build bằng clang/gcc với -fsanitize=address.</li>
-</ul>
-<p>Ghi chú: kèm sơ đồ vùng nhớ (stack/heap/data/text) và ví dụ chạy được trong <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-08">code/chapter-08</a>.</p>
+<h2>8.16. Bài tập</h2>
+<ol>
+<li>Viết chương trình khai báo <code>int a = 5; int *p = &amp;a;</code> và in <code>a</code>, <code>&amp;a</code>, <code>p</code>, <code>*p</code>, <code>&amp;p</code>. Vẽ sơ đồ bộ nhớ tương ứng.</li>
+<li>Viết hàm <code>void swap(int *a, int *b)</code> rồi hàm <code>void sort3(int *a, int *b, int *c)</code> sắp xếp ba số tăng dần.</li>
+<li>Viết hàm <code>int *find_max(int *a, size_t n)</code> trả về <strong>con trỏ</strong> tới phần tử lớn nhất (NULL nếu n = 0).</li>
+<li>Cài đặt <code>my_strlen</code>, <code>my_strcmp</code>, <code>my_strchr</code>, <code>my_strrev</code> chỉ dùng con trỏ (không dùng chỉ số <code>[]</code>).</li>
+<li>Viết hàm <code>int split(char *line, char *fields[], int max)</code> tách một dòng theo dấu phẩy, lưu con trỏ tới từng trường vào <code>fields</code>.</li>
+<li>Viết chương trình in các đối số dòng lệnh theo thứ tự ngược, và chương trình cộng các số nguyên trong <code>argv</code> (dùng <code>strtol</code>).</li>
+<li>Viết hàm <code>int alloc_matrix(int rows, int cols, int ***out)</code> cấp phát ma trận động; và hàm giải phóng tương ứng. (Gợi ý: thử cả hai cách: mảng các con trỏ hàng, và một khối liên tiếp với <code>rows * cols</code> phần tử.)</li>
+<li>Đọc khai báo và viết lại bằng tiếng Việt: <code>char *(*fp)(const char *, int);</code>, <code>int (*(*fn)(void))[3];</code>. Kiểm tra bằng <code>cdecl.org</code>.</li>
+<li>Tìm lỗi trong mỗi đoạn ở mục 8.13 bằng cách viết chương trình nhỏ tái hiện, chạy với AddressSanitizer, và đọc thông báo.</li>
+<li>(Thử thách) Viết hàm <code>void *my_memcpy(void *dst, const void *src, size_t n)</code> chỉ dùng <code>unsigned char *</code>. Sau đó viết <code>my_memmove</code> xử lý được trường hợp vùng nhớ chồng lấn (gợi ý: chọn chiều sao chép dựa trên so sánh <code>dst</code> và <code>src</code>).</li>
+</ol>
+<p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-08">code/chapter-08</a></p>
 
 </article>
 <div class="chapter-nav"><a class="nav-prev" href="chapter-07.html">&larr; Mảng & chuỗi (Arrays & Strings)</a><a class="nav-next" href="chapter-09.html">Quản lý bộ nhớ và lỗi phổ biến &rarr;</a></div>

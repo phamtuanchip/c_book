@@ -12,60 +12,588 @@
 <main class="content">
 <article>
 <h1>Chương 6 — Hàm &amp; phạm vi biến (Functions &amp; Scope)</h1>
-<p>Mục tiêu chương:</p>
+<h2>Mục tiêu chương</h2>
 <ul>
-<li>Hiểu cách thiết kế hàm, prototype, và cách tổ chức mã theo modules (.h/.c).</li>
-<li>Khác biệt giữa pass-by-value và việc truyền con trỏ để thay đổi giá trị bên ngoài.</li>
-<li>Hiểu storage class: auto, static, extern; và best practices khi dùng biến toàn cục.</li>
+<li>Hiểu hàm là gì, vì sao chia chương trình thành hàm và cách một lời gọi hàm hoạt động trong bộ nhớ.</li>
+<li>Viết hàm với tham số, giá trị trả về, prototype; hiểu <strong>truyền theo giá trị</strong>.</li>
+<li>Phân biệt <strong>phạm vi (scope)</strong>, <strong>thời gian sống (lifetime)</strong> và <strong>liên kết (linkage)</strong>; dùng đúng <code>static</code>, <code>extern</code>, biến toàn cục.</li>
+<li>Hiểu <strong>stack frame</strong>, <strong>đệ quy</strong> và giới hạn của nó.</li>
+<li>Nhận biết và tránh các lỗi kinh điển: trả về địa chỉ biến cục bộ, biến toàn cục lạm dụng, đệ quy không có điều kiện dừng.</li>
+<li>Làm quen với con trỏ hàm và hàm nhận số lượng tham số thay đổi (variadic).</li>
 </ul>
-<h2>1. Prototype và definition</h2>
-<ul>
-<li>Prototype (khai báo) giúp compiler biết kiểu trả về và tham số trước khi gọi hàm.</li>
-<li>Đặt prototype trong header (.h), definition trong .c.</li>
-</ul>
-<p>Ví dụ:</p>
-<pre class="hljs"><code><span class="hljs-comment">// math.h</span>
-<span class="hljs-type">int</span> <span class="hljs-title function_">add</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span>;
-
-<span class="hljs-comment">// math.c</span>
-<span class="hljs-type">int</span> <span class="hljs-title function_">add</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span> { <span class="hljs-keyword">return</span> a + b; }
-</code></pre>
-<h2>2. Truyền tham số: giá trị vs địa chỉ</h2>
-<ul>
-<li>Mặc định: giá trị được truyền theo giá trị (copy). Thay đổi bên trong hàm không ảnh hưởng biến ở caller.</li>
-<li>Truyền con trỏ: hàm nhận địa chỉ để sửa giá trị ban đầu.</li>
-</ul>
-<p>Ví dụ swap bằng con trỏ:</p>
-<pre class="hljs"><code><span class="hljs-type">void</span> <span class="hljs-title function_">swap</span><span class="hljs-params">(<span class="hljs-type">int</span> *a, <span class="hljs-type">int</span> *b)</span> { <span class="hljs-type">int</span> t = *a; *a = *b; *b = t; }
-</code></pre>
-<h2>3. Storage class và scope</h2>
-<ul>
-<li>auto: mặc định cho biến cục bộ.</li>
-<li>static: nếu áp dụng cho biến file-scope, biến chỉ nhìn thấy trong translation unit; nếu cho biến cục bộ, biến giữ giá trị giữa các lần gọi.</li>
-<li>extern: khai báo biến toàn cục được định nghĩa ở file khác.</li>
-</ul>
-<h2>4. Function pointers</h2>
-<ul>
-<li>Khai báo: int (<em>cmp)(const void</em>, const void*);</li>
-<li>Dùng để truyền callback cho các hàm như qsort.</li>
-</ul>
-<h2>5. Tách module (header + source)</h2>
-<ul>
-<li>Quy tắc: header cho API công khai; .c cho implementation nội bộ.</li>
-<li>Ví dụ cấu trúc: include/math.h, src/math.c, examples/main.c</li>
-<li>Makefile: compile .c -&gt; .o và link thành exe.</li>
-</ul>
-<h2>6. Ví dụ thực hành</h2>
-<ul>
-<li>Viết thư viện vector_int: create, push, pop, free; test memory leak.</li>
-<li>Viết swap bằng con trỏ và so sánh với macro swap.</li>
-<li>Dùng qsort với comparator function pointer.</li>
-</ul>
-<h2>7. Bài tập</h2>
+<h2>6.1. Vì sao cần hàm?</h2>
+<p>Hàm là một đoạn mã được <strong>đặt tên</strong>, có thể gọi nhiều lần với đầu vào khác nhau. Lợi ích:</p>
 <ol>
-<li>Tạo module math với add/sub/mul/div (xử lý chia cho 0). 2) Viết vector_int (push/pop). 3) Viết comparator và sort array bằng qsort.</li>
+<li><strong>Tái sử dụng:</strong> viết một lần, dùng nhiều nơi.</li>
+<li><strong>Chia để trị:</strong> bài toán lớn chia thành bài toán nhỏ, mỗi hàm làm <em>một việc</em>.</li>
+<li><strong>Dễ kiểm thử và gỡ lỗi:</strong> kiểm tra riêng từng hàm.</li>
+<li><strong>Trừu tượng hóa:</strong> người gọi chỉ cần biết hàm <em>làm gì</em>, không cần biết <em>làm thế nào</em>.</li>
 </ol>
-<p>Ghi chú: đưa các ví dụ trong <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-06">code/chapter-06</a> kèm Makefile và test cases.</p>
+<p>Nguyên tắc: <strong>một hàm làm một việc</strong>, tên hàm là động từ mô tả việc đó (<code>calculate_average</code>, <code>is_valid_email</code>, <code>read_config</code>). Nếu bạn khó đặt tên hoặc phải dùng chữ &quot;và&quot; (<code>read_and_parse_and_print</code>), có lẽ hàm đang làm quá nhiều.</p>
+<h2>6.2. Định nghĩa và gọi hàm</h2>
+<h3>Cú pháp</h3>
+<pre class="hljs"><code>kiểu_trả_về tên_hàm(kiểu1 tham_số<span class="hljs-number">1</span>, kiểu2 tham_số<span class="hljs-number">2</span>) {
+    <span class="hljs-comment">// thân hàm</span>
+    <span class="hljs-keyword">return</span> giá_trị;
+}
+</code></pre>
+<pre class="hljs"><code><span class="hljs-comment">// Tính trung bình cộng hai số</span>
+<span class="hljs-type">double</span> <span class="hljs-title function_">average</span><span class="hljs-params">(<span class="hljs-type">double</span> a, <span class="hljs-type">double</span> b)</span> {
+    <span class="hljs-keyword">return</span> (a + b) / <span class="hljs-number">2.0</span>;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">double</span> m = average(<span class="hljs-number">3.0</span>, <span class="hljs-number">4.5</span>);   <span class="hljs-comment">// gọi hàm: 3.0 và 4.5 là ĐỐI SỐ (argument)</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%.2f\n&quot;</span>, m);            <span class="hljs-comment">// 3.75</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p><strong>Thuật ngữ:</strong></p>
+<ul>
+<li><strong>Tham số (parameter):</strong> biến khai báo trong định nghĩa hàm (<code>a</code>, <code>b</code>).</li>
+<li><strong>Đối số (argument):</strong> giá trị thực tế truyền vào khi gọi (<code>3.0</code>, <code>4.5</code>).</li>
+</ul>
+<h3>Hàm không trả về giá trị</h3>
+<p>Dùng <code>void</code>:</p>
+<pre class="hljs"><code><span class="hljs-type">void</span> <span class="hljs-title function_">print_line</span><span class="hljs-params">(<span class="hljs-type">int</span> n)</span> {
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) <span class="hljs-built_in">putchar</span>(<span class="hljs-string">&#x27;-&#x27;</span>);
+    <span class="hljs-built_in">putchar</span>(<span class="hljs-string">&#x27;\n&#x27;</span>);
+}
+</code></pre>
+<p>Có thể dùng <code>return;</code> (không kèm giá trị) để thoát sớm khỏi hàm <code>void</code>.</p>
+<h3>Hàm không có tham số: <code>(void)</code></h3>
+<pre class="hljs"><code><span class="hljs-type">int</span> <span class="hljs-title function_">get_answer</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> { <span class="hljs-keyword">return</span> <span class="hljs-number">42</span>; }
+</code></pre>
+<p>Trong C, <code>int f()</code> nghĩa là &quot;hàm nhận <strong>số lượng tham số không xác định</strong>&quot; (kiểu cũ, không kiểm tra), còn <code>int f(void)</code> nghĩa là <strong>không có tham số</strong>. Luôn dùng <code>(void)</code>.</p>
+<h3>Prototype (khai báo hàm)</h3>
+<p>Compiler đọc từ trên xuống, nên hàm phải được <strong>khai báo trước khi gọi</strong>:</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">square</span><span class="hljs-params">(<span class="hljs-type">int</span> x)</span>;          <span class="hljs-comment">// prototype: chỉ có chữ ký, kết thúc bằng ;</span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, square(<span class="hljs-number">5</span>));
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">square</span><span class="hljs-params">(<span class="hljs-type">int</span> x)</span> {         <span class="hljs-comment">// định nghĩa: có thân hàm</span>
+    <span class="hljs-keyword">return</span> x * x;
+}
+</code></pre>
+<p>Prototype cho phép compiler kiểm tra số lượng và kiểu đối số ở mỗi lời gọi. Tên tham số trong prototype là tùy chọn (<code>int square(int);</code> cũng được) nhưng nên viết để có tài liệu. Prototype của hàm dùng chung được đặt trong file <code>.h</code>.</p>
+<h2>6.3. Truyền tham số theo giá trị</h2>
+<p>Trong C, mọi tham số <strong>được truyền theo giá trị (pass by value)</strong>: hàm nhận <strong>bản sao</strong> của đối số. Thay đổi bản sao <strong>không ảnh hưởng</strong> biến gốc.</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">increment</span><span class="hljs-params">(<span class="hljs-type">int</span> x)</span> {
+    x = x + <span class="hljs-number">1</span>;                     <span class="hljs-comment">// chỉ sửa bản sao</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;trong ham: x = %d\n&quot;</span>, x);
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> a = <span class="hljs-number">5</span>;
+    increment(a);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;trong main: a = %d\n&quot;</span>, a);   <span class="hljs-comment">// vẫn là 5</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<pre class="hljs"><code>trong ham: x = 6
+trong main: a = 5
+</code></pre>
+<h3>Muốn hàm sửa biến của người gọi? Truyền địa chỉ</h3>
+<p>Truyền <strong>con trỏ</strong> (địa chỉ của biến). Hàm vẫn nhận bản sao <em>của con trỏ</em>, nhưng bản sao đó trỏ vào cùng biến gốc nên ta sửa được nó:</p>
+<pre class="hljs"><code><span class="hljs-type">void</span> <span class="hljs-title function_">increment_ptr</span><span class="hljs-params">(<span class="hljs-type">int</span> *p)</span> {
+    *p = *p + <span class="hljs-number">1</span>;         <span class="hljs-comment">// *p là &quot;giá trị tại địa chỉ p&quot;</span>
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> a = <span class="hljs-number">5</span>;
+    increment_ptr(&amp;a);   <span class="hljs-comment">// truyền địa chỉ của a</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, a);   <span class="hljs-comment">// 6</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Ví dụ kinh điển: hoán đổi hai số.</p>
+<pre class="hljs"><code><span class="hljs-type">void</span> <span class="hljs-title function_">swap</span><span class="hljs-params">(<span class="hljs-type">int</span> *a, <span class="hljs-type">int</span> *b)</span> {
+    <span class="hljs-type">int</span> tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
+
+<span class="hljs-type">int</span> x = <span class="hljs-number">1</span>, y = <span class="hljs-number">2</span>;
+swap(&amp;x, &amp;y);            <span class="hljs-comment">// x = 2, y = 1</span>
+</code></pre>
+<p>Bạn đã dùng cơ chế này với <code>scanf(&quot;%d&quot;, &amp;n)</code> — <code>scanf</code> cần địa chỉ để ghi giá trị vào <code>n</code>. Chương 8 giải thích con trỏ chi tiết.</p>
+<h3>Trả về nhiều giá trị</h3>
+<p>Hàm C chỉ <code>return</code> một giá trị. Để &quot;trả về&quot; nhiều giá trị, dùng tham số con trỏ đầu ra hoặc <code>struct</code>:</p>
+<pre class="hljs"><code><span class="hljs-comment">// Cách 1: tham số đầu ra</span>
+<span class="hljs-type">void</span> <span class="hljs-title function_">min_max</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">int</span> a[], <span class="hljs-type">int</span> n, <span class="hljs-type">int</span> *min, <span class="hljs-type">int</span> *max)</span> {
+    *min = *max = a[<span class="hljs-number">0</span>];
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt; n; i++) {
+        <span class="hljs-keyword">if</span> (a[i] &lt; *min) *min = a[i];
+        <span class="hljs-keyword">if</span> (a[i] &gt; *max) *max = a[i];
+    }
+}
+
+<span class="hljs-comment">// Cách 2: trả về struct (chương 10)</span>
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span> <span class="hljs-type">int</span> min, max; } MinMax;
+MinMax <span class="hljs-title function_">find_min_max</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">int</span> a[], <span class="hljs-type">int</span> n)</span>;
+</code></pre>
+<h3>Mảng là tham số: đặc biệt</h3>
+<p>Khi truyền <strong>mảng</strong> cho hàm, thực chất hàm nhận <strong>con trỏ tới phần tử đầu</strong>, không phải bản sao mảng. Vì vậy hàm <strong>có thể sửa</strong> phần tử mảng gốc, và phải truyền thêm <strong>kích thước</strong>:</p>
+<pre class="hljs"><code><span class="hljs-type">void</span> <span class="hljs-title function_">fill_zero</span><span class="hljs-params">(<span class="hljs-type">int</span> a[], <span class="hljs-type">int</span> n)</span> {     <span class="hljs-comment">// int a[] thực chất là int *a</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) a[i] = <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Bên trong hàm, <code>sizeof(a)</code> là kích thước <strong>con trỏ</strong>, không phải mảng (bẫy kinh điển, xem chương 7). Nếu hàm không sửa mảng, khai báo <code>const</code>: <code>int sum(const int a[], int n)</code>.</p>
+<h2>6.4. Giá trị trả về</h2>
+<ul>
+<li>Kiểu của biểu thức sau <code>return</code> được chuyển sang kiểu trả về của hàm.</li>
+<li>Hàm khác <code>void</code> <strong>phải</strong> trả về giá trị trên mọi đường thực thi. Nếu bạn dùng kết quả của hàm mà nó không <code>return</code>, hành vi là không xác định. <code>-Wall</code> cảnh báo <code>control reaches end of non-void function</code>.</li>
+<li>Giá trị trả về nên <strong>được kiểm tra</strong> nếu nó biểu thị lỗi (<code>fopen</code> trả <code>NULL</code>, <code>scanf</code> trả số mục đọc được).</li>
+</ul>
+<p>Quy ước phổ biến để báo lỗi: trả về <code>0</code> cho thành công, số âm hoặc <code>-1</code> cho lỗi; hoặc trả về con trỏ <code>NULL</code> khi lỗi. Chương 13 đi sâu vào xử lý lỗi.</p>
+<h2>6.5. Phạm vi (scope)</h2>
+<p><strong>Phạm vi</strong> của một tên (biến, hàm) là vùng mã nguồn nơi tên đó có thể được dùng.</p>
+<h3>Bốn loại phạm vi trong C</h3>
+<table>
+<thead>
+<tr>
+<th>Phạm vi</th>
+<th>Bắt đầu / kết thúc</th>
+<th>Ví dụ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Khối (block)</strong></td>
+<td>từ khai báo đến <code>}</code> của khối chứa nó</td>
+<td>biến trong <code>{ }</code>, biến vòng <code>for</code></td>
+</tr>
+<tr>
+<td><strong>Hàm (function)</strong></td>
+<td>trong toàn hàm</td>
+<td>chỉ áp dụng cho nhãn <code>goto</code></td>
+</tr>
+<tr>
+<td><strong>Tệp (file)</strong></td>
+<td>từ khai báo đến cuối file</td>
+<td>biến/hàm khai báo ngoài mọi hàm</td>
+</tr>
+<tr>
+<td><strong>Prototype hàm</strong></td>
+<td>trong dấu ngoặc của prototype</td>
+<td>tên tham số trong prototype</td>
+</tr>
+</tbody>
+</table>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> g = <span class="hljs-number">100</span>;                <span class="hljs-comment">// phạm vi file (biến toàn cục)</span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> x = <span class="hljs-number">1</span>;              <span class="hljs-comment">// phạm vi khối của main</span>
+    {
+        <span class="hljs-type">int</span> y = <span class="hljs-number">2</span>;          <span class="hljs-comment">// phạm vi khối trong</span>
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d %d %d\n&quot;</span>, g, x, y);
+    }
+    <span class="hljs-comment">// printf(&quot;%d&quot;, y);     // LỖI: y không tồn tại ngoài khối</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">3</span>; i++) {
+        <span class="hljs-type">int</span> t = i * <span class="hljs-number">2</span>;      <span class="hljs-comment">// t được tạo lại mỗi lần lặp</span>
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d &quot;</span>, t);
+    }
+    <span class="hljs-comment">// i, t không dùng được ở đây</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<h3>Che khuất (shadowing)</h3>
+<p>Biến trong khối trong có thể <strong>trùng tên</strong> với biến ở khối ngoài và <em>che</em> nó:</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> x = <span class="hljs-number">10</span>;
+{
+    <span class="hljs-type">int</span> x = <span class="hljs-number">20</span>;              <span class="hljs-comment">// x này che x bên ngoài</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, x);       <span class="hljs-comment">// 20</span>
+}
+<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, x);           <span class="hljs-comment">// 10</span>
+</code></pre>
+<p>Shadowing hợp lệ nhưng dễ gây nhầm; bật <code>-Wshadow</code> để được cảnh báo.</p>
+<h2>6.6. Thời gian sống (storage duration) và <code>static</code></h2>
+<p><strong>Thời gian sống</strong> là khoảng thời gian <strong>khi chương trình chạy</strong> mà biến tồn tại trong bộ nhớ. Đừng nhầm với phạm vi (phần mã nguồn có thể truy cập).</p>
+<table>
+<thead>
+<tr>
+<th>Loại</th>
+<th>Khi nào tồn tại</th>
+<th>Nằm ở đâu</th>
+<th>Khởi tạo mặc định</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>automatic</strong> (biến cục bộ thường)</td>
+<td>từ khi vào khối đến khi ra khỏi khối</td>
+<td>stack</td>
+<td><strong>rác</strong> (không xác định)</td>
+</tr>
+<tr>
+<td><strong>static</strong> (toàn cục và <code>static</code>)</td>
+<td>suốt chương trình</td>
+<td>vùng data/BSS</td>
+<td><strong>0</strong></td>
+</tr>
+<tr>
+<td><strong>allocated</strong> (malloc)</td>
+<td>từ <code>malloc</code> đến <code>free</code></td>
+<td>heap</td>
+<td>rác (<code>calloc</code> thì 0)</td>
+</tr>
+</tbody>
+</table>
+<h3><code>static</code> cho biến cục bộ</h3>
+<p><code>static</code> biến cục bộ <strong>giữ giá trị giữa các lần gọi hàm</strong>; nó được khởi tạo <strong>một lần</strong> duy nhất:</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> <span class="hljs-title function_">next_id</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">static</span> <span class="hljs-type">int</span> id = <span class="hljs-number">0</span>;     <span class="hljs-comment">// khởi tạo một lần; tồn tại suốt chương trình</span>
+    id++;
+    <span class="hljs-keyword">return</span> id;
+}
+
+<span class="hljs-comment">// gọi 3 lần: 1, 2, 3</span>
+<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d %d %d\n&quot;</span>, next_id(), next_id(), next_id());
+</code></pre>
+<p>Phạm vi vẫn là bên trong hàm, nhưng thời gian sống là toàn chương trình. Lưu ý <code>static</code> cục bộ làm hàm <strong>không tái nhập được (not reentrant)</strong> và không an toàn với đa luồng (chương 15).</p>
+<h3><code>static</code> cho biến/hàm ở phạm vi file</h3>
+<p>Với biến hoặc hàm ở phạm vi file, <code>static</code> có nghĩa khác: <strong>giới hạn tên trong file <code>.c</code> hiện tại</strong> (<em>internal linkage</em>). File khác không thể thấy hay gọi nó — giống như &quot;private&quot; trong các ngôn ngữ khác.</p>
+<pre class="hljs"><code><span class="hljs-comment">// counter.c</span>
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> counter = <span class="hljs-number">0</span>;                 <span class="hljs-comment">// chỉ dùng được trong counter.c</span>
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">log_msg</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *m)</span> {    <span class="hljs-comment">// hàm nội bộ</span>
+    <span class="hljs-comment">/* ... */</span>
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">counter_next</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {                <span class="hljs-comment">// hàm công khai (external linkage)</span>
+    log_msg(<span class="hljs-string">&quot;tang&quot;</span>);
+    <span class="hljs-keyword">return</span> ++counter;
+}
+</code></pre>
+<p><strong>Quy tắc:</strong> <em>mọi hàm và biến toàn cục không cần chia sẻ với file khác đều nên là <code>static</code>.</em> Điều này tránh xung đột tên và giúp compiler tối ưu.</p>
+<h3>Biến toàn cục và <code>extern</code></h3>
+<p>Biến toàn cục tồn tại suốt chương trình và mọi hàm đều truy cập được. Để dùng nó từ file khác, khai báo bằng <code>extern</code> (báo &quot;biến này được định nghĩa ở nơi khác&quot;):</p>
+<pre class="hljs"><code><span class="hljs-comment">// config.c</span>
+<span class="hljs-type">int</span> max_connections = <span class="hljs-number">100</span>;      <span class="hljs-comment">// ĐỊNH NGHĨA (cấp bộ nhớ) - chỉ ở một file</span>
+
+<span class="hljs-comment">// config.h</span>
+<span class="hljs-keyword">extern</span> <span class="hljs-type">int</span> max_connections;     <span class="hljs-comment">// KHAI BÁO (không cấp bộ nhớ)</span>
+
+<span class="hljs-comment">// main.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;config.h&quot;</span></span>
+<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, max_connections);
+</code></pre>
+<p><strong>Hạn chế biến toàn cục</strong>, vì:</p>
+<ul>
+<li>Mọi hàm có thể sửa nó → khó theo dõi ai làm thay đổi giá trị.</li>
+<li>Làm hàm phụ thuộc trạng thái ẩn → khó kiểm thử.</li>
+<li>Không an toàn với đa luồng.</li>
+</ul>
+<p>Thay vào đó, hãy truyền dữ liệu qua tham số, hoặc gói trạng thái vào <code>struct</code> và truyền con trỏ tới nó.</p>
+<h3><code>const</code> và <code>register</code> (ngắn gọn)</h3>
+<ul>
+<li><code>const</code>: đối tượng không được sửa qua tên này. <code>const int MAX = 10;</code></li>
+<li><code>register</code>: gợi ý cho compiler cất biến vào thanh ghi. Compiler hiện đại tự quyết định nên từ khóa gần như không còn tác dụng; bạn cũng không thể lấy địa chỉ (<code>&amp;</code>) của biến <code>register</code>.</li>
+</ul>
+<h2>6.7. Hàm gọi hàm: stack frame</h2>
+<p>Khi bạn gọi một hàm, CPU/compiler tạo một <strong>stack frame</strong> trên stack chứa: đối số (hoặc chỗ lưu chúng), <strong>địa chỉ trở về</strong> (để biết chạy tiếp ở đâu sau khi hàm xong), và các <strong>biến cục bộ</strong>. Khi hàm <code>return</code>, frame bị bỏ.</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> <span class="hljs-title function_">square</span><span class="hljs-params">(<span class="hljs-type">int</span> x)</span> { <span class="hljs-keyword">return</span> x * x; }
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">sum_of_squares</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span> {
+    <span class="hljs-type">int</span> sa = square(a);
+    <span class="hljs-type">int</span> sb = square(b);
+    <span class="hljs-keyword">return</span> sa + sb;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> r = sum_of_squares(<span class="hljs-number">3</span>, <span class="hljs-number">4</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, r);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Trạng thái stack khi đang chạy <code>square(3)</code> bên trong <code>sum_of_squares(3, 4)</code> (địa chỉ cao ở trên, stack lớn xuống dưới):</p>
+<pre class="hljs"><code>┌────────────────────────────┐  ← cao
+│ frame của main             │
+│   r (chưa có giá trị)      │
+├────────────────────────────┤
+│ frame của sum_of_squares   │
+│   a = 3, b = 4             │
+│   sa (chưa có), sb         │
+│   địa chỉ trở về (→ main)  │
+├────────────────────────────┤
+│ frame của square           │
+│   x = 3                    │
+│   địa chỉ trở về (→ sum_…) │
+└────────────────────────────┘  ← thấp (đỉnh stack hiện tại)
+</code></pre>
+<p>Khi <code>square</code> trả về, frame của nó biến mất và <code>sa</code> nhận giá trị 9.</p>
+<h3>Lỗi kinh điển: trả về địa chỉ của biến cục bộ</h3>
+<p>Biến cục bộ nằm trong stack frame. Khi hàm kết thúc, vùng nhớ đó <em>được coi là trống</em> và sẽ bị ghi đè bởi lần gọi hàm tiếp theo. Con trỏ trỏ tới nó thành <strong>con trỏ treo (dangling pointer)</strong>.</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> *<span class="hljs-title function_">bad</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> x = <span class="hljs-number">42</span>;
+    <span class="hljs-keyword">return</span> &amp;x;              <span class="hljs-comment">// LỖI: x sẽ biến mất khi hàm kết thúc</span>
+}                           <span class="hljs-comment">// gcc -Wall: warning: function returns address of local variable</span>
+
+<span class="hljs-type">char</span> *<span class="hljs-title function_">bad_string</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">char</span> buf[<span class="hljs-number">32</span>] = <span class="hljs-string">&quot;xin chao&quot;</span>;
+    <span class="hljs-keyword">return</span> buf;             <span class="hljs-comment">// LỖI tương tự: buf là mảng cục bộ</span>
+}
+</code></pre>
+<p>Cách sửa đúng:</p>
+<pre class="hljs"><code><span class="hljs-comment">// 1. Người gọi cung cấp bộ nhớ</span>
+<span class="hljs-type">void</span> <span class="hljs-title function_">good1</span><span class="hljs-params">(<span class="hljs-type">char</span> *out, <span class="hljs-type">size_t</span> size)</span> {
+    <span class="hljs-built_in">snprintf</span>(out, size, <span class="hljs-string">&quot;xin chao&quot;</span>);
+}
+
+<span class="hljs-comment">// 2. Cấp phát trên heap (người gọi phải free)</span>
+<span class="hljs-type">char</span> *<span class="hljs-title function_">good2</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">char</span> *s = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">32</span>);
+    <span class="hljs-keyword">if</span> (s) <span class="hljs-built_in">snprintf</span>(s, <span class="hljs-number">32</span>, <span class="hljs-string">&quot;xin chao&quot;</span>);
+    <span class="hljs-keyword">return</span> s;
+}
+
+<span class="hljs-comment">// 3. Trả về hằng chuỗi (tồn tại suốt chương trình)</span>
+<span class="hljs-type">const</span> <span class="hljs-type">char</span> *<span class="hljs-title function_">good3</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;xin chao&quot;</span>;
+}
+
+<span class="hljs-comment">// 4. static (tồn tại suốt chương trình, nhưng không an toàn đa luồng)</span>
+<span class="hljs-type">const</span> <span class="hljs-type">char</span> *<span class="hljs-title function_">good4</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">static</span> <span class="hljs-type">char</span> buf[<span class="hljs-number">32</span>] = <span class="hljs-string">&quot;xin chao&quot;</span>;
+    <span class="hljs-keyword">return</span> buf;
+}
+</code></pre>
+<h2>6.8. Đệ quy</h2>
+<p><strong>Đệ quy</strong> là hàm tự gọi chính nó. Mỗi hàm đệ quy cần:</p>
+<ol>
+<li><strong>Trường hợp cơ sở (base case):</strong> điều kiện dừng, không gọi đệ quy nữa.</li>
+<li><strong>Bước đệ quy:</strong> gọi lại chính nó với bài toán <strong>nhỏ hơn</strong>, tiến dần đến trường hợp cơ sở.</li>
+</ol>
+<h3>Ví dụ: giai thừa</h3>
+<pre class="hljs"><code><span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> <span class="hljs-type">long</span> <span class="hljs-title function_">factorial</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> n)</span> {
+    <span class="hljs-keyword">if</span> (n &lt;= <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;              <span class="hljs-comment">// base case</span>
+    <span class="hljs-keyword">return</span> n * factorial(n - <span class="hljs-number">1</span>);       <span class="hljs-comment">// bước đệ quy</span>
+}
+</code></pre>
+<p>Chạy tay <code>factorial(4)</code>:</p>
+<pre class="hljs"><code>factorial(4) = 4 * factorial(3)
+                    = 3 * factorial(2)
+                          = 2 * factorial(1)
+                                = 1            ← base case
+                          = 2 * 1 = 2
+                    = 3 * 2 = 6
+             = 4 * 6 = 24
+</code></pre>
+<p>Mỗi lời gọi tạo một stack frame mới; chúng xếp chồng cho tới base case rồi lần lượt được &quot;tháo&quot; ra. Nếu thiếu base case hoặc bài toán không thu nhỏ, đệ quy vô hạn sẽ làm tràn stack (<strong>stack overflow</strong>, chương trình bị crash với <code>Segmentation fault</code>).</p>
+<h3>Ví dụ: Fibonacci — ngây thơ và cải tiến</h3>
+<pre class="hljs"><code><span class="hljs-comment">// Ngây thơ: độ phức tạp mũ, fib(40) mất vài giây vì tính lại rất nhiều lần</span>
+<span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> <span class="hljs-title function_">fib_slow</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> n)</span> {
+    <span class="hljs-keyword">if</span> (n &lt; <span class="hljs-number">2</span>) <span class="hljs-keyword">return</span> n;
+    <span class="hljs-keyword">return</span> fib_slow(n - <span class="hljs-number">1</span>) + fib_slow(n - <span class="hljs-number">2</span>);
+}
+
+<span class="hljs-comment">// Lặp: tuyến tính, dùng bộ nhớ O(1)</span>
+<span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> <span class="hljs-title function_">fib_fast</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> n)</span> {
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> a = <span class="hljs-number">0</span>, b = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">unsigned</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) {
+        <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> t = a + b;
+        a = b;
+        b = t;
+    }
+    <span class="hljs-keyword">return</span> a;
+}
+</code></pre>
+<p>Bài học: đệ quy thanh lịch nhưng có thể chậm nếu các bài toán con bị tính lặp lại. Lựa chọn thay thế: vòng lặp, hoặc <strong>ghi nhớ (memoization)</strong>.</p>
+<h3>Đệ quy đuôi</h3>
+<p>Nếu lời gọi đệ quy là <strong>việc cuối cùng</strong> hàm làm (<em>tail call</em>), compiler có thể biến nó thành vòng lặp khi tối ưu hóa (<code>-O2</code>), tránh tăng stack. Tuy nhiên chuẩn C <strong>không đảm bảo</strong> điều này, nên đừng dựa vào nó cho độ sâu lớn.</p>
+<pre class="hljs"><code><span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> <span class="hljs-type">long</span> <span class="hljs-title function_">fact_acc</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> n, <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> <span class="hljs-type">long</span> acc)</span> {
+    <span class="hljs-keyword">if</span> (n &lt;= <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> acc;
+    <span class="hljs-keyword">return</span> fact_acc(n - <span class="hljs-number">1</span>, n * acc);    <span class="hljs-comment">// lời gọi đuôi</span>
+}
+</code></pre>
+<h3>Khi nào dùng đệ quy?</h3>
+<ul>
+<li>Cấu trúc dữ liệu đệ quy tự nhiên: cây, danh sách liên kết, duyệt thư mục.</li>
+<li>Thuật toán chia để trị: sắp xếp trộn, tìm kiếm nhị phân, Tháp Hà Nội.</li>
+<li>Tránh khi độ sâu có thể rất lớn (hàng chục nghìn+) hoặc khi vòng lặp đơn giản hơn.</li>
+</ul>
+<h3>Tháp Hà Nội — ví dụ đệ quy đẹp</h3>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-comment">// Chuyển n đĩa từ cọc &#x27;from&#x27; sang cọc &#x27;to&#x27;, dùng cọc &#x27;via&#x27; làm trung gian</span>
+<span class="hljs-type">void</span> <span class="hljs-title function_">hanoi</span><span class="hljs-params">(<span class="hljs-type">int</span> n, <span class="hljs-type">char</span> from, <span class="hljs-type">char</span> to, <span class="hljs-type">char</span> via)</span> {
+    <span class="hljs-keyword">if</span> (n == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span>;
+    hanoi(n - <span class="hljs-number">1</span>, from, via, to);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Chuyen dia %d: %c -&gt; %c\n&quot;</span>, n, from, to);
+    hanoi(n - <span class="hljs-number">1</span>, via, to, from);
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    hanoi(<span class="hljs-number">3</span>, <span class="hljs-string">&#x27;A&#x27;</span>, <span class="hljs-string">&#x27;C&#x27;</span>, <span class="hljs-string">&#x27;B&#x27;</span>);      <span class="hljs-comment">// 7 bước = 2^3 - 1</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<h2>6.9. Con trỏ hàm (giới thiệu)</h2>
+<p>Tên hàm có thể được dùng như một <strong>giá trị</strong> — địa chỉ của mã hàm. Con trỏ hàm cho phép truyền hành vi như một tham số (&quot;callback&quot;).</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">add</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span> { <span class="hljs-keyword">return</span> a + b; }
+<span class="hljs-type">int</span> <span class="hljs-title function_">mul</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span> { <span class="hljs-keyword">return</span> a * b; }
+
+<span class="hljs-comment">// tham số op là con trỏ tới hàm nhận hai int và trả về int</span>
+<span class="hljs-type">int</span> <span class="hljs-title function_">apply</span><span class="hljs-params">(<span class="hljs-type">int</span> (*op)(<span class="hljs-type">int</span>, <span class="hljs-type">int</span>), <span class="hljs-type">int</span> x, <span class="hljs-type">int</span> y)</span> {
+    <span class="hljs-keyword">return</span> op(x, y);
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, apply(add, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>));   <span class="hljs-comment">// 7</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, apply(mul, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>));   <span class="hljs-comment">// 12</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Cú pháp <code>int (*op)(int, int)</code>: <code>op</code> là con trỏ tới hàm <code>(int, int) → int</code> (ngoặc quanh <code>*op</code> là bắt buộc). Dùng <code>typedef</code> cho dễ đọc: <code>typedef int (*BinaryOp)(int, int);</code>.</p>
+<p>Ứng dụng tiêu biểu: hàm <code>qsort</code> của thư viện chuẩn nhận một hàm so sánh:</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">cmp_int</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">void</span> *a, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *b)</span> {
+    <span class="hljs-type">int</span> x = *(<span class="hljs-type">const</span> <span class="hljs-type">int</span> *)a;
+    <span class="hljs-type">int</span> y = *(<span class="hljs-type">const</span> <span class="hljs-type">int</span> *)b;
+    <span class="hljs-keyword">return</span> (x &gt; y) - (x &lt; y);          <span class="hljs-comment">// -1, 0 hoặc 1, không bị tràn như x - y</span>
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> a[] = {<span class="hljs-number">5</span>, <span class="hljs-number">2</span>, <span class="hljs-number">9</span>, <span class="hljs-number">1</span>, <span class="hljs-number">7</span>};
+    qsort(a, <span class="hljs-number">5</span>, <span class="hljs-keyword">sizeof</span> a[<span class="hljs-number">0</span>], cmp_int);
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; i++) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d &quot;</span>, a[i]);   <span class="hljs-comment">// 1 2 5 7 9</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Chương 8 sẽ giải thích chi tiết <code>void *</code> và ép kiểu con trỏ.</p>
+<h2>6.10. Hàm nhận số đối số thay đổi (variadic)</h2>
+<p><code>printf</code> nhận số lượng đối số bất kỳ. Bạn có thể tự viết hàm như vậy bằng <code>&lt;stdarg.h&gt;</code>:</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdarg.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-comment">// Tính tổng n số nguyên đi sau tham số n</span>
+<span class="hljs-type">int</span> <span class="hljs-title function_">sum_ints</span><span class="hljs-params">(<span class="hljs-type">int</span> n, ...)</span> {
+    va_list args;
+    va_start(args, n);              <span class="hljs-comment">// bắt đầu đọc sau tham số cuối cùng có tên (n)</span>
+    <span class="hljs-type">int</span> total = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) {
+        total += va_arg(args, <span class="hljs-type">int</span>); <span class="hljs-comment">// lấy đối số kế tiếp, PHẢI cho đúng kiểu</span>
+    }
+    va_end(args);                   <span class="hljs-comment">// dọn dẹp</span>
+    <span class="hljs-keyword">return</span> total;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, sum_ints(<span class="hljs-number">3</span>, <span class="hljs-number">10</span>, <span class="hljs-number">20</span>, <span class="hljs-number">30</span>));   <span class="hljs-comment">// 60</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Hạn chế: compiler <strong>không kiểm tra</strong> kiểu và số lượng đối số, nên rất dễ sai. Bạn phải có cách báo hàm biết có bao nhiêu đối số (như tham số <code>n</code> hoặc chuỗi định dạng). Sai kiểu ở <code>va_arg</code> là UB. Dùng có chừng mực.</p>
+<h2>6.11. Quy tắc thiết kế hàm tốt</h2>
+<ol>
+<li><strong>Ngắn:</strong> lý tưởng nằm gọn trong một màn hình (~30–50 dòng).</li>
+<li><strong>Một nhiệm vụ</strong>, tên rõ ràng.</li>
+<li><strong>Ít tham số</strong> (≤ 4). Nếu nhiều hơn, gom vào <code>struct</code>.</li>
+<li><strong>Không phụ thuộc trạng thái toàn cục</strong> khi có thể; hàm &quot;thuần&quot; (cùng đầu vào → cùng đầu ra, không tác dụng phụ) dễ kiểm thử nhất.</li>
+<li><strong>Dùng <code>const</code></strong> cho tham số con trỏ không bị sửa.</li>
+<li><strong>Kiểm tra đầu vào</strong> và báo lỗi rõ ràng (trả mã lỗi hoặc <code>NULL</code>).</li>
+<li><strong>Ghi chú hợp đồng:</strong> hàm làm gì, tham số nào được phép <code>NULL</code>, ai giải phóng bộ nhớ.</li>
+</ol>
+<p>Ví dụ ghi chú hợp đồng:</p>
+<pre class="hljs"><code><span class="hljs-comment">/*
+ * Tính tổng các phần tử của mảng a có n phần tử.
+ * Tiền điều kiện: a khác NULL nếu n &gt; 0.
+ * Trả về: tổng; không kiểm tra tràn số.
+ */</span>
+<span class="hljs-type">long</span> <span class="hljs-title function_">sum_array</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">int</span> *a, <span class="hljs-type">size_t</span> n)</span>;
+</code></pre>
+<h2>6.12. Lỗi thường gặp</h2>
+<table>
+<thead>
+<tr>
+<th>Lỗi</th>
+<th>Hậu quả</th>
+<th>Cách tránh</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Trả về địa chỉ biến cục bộ</td>
+<td>Con trỏ treo, dữ liệu rác</td>
+<td>Trả về bộ nhớ heap, <code>static</code>, hoặc dùng bộ đệm do người gọi cấp</td>
+</tr>
+<tr>
+<td>Kỳ vọng hàm sửa được biến truyền theo giá trị</td>
+<td>Biến không đổi</td>
+<td>Truyền con trỏ</td>
+</tr>
+<tr>
+<td>Quên prototype / <code>#include</code></td>
+<td>Cảnh báo <code>implicit declaration</code></td>
+<td>Khai báo trước, dùng header</td>
+</tr>
+<tr>
+<td>Đệ quy thiếu base case</td>
+<td>Stack overflow</td>
+<td>Xác định base case, kiểm tra tiến tới nó</td>
+</tr>
+<tr>
+<td>Hàm không <code>return</code> trên mọi nhánh</td>
+<td>UB nếu dùng giá trị</td>
+<td><code>-Wall</code></td>
+</tr>
+<tr>
+<td>Lạm dụng biến toàn cục</td>
+<td>Khó theo dõi, không an toàn luồng</td>
+<td>Truyền tham số / dùng struct</td>
+</tr>
+<tr>
+<td>Dùng <code>sizeof(arr)</code> trên tham số mảng</td>
+<td>Ra kích thước con trỏ</td>
+<td>Truyền kích thước riêng</td>
+</tr>
+<tr>
+<td><code>int f()</code> thay vì <code>int f(void)</code></td>
+<td>Không kiểm tra đối số</td>
+<td>Luôn <code>(void)</code></td>
+</tr>
+</tbody>
+</table>
+<h2>6.13. Tóm tắt</h2>
+<ul>
+<li>Hàm gom mã tái sử dụng; C truyền tham số <strong>theo giá trị</strong>; dùng con trỏ để sửa biến của người gọi.</li>
+<li>Phạm vi (nơi thấy tên) khác thời gian sống (khi nào tồn tại). <code>static</code> cục bộ giữ giá trị giữa các lần gọi; <code>static</code> ở phạm vi file làm tên riêng tư.</li>
+<li>Mỗi lần gọi tạo stack frame; <strong>không trả về địa chỉ biến cục bộ</strong>.</li>
+<li>Đệ quy cần base case và bước thu nhỏ; cân nhắc độ sâu và hiệu năng.</li>
+<li>Con trỏ hàm cho phép truyền hành vi (callback), ví dụ <code>qsort</code>.</li>
+</ul>
+<h2>6.14. Bài tập</h2>
+<ol>
+<li>Viết hàm <code>int max3(int a, int b, int c)</code>. Viết thêm phiên bản dùng con trỏ trả về hai giá trị: nhỏ nhất và lớn nhất.</li>
+<li>Viết hàm <code>void swap_int(int *a, int *b)</code> và kiểm tra. Sau đó thử viết <code>swap</code> nhận tham số <code>int a, int b</code> và giải thích vì sao không hoạt động.</li>
+<li>Viết hàm <code>bool is_leap_year(int y)</code> và <code>int days_in_month(int m, int y)</code>.</li>
+<li>Viết hàm <code>next_id()</code> dùng biến <code>static</code>. Sau đó chuyển thành biến toàn cục và nêu ưu/nhược điểm.</li>
+<li>Viết hàm đệ quy <code>int power(int base, unsigned exp)</code> và phiên bản &quot;bình phương liên tiếp&quot; (<code>power(b, e) = power(b, e/2)²</code>) có độ phức tạp <code>O(log e)</code>.</li>
+<li>Viết hàm đệ quy đảo ngược chuỗi tại chỗ và hàm kiểm tra chuỗi đối xứng (palindrome).</li>
+<li>Tìm lỗi trong đoạn mã sau và sửa (có ít nhất hai lỗi):</li>
+</ol>
+<pre class="hljs"><code><span class="hljs-type">char</span> *<span class="hljs-title function_">make_greeting</span><span class="hljs-params">(<span class="hljs-type">char</span> *name)</span> {
+    <span class="hljs-type">char</span> buf[<span class="hljs-number">64</span>];
+    <span class="hljs-built_in">sprintf</span>(buf, <span class="hljs-string">&quot;Xin chao %s&quot;</span>, name);
+    <span class="hljs-keyword">return</span> buf;
+}
+</code></pre>
+<ol start="8">
+<li>Dùng <code>qsort</code> sắp xếp mảng <code>int</code> giảm dần; sau đó sắp xếp mảng chuỗi <code>const char *names[]</code> theo thứ tự chữ cái (gợi ý: hàm so sánh gọi <code>strcmp</code>).</li>
+<li>(Thử thách) Viết chương trình máy tính dùng <strong>bảng con trỏ hàm</strong>: một mảng <code>{ '+', add }, { '-', sub }, ...</code> và tra cứu theo ký tự toán tử người dùng nhập.</li>
+</ol>
+<p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-06">code/chapter-06</a></p>
 
 </article>
 <div class="chapter-nav"><a class="nav-prev" href="chapter-05.html">&larr; Điều khiển luồng (Control Flow)</a><a class="nav-next" href="chapter-07.html">Mảng & chuỗi (Arrays & Strings) &rarr;</a></div>

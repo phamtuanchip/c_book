@@ -12,50 +12,119 @@
 <main class="content">
 <article>
 <h1>Chương 1 — Giới thiệu và chương trình C đầu tiên</h1>
-<p>Mục tiêu chương:</p>
+<h2>Mục tiêu chương</h2>
+<p>Sau khi học xong chương này, bạn sẽ:</p>
 <ul>
-<li>Hiểu vai trò và lịch sử ngắn gọn của ngôn ngữ C.</li>
-<li>Thiết lập môi trường phát triển (Windows, Linux, macOS).</li>
-<li>Viết, biên dịch, chạy chương trình C đầu tiên.</li>
-<li>Giải thích chi tiết cấu trúc nguồn, hàm main, include, và cách dùng compiler flags cơ bản.</li>
+<li>Hiểu C là gì, được dùng ở đâu và vì sao vẫn đáng học ở thời điểm hiện tại.</li>
+<li>Cài đặt môi trường phát triển trên Windows, Linux hoặc macOS và kiểm tra nó hoạt động.</li>
+<li>Viết, biên dịch, chạy chương trình C đầu tiên và hiểu <strong>từng dòng</strong> của nó.</li>
+<li>Hiểu quá trình từ file <code>.c</code> đến file chạy được gồm những giai đoạn nào.</li>
+<li>Đọc được thông báo lỗi và cảnh báo của compiler thay vì sợ chúng.</li>
 </ul>
-<p>Tổng quan</p>
-<p>Chương này hướng dẫn từ cơ bản nhất để một người mới — chưa biết lập trình — có thể:</p>
+<blockquote>
+<p><strong>Cách học chương này:</strong> hãy gõ lại mọi ví dụ bằng tay, đừng copy-paste. Việc tự gõ giúp bạn nhớ cú pháp và làm quen với việc compiler báo lỗi khi bạn gõ sai.</p>
+</blockquote>
+<h2>1.1. C là gì và vì sao học C?</h2>
+<p><strong>C</strong> là ngôn ngữ lập trình được Dennis Ritchie tạo ra tại Bell Labs vào khoảng năm 1972 để viết lại hệ điều hành UNIX. Đến nay, hơn 50 năm sau, C vẫn nằm trong nhóm ngôn ngữ được dùng nhiều nhất.</p>
+<p>C thuộc loại <strong>ngôn ngữ biên dịch (compiled language)</strong>: mã nguồn bạn viết được một chương trình gọi là <em>compiler</em> dịch thành <strong>mã máy</strong> (các lệnh mà CPU hiểu trực tiếp). Kết quả là chương trình chạy nhanh và không cần &quot;máy ảo&quot; hay &quot;trình thông dịch&quot; đi kèm.</p>
+<h3>Nơi C được sử dụng</h3>
+<table>
+<thead>
+<tr>
+<th>Lĩnh vực</th>
+<th>Ví dụ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hệ điều hành</td>
+<td>Nhân Linux, phần lớn nhân Windows, macOS/iOS, Android (phần lõi)</td>
+</tr>
+<tr>
+<td>Hệ thống nhúng</td>
+<td>Vi điều khiển trong máy giặt, ô tô, thiết bị y tế, Arduino</td>
+</tr>
+<tr>
+<td>Cơ sở dữ liệu</td>
+<td>SQLite, PostgreSQL, Redis, MySQL</td>
+</tr>
+<tr>
+<td>Trình biên dịch và runtime</td>
+<td>CPython (bản Python chuẩn), Ruby, PHP, Lua là các trình thông dịch viết bằng C</td>
+</tr>
+<tr>
+<td>Mạng</td>
+<td>nginx, OpenSSL, curl</td>
+</tr>
+<tr>
+<td>Game engine, driver</td>
+<td>Phần lõi hiệu năng cao</td>
+</tr>
+</tbody>
+</table>
+<h3>Học C mang lại điều gì?</h3>
 <ol>
-<li>chuẩn bị môi trường, 2) viết mã C đầu tiên, 3) biên dịch và chạy, và 4) đọc được các thông báo lỗi/cảnh báo cơ bản để sửa.</li>
+<li><strong>Hiểu máy tính thật sự hoạt động thế nào.</strong> Khi viết C bạn phải biết biến nằm ở đâu trong bộ nhớ, một chuỗi là gì ở mức byte, gọi hàm tốn gì. Những ngôn ngữ như Python hay Java che giấu các chi tiết này.</li>
+<li><strong>Nền tảng cho ngôn ngữ khác.</strong> C++, Objective-C, C#, Java, Go, Rust đều chịu ảnh hưởng cú pháp và tư duy của C. Biết C thì học các ngôn ngữ đó nhanh hơn.</li>
+<li><strong>Kiểm soát tài nguyên.</strong> C cho bạn quyết định cấp phát bao nhiêu bộ nhớ và giải phóng khi nào.</li>
+<li><strong>Đọc được mã nguồn của những phần mềm nền tảng</strong> khi cần tìm lỗi hoặc tìm hiểu cách chúng hoạt động.</li>
 </ol>
-<h2>1. Vì sao học C?</h2>
+<h3>Cái giá phải trả</h3>
+<p>C không có &quot;lưới an toàn&quot;. Nếu bạn ghi ra ngoài mảng, dùng bộ nhớ đã giải phóng hoặc quên khởi tạo biến, chương trình <strong>vẫn có thể biên dịch</strong> và chạy sai theo cách khó đoán. Vì vậy sách này luôn dạy song song hai việc: <em>cách viết</em> và <em>cách viết an toàn</em>.</p>
+<h2>1.2. Chương trình chạy như thế nào? (bức tranh tổng thể)</h2>
+<p>Trước khi cài công cụ, hãy hình dung bốn nhân vật:</p>
 <ul>
-<li>C là một ngôn ngữ hệ thống, gần với phần cứng, giúp hiểu sâu cách máy tính hoạt động (bộ nhớ, con trỏ, quản lý tài nguyên).</li>
-<li>Nhiều ngôn ngữ hiện đại dựa trên C (C++, C#, Java có nhiều ảnh hưởng), nên nắm C giúp dễ học các ngôn ngữ khác.</li>
+<li><strong>Mã nguồn (source code):</strong> file văn bản <code>.c</code> mà bạn viết. Con người đọc được.</li>
+<li><strong>Compiler (trình biên dịch):</strong> chương trình đọc mã nguồn và tạo ra mã máy. Ví dụ: <code>gcc</code>, <code>clang</code>, <code>cl</code> (Microsoft).</li>
+<li><strong>File thực thi (executable):</strong> kết quả cuối cùng. Trên Windows có đuôi <code>.exe</code>, trên Linux/macOS thường không có đuôi.</li>
+<li><strong>Hệ điều hành (OS):</strong> nạp file thực thi vào bộ nhớ và giao cho CPU chạy.</li>
 </ul>
-<h2>2. Công cụ cơ bản và chuẩn bị môi trường (chi tiết thực hiện)</h2>
+<pre class="hljs"><code>hello.c  ──►  [ compiler ]  ──►  hello (hoặc hello.exe)  ──►  [ hệ điều hành + CPU ]  ──►  kết quả
+mã nguồn        gcc/clang          mã máy                        chạy chương trình
+</code></pre>
+<h2>1.3. Cài đặt môi trường</h2>
+<p>Bạn cần ba thứ: <strong>trình soạn thảo</strong>, <strong>terminal</strong> và <strong>compiler</strong>.</p>
 <ul>
-<li>Cần: một trình soạn thảo (VSCode, Notepad++...), một terminal (PowerShell, bash), và một compiler (gcc/clang hoặc Visual Studio cl).</li>
+<li>Trình soạn thảo: Visual Studio Code là lựa chọn phổ biến và miễn phí. Notepad++ hay Vim cũng được.</li>
+<li>Terminal: PowerShell/CMD (Windows), Terminal (macOS), bất kỳ terminal nào của Linux.</li>
+<li>Compiler: <code>gcc</code> hoặc <code>clang</code>.</li>
 </ul>
-<p>Windows (MSYS2 + MinGW-w64) — cách nhanh và tương thích:</p>
+<h3>Windows — cách 1: MSYS2 + MinGW-w64 (khuyến nghị)</h3>
+<p>MinGW-w64 là bản <code>gcc</code> chạy trên Windows, dùng cùng lệnh với Linux nên hướng dẫn trong sách áp dụng trực tiếp.</p>
 <ol>
-<li>Tải và cài MSYS2 từ <a href="https://www.msys2.org">https://www.msys2.org</a> theo hướng dẫn.</li>
-<li>Mở MSYS2 và cập nhật hệ thống: pacman -Syu (đóng/mở lại terminal nếu được yêu cầu).</li>
-<li>Cài toolchain 64-bit: pacman -S --needed mingw-w64-x86_64-toolchain mingw-w64-x86_64-make mingw-w64-x86_64-gdb</li>
-<li>Mở &quot;MSYS2 MinGW 64-bit&quot; shell để làm việc với gcc 64-bit.</li>
-<li>Kiểm tra: gcc --version, make --version, gdb --version</li>
+<li>Tải MSYS2 từ <a href="https://www.msys2.org">https://www.msys2.org</a> và cài đặt (mặc định vào <code>C:\msys64</code>).</li>
+<li>Mở <strong>MSYS2 UCRT64</strong> (hoặc MINGW64) từ Start Menu và cập nhật:</li>
 </ol>
-<p>Windows (Visual Studio) — nếu muốn dùng cl.exe:</p>
-<ul>
-<li>Cài Visual Studio Community với workload &quot;Desktop development with C++&quot;. Mở &quot;Developer Command Prompt&quot; để chạy cl.exe.</li>
-</ul>
-<p>Linux (Debian/Ubuntu):</p>
-<ul>
-<li>sudo apt update &amp;&amp; sudo apt install build-essential gdb valgrind make</li>
-</ul>
-<p>macOS (Homebrew):</p>
-<ul>
-<li>brew install gcc gdb make</li>
-</ul>
-<p>Lưu ý: Sau khi cài, hãy thêm đường dẫn compiler vào PATH nếu cần.</p>
-<h2>3. Cấu trúc chương trình C cơ bản — giải thích từng thành phần</h2>
-<p>Ví dụ tối thiểu (hello.c):</p>
+<pre class="hljs"><code>pacman -Syu
+</code></pre>
+<p>Nếu terminal yêu cầu đóng lại, hãy đóng, mở lại và chạy lại lệnh trên.</p>
+<h2>3. Cài toolchain (gcc, make, gdb):</h2>
+<pre class="hljs"><code>pacman -S --needed mingw-w64-ucrt-x86_64-toolchain mingw-w64-ucrt-x86_64-gdb make
+</code></pre>
+<h2>4. Thêm <code>C:\msys64\ucrt64\bin</code> vào biến môi trường <code>PATH</code> của Windows nếu bạn muốn gọi <code>gcc</code> từ PowerShell hoặc VS Code (Settings → <em>Edit the system environment variables</em> → <em>Path</em> → <em>New</em>).</h2>
+<h3>Windows — cách 2: Visual Studio</h3>
+<p>Cài Visual Studio Community, chọn workload <strong>Desktop development with C++</strong>. Mở <strong>Developer Command Prompt for VS</strong> rồi biên dịch bằng <code>cl hello.c</code>. Lưu ý: các cờ (flag) của <code>cl</code> khác <code>gcc</code>; sách này dùng cú pháp <code>gcc</code>.</p>
+<h3>Windows — cách 3: WSL (Windows Subsystem for Linux)</h3>
+<p>Nếu bạn đã dùng WSL, cài Ubuntu rồi làm theo hướng dẫn Linux bên dưới. Đây là cách sát môi trường thực tế nhất, đặc biệt khi học các chương về thread và socket (chương 15–16).</p>
+<h3>Linux (Debian/Ubuntu)</h3>
+<pre class="hljs"><code><span class="hljs-built_in">sudo</span> apt update
+<span class="hljs-built_in">sudo</span> apt install build-essential gdb valgrind make
+</code></pre>
+<p><code>build-essential</code> gồm <code>gcc</code>, <code>g++</code> và <code>make</code>.</p>
+<h3>macOS</h3>
+<pre class="hljs"><code>xcode-select --install     <span class="hljs-comment"># cài clang và các công cụ dòng lệnh</span>
+brew install make gdb      <span class="hljs-comment"># tùy chọn; macOS thường dùng lldb thay cho gdb</span>
+</code></pre>
+<p>Trên macOS, lệnh <code>gcc</code> thực ra là <code>clang</code>. Điều này không ảnh hưởng gì đến sách.</p>
+<h3>Kiểm tra cài đặt</h3>
+<p>Mở terminal và chạy:</p>
+<pre class="hljs"><code>gcc --version
+make --version
+gdb --version
+</code></pre>
+<p>Nếu thấy số phiên bản, bạn đã sẵn sàng. Nếu thấy <code>'gcc' is not recognized...</code> (Windows) hoặc <code>command not found</code> (Linux/macOS), nghĩa là compiler chưa nằm trong <code>PATH</code> — xem mục 1.10.</p>
+<h2>1.4. Chương trình đầu tiên: Hello, World</h2>
+<p>Tạo thư mục <code>c_book_practice</code>, tạo file <code>hello.c</code> với nội dung:</p>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 
 <span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
@@ -63,71 +132,450 @@
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </code></pre>
-<p>Giải thích:</p>
+<p>Biên dịch và chạy:</p>
+<pre class="hljs"><code>gcc -o hello hello.c
+./hello          <span class="hljs-comment"># Linux/macOS/MSYS2</span>
+hello.exe        <span class="hljs-comment"># PowerShell/CMD trên Windows (hoặc .\hello.exe)</span>
+</code></pre>
+<p>Kết quả:</p>
+<pre class="hljs"><code>Hello, World!
+</code></pre>
+<h3>Giải thích từng dòng</h3>
+<p><strong>Dòng 1: <code>#include &lt;stdio.h&gt;</code></strong></p>
+<p>Dòng bắt đầu bằng <code>#</code> là chỉ thị cho <em>bộ tiền xử lý (preprocessor)</em>, chạy <strong>trước</strong> khi compiler dịch. <code>#include</code> nghĩa là &quot;chép nội dung file này vào đây&quot;. <code>stdio.h</code> (<em>standard input/output header</em>) chứa <strong>khai báo</strong> của các hàm nhập/xuất như <code>printf</code>, <code>scanf</code>, <code>fgets</code>. Nếu thiếu dòng này, compiler không biết <code>printf</code> là gì và sẽ báo lỗi hoặc cảnh báo.</p>
+<p>Dấu <code>&lt; &gt;</code> nghĩa là tìm file trong thư mục header của hệ thống. Dấu <code>&quot; &quot;</code> (ví dụ <code>#include &quot;myheader.h&quot;</code>) nghĩa là tìm trong thư mục dự án trước; bạn sẽ dùng cách này ở chương 11.</p>
+<p><strong>Dòng 3: <code>int main(void) {</code></strong></p>
 <ul>
-<li>#include &lt;stdio.h&gt;: đưa vào các khai báo cho hàm nhập/xuất (printf, scanf).</li>
-<li>int main(void): hàm main trả về int; hệ điều hành sử dụng giá trị trả về để biết trạng thái chương trình (0 = thành công).</li>
-<li>printf: in ra stdout; chuỗi có thể chứa escape sequences như \n (xuống dòng).</li>
+<li><code>main</code> là <strong>điểm bắt đầu</strong> của mọi chương trình C. Khi hệ điều hành chạy chương trình, nó gọi <code>main</code>.</li>
+<li><code>int</code> là <strong>kiểu trả về</strong>: <code>main</code> trả về một số nguyên cho hệ điều hành.</li>
+<li><code>(void)</code> nghĩa là <code>main</code> không nhận tham số. (Ở chương 13 bạn sẽ thấy dạng <code>int main(int argc, char *argv[])</code> để nhận tham số dòng lệnh.)</li>
+<li>Dấu <code>{</code> mở <strong>thân hàm</strong>; dấu <code>}</code> đóng nó. Mọi lệnh nằm giữa hai dấu ngoặc là một phần của hàm.</li>
 </ul>
-<h2>4. Biên dịch và các cờ thường dùng</h2>
+<p><strong>Dòng 4: <code>printf(&quot;Hello, World!\n&quot;);</code></strong></p>
 <ul>
-<li>Cơ bản: gcc -o hello hello.c</li>
-<li>Với cảnh báo và chuẩn: gcc -std=c11 -Wall -Wextra -O0 -g -o hello hello.c
-<ul>
-<li>-std=c11: chọn chuẩn C</li>
-<li>-Wall -Wextra: bật cảnh báo phổ thông</li>
-<li>-O0: tắt tối ưu để dễ debug</li>
-<li>-g: sinh symbol debug cho gdb</li>
+<li><code>printf</code> là hàm in ra <strong>stdout</strong> (đầu ra chuẩn, thường là màn hình terminal).</li>
+<li><code>&quot;Hello, World!\n&quot;</code> là một <strong>chuỗi ký tự (string literal)</strong>. Trong đó <code>\n</code> là <strong>escape sequence</strong> biểu diễn ký tự xuống dòng. Nếu bỏ <code>\n</code>, dấu nhắc lệnh của terminal sẽ dính liền sau chữ <code>World!</code>.</li>
+<li>Dấu <code>;</code> kết thúc một <strong>câu lệnh</strong>. Thiếu <code>;</code> là lỗi cú pháp phổ biến nhất của người mới.</li>
 </ul>
-</li>
-</ul>
-<h2>5. Viết chương trình có input: ví dụ hello_name.c</h2>
-<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<p><strong>Dòng 5: <code>return 0;</code></strong></p>
+<p>Trả về <code>0</code> cho hệ điều hành, quy ước là <strong>&quot;chạy thành công&quot;</strong>. Giá trị khác 0 báo hiệu có lỗi. Bạn có thể kiểm tra giá trị này ngay sau khi chạy:</p>
+<pre class="hljs"><code>./hello
+<span class="hljs-built_in">echo</span> $?          <span class="hljs-comment"># Linux/macOS/MSYS2: in ra 0</span>
+</code></pre>
+<pre class="hljs"><code>.\hello.exe
+<span class="hljs-built_in">echo</span> <span class="hljs-variable">$LASTEXITCODE</span>   <span class="hljs-comment"># PowerShell: in ra 0</span>
+</code></pre>
+<p>Từ C99, nếu <code>main</code> chạy tới cuối mà không có <code>return</code>, compiler tự hiểu là <code>return 0;</code>. Tuy nhiên, hãy viết rõ ràng để ý định của bạn dễ đọc.</p>
+<h3>Các escape sequence thường dùng</h3>
+<table>
+<thead>
+<tr>
+<th>Chuỗi</th>
+<th>Ý nghĩa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>\n</code></td>
+<td>Xuống dòng (newline)</td>
+</tr>
+<tr>
+<td><code>\t</code></td>
+<td>Dấu tab</td>
+</tr>
+<tr>
+<td><code>\\</code></td>
+<td>Một dấu gạch chéo ngược <code>\</code></td>
+</tr>
+<tr>
+<td><code>\&quot;</code></td>
+<td>Dấu nháy kép <code>&quot;</code> bên trong chuỗi</td>
+</tr>
+<tr>
+<td><code>\'</code></td>
+<td>Dấu nháy đơn <code>'</code></td>
+</tr>
+<tr>
+<td><code>\0</code></td>
+<td>Ký tự null, dùng để kết thúc chuỗi (chương 7)</td>
+</tr>
+<tr>
+<td><code>\r</code></td>
+<td>Đưa con trỏ về đầu dòng</td>
+</tr>
+</tbody>
+</table>
+<p>Ví dụ:</p>
+<pre class="hljs"><code><span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Ten:\tAn\nTuoi:\t20\n&quot;</span>);
+<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Cô ấy nói: \&quot;Xin chào\&quot;\n&quot;</span>);
+</code></pre>
+<h3>Một lưu ý cho Windows về tiếng Việt</h3>
+<p>Terminal của Windows mặc định không dùng UTF-8, nên chữ có dấu có thể bị hiện thành ký tự lạ. Trước khi chạy chương trình, hãy gõ:</p>
+<pre class="hljs"><code>chcp <span class="hljs-number">65001</span>
+</code></pre>
+<p>Nếu vẫn lỗi, dùng Windows Terminal thay cho CMD cũ. Trong các ví dụ của sách, một số chỗ dùng tiếng Việt không dấu để chương trình chạy đúng trên mọi terminal.</p>
+<h2>1.5. Từ file <code>.c</code> đến file chạy được — bốn giai đoạn</h2>
+<p>Lệnh <code>gcc -o hello hello.c</code> thực ra làm bốn việc liên tiếp. Hiểu chúng giúp bạn đọc được lỗi sau này (đặc biệt lỗi <em>linker</em> ở chương 11).</p>
+<pre class="hljs"><code>hello.c ─► [1 Tiền xử lý] ─► hello.i ─► [2 Biên dịch] ─► hello.s ─► [3 Hợp ngữ] ─► hello.o ─► [4 Liên kết] ─► hello
+</code></pre>
+<ol>
+<li><strong>Tiền xử lý (preprocessing):</strong> xử lý các dòng <code>#</code>. <code>#include &lt;stdio.h&gt;</code> được thay bằng toàn bộ nội dung của <code>stdio.h</code>; comment bị xóa; macro được thay thế.</li>
+<li><strong>Biên dịch (compiling):</strong> dịch C thành <strong>hợp ngữ (assembly)</strong> của CPU đích.</li>
+<li><strong>Hợp ngữ (assembling):</strong> chuyển assembly thành <strong>object file</strong> (<code>.o</code>/<code>.obj</code>) chứa mã máy nhưng chưa hoàn chỉnh — nó còn &quot;chỗ trống&quot; cho những hàm nằm ở nơi khác (như <code>printf</code>).</li>
+<li><strong>Liên kết (linking):</strong> <em>linker</em> ghép object file của bạn với thư viện chuẩn của C để lấp các chỗ trống đó và tạo file thực thi.</li>
+</ol>
+<p>Bạn có thể dừng ở từng giai đoạn để quan sát:</p>
+<pre class="hljs"><code>gcc -E hello.c -o hello.i     <span class="hljs-comment"># chỉ tiền xử lý (mở hello.i, bạn sẽ thấy hàng trăm dòng của stdio.h)</span>
+gcc -S hello.c -o hello.s     <span class="hljs-comment"># chỉ đến assembly</span>
+gcc -c hello.c -o hello.o     <span class="hljs-comment"># chỉ đến object file</span>
+gcc hello.o -o hello          <span class="hljs-comment"># liên kết</span>
+</code></pre>
+<p>Việc này quan trọng vì <strong>lỗi ở mỗi giai đoạn có dạng khác nhau</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Giai đoạn</th>
+<th>Lỗi thường gặp</th>
+<th>Dấu hiệu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tiền xử lý</td>
+<td>Thiếu file header</td>
+<td><code>fatal error: xyz.h: No such file or directory</code></td>
+</tr>
+<tr>
+<td>Biên dịch</td>
+<td>Sai cú pháp, sai kiểu</td>
+<td><code>error: expected ';' before ...</code></td>
+</tr>
+<tr>
+<td>Liên kết</td>
+<td>Gọi hàm nhưng chưa có định nghĩa</td>
+<td><code>undefined reference to 'foo'</code></td>
+</tr>
+<tr>
+<td>Khi chạy</td>
+<td>Lỗi logic, truy cập bộ nhớ sai</td>
+<td><code>Segmentation fault</code>, kết quả sai</td>
+</tr>
+</tbody>
+</table>
+<h2>1.6. Các cờ biên dịch nên dùng từ ngày đầu</h2>
+<p>Cách tối thiểu là <code>gcc -o hello hello.c</code>. Tuy nhiên, compiler có thể giúp bạn rất nhiều nếu bạn yêu cầu nó:</p>
+<pre class="hljs"><code>gcc -std=c11 -Wall -Wextra -g -O0 -o hello hello.c
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Cờ</th>
+<th>Ý nghĩa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-std=c11</code></td>
+<td>Dùng chuẩn C11 (một chuẩn hiện đại, được hỗ trợ rộng). Có thể dùng <code>c17</code>.</td>
+</tr>
+<tr>
+<td><code>-Wall</code></td>
+<td>Bật hầu hết cảnh báo hữu ích (<em>Warnings: all</em>).</td>
+</tr>
+<tr>
+<td><code>-Wextra</code></td>
+<td>Bật thêm các cảnh báo bổ sung.</td>
+</tr>
+<tr>
+<td><code>-g</code></td>
+<td>Nhúng thông tin gỡ lỗi (tên biến, số dòng) để dùng với <code>gdb</code>.</td>
+</tr>
+<tr>
+<td><code>-O0</code></td>
+<td>Không tối ưu hóa, giúp mã chạy đúng theo thứ tự bạn viết khi gỡ lỗi.</td>
+</tr>
+<tr>
+<td><code>-o tên</code></td>
+<td>Đặt tên file kết quả. Nếu bỏ, gcc tạo <code>a.out</code> (Linux/macOS) hoặc <code>a.exe</code> (Windows).</td>
+</tr>
+<tr>
+<td><code>-Werror</code></td>
+<td>Biến cảnh báo thành lỗi. Hữu ích khi làm dự án nghiêm túc.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Quy tắc vàng:</strong> <em>Cảnh báo là lỗi chưa xảy ra.</em> Đừng bao giờ bỏ qua cảnh báo. Nếu bạn thấy cảnh báo, hãy sửa cho đến khi biên dịch sạch.</p>
+</blockquote>
+<p>Ví dụ, thử bỏ dòng <code>#include &lt;stdio.h&gt;</code> và biên dịch với <code>-Wall</code>. Bạn sẽ nhận được thông báo dạng:</p>
+<pre class="hljs"><code>hello.c: In function &#x27;main&#x27;:
+hello.c:2:5: warning: implicit declaration of function &#x27;printf&#x27; [-Wimplicit-function-declaration]
+    2 |     printf(&quot;Hello, World!\n&quot;);
+      |     ^~~~~~
+</code></pre>
+<p>Cách đọc: <code>hello.c:2:5</code> nghĩa là <strong>file hello.c, dòng 2, cột 5</strong>. Sau đó là mức độ (<code>warning</code>/<code>error</code>), nội dung, và tên cờ gây ra cảnh báo trong ngoặc vuông. Hãy tập thói quen đọc dòng đầu tiên của thông báo lỗi trước; nhiều lỗi phía sau chỉ là hệ quả của lỗi đầu.</p>
+<h2>1.7. Comment (chú thích)</h2>
+<p>Comment là phần chú thích cho người đọc, compiler bỏ qua.</p>
+<pre class="hljs"><code><span class="hljs-comment">// Comment một dòng (từ C99)</span>
+
+<span class="hljs-comment">/* Comment nhiều dòng.
+   Có thể trải dài trên nhiều dòng. */</span>
 
 <span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
-    <span class="hljs-type">char</span> name[<span class="hljs-number">128</span>];
-    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Nhập tên: &quot;</span>);
+    <span class="hljs-type">int</span> tuoi = <span class="hljs-number">20</span>;   <span class="hljs-comment">// comment cuối dòng</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Lưu ý: comment <strong>không lồng nhau</strong> được với kiểu <code>/* ... */</code>. Nếu bạn muốn &quot;tạm tắt&quot; một đoạn mã đã có comment, hãy dùng <code>#if 0 ... #endif</code>.</p>
+<p>Nguyên tắc viết comment tốt: <strong>giải thích &quot;vì sao&quot;, đừng lặp lại &quot;cái gì&quot;</strong>. Comment <code>// cộng 1 vào i</code> cho câu <code>i++;</code> là vô ích; comment <code>// bỏ qua dòng tiêu đề của file CSV</code> mới có giá trị.</p>
+<h2>1.8. Đọc dữ liệu từ bàn phím và in nhiều giá trị</h2>
+<p>Một chương trình chỉ có đầu ra thì hơi nhàm chán. Ví dụ dưới đây đọc một tên và chào lại:</p>
+<pre class="hljs"><code><span class="hljs-comment">// hello_name.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span>   <span class="hljs-comment">// cần cho strlen</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">char</span> name[<span class="hljs-number">128</span>];   <span class="hljs-comment">// mảng 128 ký tự để chứa tên</span>
+
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Nhap ten: &quot;</span>);
     <span class="hljs-keyword">if</span> (fgets(name, <span class="hljs-keyword">sizeof</span>(name), <span class="hljs-built_in">stdin</span>) != <span class="hljs-literal">NULL</span>) {
-        <span class="hljs-comment">/* loại bỏ newline nếu có */</span>
         <span class="hljs-type">size_t</span> len = <span class="hljs-built_in">strlen</span>(name);
-        <span class="hljs-keyword">if</span> (len &gt; <span class="hljs-number">0</span> &amp;&amp; name[len<span class="hljs-number">-1</span>] == <span class="hljs-string">&#x27;\n&#x27;</span>) name[len<span class="hljs-number">-1</span>] = <span class="hljs-string">&#x27;\0&#x27;</span>;
-        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Xin chào, %s!\n&quot;</span>, name);
+        <span class="hljs-keyword">if</span> (len &gt; <span class="hljs-number">0</span> &amp;&amp; name[len - <span class="hljs-number">1</span>] == <span class="hljs-string">&#x27;\n&#x27;</span>) {
+            name[len - <span class="hljs-number">1</span>] = <span class="hljs-string">&#x27;\0&#x27;</span>;   <span class="hljs-comment">// xóa ký tự xuống dòng ở cuối</span>
+        }
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Xin chao, %s!\n&quot;</span>, name);
     }
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </code></pre>
-<p>Ghi chú an toàn:</p>
+<p>Giải thích các phần mới (bạn chưa cần hiểu sâu, chi tiết ở các chương sau):</p>
 <ul>
-<li>Tránh dùng gets(); dùng fgets() để hạn chế buffer overflow.</li>
-<li>Luôn kiểm tra giá trị trả về của hàm IO.</li>
+<li><code>char name[128];</code> khai báo một <strong>mảng</strong> 128 ký tự. Chuỗi trong C thực chất là mảng <code>char</code> kết thúc bằng ký tự <code>\0</code> (chương 7).</li>
+<li><code>fgets(name, sizeof(name), stdin)</code> đọc <strong>tối đa</strong> <code>sizeof(name) - 1</code> ký tự từ bàn phím (<code>stdin</code>) vào <code>name</code>, và luôn thêm <code>\0</code> ở cuối. Nó <strong>không bao giờ ghi tràn</strong> mảng, khác với hàm <code>gets</code> nguy hiểm đã bị loại khỏi chuẩn C11.</li>
+<li><code>fgets</code> giữ lại ký tự <code>\n</code> mà người dùng gõ khi nhấn Enter, nên đoạn mã phía dưới tự cắt nó đi.</li>
+<li><code>fgets</code> trả về <code>NULL</code> nếu đọc thất bại hoặc gặp hết dữ liệu (EOF). Luôn kiểm tra giá trị trả về của hàm nhập/xuất.</li>
+<li><code>%s</code> trong <code>printf</code> là <strong>định dạng (format specifier)</strong> dành cho chuỗi.</li>
 </ul>
-<h2>6. Ví dụ và mã nguồn trong <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-01">code/chapter-01</a></h2>
+<h3>Bảng định dạng <code>printf</code> cơ bản</h3>
+<table>
+<thead>
+<tr>
+<th>Định dạng</th>
+<th>Kiểu dữ liệu</th>
+<th>Ví dụ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>%d</code></td>
+<td><code>int</code></td>
+<td><code>printf(&quot;%d&quot;, 42);</code> → <code>42</code></td>
+</tr>
+<tr>
+<td><code>%u</code></td>
+<td><code>unsigned int</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>%ld</code></td>
+<td><code>long</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>%f</code></td>
+<td><code>double</code> (số thực)</td>
+<td><code>printf(&quot;%f&quot;, 3.14);</code> → <code>3.140000</code></td>
+</tr>
+<tr>
+<td><code>%.2f</code></td>
+<td><code>double</code>, 2 chữ số thập phân</td>
+<td><code>printf(&quot;%.2f&quot;, 3.14159);</code> → <code>3.14</code></td>
+</tr>
+<tr>
+<td><code>%c</code></td>
+<td><code>char</code> (một ký tự)</td>
+<td><code>printf(&quot;%c&quot;, 'A');</code> → <code>A</code></td>
+</tr>
+<tr>
+<td><code>%s</code></td>
+<td>chuỗi</td>
+<td><code>printf(&quot;%s&quot;, &quot;abc&quot;);</code> → <code>abc</code></td>
+</tr>
+<tr>
+<td><code>%x</code></td>
+<td>số nguyên in dạng thập lục phân</td>
+<td><code>printf(&quot;%x&quot;, 255);</code> → <code>ff</code></td>
+</tr>
+<tr>
+<td><code>%p</code></td>
+<td>địa chỉ (con trỏ)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>%zu</code></td>
+<td><code>size_t</code></td>
+<td><code>printf(&quot;%zu&quot;, strlen(s));</code></td>
+</tr>
+<tr>
+<td><code>%%</code></td>
+<td>dấu <code>%</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Bạn có thể chỉ định độ rộng: <code>%5d</code> in số chiếm tối thiểu 5 ký tự (căn phải), <code>%-5d</code> căn trái, <code>%05d</code> đệm số 0.</p>
+<blockquote>
+<p><strong>Vì sao dùng <code>fgets</code> thay vì <code>scanf</code>?</strong> <code>scanf(&quot;%s&quot;, name)</code> dừng ở dấu cách (nên &quot;Nguyen Van A&quot; chỉ đọc được &quot;Nguyen&quot;) và không giới hạn độ dài nếu bạn quên viết <code>%127s</code>. <code>fgets</code> đọc cả dòng và tự bảo vệ bộ nhớ. Chương 4 sẽ nói kỹ hơn về <code>scanf</code>.</p>
+</blockquote>
+<h2>1.9. Một ví dụ hoàn chỉnh: máy tính bốn phép toán</h2>
+<pre class="hljs"><code><span class="hljs-comment">// arithmetic.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> a, b;
+
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Nhap hai so nguyen (cach nhau bang dau cach): &quot;</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d %d&quot;</span>, &amp;a, &amp;b) != <span class="hljs-number">2</span>) {
+        <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;Loi: du lieu nhap khong hop le.\n&quot;</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;                    <span class="hljs-comment">// mã khác 0 = có lỗi</span>
+    }
+
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d + %d = %d\n&quot;</span>, a, b, a + b);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d - %d = %d\n&quot;</span>, a, b, a - b);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d * %d = %d\n&quot;</span>, a, b, a * b);
+
+    <span class="hljs-keyword">if</span> (b == <span class="hljs-number">0</span>) {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Khong the chia cho 0.\n&quot;</span>);
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d / %d = %d (phan nguyen)\n&quot;</span>, a, b, a / b);
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d %% %d = %d (phan du)\n&quot;</span>, a, b, a % b);
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d / %d = %.2f (so thuc)\n&quot;</span>, a, b, (<span class="hljs-type">double</span>)a / b);
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Các điểm đáng chú ý:</p>
 <ul>
-<li>hello.c — &quot;Hello, World!&quot;</li>
-<li>hello_name.c — đọc tên người dùng và in lời chào (dùng fgets)</li>
-<li>arithmetic.c — nhập hai số và in tổng/hiệu/tích/thương với kiểm tra chia cho 0</li>
-<li>input_validation.c — ví dụ kiểm tra đầu vào hợp lệ</li>
+<li><code>&amp;a</code> là <strong>địa chỉ</strong> của biến <code>a</code>. <code>scanf</code> cần địa chỉ để biết phải ghi giá trị vào đâu. Quên dấu <code>&amp;</code> là lỗi kinh điển (chương 8 giải thích vì sao).</li>
+<li><code>scanf</code> trả về <strong>số mục đọc thành công</strong>. Ở đây ta mong đợi 2; nếu khác 2 tức là người dùng nhập sai (ví dụ gõ chữ).</li>
+<li><code>fprintf(stderr, ...)</code> in ra <strong>stderr</strong> (luồng lỗi), tách biệt với stdout. Nhờ vậy thông báo lỗi không lẫn vào kết quả khi bạn chuyển hướng đầu ra (<code>./prog &gt; out.txt</code>).</li>
+<li>Phép chia hai số nguyên trong C cho <strong>kết quả nguyên</strong> (<code>7 / 2</code> là <code>3</code>). Để có kết quả thực, ép một toán hạng sang <code>double</code>: <code>(double)a / b</code>.</li>
+<li><code>%%</code> in ra dấu <code>%</code> (vì <code>%</code> là ký tự đặc biệt trong <code>printf</code>).</li>
 </ul>
-<p>Mỗi ví dụ có README hướng dẫn biên dịch: gcc -std=c11 -Wall -Wextra -o exe file.c</p>
-<h2>7. Bài tập thực hành (có lời giải trong /manuscript/solutions)</h2>
+<p>Chạy thử:</p>
+<pre class="hljs"><code>Nhap hai so nguyen (cach nhau bang dau cach): 7 2
+7 + 2 = 9
+7 - 2 = 5
+7 * 2 = 14
+7 / 2 = 3 (phan nguyen)
+7 % 2 = 1 (phan du)
+7 / 2 = 3.50 (so thuc)
+</code></pre>
+<h2>1.10. Lỗi thường gặp của người mới và cách xử lý</h2>
+<table>
+<thead>
+<tr>
+<th>Triệu chứng</th>
+<th>Nguyên nhân thường gặp</th>
+<th>Cách xử lý</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>'gcc' is not recognized</code> / <code>command not found</code></td>
+<td>Chưa cài compiler hoặc chưa nằm trong <code>PATH</code>.</td>
+<td>Cài lại, hoặc thêm thư mục <code>bin</code> của compiler vào <code>PATH</code>, rồi mở terminal mới.</td>
+</tr>
+<tr>
+<td><code>expected ';' before '}'</code></td>
+<td>Thiếu dấu <code>;</code> ở dòng <strong>trước</strong> dòng được báo.</td>
+<td>Kiểm tra dòng phía trên vị trí lỗi.</td>
+</tr>
+<tr>
+<td><code>implicit declaration of function</code></td>
+<td>Quên <code>#include</code> header của hàm đó.</td>
+<td>Thêm header phù hợp (<code>stdio.h</code>, <code>string.h</code>, <code>stdlib.h</code>...).</td>
+</tr>
+<tr>
+<td><code>undefined reference to 'main'</code></td>
+<td>File không có hàm <code>main</code> hoặc gõ sai tên.</td>
+<td>Kiểm tra chính tả <code>main</code>.</td>
+</tr>
+<tr>
+<td><code>undefined reference to 'sqrt'</code></td>
+<td>Chưa liên kết thư viện toán.</td>
+<td>Thêm <code>-lm</code> ở cuối lệnh gcc.</td>
+</tr>
+<tr>
+<td>Chương trình chạy xong, cửa sổ đóng ngay (Windows)</td>
+<td>Chạy bằng cách nhấp đúp thay vì từ terminal.</td>
+<td>Chạy từ terminal.</td>
+</tr>
+<tr>
+<td>Chữ tiếng Việt hiện ký tự lạ</td>
+<td>Terminal không dùng UTF-8.</td>
+<td><code>chcp 65001</code> hoặc dùng Windows Terminal.</td>
+</tr>
+<tr>
+<td><code>Segmentation fault</code></td>
+<td>Truy cập bộ nhớ không hợp lệ.</td>
+<td>Biên dịch với <code>-g</code> và chạy <code>gdb</code> (bên dưới).</td>
+</tr>
+<tr>
+<td>Kết quả <code>printf</code> không xuất hiện trước khi crash</td>
+<td><code>stdout</code> được đệm (buffer), chưa kịp ghi ra.</td>
+<td>In thêm <code>\n</code> hoặc gọi <code>fflush(stdout);</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3>Gỡ lỗi cơ bản với gdb</h3>
+<pre class="hljs"><code>gcc -std=c11 -Wall -Wextra -g -O0 -o prog prog.c
+gdb ./prog
+</code></pre>
+<p>Trong gdb:</p>
+<pre class="hljs"><code>(gdb) run            # chạy chương trình
+(gdb) backtrace      # xem chuỗi hàm gọi dẫn tới lỗi (viết tắt: bt)
+(gdb) break main     # đặt điểm dừng tại đầu main
+(gdb) next           # chạy một dòng, không đi vào hàm (viết tắt: n)
+(gdb) step           # chạy một dòng, đi vào hàm (viết tắt: s)
+(gdb) print a        # in giá trị biến a (viết tắt: p)
+(gdb) quit
+</code></pre>
+<p>Đây là kỹ năng quan trọng nhất sau việc viết mã: <strong>đừng đoán, hãy quan sát</strong>.</p>
+<h2>1.11. Tổ chức thư mục làm việc</h2>
+<p>Từ đầu, hãy giữ thói quen mỗi chương một thư mục:</p>
+<pre class="hljs"><code>c_book_practice/
+├── chapter01/
+│   ├── hello.c
+│   ├── hello_name.c
+│   └── arithmetic.c
+├── chapter02/
+└── ...
+</code></pre>
+<p>Mã mẫu của sách nằm ở thư mục <code>code/chapter-NN</code> trong repository, mỗi thư mục có README hướng dẫn biên dịch.</p>
+<h2>1.12. Tóm tắt</h2>
 <ul>
-<li>Bài tập 1: Viết chương trình in &quot;Hello, [Tên bạn]!&quot; — dùng fgets để đọc tên.</li>
-<li>Bài tập 2: Viết chương trình nhập hai số nguyên, in tổng, hiệu, tích, thương (xử lý chia cho 0).</li>
-<li>Bài tập 3: Viết chương trình đọc một chuỗi và in độ dài (dùng strlen).</li>
+<li>C là ngôn ngữ biên dịch, gần phần cứng, dùng nhiều trong hệ thống và nhúng.</li>
+<li>Chương trình C luôn bắt đầu tại hàm <code>main</code>; giá trị <code>main</code> trả về là mã thoát cho hệ điều hành (<code>0</code> = thành công).</li>
+<li><code>gcc</code> thực hiện tiền xử lý → biên dịch → hợp ngữ → liên kết. Loại lỗi cho biết lỗi xảy ra ở giai đoạn nào.</li>
+<li>Luôn biên dịch với <code>-std=c11 -Wall -Wextra -g</code> và xử lý mọi cảnh báo.</li>
+<li>Dùng <code>fgets</code> để đọc chuỗi, kiểm tra giá trị trả về của <code>scanf</code>/<code>fgets</code>.</li>
+<li>Phép chia hai số nguyên cho kết quả nguyên.</li>
 </ul>
-<h2>8. Lỗi thường gặp và mẹo gỡ lỗi</h2>
+<h2>1.13. Bài tập</h2>
+<p><strong>Bài 1 (dễ).</strong> Viết chương trình in ra ba dòng: tên bạn, năm sinh, quê quán. Dùng <code>\n</code> và <code>\t</code> để căn cho đẹp.</p>
+<p><strong>Bài 2 (dễ).</strong> Viết chương trình đọc tên bằng <code>fgets</code> và in <code>Hello, &lt;Tên&gt;!</code>.</p>
+<p><strong>Bài 3 (trung bình).</strong> Viết chương trình nhập hai số nguyên, in tổng, hiệu, tích, thương và phần dư. Xử lý trường hợp chia cho 0.</p>
+<p><strong>Bài 4 (trung bình).</strong> Viết chương trình đọc một dòng chữ và in độ dài của nó bằng <code>strlen</code>. Sau đó tự viết lại bằng vòng lặp <code>while</code> đếm đến khi gặp <code>'\0'</code> và so sánh hai kết quả.</p>
+<p><strong>Bài 5 (thử thách).</strong> Cố tình gây ra lần lượt: (a) thiếu dấu <code>;</code>, (b) thiếu <code>#include &lt;stdio.h&gt;</code>, (c) gọi hàm <code>khong_ton_tai();</code>. Với mỗi lỗi, ghi lại thông báo của gcc, cho biết nó xảy ra ở <strong>giai đoạn nào</strong> trong bốn giai đoạn của mục 1.5 và cách sửa.</p>
+<p>Lời giải gợi ý ở <a href="solutions-01.html">Lời giải chương 1</a>.</p>
+<h2>1.14. Tài nguyên bổ sung</h2>
 <ul>
-<li>Dùng -Wall -Wextra để bắt sớm lỗi khả nghi.</li>
-<li>Nếu chương trình crash (segfault), chạy với gdb: gdb ./prog; run; backtrace</li>
-<li>Kiểm tra giá trị trả về của scanf/fgets để biết input có hợp lệ hay không.</li>
+<li>Brian Kernighan &amp; Dennis Ritchie, <em>The C Programming Language</em> (K&amp;R) — sách kinh điển.</li>
+<li><a href="https://en.cppreference.com/w/c">https://en.cppreference.com/w/c</a> — tài liệu tham khảo chuẩn về ngôn ngữ và thư viện C.</li>
+<li><code>man 3 printf</code>, <code>man 3 fgets</code> (Linux/macOS) — trang hướng dẫn ngay trong terminal.</li>
 </ul>
-<p>Tài nguyên bổ sung</p>
-<ul>
-<li>K&amp;R, &quot;The C Programming Language&quot;</li>
-<li><a href="http://cppreference.com">cppreference.com</a>: trang tham khảo các hàm thư viện chuẩn</li>
-</ul>
-<hr>
-<p>Ghi chú kỹ thuật: giữ ví dụ ngắn, có comment tiếng Việt; kiểm tra các ví dụ biên dịch trên MinGW và Linux.</p>
+<p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-01">code/chapter-01</a></p>
 
 </article>
 <div class="chapter-nav"><span></span><a class="nav-next" href="chapter-02.html">Máy tính và lập trình cơ bản &rarr;</a></div>

@@ -12,43 +12,604 @@
 <main class="content">
 <article>
 <h1>Chương 18 — Bảo mật &amp; an toàn bộ nhớ</h1>
-<p>Mục tiêu chương:</p>
+<h2>Mục tiêu chương</h2>
 <ul>
-<li>Nhận diện các lỗ hổng an toàn bộ nhớ phổ biến (buffer overflow, format string, integer overflow) và biện pháp phòng tránh.</li>
-<li>Sử dụng static và dynamic analysis để phát hiện lỗi (clang-tidy, cppcheck, ASAN).</li>
+<li>Hiểu vì sao C dễ có lỗ hổng an toàn bộ nhớ và các lớp lỗi chính: <strong>tràn bộ đệm</strong>, <strong>format string</strong>, <strong>tràn số nguyên</strong>, <strong>use-after-free</strong>, <strong>race condition</strong> (TOCTOU).</li>
+<li>Nắm cơ chế khai thác ở mức khái niệm (stack smashing) để hiểu <strong>vì sao</strong> các biện pháp phòng thủ tồn tại.</li>
+<li>Biết các lớp phòng thủ: <strong>canary</strong>, <strong>NX/DEP</strong>, <strong>ASLR/PIE</strong>, <strong>RELRO</strong>, <strong>FORTIFY_SOURCE</strong>, CFI.</li>
+<li>Viết mã C <strong>an toàn theo mặc định</strong>: kiểm tra biên, API an toàn, kiểm tra đầu vào, phép toán số học an toàn.</li>
+<li>Dùng công cụ: <strong>cờ cảnh báo</strong>, phân tích tĩnh, <strong>ASan/UBSan/MSan</strong>, <strong>fuzzing</strong> (libFuzzer/AFL++).</li>
+<li>Biết các nguyên tắc: đặc quyền tối thiểu, xóa bí mật khỏi bộ nhớ, tránh so sánh không hằng thời gian.</li>
 </ul>
-<h2>1. Các loại lỗ hổng phổ biến</h2>
+<blockquote>
+<p><strong>Lưu ý đạo đức:</strong> nội dung chương nhằm giúp bạn <strong>phòng thủ</strong> và viết mã an toàn. Chỉ thử các ví dụ khai thác trên chương trình do chính bạn viết, trong môi trường thử nghiệm của bạn. Không dùng để tấn công hệ thống mà bạn không được phép.</p>
+</blockquote>
+<h2>18.1. Vì sao C dễ gặp lỗi bảo mật?</h2>
+<p>C cho phép truy cập bộ nhớ trực tiếp mà <strong>không kiểm tra</strong>: không giới hạn mảng, không kiểm tra con trỏ, không tự quản lý vòng đời bộ nhớ. Một lỗi nhỏ có thể biến thành <strong>lỗ hổng</strong>: kẻ tấn công cung cấp đầu vào được thiết kế khéo để đọc bộ nhớ ngoài ý muốn (rò rỉ thông tin), ghi đè dữ liệu/địa chỉ hàm (chiếm quyền điều khiển — <em>thực thi mã tùy ý</em>), hoặc làm chương trình sập (<em>từ chối dịch vụ</em>).</p>
+<p>Các báo cáo của Microsoft và Google (Chromium) đều chỉ ra rằng khoảng <strong>70%</strong> lỗ hổng nghiêm trọng trong phần mềm viết bằng C/C++ là <strong>lỗi an toàn bộ nhớ</strong>. Đó là lý do có sự chuyển dịch sang ngôn ngữ như Rust — nhưng rất nhiều mã C sẽ còn sống hàng chục năm, nên kỹ năng viết C an toàn rất đáng giá.</p>
+<h3>Mô hình đe dọa: đầu vào không tin cậy</h3>
+<p>Mọi dữ liệu từ <strong>bên ngoài chương trình</strong> đều <strong>không tin cậy</strong>: dòng lệnh, biến môi trường, file, socket, đường dẫn, dữ liệu từ thư viện khác, thậm chí tên file. Câu hỏi bảo mật cơ bản với mỗi dòng mã: <em>&quot;Nếu kẻ tấn công kiểm soát giá trị này, điều tồi tệ nhất là gì?&quot;</em></p>
+<h2>18.2. Tràn bộ đệm (buffer overflow)</h2>
+<h3>Tràn trên stack — cơ chế</h3>
+<p>Ghi dữ liệu vượt quá kích thước mảng trên stack có thể ghi đè lên biến lân cận, <strong>địa chỉ trở về</strong> của hàm, hoặc các con trỏ.</p>
+<pre class="hljs"><code><span class="hljs-comment">// vuln.c — CỐ Ý có lỗi để học. Không dùng mã này trong sản phẩm.</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">greet</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *name)</span> {
+    <span class="hljs-type">char</span> buf[<span class="hljs-number">16</span>];
+    <span class="hljs-built_in">strcpy</span>(buf, name);                   <span class="hljs-comment">// KHÔNG kiểm tra độ dài</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Xin chao, %s\n&quot;</span>, buf);
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> *argv[])</span> {
+    <span class="hljs-keyword">if</span> (argc &gt; <span class="hljs-number">1</span>) greet(argv[<span class="hljs-number">1</span>]);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Bố cục stack của <code>greet</code> (địa chỉ cao ở trên):</p>
+<pre class="hljs"><code>địa chỉ cao
+┌──────────────────────────┐
+│ tham số / frame của main │
+├──────────────────────────┤
+│ ĐỊA CHỈ TRỞ VỀ (→ main)  │  ◄─ kẻ tấn công muốn ghi đè cái này
+├──────────────────────────┤
+│ frame pointer đã lưu     │
+├──────────────────────────┤
+│ (canary — nếu bật)       │  ◄─ giá trị bí mật, kiểm tra trước khi return
+├──────────────────────────┤
+│ buf[16]                  │  ◄─ strcpy ghi từ đây, đi LÊN phía địa chỉ cao
+└──────────────────────────┘
+địa chỉ thấp
+</code></pre>
+<p>Nếu <code>name</code> dài hơn 15 ký tự, <code>strcpy</code> ghi tràn <code>buf</code>, lần lượt phá canary, frame pointer, rồi <strong>địa chỉ trở về</strong>. Khi <code>greet</code> kết thúc và thực hiện <code>ret</code>, CPU nhảy tới địa chỉ mà kẻ tấn công đã chọn. Đó là <em>stack smashing</em>. Ngay cả khi không bị khai thác, chương trình thường bị crash (<code>Segmentation fault</code>).</p>
+<p>Xem hiệu ứng an toàn (không khai thác): biên dịch với ASan:</p>
+<pre class="hljs"><code>gcc -std=c11 -g -fsanitize=address vuln.c -o vuln
+./vuln AAAAAAAAAAAAAAAAAAAAAAAAAAAA
+<span class="hljs-comment"># ERROR: AddressSanitizer: stack-buffer-overflow ... WRITE of size 29 ... in strcpy</span>
+</code></pre>
+<h3>Tràn trên heap</h3>
+<pre class="hljs"><code><span class="hljs-type">char</span> *name = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">8</span>);
+<span class="hljs-built_in">strcpy</span>(name, <span class="hljs-string">&quot;nguyen van a&quot;</span>);           <span class="hljs-comment">// 13 byte vào khối 8 byte -&gt; phá metadata của allocator</span>
+</code></pre>
+<p>Tràn heap có thể ghi đè dữ liệu của đối tượng khác cấp phát ngay sau đó (ví dụ một con trỏ hàm, cờ &quot;is_admin&quot;) hoặc cấu trúc quản lý của <code>malloc</code>. Khó khai thác hơn nhưng vẫn nguy hiểm.</p>
+<h3>Các hàm nguy hiểm và thay thế an toàn</h3>
+<table>
+<thead>
+<tr>
+<th>Nguy hiểm</th>
+<th>Lý do</th>
+<th>Thay bằng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gets(buf)</code></td>
+<td>Không giới hạn; <strong>đã bị xóa khỏi C11</strong></td>
+<td><code>fgets(buf, sizeof buf, stdin)</code></td>
+</tr>
+<tr>
+<td><code>strcpy(dst, src)</code></td>
+<td>Không kiểm tra độ dài</td>
+<td><code>snprintf(dst, sizeof dst, &quot;%s&quot;, src)</code>; <code>memcpy</code> sau khi kiểm tra; <code>strlcpy</code> nếu có</td>
+</tr>
+<tr>
+<td><code>strcat(dst, src)</code></td>
+<td>Như trên</td>
+<td><code>snprintf</code> với offset; <code>strlcat</code></td>
+</tr>
+<tr>
+<td><code>sprintf(buf, fmt, ...)</code></td>
+<td>Không giới hạn</td>
+<td><code>snprintf(buf, sizeof buf, fmt, ...)</code></td>
+</tr>
+<tr>
+<td><code>scanf(&quot;%s&quot;, buf)</code></td>
+<td>Không giới hạn</td>
+<td><code>scanf(&quot;%15s&quot;, buf)</code> (số = kích thước − 1) hoặc <code>fgets</code></td>
+</tr>
+<tr>
+<td><code>strncpy(dst, src, n)</code></td>
+<td>Có thể <strong>không thêm <code>'\0'</code></strong>; đệm 0 thừa</td>
+<td><code>snprintf</code>; hoặc luôn gán <code>dst[n-1] = '\0'</code></td>
+</tr>
+<tr>
+<td><code>atoi</code>, <code>atof</code></td>
+<td>Không báo lỗi</td>
+<td><code>strtol</code>, <code>strtod</code> (kiểm tra <code>errno</code>, <code>end</code>)</td>
+</tr>
+<tr>
+<td><code>system(cmd)</code></td>
+<td>Command injection</td>
+<td>Hàm <code>exec*</code>/<code>posix_spawn</code> với mảng đối số</td>
+</tr>
+<tr>
+<td><code>mktemp</code></td>
+<td>Race/đoán được</td>
+<td><code>mkstemp</code></td>
+</tr>
+<tr>
+<td><code>tmpnam</code></td>
+<td>Race/đoán được</td>
+<td><code>mkstemp</code> / <code>tmpfile</code></td>
+</tr>
+<tr>
+<td><code>rand()</code> cho bí mật</td>
+<td>Đoán được</td>
+<td><code>getrandom</code>, <code>/dev/urandom</code>, <code>arc4random</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Nguyên tắc chống tràn</h3>
+<ol>
+<li><strong>Luôn biết kích thước đích</strong> và truyền nó cùng con trỏ: <code>(char *buf, size_t cap)</code>.</li>
+<li><strong>Kiểm tra trước khi chép:</strong> <code>if (len &gt;= cap) return ERROR;</code> (nhớ <code>+1</code> cho <code>'\0'</code>).</li>
+<li><strong>Dùng độ dài tường minh</strong> thay vì dựa vào <code>'\0'</code> khi dữ liệu không tin cậy (có thể không có <code>'\0'</code>): <code>strnlen</code>, <code>memchr</code>.</li>
+<li><strong>Mảng có kích thước cố định + <code>sizeof</code></strong>, không &quot;số ma thuật&quot; lặp lại nhiều nơi.</li>
+<li><strong>Đóng gói</strong> buffer cùng độ dài vào struct rồi chỉ truy cập qua hàm có kiểm tra biên:</li>
+</ol>
+<pre class="hljs"><code><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span> <span class="hljs-type">char</span> *data; <span class="hljs-type">size_t</span> len, cap; } Buf;
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">buf_append</span><span class="hljs-params">(Buf *b, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *src, <span class="hljs-type">size_t</span> n)</span> {
+    <span class="hljs-keyword">if</span> (n &gt; b-&gt;cap - b-&gt;len) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;          <span class="hljs-comment">// so sánh không tràn: cap - len không âm vì len &lt;= cap</span>
+    <span class="hljs-built_in">memcpy</span>(b-&gt;data + b-&gt;len, src, n);
+    b-&gt;len += n;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Chú ý cách viết <code>n &gt; cap - len</code> thay vì <code>len + n &gt; cap</code> (biểu thức sau có thể <strong>tràn số</strong> khi <code>n</code> rất lớn, xem 18.4).</p>
+<h3>Ví dụ vá lỗi <code>vuln.c</code></h3>
+<pre class="hljs"><code><span class="hljs-type">void</span> <span class="hljs-title function_">greet_safe</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *name)</span> {
+    <span class="hljs-type">char</span> buf[<span class="hljs-number">16</span>];
+    <span class="hljs-type">int</span> n = <span class="hljs-built_in">snprintf</span>(buf, <span class="hljs-keyword">sizeof</span> buf, <span class="hljs-string">&quot;%s&quot;</span>, name);   <span class="hljs-comment">// luôn kết thúc bằng &#x27;\0&#x27;, không ghi quá 16 byte</span>
+    <span class="hljs-keyword">if</span> (n &lt; <span class="hljs-number">0</span> || (<span class="hljs-type">size_t</span>)n &gt;= <span class="hljs-keyword">sizeof</span> buf) {
+        <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;ten qua dai, da cat bot\n&quot;</span>);
+    }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Xin chao, %s\n&quot;</span>, buf);
+}
+</code></pre>
+<p>Hoặc từ chối hẳn đầu vào quá dài nếu việc cắt bớt gây sai nghiệp vụ.</p>
+<h2>18.3. Lỗ hổng chuỗi định dạng (format string)</h2>
+<pre class="hljs"><code><span class="hljs-comment">// SAI</span>
+<span class="hljs-type">char</span> input[<span class="hljs-number">256</span>];
+fgets(input, <span class="hljs-keyword">sizeof</span> input, <span class="hljs-built_in">stdin</span>);
+<span class="hljs-built_in">printf</span>(input);                        <span class="hljs-comment">// input do người dùng quyết định định dạng!</span>
+</code></pre>
+<p>Nếu <code>input</code> chứa <code>%x %x %x %x</code>, <code>printf</code> sẽ <strong>đọc các giá trị trên stack</strong> và in ra — <strong>rò rỉ thông tin</strong> (địa chỉ, canary, dữ liệu). Với <code>%s</code> lấy con trỏ từ stack có thể crash; với <strong><code>%n</code></strong> (ghi số ký tự đã in vào địa chỉ trên stack) kẻ tấn công có thể <strong>ghi vào bộ nhớ tùy ý</strong>.</p>
+<p><strong>Cách đúng:</strong> luôn dùng chuỗi định dạng <strong>hằng số</strong> và truyền dữ liệu như đối số:</p>
+<pre class="hljs"><code><span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%s&quot;</span>, input);                  <span class="hljs-comment">// ĐÚNG</span>
+<span class="hljs-built_in">puts</span>(input);                          <span class="hljs-comment">// hoặc fputs(input, stdout)</span>
+</code></pre>
+<p>Quy tắc: <strong>chuỗi định dạng không bao giờ được đến từ đầu vào không tin cậy.</strong> Áp dụng cho cả <code>fprintf</code>, <code>sprintf</code>, <code>snprintf</code>, <code>syslog</code>, và các hàm log tự viết. Bật <code>-Wformat -Wformat-security -Werror=format-security</code>: gcc sẽ cảnh báo <code>printf(input)</code>. Với hàm log tự viết, gắn <code>__attribute__((format(printf, ...)))</code> (chương 13) để compiler kiểm tra.</p>
+<h2>18.4. Tràn số nguyên (integer overflow)</h2>
+<p>Tràn số nguyên không tự nó phá bộ nhớ, nhưng khi kết quả dùng để <strong>tính kích thước cấp phát hoặc chỉ số</strong>, nó dẫn tới tràn bộ đệm.</p>
+<h3>Ví dụ: cấp phát bị tràn</h3>
+<pre class="hljs"><code><span class="hljs-comment">// SAI</span>
+<span class="hljs-type">uint32_t</span> count = read_count_from_network();       <span class="hljs-comment">// kẻ tấn công chọn: 0x40000001</span>
+<span class="hljs-type">uint32_t</span> size  = count * <span class="hljs-number">4</span>;                       <span class="hljs-comment">// 0x100000004 cắt về 32 bit thành 4!</span>
+<span class="hljs-type">uint8_t</span> *buf   = <span class="hljs-built_in">malloc</span>(size);                    <span class="hljs-comment">// chỉ 4 byte</span>
+<span class="hljs-keyword">for</span> (<span class="hljs-type">uint32_t</span> i = <span class="hljs-number">0</span>; i &lt; count; i++)
+    <span class="hljs-built_in">memcpy</span>(buf + i * <span class="hljs-number">4</span>, src + i * <span class="hljs-number">4</span>, <span class="hljs-number">4</span>);          <span class="hljs-comment">// ghi cả tỷ lần ra ngoài 4 byte -&gt; tràn heap</span>
+</code></pre>
+<p>Phép nhân tràn nhưng vẫn &quot;thành công&quot;, nên <code>malloc</code> cấp ít hơn nhiều so với số vòng lặp.</p>
+<h3>Cách tránh</h3>
+<p><strong>1. Kiểm tra trước khi tính:</strong></p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdint.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">alloc_array</span><span class="hljs-params">(<span class="hljs-type">size_t</span> count, <span class="hljs-type">size_t</span> elem, <span class="hljs-type">void</span> **out)</span> {
+    <span class="hljs-keyword">if</span> (elem != <span class="hljs-number">0</span> &amp;&amp; count &gt; SIZE_MAX / elem) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;   <span class="hljs-comment">// count * elem sẽ tràn</span>
+    <span class="hljs-type">void</span> *p = <span class="hljs-built_in">malloc</span>(count * elem);
+    <span class="hljs-keyword">if</span> (!p) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    *out = p;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p><strong>2. Dùng hàm nhận nhân sẵn có kiểm tra:</strong> <code>calloc(count, size)</code> tự kiểm tra tràn của phép nhân.</p>
+<p><strong>3. Dùng builtin của compiler (gcc/clang):</strong></p>
+<pre class="hljs"><code><span class="hljs-type">size_t</span> total;
+<span class="hljs-keyword">if</span> (__builtin_mul_overflow(count, elem, &amp;total)) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+<span class="hljs-keyword">if</span> (__builtin_add_overflow(a, b, &amp;sum))          <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+</code></pre>
+<p>C23 chuẩn hóa <code>&lt;stdckdint.h&gt;</code> (<code>ckd_add</code>, <code>ckd_mul</code>).</p>
+<p><strong>4. Với số có dấu:</strong> kiểm tra <strong>trước</strong> khi thực hiện phép toán (vì tràn số có dấu là UB, không thể kiểm tra sau):</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> <span class="hljs-title function_">safe_add</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b, <span class="hljs-type">int</span> *out)</span> {
+    <span class="hljs-keyword">if</span> ((b &gt; <span class="hljs-number">0</span> &amp;&amp; a &gt; INT_MAX - b) || (b &lt; <span class="hljs-number">0</span> &amp;&amp; a &lt; INT_MIN - b)) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    *out = a + b;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<h3>Lỗi dấu (sign) và ép kiểu</h3>
+<pre class="hljs"><code><span class="hljs-type">int</span> len = get_length();                  <span class="hljs-comment">// có thể âm!</span>
+<span class="hljs-type">char</span> buf[<span class="hljs-number">64</span>];
+<span class="hljs-keyword">if</span> (len &gt; <span class="hljs-number">64</span>) <span class="hljs-keyword">return</span>;                    <span class="hljs-comment">// -1 vượt qua kiểm tra</span>
+<span class="hljs-built_in">memcpy</span>(buf, src, len);                   <span class="hljs-comment">// len chuyển thành size_t: -1 -&gt; 18446744073709551615</span>
+</code></pre>
+<p>Sửa: kiểm tra <strong>cả hai phía</strong> (<code>len &lt; 0 || len &gt; 64</code>) hoặc dùng kiểu không dấu ngay từ đầu (<code>size_t</code>) và không trộn.</p>
+<p>Truncation cũng nguy hiểm: <code>unsigned char n = len;</code> cắt <code>len = 300</code> thành <code>44</code>. Dùng <code>-Wconversion -Wsign-conversion</code> để compiler bắt các chuyển đổi ngầm.</p>
+<h2>18.5. Use-after-free, double free và các lỗi vòng đời (nhắc lại)</h2>
+<p>Chương 9 đã trình bày các lỗi này. Ở góc độ bảo mật:</p>
 <ul>
-<li>Buffer overflow: viết quá giới hạn mảng/chuỗi → remote code execution hoặc crash.</li>
-<li>Format string vulnerability: printf(user_input) → attacker kiểm soát format.</li>
-<li>Integer overflow/underflow: tính toán kích thước bộ nhớ dẫn tới allocation sai.</li>
+<li><strong>Use-after-free:</strong> kẻ tấn công <strong>đặt dữ liệu của mình vào vùng nhớ vừa giải phóng</strong> (bằng cách gây ra một cấp phát mới cùng kích thước), rồi con trỏ treo của bạn dùng dữ liệu đó (ví dụ gọi qua <strong>con trỏ hàm</strong> nằm trong đối tượng). Đây là một trong những lớp lỗ hổng bị khai thác nhiều nhất trong trình duyệt và nhân.</li>
+<li><strong>Double free:</strong> phá cấu trúc danh sách trống của allocator, dẫn tới ghi tùy ý.</li>
+<li><strong>Đọc chưa khởi tạo (uninitialized read):</strong> rò rỉ dữ liệu cũ trên stack/heap, có thể chứa khóa/mật khẩu; và struct có <strong>padding</strong> khi gửi ra ngoài (ghi file/socket) làm lộ byte rác — hãy <code>memset(&amp;s, 0, sizeof s)</code> hoặc khởi tạo <code>= {0}</code> trước khi điền.</li>
+<li><strong>Out-of-bounds read</strong> (như <em>Heartbleed</em>): đọc quá độ dài dữ liệu thật rồi gửi trả — rò rỉ nội dung bộ nhớ. Nguyên nhân: tin độ dài do đối phương tự khai (xem <code>recv_msg</code> chương 16: luôn <strong>kiểm tra độ dài khai báo</strong> với dữ liệu thực có).</li>
 </ul>
-<h2>2. Defense-in-depth</h2>
+<p>Biện pháp mã: gán <code>NULL</code> sau <code>free</code>, ownership rõ ràng, tránh con trỏ thô chia sẻ, dùng ASan trong kiểm thử.</p>
+<h2>18.6. Race condition bảo mật: TOCTOU</h2>
+<p><strong>Time-Of-Check to Time-Of-Use:</strong> kiểm tra một điều kiện rồi mới dùng, nhưng giữa hai bước trạng thái đã đổi.</p>
+<pre class="hljs"><code><span class="hljs-comment">// SAI: chương trình chạy với đặc quyền cao</span>
+<span class="hljs-keyword">if</span> (access(path, W_OK) == <span class="hljs-number">0</span>) {           <span class="hljs-comment">// 1) kiểm tra: người dùng có quyền ghi file này không?</span>
+    FILE *f = fopen(path, <span class="hljs-string">&quot;w&quot;</span>);          <span class="hljs-comment">// 2) dùng: nhưng giữa 1 và 2, kẻ tấn công thay path bằng</span>
+    ...                                  <span class="hljs-comment">//    symlink trỏ tới /etc/passwd -&gt; ghi vào file hệ thống!</span>
+}
+</code></pre>
+<p>Cách đúng: <strong>bỏ bước kiểm tra riêng</strong>; mở file <strong>trực tiếp</strong> với cờ phù hợp rồi xử lý lỗi, và dùng cờ chống symlink/đảm bảo tính duy nhất:</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> fd = open(path, O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW, <span class="hljs-number">0600</span>);
+<span class="hljs-keyword">if</span> (fd &lt; <span class="hljs-number">0</span>) { perror(<span class="hljs-string">&quot;open&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>; }
+</code></pre>
+<p>Với file tạm: dùng <code>mkstemp</code>, không dùng <code>tmpnam</code>/<code>mktemp</code>. Hạ đặc quyền (<code>setuid</code>) trước khi mở file thay mặt người dùng.</p>
+<h2>18.7. Command injection, path traversal, và tin cậy đầu vào</h2>
+<h3>Command injection</h3>
+<pre class="hljs"><code><span class="hljs-comment">// SAI</span>
+<span class="hljs-type">char</span> cmd[<span class="hljs-number">256</span>];
+<span class="hljs-built_in">snprintf</span>(cmd, <span class="hljs-keyword">sizeof</span> cmd, <span class="hljs-string">&quot;ls -l %s&quot;</span>, user_supplied_dir);
+system(cmd);                             <span class="hljs-comment">// nếu dir là &quot;x; rm -rf ~&quot; -&gt; chạy cả lệnh thứ hai!</span>
+</code></pre>
+<p>Tránh <code>system()</code>/<code>popen()</code> với dữ liệu ngoài. Dùng <code>fork</code> + <code>execv</code> (truyền <strong>mảng đối số</strong>, không qua shell) hoặc <code>posix_spawn</code>; tốt hơn cả là dùng API trực tiếp (<code>opendir</code>) thay vì chạy công cụ ngoài.</p>
+<h3>Path traversal</h3>
+<pre class="hljs"><code><span class="hljs-comment">// SAI: người dùng gửi tên file &quot;../../etc/passwd&quot;</span>
+<span class="hljs-built_in">snprintf</span>(path, <span class="hljs-keyword">sizeof</span> path, <span class="hljs-string">&quot;/var/www/files/%s&quot;</span>, name);
+</code></pre>
+<p>Cách phòng: từ chối tên chứa <code>/</code>, <code>\</code>, <code>..</code>, hoặc chuẩn hóa bằng <code>realpath()</code> rồi kiểm tra kết quả nằm trong thư mục gốc cho phép (<code>strncmp(resolved, root, strlen(root)) == 0</code> và ký tự kế tiếp là <code>/</code> hoặc <code>'\0'</code>).</p>
+<h3>Validate theo danh sách cho phép (allow-list)</h3>
+<p>Kiểm tra đầu vào bằng cách liệt kê <strong>những gì được phép</strong>, không cố liệt kê những gì cấm:</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> <span class="hljs-title function_">is_valid_username</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *s)</span> {
+    <span class="hljs-type">size_t</span> n = <span class="hljs-built_in">strlen</span>(s);
+    <span class="hljs-keyword">if</span> (n == <span class="hljs-number">0</span> || n &gt; <span class="hljs-number">32</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) {
+        <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> c = (<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>)s[i];
+        <span class="hljs-keyword">if</span> (!(<span class="hljs-built_in">isalnum</span>(c) || c == <span class="hljs-string">&#x27;_&#x27;</span> || c == <span class="hljs-string">&#x27;-&#x27;</span>)) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+}
+</code></pre>
+<p>Quy tắc: <strong>validate ở biên (khi dữ liệu vào)</strong>, <strong>chuẩn hóa trước khi kiểm tra</strong>, và <strong>kiểm tra độ dài, kiểu, phạm vi, định dạng</strong>.</p>
+<h2>18.8. Các lớp phòng thủ của hệ thống và compiler</h2>
+<p>Không thay thế cho việc viết mã đúng, nhưng <strong>làm khai thác khó hơn nhiều</strong>. Nên bật tất cả trong bản phát hành.</p>
+<table>
+<thead>
+<tr>
+<th>Cơ chế</th>
+<th>Chống gì</th>
+<th>Cách bật (gcc/clang)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Stack canary</strong></td>
+<td>Ghi đè địa chỉ trở về: chèn giá trị bí mật trước địa chỉ trở về, kiểm tra trước khi <code>ret</code>; sai → dừng</td>
+<td><code>-fstack-protector-strong</code></td>
+</tr>
+<tr>
+<td><strong>NX / DEP</strong> (Non-eXecutable)</td>
+<td>Chạy mã kẻ tấn công chèn vào stack/heap: đánh dấu vùng dữ liệu không thực thi</td>
+<td>Mặc định (linker: <code>-z noexecstack</code>)</td>
+</tr>
+<tr>
+<td><strong>ASLR</strong> (Address Space Layout Randomization)</td>
+<td>Kẻ tấn công không biết địa chỉ cố định: xáo trộn địa chỉ stack, heap, thư viện mỗi lần chạy</td>
+<td>Hệ điều hành (<code>/proc/sys/kernel/randomize_va_space</code>)</td>
+</tr>
+<tr>
+<td><strong>PIE</strong> (Position Independent Executable)</td>
+<td>Để chính chương trình cũng được ASLR</td>
+<td><code>-fPIE -pie</code></td>
+</tr>
+<tr>
+<td><strong>RELRO</strong> (Relocation Read-Only)</td>
+<td>Ghi đè bảng GOT: đánh dấu chỉ đọc sau khi nạp</td>
+<td><code>-Wl,-z,relro,-z,now</code> (Full RELRO)</td>
+</tr>
+<tr>
+<td><strong>FORTIFY_SOURCE</strong></td>
+<td>Kiểm tra biên tự động cho <code>memcpy</code>, <code>strcpy</code>, <code>sprintf</code>... khi biết kích thước đích lúc biên dịch</td>
+<td><code>-O2 -D_FORTIFY_SOURCE=2</code> (hoặc <code>=3</code>)</td>
+</tr>
+<tr>
+<td><strong>CFI</strong> (Control-Flow Integrity)</td>
+<td>Nhảy tới địa chỉ hàm không hợp lệ (ROP/JOP)</td>
+<td><code>-fsanitize=cfi -flto</code> (clang)</td>
+</tr>
+<tr>
+<td><strong>Shadow stack / CET</strong></td>
+<td>Sửa địa chỉ trở về</td>
+<td>Phần cứng + hệ điều hành mới</td>
+</tr>
+<tr>
+<td><strong><code>-ftrivial-auto-var-init=zero</code></strong></td>
+<td>Đọc biến cục bộ chưa khởi tạo</td>
+<td>gcc 12+/clang: khởi tạo biến tự động về 0</td>
+</tr>
+</tbody>
+</table>
+<p>Bộ cờ khuyến nghị cho bản phát hành gcc/clang trên Linux:</p>
+<pre class="hljs"><code>gcc -std=c11 -O2 -Wall -Wextra -Wformat=2 -Wformat-security \
+    -D_FORTIFY_SOURCE=2 -fstack-protector-strong -fPIE -pie \
+    -Wl,-z,relro,-z,now,-z,noexecstack \
+    prog.c -o prog
+</code></pre>
+<p>Kiểm tra một file nhị phân đã bật những gì: <code>checksec --file=./prog</code> (công cụ <code>checksec</code>), hoặc <code>readelf -l</code>, <code>readelf -d</code>.</p>
+<p><strong>Lưu ý:</strong> các biện pháp này là <strong>giảm thiểu (mitigation)</strong>, không phải sửa lỗi. Kẻ tấn công có thể vượt qua chúng khi có thêm lỗ hổng rò rỉ địa chỉ. Mã đúng vẫn là tuyến phòng thủ đầu tiên.</p>
+<h2>18.9. Công cụ phát hiện lỗi</h2>
+<h3>Cảnh báo compiler — bật hết và coi trọng</h3>
+<pre class="hljs"><code>gcc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion \
+    -Wformat=2 -Wcast-qual -Wcast-align -Wstrict-prototypes -Wnull-dereference \
+    -Wdouble-promotion -Wundef -Wvla -Werror prog.c
+</code></pre>
+<p>(Mỗi cờ thêm nhiều cảnh báo; cấp độ <code>-Wconversion</code> khá ồn nên áp dụng dần.) <code>gcc -fanalyzer</code> (10+) chạy phân tích tĩnh liên thủ tục, phát hiện double free, rò rỉ, NULL dereference, use-after-free.</p>
+<h3>Phân tích tĩnh</h3>
+<pre class="hljs"><code>cppcheck --<span class="hljs-built_in">enable</span>=warning,style,performance,portability --std=c11 src/
+clang-tidy -checks=<span class="hljs-string">&#x27;clang-analyzer-*,bugprone-*,cert-*&#x27;</span> src/*.c -- -std=c11
+clang --analyze src/*.c            <span class="hljs-comment"># Clang Static Analyzer</span>
+</code></pre>
+<p>Có nhiều kết quả <strong>dương tính giả (false positive)</strong>, và cũng có lỗi mà chúng <strong>không thấy</strong> — vẫn cần kiểm thử động.</p>
+<h3>Sanitizer (phân tích động, khi chạy)</h3>
+<table>
+<thead>
+<tr>
+<th>Sanitizer</th>
+<th>Cờ</th>
+<th>Bắt được</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>AddressSanitizer (ASan)</strong></td>
+<td><code>-fsanitize=address</code></td>
+<td>Tràn stack/heap/global, use-after-free, double free, rò rỉ (LeakSanitizer)</td>
+</tr>
+<tr>
+<td><strong>UndefinedBehaviorSanitizer (UBSan)</strong></td>
+<td><code>-fsanitize=undefined</code></td>
+<td>Tràn số có dấu, dịch bit sai, NULL dereference, chia cho 0, ép kiểu sai</td>
+</tr>
+<tr>
+<td><strong>MemorySanitizer (MSan)</strong> (clang)</td>
+<td><code>-fsanitize=memory</code></td>
+<td>Đọc bộ nhớ chưa khởi tạo</td>
+</tr>
+<tr>
+<td><strong>ThreadSanitizer (TSan)</strong></td>
+<td><code>-fsanitize=thread</code></td>
+<td>Data race (chương 15)</td>
+</tr>
+<tr>
+<td><strong>Hardware-assisted ASan / MTE</strong></td>
+<td>ARM</td>
+<td>Nhẹ hơn, dùng cả trong sản phẩm</td>
+</tr>
+</tbody>
+</table>
+<pre class="hljs"><code>gcc -std=c11 -g -O1 -fsanitize=address,undefined -fno-omit-frame-pointer prog.c -o prog
+ASAN_OPTIONS=detect_leaks=1:abort_on_error=1 ./prog
+</code></pre>
+<p>Cách đọc báo cáo ASan (chương 9): loại lỗi, dòng gây lỗi, dòng cấp phát/giải phóng liên quan.</p>
+<h3>Fuzzing — tìm lỗi bằng đầu vào ngẫu nhiên có hướng dẫn</h3>
+<p><strong>Fuzzer</strong> sinh hàng triệu đầu vào biến đổi, theo dõi <strong>độ phủ mã</strong> để ưu tiên đầu vào mở ra nhánh mới, và báo khi chương trình crash hoặc sanitizer kêu. Đây là công cụ rất hiệu quả cho <strong>bộ phân tích dữ liệu</strong> (parser, giải mã, giao thức).</p>
+<p><strong>libFuzzer</strong> (clang) — bạn viết một hàm nhận mảng byte:</p>
+<pre class="hljs"><code><span class="hljs-comment">// fuzz_parse.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stddef.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdint.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;parser.h&quot;</span>          <span class="hljs-comment">// hàm cần thử: parse_config(const char *data, size_t len)</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">LLVMFuzzerTestOneInput</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">uint8_t</span> *data, <span class="hljs-type">size_t</span> size)</span> {
+    parse_config((<span class="hljs-type">const</span> <span class="hljs-type">char</span> *)data, size);     <span class="hljs-comment">// không được crash, treo, hay rò rỉ với BẤT KỲ đầu vào nào</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<pre class="hljs"><code>clang -std=c11 -g -O1 -fsanitize=fuzzer,address,undefined fuzz_parse.c parser.c -o fuzz_parse
+<span class="hljs-built_in">mkdir</span> corpus &amp;&amp; ./fuzz_parse corpus/ -max_total_time=60
+<span class="hljs-comment"># crash-xxxx: file chứa đầu vào gây lỗi để tái hiện: ./fuzz_parse crash-xxxx</span>
+</code></pre>
+<p><strong>AFL++</strong> thay thế: <code>afl-clang-fast</code> để biên dịch, <code>afl-fuzz -i in -o out -- ./prog @@</code>. Đặt thư mục <code>in/</code> với vài file mẫu hợp lệ làm hạt giống.</p>
+<p>Fuzzing nên tích hợp vào CI (chương 21) và chạy định kỳ; giữ lại các đầu vào từng gây crash làm <strong>bộ kiểm thử hồi quy</strong>.</p>
+<h3>Valgrind</h3>
+<p><code>valgrind --leak-check=full --track-origins=yes ./prog</code> — không cần biên dịch lại, chậm hơn nhưng bắt cả đọc chưa khởi tạo.</p>
+<h2>18.10. Thực hành lập trình an toàn</h2>
+<h3>Danh sách kiểm tra</h3>
+<ol>
+<li><strong>Coi mọi đầu vào ngoài là không tin cậy;</strong> kiểm tra độ dài, phạm vi, định dạng ngay tại biên.</li>
+<li><strong>Luôn có giới hạn:</strong> kích thước bộ đệm, độ dài dòng/thông điệp, số kết nối, độ sâu đệ quy, thời gian.</li>
+<li><strong>Truyền kích thước cùng con trỏ;</strong> không dựa vào <code>'\0'</code> cho dữ liệu không tin cậy.</li>
+<li><strong>Khởi tạo mọi thứ:</strong> biến, struct (<code>= {0}</code>), bộ nhớ (<code>calloc</code>), và <code>memset</code> struct gửi ra ngoài.</li>
+<li><strong>Kiểm tra mọi giá trị trả về</strong> (nhất là <code>malloc</code>, <code>read</code>, <code>fopen</code>, <code>snprintf</code>).</li>
+<li><strong>Kiểm tra tràn số trước khi dùng cho kích thước/chỉ số;</strong> dùng <code>size_t</code> nhất quán, tránh trộn signed/unsigned.</li>
+<li><strong>Cấp phát và giải phóng đối xứng;</strong> ownership rõ; <code>NULL</code> sau <code>free</code>.</li>
+<li><strong>Chuỗi định dạng là hằng số.</strong></li>
+<li><strong>Ưu tiên API an toàn</strong> (<code>snprintf</code>, <code>fgets</code>, <code>strtol</code>, <code>mkstemp</code>, <code>calloc</code>), tránh danh sách ở 18.2.</li>
+<li><strong>Đặc quyền tối thiểu:</strong> không chạy với quyền cao hơn cần thiết; hạ quyền sớm (<code>setuid</code>), bỏ khả năng không dùng (<code>seccomp</code>, <code>pledge</code>/<code>unveil</code> trên OpenBSD).</li>
+<li><strong>Đơn giản hóa:</strong> mã phức tạp che giấu lỗi. Chia nhỏ hàm, ít con trỏ nhiều tầng.</li>
+<li><strong>Bật mọi cờ cảnh báo và sanitizer trong CI;</strong> chạy fuzzer với parser.</li>
+<li><strong>Xem xét mã (code review)</strong> tập trung vào ranh giới tin cậy.</li>
+<li><strong>Cập nhật phụ thuộc</strong> và theo dõi CVE của thư viện bạn dùng.</li>
+</ol>
+<h3>Chuẩn viết mã an toàn</h3>
 <ul>
-<li>Biện pháp runtime: ASLR, DEP/NX, stack canaries, PIE.</li>
-<li>Biện pháp code: kiểm tra bound, dùng safe APIs (snprintf, strnlen), validate input.</li>
+<li><strong>CERT C Coding Standard</strong> (SEI): danh sách quy tắc và khuyến nghị cụ thể, kèm ví dụ mã sai/đúng.</li>
+<li><strong>MISRA C</strong>: dùng nhiều trong ô tô, hàng không, y tế.</li>
+<li><strong>CWE Top 25</strong> và <strong>OWASP</strong>: danh mục lỗ hổng phổ biến để đối chiếu.</li>
 </ul>
-<h2>3. Static/dynamic analysis</h2>
+<h2>18.11. Xử lý dữ liệu nhạy cảm</h2>
+<h3>Xóa bí mật khỏi bộ nhớ</h3>
+<p>Mật khẩu, khóa, token không nên nằm lại trong RAM lâu hơn cần thiết (có thể lộ qua core dump, swap, lỗ hổng đọc bộ nhớ). Nhưng:</p>
+<pre class="hljs"><code><span class="hljs-type">char</span> password[<span class="hljs-number">64</span>];
+<span class="hljs-comment">/* ... dùng xong ... */</span>
+<span class="hljs-built_in">memset</span>(password, <span class="hljs-number">0</span>, <span class="hljs-keyword">sizeof</span> password);      <span class="hljs-comment">// compiler có thể XÓA lệnh này (dead store elimination) vì password không được đọc nữa!</span>
+</code></pre>
+<p>Dùng hàm <strong>được đảm bảo không bị tối ưu bỏ</strong>: <code>explicit_bzero</code> (glibc, BSD), <code>memset_s</code> (C11 Annex K), <code>SecureZeroMemory</code> (Windows), hoặc tự viết qua con trỏ <code>volatile</code>:</p>
+<pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">secure_zero</span><span class="hljs-params">(<span class="hljs-type">void</span> *p, <span class="hljs-type">size_t</span> n)</span> {
+    <span class="hljs-keyword">volatile</span> <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> *v = p;
+    <span class="hljs-keyword">while</span> (n--) *v++ = <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Đồng thời khóa vùng nhớ nhạy cảm khỏi swap: <code>mlock</code>.</p>
+<h3>So sánh không hằng thời gian và tấn công kênh phụ</h3>
+<p><code>memcmp</code>/<code>strcmp</code> dừng ngay khi gặp byte khác nhau, nên <strong>thời gian chạy tiết lộ</strong> bao nhiêu byte đầu đúng — kẻ tấn công có thể đoán từng byte của token/MAC (<em>timing attack</em>). Khi so sánh bí mật, dùng phép so sánh <strong>hằng thời gian</strong>:</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> <span class="hljs-title function_">consteq</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">void</span> *a, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *b, <span class="hljs-type">size_t</span> n)</span> {
+    <span class="hljs-type">const</span> <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> *x = a, *y = b;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> diff = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) diff |= x[i] ^ y[i];   <span class="hljs-comment">// luôn duyệt hết n byte</span>
+    <span class="hljs-keyword">return</span> diff == <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>(Hoặc <code>CRYPTO_memcmp</code> của OpenSSL, <code>sodium_memcmp</code> của libsodium.)</p>
+<h3>Ngẫu nhiên và mật mã</h3>
 <ul>
-<li>clang-tidy/cppcheck: phát hiện pattern xấu, buffer misuse.</li>
-<li>AddressSanitizer (ASAN): gcc/clang với -fsanitize=address để phát hiện OOB và use-after-free.</li>
+<li><strong>Không dùng <code>rand()</code>/<code>srand(time(NULL))</code> cho bí mật</strong> — dễ đoán. Dùng <code>getrandom()</code>, <code>/dev/urandom</code>, <code>arc4random_buf</code>, <code>BCryptGenRandom</code> (Windows).</li>
+<li><strong>Không tự phát minh mật mã.</strong> Dùng thư viện đã được kiểm chứng (libsodium, OpenSSL, mbedTLS) và giao thức tiêu chuẩn (TLS). Băm mật khẩu bằng Argon2/bcrypt/scrypt, không dùng MD5/SHA-1/SHA-256 đơn thuần.</li>
 </ul>
-<h2>4. Secure coding guidelines</h2>
+<h2>18.12. Ví dụ hoàn chỉnh: đọc thông điệp có tiền tố độ dài an toàn</h2>
+<p>Đây là mẫu của lỗi Heartbleed: gói tin khai độ dài <code>payload_len</code> nhưng dữ liệu thực có thể ngắn hơn. Đây là phiên bản <strong>an toàn</strong>:</p>
+<pre class="hljs"><code><span class="hljs-comment">// safe_parse.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdint.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> MAX_PAYLOAD 4096</span>
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span>
+    <span class="hljs-type">uint8_t</span>  type;
+    <span class="hljs-type">uint16_t</span> len;                       <span class="hljs-comment">// độ dài payload do đối phương khai</span>
+    <span class="hljs-type">uint8_t</span>  payload[MAX_PAYLOAD];
+} Message;
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">enum</span> {</span> P_OK = <span class="hljs-number">0</span>, P_SHORT, P_TOO_BIG, P_BAD_TYPE } ParseResult;
+
+<span class="hljs-comment">// data/size: gói tin nhận được (KHÔNG tin cậy). Trả kết quả phân tích vào *out.</span>
+ParseResult <span class="hljs-title function_">parse_message</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">uint8_t</span> *data, <span class="hljs-type">size_t</span> size, Message *out)</span> {
+    <span class="hljs-built_in">memset</span>(out, <span class="hljs-number">0</span>, <span class="hljs-keyword">sizeof</span> *out);                   <span class="hljs-comment">// khởi tạo sạch, không để lộ byte cũ</span>
+
+    <span class="hljs-keyword">if</span> (size &lt; <span class="hljs-number">3</span>) <span class="hljs-keyword">return</span> P_SHORT;                  <span class="hljs-comment">// cần ít nhất header 3 byte: type(1) + len(2)</span>
+
+    <span class="hljs-type">uint8_t</span>  type = data[<span class="hljs-number">0</span>];
+    <span class="hljs-type">uint16_t</span> len  = (<span class="hljs-type">uint16_t</span>)((data[<span class="hljs-number">1</span>] &lt;&lt; <span class="hljs-number">8</span>) | data[<span class="hljs-number">2</span>]);     <span class="hljs-comment">// big-endian, đọc từng byte (không ép kiểu con trỏ)</span>
+
+    <span class="hljs-keyword">if</span> (type &gt; <span class="hljs-number">3</span>)            <span class="hljs-keyword">return</span> P_BAD_TYPE;    <span class="hljs-comment">// allow-list các giá trị hợp lệ</span>
+    <span class="hljs-keyword">if</span> (len &gt; MAX_PAYLOAD)   <span class="hljs-keyword">return</span> P_TOO_BIG;     <span class="hljs-comment">// giới hạn cứng</span>
+    <span class="hljs-keyword">if</span> ((<span class="hljs-type">size_t</span>)len &gt; size - <span class="hljs-number">3</span>) <span class="hljs-keyword">return</span> P_SHORT;    <span class="hljs-comment">// độ dài khai báo KHÔNG được vượt quá dữ liệu thực có</span>
+                                                   <span class="hljs-comment">// (viết size - 3 thay vì 3 + len để tránh tràn)</span>
+    out-&gt;type = type;
+    out-&gt;len  = len;
+    <span class="hljs-built_in">memcpy</span>(out-&gt;payload, data + <span class="hljs-number">3</span>, len);
+    <span class="hljs-keyword">return</span> P_OK;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">uint8_t</span> good[] = { <span class="hljs-number">1</span>, <span class="hljs-number">0x00</span>, <span class="hljs-number">0x05</span>, <span class="hljs-string">&#x27;h&#x27;</span>, <span class="hljs-string">&#x27;e&#x27;</span>, <span class="hljs-string">&#x27;l&#x27;</span>, <span class="hljs-string">&#x27;l&#x27;</span>, <span class="hljs-string">&#x27;o&#x27;</span> };
+    <span class="hljs-type">uint8_t</span> liar[] = { <span class="hljs-number">1</span>, <span class="hljs-number">0xFF</span>, <span class="hljs-number">0xFF</span>, <span class="hljs-string">&#x27;x&#x27;</span> };       <span class="hljs-comment">// khai 65535 byte nhưng chỉ có 1</span>
+    Message m;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;good: %d\n&quot;</span>, parse_message(good, <span class="hljs-keyword">sizeof</span> good, &amp;m));   <span class="hljs-comment">// 0</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;liar: %d\n&quot;</span>, parse_message(liar, <span class="hljs-keyword">sizeof</span> liar, &amp;m));   <span class="hljs-comment">// 2 (P_TOO_BIG) chặn ngay</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Các điểm an toàn: kiểm tra kích thước tối thiểu trước khi đọc header, đọc số nhiều byte từng byte (tránh vấn đề căn hàng và endianness), giới hạn độ dài, so sánh độ dài khai báo với dữ liệu thực bằng biểu thức không tràn, <code>memset</code> đầu ra. Đây cũng là mục tiêu lý tưởng để <strong>fuzz</strong> (mục 18.9).</p>
+<h2>18.13. Lỗi thường gặp</h2>
+<table>
+<thead>
+<tr>
+<th>Lỗi</th>
+<th>Hậu quả</th>
+<th>Cách tránh</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gets</code>, <code>strcpy</code>, <code>sprintf</code>, <code>scanf(&quot;%s&quot;)</code></td>
+<td>Tràn bộ đệm</td>
+<td><code>fgets</code>, <code>snprintf</code>, giới hạn độ rộng</td>
+</tr>
+<tr>
+<td><code>printf(user_input)</code></td>
+<td>Rò rỉ/ghi bộ nhớ</td>
+<td><code>printf(&quot;%s&quot;, user_input)</code></td>
+</tr>
+<tr>
+<td><code>count * size</code> không kiểm tra tràn</td>
+<td>Cấp phát nhỏ, ghi tràn</td>
+<td><code>calloc</code>, <code>__builtin_mul_overflow</code></td>
+</tr>
+<tr>
+<td><code>len &lt; max</code> với <code>len</code> có dấu</td>
+<td><code>-1</code> vượt qua, thành số khổng lồ</td>
+<td>Kiểm tra hai phía hoặc dùng <code>size_t</code></td>
+</tr>
+<tr>
+<td>Tin độ dài do đối phương khai</td>
+<td>Đọc/ghi ngoài vùng (Heartbleed)</td>
+<td>So với dữ liệu thực có, giới hạn tối đa</td>
+</tr>
+<tr>
+<td><code>system()</code> với dữ liệu ngoài</td>
+<td>Command injection</td>
+<td><code>execv</code>, API trực tiếp</td>
+</tr>
+<tr>
+<td>Ghép đường dẫn với tên do người dùng đưa</td>
+<td>Path traversal</td>
+<td><code>realpath</code> + kiểm tra thư mục gốc</td>
+</tr>
+<tr>
+<td><code>access()</code> rồi <code>open()</code></td>
+<td>TOCTOU</td>
+<td>Mở trực tiếp với <code>O_EXCL/O_NOFOLLOW</code></td>
+</tr>
+<tr>
+<td><code>memset</code> bí mật rồi không dùng nữa</td>
+<td>Bị compiler xóa</td>
+<td><code>explicit_bzero</code>/<code>memset_s</code></td>
+</tr>
+<tr>
+<td>Dùng <code>rand()</code> cho token</td>
+<td>Đoán được</td>
+<td><code>getrandom</code>/<code>/dev/urandom</code></td>
+</tr>
+<tr>
+<td>So sánh bí mật bằng <code>memcmp</code></td>
+<td>Timing attack</td>
+<td>So sánh hằng thời gian</td>
+</tr>
+<tr>
+<td>Chỉ dựa vào canary/ASLR</td>
+<td>Vẫn bị vượt qua</td>
+<td>Sửa lỗi gốc; nhiều lớp phòng thủ</td>
+</tr>
+</tbody>
+</table>
+<h2>18.14. Tóm tắt</h2>
 <ul>
-<li>Validate all inputs, sử dụng size_t hợp lý, tránh signed/unsigned mismatch.</li>
-<li>Document ownership và lifetime của buffer/objects.</li>
-<li>Prefer bounds-checked APIs and explicit length tracking.</li>
+<li>Lỗ hổng C chủ yếu là <strong>lỗi bộ nhớ</strong>: tràn bộ đệm, format string, tràn số nguyên → tràn, use-after-free, đọc chưa khởi tạo, TOCTOU.</li>
+<li><strong>Mọi dữ liệu ngoài là không tin cậy;</strong> validate theo allow-list, giới hạn kích thước ở mọi nơi, kiểm tra tràn số <strong>trước</strong> khi tính.</li>
+<li>Tránh hàm không an toàn; dùng <code>snprintf</code>, <code>fgets</code>, <code>strtol</code>, <code>calloc</code>, <code>mkstemp</code>; chuỗi định dạng phải là hằng.</li>
+<li>Bật các lớp phòng thủ: canary, NX, ASLR/PIE, RELRO, FORTIFY_SOURCE — nhưng chúng chỉ <strong>giảm thiểu</strong>.</li>
+<li>Phát hiện lỗi: cảnh báo đầy đủ, phân tích tĩnh, <strong>ASan/UBSan/MSan/TSan</strong>, <strong>fuzzing</strong>; tích hợp vào CI.</li>
+<li>Xử lý bí mật: xóa an toàn, so sánh hằng thời gian, ngẫu nhiên mật mã, dùng thư viện mật mã có sẵn.</li>
 </ul>
-<h2>5. Ví dụ thực hành</h2>
-<ul>
-<li><a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-18">code/chapter-18</a>/buffer_overflow_demo.c: có lỗi có chủ đích và phiên bản đã vá.</li>
-<li><a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-18">code/chapter-18</a>/format_string_demo.c: minh họa lỗi và fix bằng format-safe call.</li>
-</ul>
-<p>Bài tập</p>
-<ul>
-<li>Sửa một chương trình chứa buffer overflow; chứng minh bằng ASAN hoặc Valgrind.</li>
-</ul>
-<p>Ghi chú: kèm hướng dẫn build với -fsanitize=address và cách đọc output ASAN.</p>
+<h2>18.15. Bài tập</h2>
+<ol>
+<li>Biên dịch <code>vuln.c</code> với ASan, gọi với chuỗi dài, đọc báo cáo và mô tả từng phần. Sửa bằng <code>snprintf</code> và xác nhận báo cáo sạch. Sau đó biên dịch <strong>không</strong> có <code>-fstack-protector</code>, rồi có, và so sánh hành vi khi tràn (dùng <code>-fno-stack-protector</code> / <code>-fstack-protector-strong</code>).</li>
+<li>Viết chương trình có lỗi format string (<code>printf(buf)</code>), dùng <code>%x %x %x</code> để quan sát rò rỉ (chỉ trên máy bạn), rồi vá và bật <code>-Werror=format-security</code> để compiler bắt lỗi.</li>
+<li>Viết hàm <code>void *xmalloc_array(size_t n, size_t size)</code> an toàn tràn số, và bộ kiểm thử chứng minh nó trả <code>NULL</code> với <code>n = SIZE_MAX/2 + 1, size = 2</code>. Dùng thêm <code>__builtin_mul_overflow</code> để so sánh.</li>
+<li>Viết <code>safe_add</code>, <code>safe_mul</code> cho <code>int</code> (không UB) và kiểm thử ở các biên <code>INT_MAX</code>, <code>INT_MIN</code>. Kiểm tra bằng UBSan.</li>
+<li>Viết chương trình &quot;tải file cho người dùng&quot; nhận tên file, chống path traversal bằng <code>realpath</code> và kiểm tra tiền tố; thử với <code>../../etc/passwd</code> và symlink.</li>
+<li>Viết fuzz target cho <code>csv_split</code> (chương 12) hoặc <code>parse_message</code>; chạy libFuzzer 5 phút với ASan+UBSan. Nếu tìm được lỗi, phân tích và sửa; lưu đầu vào gây lỗi làm test hồi quy.</li>
+<li>Viết <code>consteq</code> và so sánh thời gian với <code>memcmp</code> khi hai chuỗi khác nhau ở byte đầu và byte cuối (đo nhiều lần).</li>
+<li>Viết hàm đọc mật khẩu từ bàn phím (tắt echo bằng <code>termios</code>), lưu vào bộ đệm, dùng xong xóa bằng <code>explicit_bzero</code>/<code>secure_zero</code>; kiểm tra bằng <code>gcc -O2 -S</code> để thấy <code>memset</code> thường bị bỏ còn <code>secure_zero</code> thì không.</li>
+<li>(Thử thách) Kiểm tra một dự án C mã nguồn mở nhỏ bằng <code>cppcheck</code>, <code>clang-tidy</code>, <code>-fanalyzer</code>, ASan+UBSan và fuzz; lập báo cáo phân loại các phát hiện (thật/dương tính giả) và đề xuất bản vá.</li>
+</ol>
+<p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-18">code/chapter-18</a></p>
 
 </article>
 <div class="chapter-nav"><a class="nav-prev" href="chapter-17.html">&larr; Tối ưu hóa & profiling</a><a class="nav-next" href="chapter-19.html">Project: Trình biên dịch / Interpreter mini &rarr;</a></div>

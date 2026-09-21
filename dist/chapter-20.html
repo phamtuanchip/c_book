@@ -12,44 +12,843 @@
 <main class="content">
 <article>
 <h1>Chương 20 — Project: Web server đơn giản</h1>
-<p>Mục tiêu chương:</p>
+<h2>Mục tiêu chương</h2>
 <ul>
-<li>Xây một web server nhỏ có thể serve static files và vài route động (JSON API).</li>
-<li>Hiểu trade-offs giữa thread-per-connection, thread-pool và non-blocking event loop.</li>
+<li>Xây một <strong>web server HTTP/1.1 nhỏ</strong> bằng C: phục vụ <strong>file tĩnh</strong> và vài <strong>route động</strong> (JSON API).</li>
+<li>Vận dụng kiến thức socket (chương 16), luồng (chương 15), file I/O (chương 12), xử lý lỗi (chương 13) và bảo mật (chương 18).</li>
+<li>Hiểu cấu trúc một yêu cầu/phản hồi HTTP và cách <strong>phân tích</strong> yêu cầu an toàn.</li>
+<li>So sánh các kiến trúc: <strong>thread-per-connection</strong>, <strong>thread pool</strong>, <strong>event loop</strong>; cài đặt thread pool có hàng đợi giới hạn.</li>
+<li>Ngăn <strong>directory traversal</strong>, giới hạn kích thước/thời gian, tắt server <strong>êm (graceful shutdown)</strong>.</li>
+<li>Kiểm thử bằng <code>curl</code>, <code>ab</code>/<code>wrk</code>, và sanitizer.</li>
 </ul>
-<h2>1. Architecture cơ bản</h2>
+<blockquote>
+<p><strong>Môi trường:</strong> mã dùng POSIX (Linux, macOS, WSL). Trên Windows, chạy trong WSL hoặc chuyển sang Winsock theo bảng ở chương 16. Đây là <strong>server học tập</strong>: chưa có TLS, chưa xử lý đầy đủ HTTP; đừng phơi ra Internet công cộng.</p>
+</blockquote>
+<h2>20.1. HTTP trong 5 phút</h2>
+<p>HTTP là giao thức <strong>văn bản</strong> kiểu <strong>yêu cầu–phản hồi</strong> chạy trên TCP (mặc định cổng 80). Client gửi một <strong>yêu cầu</strong>, server trả một <strong>phản hồi</strong>.</p>
+<h3>Yêu cầu</h3>
+<pre class="hljs"><code>GET /index.html HTTP/1.1\r\n            ← dòng yêu cầu: PHƯƠNG THỨC  ĐƯỜNG DẪN  PHIÊN BẢN
+Host: localhost:8080\r\n                ← các header, mỗi dòng &quot;Tên: giá trị&quot;
+User-Agent: curl/8.0\r\n
+Accept: */*\r\n
+\r\n                                    ← dòng trống kết thúc phần header
+</code></pre>
+<h3>Phản hồi</h3>
+<pre class="hljs"><code>HTTP/1.1 200 OK\r\n                     ← dòng trạng thái: PHIÊN BẢN  MÃ  LÝ DO
+Content-Type: text/html\r\n             ← header
+Content-Length: 44\r\n
+Connection: close\r\n
+\r\n                                    ← hết header
+&lt;html&gt;&lt;body&gt;Xin chao!&lt;/body&gt;&lt;/html&gt;     ← body (đúng 44 byte)
+</code></pre>
 <ul>
-<li>Accept loop: accept() kết nối và xử lý request.</li>
-<li>Thread-per-connection: đơn giản nhưng tốn tài nguyên khi nhiều client.</li>
-<li>Thread pool: queue kết nối và worker threads xử lý; cân bằng throughput.</li>
+<li>Mỗi dòng kết thúc bằng <strong><code>\r\n</code></strong> (CRLF), không chỉ <code>\n</code>.</li>
+<li><code>Content-Length</code> cho client biết body dài bao nhiêu byte — đây chính là <strong>đóng khung</strong> (chương 16) của HTTP.</li>
+<li><code>Connection: close</code> báo server sẽ đóng kết nối sau khi trả lời (đơn giản hơn <em>keep-alive</em>).</li>
 </ul>
-<h2>2. HTTP request parsing</h2>
+<h3>Các mã trạng thái cần thiết</h3>
+<table>
+<thead>
+<tr>
+<th>Mã</th>
+<th>Ý nghĩa</th>
+<th>Khi nào</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>200 OK</code></td>
+<td>thành công</td>
+<td>trả file/JSON</td>
+</tr>
+<tr>
+<td><code>400 Bad Request</code></td>
+<td>yêu cầu sai cú pháp</td>
+<td>không phân tích được dòng yêu cầu</td>
+</tr>
+<tr>
+<td><code>403 Forbidden</code></td>
+<td>bị cấm</td>
+<td>đường dẫn nguy hiểm (<code>..</code>)</td>
+</tr>
+<tr>
+<td><code>404 Not Found</code></td>
+<td>không có</td>
+<td>file không tồn tại</td>
+</tr>
+<tr>
+<td><code>405 Method Not Allowed</code></td>
+<td>phương thức không hỗ trợ</td>
+<td>POST/PUT...</td>
+</tr>
+<tr>
+<td><code>414 URI Too Long</code></td>
+<td>đường dẫn quá dài</td>
+<td></td>
+</tr>
+<tr>
+<td><code>431 Request Header Fields Too Large</code></td>
+<td>header quá lớn</td>
+<td></td>
+</tr>
+<tr>
+<td><code>500 Internal Server Error</code></td>
+<td>lỗi phía server</td>
+<td></td>
+</tr>
+<tr>
+<td><code>503 Service Unavailable</code></td>
+<td>quá tải</td>
+<td>hàng đợi đầy</td>
+</tr>
+</tbody>
+</table>
+<p>Phạm vi ta hỗ trợ: phương thức <strong>GET</strong> và <strong>HEAD</strong> (HEAD như GET nhưng không có body), header đọc nhưng bỏ qua, không hỗ trợ body của yêu cầu, không nén, không keep-alive.</p>
+<p>Thử một server có sẵn để quan sát: <code>curl -v http://example.com/</code> hiện đầy đủ yêu cầu (<code>&gt;</code>) và phản hồi (<code>&lt;</code>).</p>
+<h2>20.2. Kiến trúc</h2>
+<p>Ba lựa chọn (chương 16):</p>
+<table>
+<thead>
+<tr>
+<th>Kiến trúc</th>
+<th>Ý tưởng</th>
+<th>Ưu</th>
+<th>Nhược</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Thread-per-connection</strong></td>
+<td>Mỗi kết nối một luồng mới</td>
+<td>Rất dễ viết</td>
+<td>Tốn tài nguyên khi nhiều kết nối; tạo/hủy luồng liên tục; dễ bị cạn tài nguyên</td>
+</tr>
+<tr>
+<td><strong>Thread pool</strong></td>
+<td><code>N</code> luồng cố định lấy kết nối từ hàng đợi</td>
+<td>Giới hạn tài nguyên; dùng lại luồng; vẫn dễ viết</td>
+<td>Kết nối chậm chiếm một luồng</td>
+</tr>
+<tr>
+<td><strong>Event loop</strong> (<code>epoll</code>)</td>
+<td>Một (hoặc vài) luồng theo dõi mọi socket, không chặn</td>
+<td>Mở rộng tới hàng chục nghìn kết nối</td>
+<td>Mã phức tạp (máy trạng thái)</td>
+</tr>
+</tbody>
+</table>
+<p>Ta chọn <strong>thread pool</strong>: cân bằng giữa đơn giản và an toàn tài nguyên. Sơ đồ:</p>
+<pre class="hljs"><code>                    ┌──────────────────────┐
+  client ──┐        │  luồng chính         │       ┌─ worker 1 ─┐
+  client ──┼──────► │  poll + accept()     │──┐    │ lấy fd,    │
+  client ──┘        │  (kiểm tra cờ dừng)  │  │    │ xử lý,     │
+                    └──────────────────────┘  │    │ close(fd)  │
+                                              ▼    └────────────┘
+                                     ┌────────────────┐   ┌─ worker 2 ─┐
+                                     │ hàng đợi fd    │──►│    ...     │
+                                     │ (giới hạn 64)  │   └────────────┘
+                                     └────────────────┘   ┌─ worker N ─┐
+                                                          └────────────┘
+</code></pre>
+<p>Luồng chính chỉ <strong>chấp nhận kết nối</strong> và bỏ <code>fd</code> vào hàng đợi; <strong>worker</strong> làm phần việc nặng. Nếu hàng đợi <strong>đầy</strong>, luồng chính trả <code>503</code> ngay và đóng kết nối — <strong>áp lực ngược (backpressure)</strong> thay vì để hàng đợi phình vô hạn.</p>
+<h2>20.3. Khung mã và các tiện ích</h2>
+<p>Cấu trúc thư mục:</p>
+<pre class="hljs"><code>webserver/
+├── server.c
+├── www/
+│   ├── index.html
+│   └── style.css
+└── Makefile
+</code></pre>
+<p><code>www/index.html</code> để thử:</p>
+<pre class="hljs"><code><span class="hljs-meta">&lt;!doctype <span class="hljs-keyword">html</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;utf-8&quot;</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>C server<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;stylesheet&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;/style.css&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Xin chào từ máy chủ C!<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Giờ hiện tại: <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;/api/time&quot;</span>&gt;</span>/api/time<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
+</code></pre>
+<h3>Phần đầu: include, cấu hình, gửi đủ dữ liệu</h3>
+<pre class="hljs"><code><span class="hljs-comment">// server.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> _POSIX_C_SOURCE 200809L</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;arpa/inet.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;errno.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;netinet/in.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;poll.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;pthread.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;signal.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;strings.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/socket.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/stat.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;time.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> MAX_HEADER   8192          <span class="hljs-comment">// tối đa cho toàn bộ phần header của yêu cầu</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> QUEUE_CAP    64            <span class="hljs-comment">// số kết nối chờ tối đa</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> IO_TIMEOUT_S 5             <span class="hljs-comment">// giây chờ tối đa cho mỗi lần recv/send</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> PATH_MAX_LOCAL 4096        <span class="hljs-comment">// bộ đệm cho realpath() (PATH_MAX không phải lúc nào cũng có)</span></span>
+
+<span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">char</span> *g_root = <span class="hljs-string">&quot;./www&quot;</span>;
+<span class="hljs-type">static</span> <span class="hljs-keyword">volatile</span> <span class="hljs-type">sig_atomic_t</span> g_stop = <span class="hljs-number">0</span>;
+
+<span class="hljs-comment">// Gửi ĐỦ n byte. Dùng MSG_NOSIGNAL để không bị SIGPIPE nếu client đóng giữa chừng.</span>
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">send_all</span><span class="hljs-params">(<span class="hljs-type">int</span> fd, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *data, <span class="hljs-type">size_t</span> n)</span> {
+    <span class="hljs-type">const</span> <span class="hljs-type">char</span> *p = data;
+    <span class="hljs-keyword">while</span> (n &gt; <span class="hljs-number">0</span>) {
+        <span class="hljs-type">ssize_t</span> r = send(fd, p, n, MSG_NOSIGNAL);
+        <span class="hljs-keyword">if</span> (r &lt; <span class="hljs-number">0</span>) {
+            <span class="hljs-keyword">if</span> (errno == EINTR) <span class="hljs-keyword">continue</span>;
+            <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;                          <span class="hljs-comment">// gồm cả EAGAIN do hết thời gian chờ</span>
+        }
+        p += r;
+        n -= (<span class="hljs-type">size_t</span>)r;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<h3>Ghi log</h3>
+<pre class="hljs"><code><span class="hljs-comment">// Ghi 1 dòng log cho mỗi yêu cầu: thời gian, phương thức, đường dẫn, mã trạng thái, số byte body.</span>
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">log_request</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *method, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *path, <span class="hljs-type">int</span> status, <span class="hljs-type">long</span> bytes)</span> {
+    <span class="hljs-type">char</span> ts[<span class="hljs-number">32</span>];
+    <span class="hljs-type">time_t</span> now = time(<span class="hljs-literal">NULL</span>);
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">tm</span> <span class="hljs-title">tmv</span>;</span>
+    localtime_r(&amp;now, &amp;tmv);
+    strftime(ts, <span class="hljs-keyword">sizeof</span> ts, <span class="hljs-string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>, &amp;tmv);
+    <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;%s %-4s %-30.30s %d %ld\n&quot;</span>, ts, method, path, status, bytes);   <span class="hljs-comment">// một lệnh fprintf -&gt; không bị xen dòng</span>
+}
+</code></pre>
+<p>Cắt đường dẫn khi in (<code>%-30.30s</code>) để <strong>kẻ tấn công không thể làm nổ log</strong> bằng đường dẫn dài hoặc chứa ký tự điều khiển; thực tế nên lọc cả ký tự xuống dòng để chống <strong>log injection</strong>.</p>
+<h2>20.4. Phản hồi và loại nội dung (MIME)</h2>
+<h3>Gửi header</h3>
+<pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">char</span> *<span class="hljs-title function_">reason_phrase</span><span class="hljs-params">(<span class="hljs-type">int</span> status)</span> {
+    <span class="hljs-keyword">switch</span> (status) {
+        <span class="hljs-keyword">case</span> <span class="hljs-number">200</span>: <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;OK&quot;</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-number">400</span>: <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Bad Request&quot;</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-number">403</span>: <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Forbidden&quot;</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-number">404</span>: <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Not Found&quot;</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-number">405</span>: <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Method Not Allowed&quot;</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-number">414</span>: <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;URI Too Long&quot;</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-number">431</span>: <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Request Header Fields Too Large&quot;</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-number">503</span>: <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Service Unavailable&quot;</span>;
+        <span class="hljs-keyword">default</span>:  <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Internal Server Error&quot;</span>;
+    }
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">send_header</span><span class="hljs-params">(<span class="hljs-type">int</span> fd, <span class="hljs-type">int</span> status, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *ctype, <span class="hljs-type">size_t</span> length)</span> {
+    <span class="hljs-type">char</span> h[<span class="hljs-number">512</span>];
+    <span class="hljs-type">int</span> n = <span class="hljs-built_in">snprintf</span>(h, <span class="hljs-keyword">sizeof</span> h,
+        <span class="hljs-string">&quot;HTTP/1.1 %d %s\r\n&quot;</span>
+        <span class="hljs-string">&quot;Content-Type: %s\r\n&quot;</span>
+        <span class="hljs-string">&quot;Content-Length: %zu\r\n&quot;</span>
+        <span class="hljs-string">&quot;Connection: close\r\n&quot;</span>
+        <span class="hljs-string">&quot;X-Content-Type-Options: nosniff\r\n&quot;</span>
+        <span class="hljs-string">&quot;\r\n&quot;</span>,
+        status, reason_phrase(status), ctype, length);
+    <span class="hljs-keyword">if</span> (n &lt; <span class="hljs-number">0</span> || (<span class="hljs-type">size_t</span>)n &gt;= <span class="hljs-keyword">sizeof</span> h) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    <span class="hljs-keyword">return</span> send_all(fd, h, (<span class="hljs-type">size_t</span>)n);
+}
+
+<span class="hljs-comment">// Trả một phản hồi ngắn (lỗi hoặc JSON). Trả số byte body để ghi log.</span>
+<span class="hljs-type">static</span> <span class="hljs-type">long</span> <span class="hljs-title function_">send_text</span><span class="hljs-params">(<span class="hljs-type">int</span> fd, <span class="hljs-type">int</span> status, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *ctype, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *body, <span class="hljs-type">int</span> head_only)</span> {
+    <span class="hljs-type">size_t</span> len = <span class="hljs-built_in">strlen</span>(body);
+    <span class="hljs-keyword">if</span> (send_header(fd, status, ctype, len) != <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">if</span> (!head_only &amp;&amp; send_all(fd, body, len) != <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">return</span> head_only ? <span class="hljs-number">0</span> : (<span class="hljs-type">long</span>)len;
+}
+</code></pre>
+<h3>Loại nội dung theo đuôi file</h3>
+<p>Trình duyệt dựa vào <code>Content-Type</code> để biết cách hiển thị. Gửi sai (ví dụ CSS với <code>text/plain</code>) khiến trình duyệt từ chối áp dụng.</p>
+<pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">char</span> *<span class="hljs-title function_">mime_type</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *path)</span> {
+    <span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span> <span class="hljs-type">const</span> <span class="hljs-type">char</span> *ext, *type; } table[] = {
+        {<span class="hljs-string">&quot;.html&quot;</span>, <span class="hljs-string">&quot;text/html; charset=utf-8&quot;</span>},
+        {<span class="hljs-string">&quot;.htm&quot;</span>,  <span class="hljs-string">&quot;text/html; charset=utf-8&quot;</span>},
+        {<span class="hljs-string">&quot;.css&quot;</span>,  <span class="hljs-string">&quot;text/css; charset=utf-8&quot;</span>},
+        {<span class="hljs-string">&quot;.js&quot;</span>,   <span class="hljs-string">&quot;application/javascript; charset=utf-8&quot;</span>},
+        {<span class="hljs-string">&quot;.json&quot;</span>, <span class="hljs-string">&quot;application/json&quot;</span>},
+        {<span class="hljs-string">&quot;.txt&quot;</span>,  <span class="hljs-string">&quot;text/plain; charset=utf-8&quot;</span>},
+        {<span class="hljs-string">&quot;.png&quot;</span>,  <span class="hljs-string">&quot;image/png&quot;</span>},
+        {<span class="hljs-string">&quot;.jpg&quot;</span>,  <span class="hljs-string">&quot;image/jpeg&quot;</span>},
+        {<span class="hljs-string">&quot;.jpeg&quot;</span>, <span class="hljs-string">&quot;image/jpeg&quot;</span>},
+        {<span class="hljs-string">&quot;.gif&quot;</span>,  <span class="hljs-string">&quot;image/gif&quot;</span>},
+        {<span class="hljs-string">&quot;.svg&quot;</span>,  <span class="hljs-string">&quot;image/svg+xml&quot;</span>},
+        {<span class="hljs-string">&quot;.ico&quot;</span>,  <span class="hljs-string">&quot;image/x-icon&quot;</span>},
+        {<span class="hljs-string">&quot;.pdf&quot;</span>,  <span class="hljs-string">&quot;application/pdf&quot;</span>},
+    };
+    <span class="hljs-type">const</span> <span class="hljs-type">char</span> *dot = <span class="hljs-built_in">strrchr</span>(path, <span class="hljs-string">&#x27;.&#x27;</span>);
+    <span class="hljs-keyword">if</span> (dot) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">sizeof</span> table / <span class="hljs-keyword">sizeof</span> table[<span class="hljs-number">0</span>]; i++)
+            <span class="hljs-keyword">if</span> (strcasecmp(dot, table[i].ext) == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> table[i].type;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;application/octet-stream&quot;</span>;            <span class="hljs-comment">// không biết: tải về thay vì hiển thị</span>
+}
+</code></pre>
+<h2>20.5. Phân tích yêu cầu</h2>
+<p>Đọc yêu cầu <strong>có giới hạn</strong> và <strong>theo giao thức</strong>: dữ liệu TCP đến từng mảnh nên phải lặp tới khi thấy <code>\r\n\r\n</code> (chương 16).</p>
+<pre class="hljs"><code><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span>
+    <span class="hljs-type">char</span> method[<span class="hljs-number">8</span>];
+    <span class="hljs-type">char</span> target[<span class="hljs-number">1024</span>];          <span class="hljs-comment">// đường dẫn đã bỏ query, đã giải mã %XX</span>
+    <span class="hljs-type">char</span> version[<span class="hljs-number">16</span>];
+    <span class="hljs-type">char</span> query[<span class="hljs-number">256</span>];            <span class="hljs-comment">// phần sau &#x27;?&#x27; (nếu có)</span>
+} Request;
+
+<span class="hljs-comment">// Đọc header vào buf. Trả độ dài (&gt;0) khi thấy &quot;\r\n\r\n&quot;; 0 nếu đối phương đóng/hết thời gian;</span>
+<span class="hljs-comment">// -1 nếu header vượt giới hạn.</span>
+<span class="hljs-type">static</span> <span class="hljs-type">ssize_t</span> <span class="hljs-title function_">read_header</span><span class="hljs-params">(<span class="hljs-type">int</span> fd, <span class="hljs-type">char</span> *buf, <span class="hljs-type">size_t</span> cap)</span> {
+    <span class="hljs-type">size_t</span> len = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (;;) {
+        <span class="hljs-keyword">if</span> (len + <span class="hljs-number">1</span> &gt;= cap) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;                         <span class="hljs-comment">// header quá lớn</span>
+        <span class="hljs-type">ssize_t</span> n = recv(fd, buf + len, cap - <span class="hljs-number">1</span> - len, <span class="hljs-number">0</span>);
+        <span class="hljs-keyword">if</span> (n &lt; <span class="hljs-number">0</span>) { <span class="hljs-keyword">if</span> (errno == EINTR) <span class="hljs-keyword">continue</span>; <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>; } <span class="hljs-comment">// lỗi hoặc hết thời gian</span>
+        <span class="hljs-keyword">if</span> (n == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;                                  <span class="hljs-comment">// đối phương đóng</span>
+        len += (<span class="hljs-type">size_t</span>)n;
+        buf[len] = <span class="hljs-string">&#x27;\0&#x27;</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strstr</span>(buf, <span class="hljs-string">&quot;\r\n\r\n&quot;</span>) != <span class="hljs-literal">NULL</span>) <span class="hljs-keyword">return</span> (<span class="hljs-type">ssize_t</span>)len;
+    }
+}
+</code></pre>
+<p><code>strstr</code> dừng ở byte NUL đầu tiên; dữ liệu độc hại có thể chèn NUL, nhưng lúc đó <code>strstr</code> chỉ thấy phần đầu — ta vẫn không đọc quá giới hạn <code>cap</code>, nên an toàn. (Server thật dùng cách quét tìm <code>\r\n\r\n</code> trên <code>len</code> byte thực nhận.)</p>
+<h3>Giải mã phần trăm (URL decoding)</h3>
+<p>URL mã hóa ký tự đặc biệt dạng <code>%XX</code>: <code>/a%20b.txt</code> là <code>/a b.txt</code>. Phải <strong>giải mã trước khi kiểm tra an toàn</strong> — nếu không, kẻ tấn công gửi <code>%2e%2e/</code> (là <code>../</code>) để lách bộ lọc.</p>
+<pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">hexval</span><span class="hljs-params">(<span class="hljs-type">int</span> c)</span> {
+    <span class="hljs-keyword">if</span> (c &gt;= <span class="hljs-string">&#x27;0&#x27;</span> &amp;&amp; c &lt;= <span class="hljs-string">&#x27;9&#x27;</span>) <span class="hljs-keyword">return</span> c - <span class="hljs-string">&#x27;0&#x27;</span>;
+    <span class="hljs-keyword">if</span> (c &gt;= <span class="hljs-string">&#x27;a&#x27;</span> &amp;&amp; c &lt;= <span class="hljs-string">&#x27;f&#x27;</span>) <span class="hljs-keyword">return</span> c - <span class="hljs-string">&#x27;a&#x27;</span> + <span class="hljs-number">10</span>;
+    <span class="hljs-keyword">if</span> (c &gt;= <span class="hljs-string">&#x27;A&#x27;</span> &amp;&amp; c &lt;= <span class="hljs-string">&#x27;F&#x27;</span>) <span class="hljs-keyword">return</span> c - <span class="hljs-string">&#x27;A&#x27;</span> + <span class="hljs-number">10</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+}
+
+<span class="hljs-comment">// Giải mã tại chỗ. Trả 0 nếu hợp lệ; -1 nếu %XX hỏng hoặc sinh ra byte NUL.</span>
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">url_decode</span><span class="hljs-params">(<span class="hljs-type">char</span> *s)</span> {
+    <span class="hljs-type">char</span> *w = s;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">const</span> <span class="hljs-type">char</span> *r = s; *r; r++) {
+        <span class="hljs-keyword">if</span> (*r == <span class="hljs-string">&#x27;%&#x27;</span>) {
+            <span class="hljs-type">int</span> hi = hexval((<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>)r[<span class="hljs-number">1</span>]);
+            <span class="hljs-type">int</span> lo = hi &gt;= <span class="hljs-number">0</span> ? hexval((<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>)r[<span class="hljs-number">2</span>]) : <span class="hljs-number">-1</span>;    <span class="hljs-comment">// không đọc r[2] nếu r[1] đã lỗi</span>
+            <span class="hljs-keyword">if</span> (hi &lt; <span class="hljs-number">0</span> || lo &lt; <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+            <span class="hljs-type">int</span> v = hi * <span class="hljs-number">16</span> + lo;
+            <span class="hljs-keyword">if</span> (v == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;                                  <span class="hljs-comment">// %00: chèn NUL để cắt chuỗi — cấm</span>
+            *w++ = (<span class="hljs-type">char</span>)v;
+            r += <span class="hljs-number">2</span>;
+        } <span class="hljs-keyword">else</span> {
+            *w++ = *r;
+        }
+    }
+    *w = <span class="hljs-string">&#x27;\0&#x27;</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<h3>Phân tích dòng yêu cầu</h3>
+<pre class="hljs"><code><span class="hljs-comment">// Trả 0 nếu OK, hoặc mã lỗi HTTP (400/414...).</span>
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">parse_request</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *buf, Request *rq)</span> {
+    <span class="hljs-type">char</span> target[<span class="hljs-number">1300</span>];
+    <span class="hljs-built_in">memset</span>(rq, <span class="hljs-number">0</span>, <span class="hljs-keyword">sizeof</span> *rq);
+
+    <span class="hljs-comment">// độ rộng tối đa trong định dạng ngăn tràn: 7 + &#x27;\0&#x27; = 8; 1299 + &#x27;\0&#x27;; 15 + &#x27;\0&#x27;</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">sscanf</span>(buf, <span class="hljs-string">&quot;%7s %1299s %15s&quot;</span>, rq-&gt;method, target, rq-&gt;version) != <span class="hljs-number">3</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">400</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strncmp</span>(rq-&gt;version, <span class="hljs-string">&quot;HTTP/1.&quot;</span>, <span class="hljs-number">7</span>) != <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">400</span>;
+
+    <span class="hljs-type">char</span> *q = <span class="hljs-built_in">strchr</span>(target, <span class="hljs-string">&#x27;?&#x27;</span>);
+    <span class="hljs-keyword">if</span> (q) { *q++ = <span class="hljs-string">&#x27;\0&#x27;</span>; <span class="hljs-built_in">snprintf</span>(rq-&gt;query, <span class="hljs-keyword">sizeof</span> rq-&gt;query, <span class="hljs-string">&quot;%s&quot;</span>, q); }
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strlen</span>(target) &gt;= <span class="hljs-keyword">sizeof</span> rq-&gt;target) <span class="hljs-keyword">return</span> <span class="hljs-number">414</span>;
+    <span class="hljs-keyword">if</span> (target[<span class="hljs-number">0</span>] != <span class="hljs-string">&#x27;/&#x27;</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">400</span>;
+    <span class="hljs-built_in">snprintf</span>(rq-&gt;target, <span class="hljs-keyword">sizeof</span> rq-&gt;target, <span class="hljs-string">&quot;%s&quot;</span>, target);
+
+    <span class="hljs-keyword">if</span> (url_decode(rq-&gt;target) != <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">400</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Lưu ý phòng thủ ngay từ dòng <code>sscanf</code>: mọi <code>%s</code> đều có <strong>giới hạn độ rộng</strong> (chương 4, 18). Giới hạn kích thước từng trường để tránh tràn và từ chối yêu cầu quá dài bằng <code>414</code>.</p>
+<h2>20.6. Phục vụ file tĩnh an toàn</h2>
+<p>Đây là chỗ dễ có lỗ hổng <strong>directory traversal</strong> nhất. Nếu server chỉ nối <code>&quot;./www&quot; + đường_dẫn</code> mà không kiểm tra, yêu cầu <code>GET /../../etc/passwd</code> sẽ đọc file ngoài thư mục web.</p>
+<h3>Các lớp phòng thủ</h3>
+<ol>
+<li><strong>Giải mã trước, kiểm tra sau</strong> (đã làm ở <code>url_decode</code>).</li>
+<li><strong>Từ chối</strong> đường dẫn chứa thành phần <code>..</code>, ký tự <code>\</code>, hoặc byte điều khiển.</li>
+<li><strong>Chỉ phục vụ file thường</strong> (<code>S_ISREG</code>) — không phải thư mục, thiết bị, FIFO.</li>
+<li><strong>Mạnh nhất:</strong> dùng <code>realpath()</code> để phân giải symlink và <code>..</code>, rồi <strong>kiểm tra kết quả nằm trong thư mục gốc</strong>.</li>
+</ol>
+<pre class="hljs"><code><span class="hljs-comment">// Trả 1 nếu đường dẫn (đã giải mã) chứa thành phần &quot;..&quot; hoặc ký tự nguy hiểm.</span>
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">path_is_unsafe</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *p)</span> {
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strchr</span>(p, <span class="hljs-string">&#x27;\\&#x27;</span>)) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">const</span> <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> *c = (<span class="hljs-type">const</span> <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> *)p; *c; c++)
+        <span class="hljs-keyword">if</span> (*c &lt; <span class="hljs-number">0x20</span> || *c == <span class="hljs-number">0x7f</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;              <span class="hljs-comment">// ký tự điều khiển</span>
+    <span class="hljs-comment">// tìm thành phần &quot;..&quot; đứng riêng giữa các dấu &#x27;/&#x27;</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">const</span> <span class="hljs-type">char</span> *s = p; (s = <span class="hljs-built_in">strstr</span>(s, <span class="hljs-string">&quot;..&quot;</span>)) != <span class="hljs-literal">NULL</span>; s += <span class="hljs-number">2</span>) {
+        <span class="hljs-type">int</span> at_start = (s == p) || (s[<span class="hljs-number">-1</span>] == <span class="hljs-string">&#x27;/&#x27;</span>);
+        <span class="hljs-type">int</span> at_end   = (s[<span class="hljs-number">2</span>] == <span class="hljs-string">&#x27;\0&#x27;</span>) || (s[<span class="hljs-number">2</span>] == <span class="hljs-string">&#x27;/&#x27;</span>);
+        <span class="hljs-keyword">if</span> (at_start &amp;&amp; at_end) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Hàm phục vụ file:</p>
+<pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-type">long</span> <span class="hljs-title function_">serve_file</span><span class="hljs-params">(<span class="hljs-type">int</span> fd, <span class="hljs-type">const</span> Request *rq, <span class="hljs-type">int</span> head_only, <span class="hljs-type">int</span> *status_out)</span> {
+    <span class="hljs-keyword">if</span> (path_is_unsafe(rq-&gt;target)) {
+        *status_out = <span class="hljs-number">403</span>;
+        <span class="hljs-keyword">return</span> send_text(fd, <span class="hljs-number">403</span>, <span class="hljs-string">&quot;text/plain&quot;</span>, <span class="hljs-string">&quot;403 Forbidden\n&quot;</span>, head_only);
+    }
+
+    <span class="hljs-type">char</span> rel[<span class="hljs-number">1100</span>];
+    <span class="hljs-built_in">snprintf</span>(rel, <span class="hljs-keyword">sizeof</span> rel, <span class="hljs-string">&quot;%s&quot;</span>, rq-&gt;target);
+    <span class="hljs-type">size_t</span> rl = <span class="hljs-built_in">strlen</span>(rel);
+    <span class="hljs-keyword">if</span> (rel[rl - <span class="hljs-number">1</span>] == <span class="hljs-string">&#x27;/&#x27;</span> &amp;&amp; rl + <span class="hljs-number">10</span> &lt; <span class="hljs-keyword">sizeof</span> rel) <span class="hljs-built_in">strcat</span>(rel, <span class="hljs-string">&quot;index.html&quot;</span>);   <span class="hljs-comment">// &quot;/&quot; -&gt; &quot;/index.html&quot; (đã kiểm tra chỗ)</span>
+
+    <span class="hljs-type">char</span> full[<span class="hljs-number">1300</span>];
+    <span class="hljs-type">int</span> n = <span class="hljs-built_in">snprintf</span>(full, <span class="hljs-keyword">sizeof</span> full, <span class="hljs-string">&quot;%s%s&quot;</span>, g_root, rel);
+    <span class="hljs-keyword">if</span> (n &lt; <span class="hljs-number">0</span> || (<span class="hljs-type">size_t</span>)n &gt;= <span class="hljs-keyword">sizeof</span> full) {
+        *status_out = <span class="hljs-number">414</span>;
+        <span class="hljs-keyword">return</span> send_text(fd, <span class="hljs-number">414</span>, <span class="hljs-string">&quot;text/plain&quot;</span>, <span class="hljs-string">&quot;414 URI Too Long\n&quot;</span>, head_only);
+    }
+
+    <span class="hljs-comment">// Lớp phòng thủ cuối: phân giải symlink và kiểm tra vẫn nằm trong thư mục gốc</span>
+    <span class="hljs-type">char</span> resolved[PATH_MAX_LOCAL], root_real[PATH_MAX_LOCAL];
+    <span class="hljs-keyword">if</span> (realpath(full, resolved) == <span class="hljs-literal">NULL</span> || realpath(g_root, root_real) == <span class="hljs-literal">NULL</span>) {
+        *status_out = <span class="hljs-number">404</span>;
+        <span class="hljs-keyword">return</span> send_text(fd, <span class="hljs-number">404</span>, <span class="hljs-string">&quot;text/plain&quot;</span>, <span class="hljs-string">&quot;404 Not Found\n&quot;</span>, head_only);
+    }
+    <span class="hljs-type">size_t</span> root_len = <span class="hljs-built_in">strlen</span>(root_real);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strncmp</span>(resolved, root_real, root_len) != <span class="hljs-number">0</span> ||
+        (resolved[root_len] != <span class="hljs-string">&#x27;/&#x27;</span> &amp;&amp; resolved[root_len] != <span class="hljs-string">&#x27;\0&#x27;</span>)) {
+        *status_out = <span class="hljs-number">403</span>;
+        <span class="hljs-keyword">return</span> send_text(fd, <span class="hljs-number">403</span>, <span class="hljs-string">&quot;text/plain&quot;</span>, <span class="hljs-string">&quot;403 Forbidden\n&quot;</span>, head_only);
+    }
+
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">stat</span> <span class="hljs-title">st</span>;</span>
+    <span class="hljs-keyword">if</span> (stat(resolved, &amp;st) != <span class="hljs-number">0</span> || !S_ISREG(st.st_mode)) {
+        *status_out = <span class="hljs-number">404</span>;
+        <span class="hljs-keyword">return</span> send_text(fd, <span class="hljs-number">404</span>, <span class="hljs-string">&quot;text/plain&quot;</span>, <span class="hljs-string">&quot;404 Not Found\n&quot;</span>, head_only);
+    }
+
+    FILE *f = fopen(resolved, <span class="hljs-string">&quot;rb&quot;</span>);
+    <span class="hljs-keyword">if</span> (!f) {
+        *status_out = <span class="hljs-number">404</span>;
+        <span class="hljs-keyword">return</span> send_text(fd, <span class="hljs-number">404</span>, <span class="hljs-string">&quot;text/plain&quot;</span>, <span class="hljs-string">&quot;404 Not Found\n&quot;</span>, head_only);
+    }
+
+    *status_out = <span class="hljs-number">200</span>;
+    <span class="hljs-keyword">if</span> (send_header(fd, <span class="hljs-number">200</span>, mime_type(resolved), (<span class="hljs-type">size_t</span>)st.st_size) != <span class="hljs-number">0</span>) { fclose(f); <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>; }
+
+    <span class="hljs-type">long</span> sent = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">if</span> (!head_only) {
+        <span class="hljs-type">char</span> chunk[<span class="hljs-number">16384</span>];
+        <span class="hljs-type">size_t</span> got;
+        <span class="hljs-keyword">while</span> ((got = fread(chunk, <span class="hljs-number">1</span>, <span class="hljs-keyword">sizeof</span> chunk, f)) &gt; <span class="hljs-number">0</span>) {
+            <span class="hljs-keyword">if</span> (send_all(fd, chunk, got) != <span class="hljs-number">0</span>) <span class="hljs-keyword">break</span>;              <span class="hljs-comment">// client đã đi -&gt; dừng</span>
+            sent += (<span class="hljs-type">long</span>)got;
+        }
+    }
+    fclose(f);
+    <span class="hljs-keyword">return</span> sent;
+}
+</code></pre>
+<p>Điểm nhấn về kiểm tra thư mục gốc: so sánh <strong>tiền tố</strong> phải kèm điều kiện ký tự kế là <code>/</code> hoặc kết thúc chuỗi. Nếu chỉ <code>strncmp</code>, thư mục <code>/srv/www-secret</code> sẽ &quot;khớp&quot; tiền tố <code>/srv/www</code>.</p>
+<p>Thư mục <code>www</code> được đọc từng khối 16 KB nên một file lớn không chiếm nhiều RAM. Trên Linux có thể dùng <code>sendfile()</code> để kernel chép trực tiếp file → socket không qua bộ nhớ người dùng (nhanh hơn); ta dùng <code>fread</code>/<code>send</code> vì di động và dễ hiểu.</p>
+<h2>20.7. Router: route động</h2>
+<p>Route là ánh xạ <strong>đường dẫn → hàm xử lý</strong>. Kiểm tra bảng route <strong>trước</strong>, rồi mới rơi về file tĩnh.</p>
+<pre class="hljs"><code><span class="hljs-keyword">typedef</span> <span class="hljs-title function_">long</span> <span class="hljs-params">(*Handler)</span><span class="hljs-params">(<span class="hljs-type">int</span> fd, <span class="hljs-type">const</span> Request *rq, <span class="hljs-type">int</span> head_only, <span class="hljs-type">int</span> *status_out)</span>;
+
+<span class="hljs-type">static</span> <span class="hljs-type">long</span> <span class="hljs-title function_">api_time</span><span class="hljs-params">(<span class="hljs-type">int</span> fd, <span class="hljs-type">const</span> Request *rq, <span class="hljs-type">int</span> head_only, <span class="hljs-type">int</span> *status_out)</span> {
+    (<span class="hljs-type">void</span>)rq;
+    <span class="hljs-type">time_t</span> now = time(<span class="hljs-literal">NULL</span>);
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">tm</span> <span class="hljs-title">tmv</span>;</span>
+    gmtime_r(&amp;now, &amp;tmv);
+    <span class="hljs-type">char</span> iso[<span class="hljs-number">32</span>];
+    strftime(iso, <span class="hljs-keyword">sizeof</span> iso, <span class="hljs-string">&quot;%Y-%m-%dT%H:%M:%SZ&quot;</span>, &amp;tmv);
+
+    <span class="hljs-type">char</span> body[<span class="hljs-number">128</span>];
+    <span class="hljs-built_in">snprintf</span>(body, <span class="hljs-keyword">sizeof</span> body, <span class="hljs-string">&quot;{\&quot;time\&quot;:\&quot;%s\&quot;,\&quot;unix\&quot;:%lld}\n&quot;</span>, iso, (<span class="hljs-type">long</span> <span class="hljs-type">long</span>)now);
+    *status_out = <span class="hljs-number">200</span>;
+    <span class="hljs-keyword">return</span> send_text(fd, <span class="hljs-number">200</span>, <span class="hljs-string">&quot;application/json&quot;</span>, body, head_only);
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">long</span> <span class="hljs-title function_">api_health</span><span class="hljs-params">(<span class="hljs-type">int</span> fd, <span class="hljs-type">const</span> Request *rq, <span class="hljs-type">int</span> head_only, <span class="hljs-type">int</span> *status_out)</span> {
+    (<span class="hljs-type">void</span>)rq;
+    *status_out = <span class="hljs-number">200</span>;
+    <span class="hljs-keyword">return</span> send_text(fd, <span class="hljs-number">200</span>, <span class="hljs-string">&quot;application/json&quot;</span>, <span class="hljs-string">&quot;{\&quot;status\&quot;:\&quot;ok\&quot;}\n&quot;</span>, head_only);
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span> <span class="hljs-type">const</span> <span class="hljs-type">char</span> *path; Handler fn; } ROUTES[] = {
+    { <span class="hljs-string">&quot;/api/time&quot;</span>,   api_time   },
+    { <span class="hljs-string">&quot;/api/health&quot;</span>, api_health },
+};
+
+<span class="hljs-type">static</span> Handler <span class="hljs-title function_">find_route</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *path)</span> {
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">sizeof</span> ROUTES / <span class="hljs-keyword">sizeof</span> ROUTES[<span class="hljs-number">0</span>]; i++)
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strcmp</span>(ROUTES[i].path, path) == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> ROUTES[i].fn;
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+}
+</code></pre>
+<p>Với JSON có dữ liệu do người dùng cung cấp (ví dụ <code>/api/echo?msg=...</code>), <strong>bạn phải thoát ký tự đặc biệt</strong> (<code>&quot;</code>, <code>\</code>, ký tự điều khiển) khi chèn vào JSON; nếu không, kẻ tấn công phá cấu trúc JSON (<em>injection</em>). Bài tập 3 yêu cầu làm việc này.</p>
+<h2>20.8. Xử lý một kết nối</h2>
+<pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">handle_connection</span><span class="hljs-params">(<span class="hljs-type">int</span> fd)</span> {
+    <span class="hljs-comment">// Chống client chậm/treo chiếm mãi một worker</span>
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">timeval</span> <span class="hljs-title">tv</span> =</span> { .tv_sec = IO_TIMEOUT_S, .tv_usec = <span class="hljs-number">0</span> };
+    setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &amp;tv, <span class="hljs-keyword">sizeof</span> tv);
+    setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &amp;tv, <span class="hljs-keyword">sizeof</span> tv);
+
+    <span class="hljs-type">char</span> buf[MAX_HEADER];
+    <span class="hljs-type">ssize_t</span> hl = read_header(fd, buf, <span class="hljs-keyword">sizeof</span> buf);
+    <span class="hljs-keyword">if</span> (hl == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span>;                                        <span class="hljs-comment">// đóng/hết thời gian: không cần trả lời</span>
+    <span class="hljs-keyword">if</span> (hl &lt; <span class="hljs-number">0</span>) {
+        <span class="hljs-type">long</span> b = send_text(fd, <span class="hljs-number">431</span>, <span class="hljs-string">&quot;text/plain&quot;</span>, <span class="hljs-string">&quot;431 Header Too Large\n&quot;</span>, <span class="hljs-number">0</span>);
+        log_request(<span class="hljs-string">&quot;?&quot;</span>, <span class="hljs-string">&quot;?&quot;</span>, <span class="hljs-number">431</span>, b);
+        <span class="hljs-keyword">return</span>;
+    }
+
+    Request rq;
+    <span class="hljs-type">int</span> perr = parse_request(buf, &amp;rq);
+    <span class="hljs-keyword">if</span> (perr != <span class="hljs-number">0</span>) {
+        <span class="hljs-type">long</span> b = send_text(fd, perr, <span class="hljs-string">&quot;text/plain&quot;</span>, perr == <span class="hljs-number">414</span> ? <span class="hljs-string">&quot;414 URI Too Long\n&quot;</span> : <span class="hljs-string">&quot;400 Bad Request\n&quot;</span>, <span class="hljs-number">0</span>);
+        log_request(<span class="hljs-string">&quot;?&quot;</span>, <span class="hljs-string">&quot;?&quot;</span>, perr, b);
+        <span class="hljs-keyword">return</span>;
+    }
+
+    <span class="hljs-type">int</span> head_only = (<span class="hljs-built_in">strcmp</span>(rq.method, <span class="hljs-string">&quot;HEAD&quot;</span>) == <span class="hljs-number">0</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strcmp</span>(rq.method, <span class="hljs-string">&quot;GET&quot;</span>) != <span class="hljs-number">0</span> &amp;&amp; !head_only) {
+        <span class="hljs-type">long</span> b = send_text(fd, <span class="hljs-number">405</span>, <span class="hljs-string">&quot;text/plain&quot;</span>, <span class="hljs-string">&quot;405 Method Not Allowed\n&quot;</span>, <span class="hljs-number">0</span>);
+        log_request(rq.method, rq.target, <span class="hljs-number">405</span>, b);
+        <span class="hljs-keyword">return</span>;
+    }
+
+    <span class="hljs-type">int</span> status = <span class="hljs-number">500</span>;
+    <span class="hljs-type">long</span> bytes;
+    Handler h = find_route(rq.target);
+    bytes = h ? h(fd, &amp;rq, head_only, &amp;status) : serve_file(fd, &amp;rq, head_only, &amp;status);
+    log_request(rq.method, rq.target, status, bytes);
+}
+</code></pre>
+<p>Quy trình: <strong>giới hạn thời gian → đọc header có giới hạn → phân tích → kiểm tra phương thức → route/file → log</strong>. Mỗi bước có đường thoát lỗi rõ ràng và trả mã HTTP phù hợp; không có <code>exit()</code> nào trong đường xử lý yêu cầu (một yêu cầu lỗi <strong>không được</strong> làm sập server).</p>
+<h2>20.9. Thread pool và hàng đợi có giới hạn</h2>
+<p>Ta dùng lại mẫu <strong>bounded queue</strong> của chương 15, chứa các <code>fd</code>.</p>
+<pre class="hljs"><code><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span>
+    <span class="hljs-type">int</span>    fds[QUEUE_CAP];
+    <span class="hljs-type">size_t</span> head, count;
+    <span class="hljs-type">int</span>    closed;
+    <span class="hljs-type">pthread_mutex_t</span> lock;
+    <span class="hljs-type">pthread_cond_t</span>  not_empty;
+} FdQueue;
+
+<span class="hljs-type">static</span> FdQueue g_queue = { .lock = PTHREAD_MUTEX_INITIALIZER, .not_empty = PTHREAD_COND_INITIALIZER };
+
+<span class="hljs-comment">// Không chặn: trả 0 nếu thêm được, -1 nếu đầy (để luồng chính trả 503)</span>
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">queue_try_put</span><span class="hljs-params">(FdQueue *q, <span class="hljs-type">int</span> fd)</span> {
+    <span class="hljs-type">int</span> rc = <span class="hljs-number">-1</span>;
+    pthread_mutex_lock(&amp;q-&gt;lock);
+    <span class="hljs-keyword">if</span> (q-&gt;count &lt; QUEUE_CAP) {
+        q-&gt;fds[(q-&gt;head + q-&gt;count) % QUEUE_CAP] = fd;
+        q-&gt;count++;
+        rc = <span class="hljs-number">0</span>;
+        pthread_cond_signal(&amp;q-&gt;not_empty);
+    }
+    pthread_mutex_unlock(&amp;q-&gt;lock);
+    <span class="hljs-keyword">return</span> rc;
+}
+
+<span class="hljs-comment">// Chặn tới khi có fd; trả -1 nếu queue đã đóng và hết việc (worker phải thoát)</span>
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">queue_get</span><span class="hljs-params">(FdQueue *q)</span> {
+    pthread_mutex_lock(&amp;q-&gt;lock);
+    <span class="hljs-keyword">while</span> (q-&gt;count == <span class="hljs-number">0</span> &amp;&amp; !q-&gt;closed)
+        pthread_cond_wait(&amp;q-&gt;not_empty, &amp;q-&gt;lock);
+    <span class="hljs-keyword">if</span> (q-&gt;count == <span class="hljs-number">0</span>) { pthread_mutex_unlock(&amp;q-&gt;lock); <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>; }
+    <span class="hljs-type">int</span> fd = q-&gt;fds[q-&gt;head];
+    q-&gt;head = (q-&gt;head + <span class="hljs-number">1</span>) % QUEUE_CAP;
+    q-&gt;count--;
+    pthread_mutex_unlock(&amp;q-&gt;lock);
+    <span class="hljs-keyword">return</span> fd;
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">queue_close</span><span class="hljs-params">(FdQueue *q)</span> {
+    pthread_mutex_lock(&amp;q-&gt;lock);
+    q-&gt;closed = <span class="hljs-number">1</span>;
+    pthread_cond_broadcast(&amp;q-&gt;not_empty);            <span class="hljs-comment">// đánh thức mọi worker để chúng thoát</span>
+    pthread_mutex_unlock(&amp;q-&gt;lock);
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> *<span class="hljs-title function_">worker_main</span><span class="hljs-params">(<span class="hljs-type">void</span> *arg)</span> {
+    (<span class="hljs-type">void</span>)arg;
+    <span class="hljs-type">int</span> fd;
+    <span class="hljs-keyword">while</span> ((fd = queue_get(&amp;g_queue)) &gt;= <span class="hljs-number">0</span>) {
+        handle_connection(fd);
+        shutdown(fd, SHUT_WR);                         <span class="hljs-comment">// báo &quot;hết dữ liệu gửi&quot; để client đọc đủ trước khi đóng</span>
+        close(fd);
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+}
+</code></pre>
+<h2>20.10. <code>main</code>: khởi tạo, vòng lặp chấp nhận, tắt êm</h2>
+<pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">on_signal</span><span class="hljs-params">(<span class="hljs-type">int</span> sig)</span> { (<span class="hljs-type">void</span>)sig; g_stop = <span class="hljs-number">1</span>; }     <span class="hljs-comment">// chỉ đặt cờ (chương 13)</span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> *argv[])</span> {
+    <span class="hljs-type">int</span> port     = argc &gt; <span class="hljs-number">1</span> ? atoi(argv[<span class="hljs-number">1</span>]) : <span class="hljs-number">8080</span>;
+    <span class="hljs-type">int</span> nthreads = argc &gt; <span class="hljs-number">2</span> ? atoi(argv[<span class="hljs-number">2</span>]) : <span class="hljs-number">4</span>;
+    <span class="hljs-keyword">if</span> (argc &gt; <span class="hljs-number">3</span>) g_root = argv[<span class="hljs-number">3</span>];
+    <span class="hljs-keyword">if</span> (port &lt;= <span class="hljs-number">0</span> || port &gt; <span class="hljs-number">65535</span> || nthreads &lt; <span class="hljs-number">1</span> || nthreads &gt; <span class="hljs-number">256</span>) {
+        <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;Cach dung: %s [cong] [so_luong] [thu_muc_goc]\n&quot;</span>, argv[<span class="hljs-number">0</span>]);
+        <span class="hljs-keyword">return</span> <span class="hljs-number">2</span>;
+    }
+
+    <span class="hljs-comment">// Tín hiệu: SIGINT/SIGTERM -&gt; dừng êm. Không dùng SA_RESTART để poll() trả về EINTR ngay.</span>
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">sigaction</span> <span class="hljs-title">sa</span>;</span>
+    <span class="hljs-built_in">memset</span>(&amp;sa, <span class="hljs-number">0</span>, <span class="hljs-keyword">sizeof</span> sa);
+    sa.sa_handler = on_signal;
+    sigemptyset(&amp;sa.sa_mask);
+    sigaction(SIGINT,  &amp;sa, <span class="hljs-literal">NULL</span>);
+    sigaction(SIGTERM, &amp;sa, <span class="hljs-literal">NULL</span>);
+    signal(SIGPIPE, SIG_IGN);                                 <span class="hljs-comment">// ghi vào socket đã đóng không giết server</span>
+
+    <span class="hljs-type">int</span> srv = socket(AF_INET, SOCK_STREAM, <span class="hljs-number">0</span>);
+    <span class="hljs-keyword">if</span> (srv &lt; <span class="hljs-number">0</span>) { perror(<span class="hljs-string">&quot;socket&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+    <span class="hljs-type">int</span> yes = <span class="hljs-number">1</span>;
+    setsockopt(srv, SOL_SOCKET, SO_REUSEADDR, &amp;yes, <span class="hljs-keyword">sizeof</span> yes);
+
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">sockaddr_in</span> <span class="hljs-title">addr</span>;</span>
+    <span class="hljs-built_in">memset</span>(&amp;addr, <span class="hljs-number">0</span>, <span class="hljs-keyword">sizeof</span> addr);
+    addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);            <span class="hljs-comment">// CHỈ nhận từ máy này khi thử nghiệm</span>
+    addr.sin_port = htons((<span class="hljs-type">uint16_t</span>)port);
+    <span class="hljs-keyword">if</span> (bind(srv, (<span class="hljs-keyword">struct</span> sockaddr *)&amp;addr, <span class="hljs-keyword">sizeof</span> addr) &lt; <span class="hljs-number">0</span>) { perror(<span class="hljs-string">&quot;bind&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+    <span class="hljs-keyword">if</span> (listen(srv, <span class="hljs-number">128</span>) &lt; <span class="hljs-number">0</span>) { perror(<span class="hljs-string">&quot;listen&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+
+    <span class="hljs-type">pthread_t</span> *workers = <span class="hljs-built_in">calloc</span>((<span class="hljs-type">size_t</span>)nthreads, <span class="hljs-keyword">sizeof</span> *workers);
+    <span class="hljs-keyword">if</span> (!workers) { perror(<span class="hljs-string">&quot;calloc&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+    <span class="hljs-type">int</span> started = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; nthreads; i++) {
+        <span class="hljs-keyword">if</span> (pthread_create(&amp;workers[i], <span class="hljs-literal">NULL</span>, worker_main, <span class="hljs-literal">NULL</span>) != <span class="hljs-number">0</span>) { perror(<span class="hljs-string">&quot;pthread_create&quot;</span>); <span class="hljs-keyword">break</span>; }
+        started++;
+    }
+    <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;Server chay tai http://127.0.0.1:%d/ (%d luong, goc: %s). Nhan Ctrl+C de dung.\n&quot;</span>,
+            port, started, g_root);
+
+    <span class="hljs-comment">// Vòng lặp chấp nhận: poll với timeout 1 giây để định kỳ kiểm tra cờ dừng</span>
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">pollfd</span> <span class="hljs-title">pfd</span> =</span> { .fd = srv, .events = POLLIN };
+    <span class="hljs-keyword">while</span> (!g_stop) {
+        <span class="hljs-type">int</span> r = poll(&amp;pfd, <span class="hljs-number">1</span>, <span class="hljs-number">1000</span>);
+        <span class="hljs-keyword">if</span> (r &lt; <span class="hljs-number">0</span>) { <span class="hljs-keyword">if</span> (errno == EINTR) <span class="hljs-keyword">continue</span>; perror(<span class="hljs-string">&quot;poll&quot;</span>); <span class="hljs-keyword">break</span>; }
+        <span class="hljs-keyword">if</span> (r == <span class="hljs-number">0</span>) <span class="hljs-keyword">continue</span>;                                 <span class="hljs-comment">// hết thời gian, quay lại kiểm tra g_stop</span>
+
+        <span class="hljs-type">int</span> fd = accept(srv, <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>);
+        <span class="hljs-keyword">if</span> (fd &lt; <span class="hljs-number">0</span>) {
+            <span class="hljs-keyword">if</span> (errno == EINTR || errno == ECONNABORTED) <span class="hljs-keyword">continue</span>;
+            perror(<span class="hljs-string">&quot;accept&quot;</span>);
+            <span class="hljs-keyword">break</span>;
+        }
+        <span class="hljs-keyword">if</span> (queue_try_put(&amp;g_queue, fd) != <span class="hljs-number">0</span>) {               <span class="hljs-comment">// hàng đợi đầy: quá tải</span>
+            <span class="hljs-type">const</span> <span class="hljs-type">char</span> *msg = <span class="hljs-string">&quot;HTTP/1.1 503 Service Unavailable\r\nContent-Length: 0\r\nConnection: close\r\n\r\n&quot;</span>;
+            send(fd, msg, <span class="hljs-built_in">strlen</span>(msg), MSG_NOSIGNAL);
+            close(fd);
+            log_request(<span class="hljs-string">&quot;-&quot;</span>, <span class="hljs-string">&quot;-&quot;</span>, <span class="hljs-number">503</span>, <span class="hljs-number">0</span>);
+        }
+    }
+
+    <span class="hljs-comment">// Tắt êm: ngừng nhận, để worker xử lý hết những kết nối đã vào hàng đợi, rồi join</span>
+    <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;\nDang dung server...\n&quot;</span>);
+    close(srv);
+    queue_close(&amp;g_queue);
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; started; i++) pthread_join(workers[i], <span class="hljs-literal">NULL</span>);
+    <span class="hljs-built_in">free</span>(workers);
+    <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;Da dung.\n&quot;</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Chú ý:</p>
 <ul>
-<li>Parsers đơn giản: đọc request line, headers, method, path.</li>
-<li>Không cần implement full HTTP/1.1 — focus vào GET và simple headers.</li>
+<li><strong><code>INADDR_LOOPBACK</code>:</strong> an toàn khi phát triển. Đổi thành <code>INADDR_ANY</code> chỉ khi bạn hiểu rủi ro.</li>
+<li><strong><code>poll</code> với timeout 1 s:</strong> vì <code>accept</code> chặn, nếu chỉ dùng <code>accept</code> thì khi nhận Ctrl+C có thể vẫn kẹt lại. Kiểm tra cờ định kỳ là cách đơn giản để dừng êm.</li>
+<li><strong><code>signal(SIGPIPE, SIG_IGN)</code></strong> kèm <code>MSG_NOSIGNAL</code>: hai lớp bảo vệ.</li>
+<li><strong>Thứ tự tắt:</strong> đóng socket lắng nghe → đóng queue → join worker (worker xử lý nốt việc rồi thoát khi <code>queue_get</code> trả -1).</li>
+<li>Không có biến toàn cục thay đổi ngoài <code>g_stop</code> và hàng đợi có khóa; <code>g_root</code> chỉ đọc sau khi khởi động, nên các worker đọc an toàn.</li>
 </ul>
-<h2>3. Serving static files</h2>
+<h2>20.11. Biên dịch, chạy, kiểm thử</h2>
+<p><code>Makefile</code>:</p>
+<pre class="hljs"><code>CC      := gcc
+CFLAGS  := -std=c11 -Wall -Wextra -Wpedantic -Wshadow -O2 -g -D_FORTIFY_SOURCE=2 -fstack-protector-strong
+LDLIBS  := -pthread
+
+<span class="hljs-section">server: server.c</span>
+	<span class="hljs-variable">$(CC)</span> <span class="hljs-variable">$(CFLAGS)</span> <span class="hljs-variable">$&lt;</span> -o <span class="hljs-variable">$@</span> <span class="hljs-variable">$(LDLIBS)</span>
+
+<span class="hljs-section">asan: server.c</span>
+	<span class="hljs-variable">$(CC)</span> -std=c11 -Wall -Wextra -g -O1 -fsanitize=address,undefined -fno-omit-frame-pointer <span class="hljs-variable">$&lt;</span> -o server_asan <span class="hljs-variable">$(LDLIBS)</span>
+
+<span class="hljs-section">tsan: server.c</span>
+	<span class="hljs-variable">$(CC)</span> -std=c11 -Wall -Wextra -g -O1 -fsanitize=thread <span class="hljs-variable">$&lt;</span> -o server_tsan <span class="hljs-variable">$(LDLIBS)</span>
+
+<span class="hljs-section">clean:</span>
+	rm -f server server_asan server_tsan
+</code></pre>
+<p>Chạy và thử:</p>
+<pre class="hljs"><code>make &amp;&amp; ./server 8080 4 ./www
+</code></pre>
+<p>Trong terminal khác:</p>
+<pre class="hljs"><code>curl -i http://127.0.0.1:8080/                    <span class="hljs-comment"># index.html: 200, Content-Type: text/html</span>
+curl -i http://127.0.0.1:8080/style.css           <span class="hljs-comment"># text/css</span>
+curl -i http://127.0.0.1:8080/api/time            <span class="hljs-comment"># JSON</span>
+curl -I http://127.0.0.1:8080/                    <span class="hljs-comment"># HEAD: chỉ header, Content-Length đúng, không body</span>
+curl -i http://127.0.0.1:8080/khong-co.html       <span class="hljs-comment"># 404</span>
+curl -i -X POST http://127.0.0.1:8080/            <span class="hljs-comment"># 405</span>
+curl -i --path-as-is <span class="hljs-string">&#x27;http://127.0.0.1:8080/../server.c&#x27;</span>          <span class="hljs-comment"># phải 403 (thử traversal)</span>
+curl -i --path-as-is <span class="hljs-string">&#x27;http://127.0.0.1:8080/%2e%2e/server.c&#x27;</span>      <span class="hljs-comment"># 403 sau khi giải mã</span>
+curl -i <span class="hljs-string">&#x27;http://127.0.0.1:8080/%00&#x27;</span>               <span class="hljs-comment"># 400 (NUL)</span>
+<span class="hljs-built_in">printf</span> <span class="hljs-string">&#x27;GET / HTTP/1.1\r\n&#x27;</span> | nc 127.0.0.1 8080   <span class="hljs-comment"># header chưa xong -&gt; chờ 5 giây rồi đóng (timeout)</span>
+</code></pre>
+<p>Mở <code>http://127.0.0.1:8080/</code> bằng trình duyệt: trang HTML nạp thêm CSS qua yêu cầu thứ hai.</p>
+<p><strong>Kiểm tra tải:</strong> công cụ <code>ab</code> (ApacheBench) hoặc <code>wrk</code>:</p>
+<pre class="hljs"><code>ab -n 20000 -c 50 http://127.0.0.1:8080/api/health
+wrk -t2 -c100 -d10s http://127.0.0.1:8080/
+</code></pre>
+<p>Quan sát yêu cầu/giây, tỷ lệ lỗi; thử thay đổi số worker (<code>./server 8080 1</code>, <code>... 16</code>) và xem ảnh hưởng.</p>
+<p><strong>Kiểm tra lỗi bộ nhớ và đồng bộ:</strong> chạy <code>make asan</code>/<code>make tsan</code>, chạy các lệnh <code>curl</code> và <code>ab</code> ở trên; không có báo cáo nghĩa là sạch. Thử gửi dữ liệu rác/dài bằng <code>nc</code> hoặc một script:</p>
+<pre class="hljs"><code><span class="hljs-built_in">head</span> -c 100000 /dev/urandom | nc 127.0.0.1 8080          <span class="hljs-comment"># không được crash</span>
+python3 -c <span class="hljs-string">&quot;print(&#x27;GET /&#x27; + &#x27;a&#x27;*5000 + &#x27; HTTP/1.1\r\n\r\n&#x27;, end=&#x27;&#x27;)&quot;</span> | nc 127.0.0.1 8080    <span class="hljs-comment"># 414</span>
+</code></pre>
+<h2>20.12. Bảo mật và giới hạn — kiểm tra cuối cùng</h2>
+<table>
+<thead>
+<tr>
+<th>Nguy cơ</th>
+<th>Biện pháp trong mã</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Directory traversal (<code>../</code>, <code>%2e%2e</code>, symlink)</td>
+<td>Giải mã trước; <code>path_is_unsafe</code>; <code>realpath</code> + kiểm tra tiền tố; chỉ <code>S_ISREG</code></td>
+</tr>
+<tr>
+<td>Tràn bộ đệm khi phân tích</td>
+<td><code>sscanf</code> với độ rộng; header giới hạn 8 KB; kiểm tra độ dài trường</td>
+</tr>
+<tr>
+<td>Slowloris (client gửi chậm giữ kết nối)</td>
+<td><code>SO_RCVTIMEO</code>/<code>SO_SNDTIMEO</code>; số worker cố định</td>
+</tr>
+<tr>
+<td>Cạn tài nguyên do quá nhiều kết nối</td>
+<td>Hàng đợi giới hạn + <code>503</code>; số luồng cố định</td>
+</tr>
+<tr>
+<td>Log injection</td>
+<td>Cắt độ dài; nên loại bỏ <code>\r\n</code> khỏi giá trị log</td>
+</tr>
+<tr>
+<td><code>SIGPIPE</code> giết server</td>
+<td><code>SIG_IGN</code> + <code>MSG_NOSIGNAL</code></td>
+</tr>
+<tr>
+<td>Lộ file nhạy cảm (<code>.env</code>, <code>.git</code>)</td>
+<td>Nên chặn tên file bắt đầu bằng <code>.</code> (bài tập)</td>
+</tr>
+<tr>
+<td>Chạy với quyền cao</td>
+<td>Chạy bằng người dùng thường, <code>chroot</code>/container, bind cổng cao</td>
+</tr>
+<tr>
+<td>Nội dung người dùng chèn vào JSON/HTML</td>
+<td>Thoát ký tự (bài tập 3)</td>
+</tr>
+<tr>
+<td>Thiếu HTTPS</td>
+<td>Đặt sau reverse proxy có TLS (nginx, Caddy)</td>
+</tr>
+</tbody>
+</table>
+<p>Đây là mã học tập; nếu triển khai thật, hãy dùng server đã được kiểm chứng (nginx, Caddy...) hoặc ít nhất bổ sung: TLS, giới hạn tốc độ theo IP, xử lý <code>Range</code>, <code>If-Modified-Since</code>, <code>keep-alive</code>, chunked encoding, và fuzz bộ phân tích (chương 18).</p>
+<h2>20.13. Hướng mở rộng</h2>
 <ul>
-<li>Map path -&gt; filesystem path; validate path để tránh directory traversal.</li>
-<li>Set Content-Type theo file extension (MIME map).</li>
-<li>Use sendfile on POSIX for efficiency where có.</li>
+<li><strong>Keep-alive:</strong> cho phép nhiều yêu cầu trên một kết nối (vòng lặp đọc yêu cầu, hết thời gian chờ nhàn rỗi).</li>
+<li><strong><code>epoll</code> event loop:</strong> thay thread pool bằng vòng lặp sự kiện non-blocking, máy trạng thái cho mỗi kết nối (đọc header → xử lý → ghi phản hồi); dùng <code>sendfile</code>.</li>
+<li><strong>Các phương thức <code>POST</code>:</strong> đọc <code>Content-Length</code> byte body (có giới hạn), phân tích <code>application/x-www-form-urlencoded</code> hoặc JSON.</li>
+<li><strong>Cache và điều kiện:</strong> <code>ETag</code>, <code>Last-Modified</code>/<code>If-Modified-Since</code> → <code>304 Not Modified</code>.</li>
+<li><strong>Nén:</strong> <code>gzip</code> với zlib khi client gửi <code>Accept-Encoding: gzip</code>.</li>
+<li><strong><code>Range</code> request:</strong> hỗ trợ tải/phát tiếp (<code>206 Partial Content</code>).</li>
+<li><strong>Cấu hình:</strong> đọc file cấu hình, hỗ trợ nhiều thư mục/route, <code>Host</code> ảo.</li>
+<li><strong>TLS:</strong> liên kết OpenSSL/mbedTLS; hoặc để proxy làm.</li>
 </ul>
-<h2>4. Routing and logging</h2>
+<h2>20.14. Lỗi thường gặp</h2>
+<table>
+<thead>
+<tr>
+<th>Lỗi</th>
+<th>Triệu chứng</th>
+<th>Cách tránh</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Thiếu <code>\r\n\r\n</code> hoặc <code>Content-Length</code> sai</td>
+<td>Trình duyệt treo/cắt nội dung</td>
+<td>Luôn đủ header, đúng độ dài</td>
+</tr>
+<tr>
+<td>Không xử lý <code>send</code> một phần</td>
+<td>File lớn bị cụt</td>
+<td><code>send_all</code></td>
+</tr>
+<tr>
+<td>Kiểm tra <code>..</code> trước khi giải mã</td>
+<td>Bị bypass <code>%2e%2e</code></td>
+<td>Giải mã rồi mới kiểm tra</td>
+</tr>
+<tr>
+<td>So tiền tố thư mục gốc thiếu ký tự phân cách</td>
+<td><code>/srv/www-x</code> khớp <code>/srv/www</code></td>
+<td>Kiểm tra <code>/</code> hoặc <code>'\0'</code> sau tiền tố</td>
+</tr>
+<tr>
+<td>Đóng socket ngay sau <code>send</code></td>
+<td>Client mất phần cuối dữ liệu</td>
+<td><code>shutdown(SHUT_WR)</code> rồi <code>close</code>, hoặc đọc hết</td>
+</tr>
+<tr>
+<td>Worker chặn mãi trên client treo</td>
+<td>Cạn worker</td>
+<td>Timeout socket</td>
+</tr>
+<tr>
+<td>Truyền địa chỉ biến vòng lặp cho luồng</td>
+<td>Sai <code>fd</code></td>
+<td>Đặt <code>fd</code> vào hàng đợi (giá trị, không phải địa chỉ)</td>
+</tr>
+<tr>
+<td>Quên <code>MSG_NOSIGNAL</code>/<code>SIG_IGN</code></td>
+<td>Server chết bất ngờ</td>
+<td>Cả hai</td>
+</tr>
+<tr>
+<td><code>exit()</code> trong xử lý yêu cầu</td>
+<td>Một yêu cầu xấu giết cả server</td>
+<td>Trả lỗi, đóng kết nối</td>
+</tr>
+<tr>
+<td>Không chờ worker khi thoát</td>
+<td>Cắt ngang yêu cầu đang xử lý</td>
+<td><code>queue_close</code> + <code>pthread_join</code></td>
+</tr>
+</tbody>
+</table>
+<h2>20.15. Tóm tắt</h2>
 <ul>
-<li>Map routes to handler functions; basic router supports prefix/static routes.</li>
-<li>Logging: request time, method, path, response code.</li>
+<li>HTTP là giao thức văn bản: dòng yêu cầu + header + dòng trống; phản hồi có dòng trạng thái, header (<code>Content-Length</code>, <code>Content-Type</code>), body.</li>
+<li>Phân tích yêu cầu <strong>có giới hạn</strong> ở mọi trường; <strong>giải mã URL trước, kiểm tra an toàn sau</strong>.</li>
+<li>Phục vụ file: chặn <code>..</code>, <code>realpath</code> + kiểm tra thư mục gốc, chỉ file thường; đặt <code>Content-Type</code> theo đuôi.</li>
+<li>Thread pool với <strong>hàng đợi giới hạn</strong> và <code>503</code> khi quá tải giữ tài nguyên ổn định; timeout socket chống client chậm.</li>
+<li>Tắt êm: cờ <code>sig_atomic_t</code>, <code>poll</code> timeout, đóng queue, join worker.</li>
+<li>Kiểm thử bằng <code>curl</code>, <code>ab</code>/<code>wrk</code>, ASan/TSan và dữ liệu rác.</li>
 </ul>
-<h2>5. Ví dụ thực hành</h2>
-<ul>
-<li><a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-20">code/chapter-20</a>/simple_server.c: thread-per-connection server serving files from ./www</li>
-<li><a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-20">code/chapter-20</a>/thread_pool_server.c: server using fixed worker pool and request queue</li>
-</ul>
-<p>Bài tập</p>
-<ul>
-<li>Implement server serving static files and a /api/time JSON endpoint.</li>
-<li>Add graceful shutdown (signal handling) and basic rate-limiting.</li>
-</ul>
-<p>Ghi chú: provide POSIX build instructions; Windows users see alternative using Winsock or run in WSL.</p>
+<h2>20.16. Bài tập</h2>
+<ol>
+<li>Chạy server, dùng <code>curl -v</code> để quan sát yêu cầu/phản hồi. Xác minh <code>Content-Length</code> bằng <code>wc -c</code> trên file, và HEAD trả cùng độ dài nhưng không có body.</li>
+<li>Thêm route <code>/api/echo?msg=...</code> trả JSON <code>{&quot;msg&quot;:&quot;...&quot;}</code> với <strong>thoát ký tự JSON</strong> đúng (<code>&quot;</code>, <code>\</code>, xuống dòng, ký tự điều khiển). Kiểm thử với chuỗi có dấu nháy và unicode.</li>
+<li>Cấm phục vụ mọi file/thư mục có thành phần bắt đầu bằng <code>.</code> (như <code>.git</code>, <code>.env</code>) và trả <code>403</code>.</li>
+<li>Thêm <code>Last-Modified</code> và xử lý <code>If-Modified-Since</code> trả <code>304 Not Modified</code> khi file không đổi.</li>
+<li>Thêm <strong>giới hạn tốc độ</strong> theo địa chỉ IP (cửa sổ trượt hoặc token bucket) — trả <code>429 Too Many Requests</code> khi vượt quá; chú ý đồng bộ khi nhiều worker.</li>
+<li>Thêm hỗ trợ <code>keep-alive</code>: lặp đọc yêu cầu trên cùng kết nối tới khi client đóng hoặc nhàn rỗi quá 5 giây; giới hạn số yêu cầu mỗi kết nối.</li>
+<li>Đo <code>ab</code>/<code>wrk</code> với 1, 2, 4, 8, 16 worker; vẽ đồ thị yêu cầu/giây; giải thích điểm bão hòa (số nhân CPU, ngưỡng I/O).</li>
+<li>Viết phiên bản <strong>event loop</strong> dùng <code>epoll</code> (Linux) hoặc <code>poll</code> cho các kết nối non-blocking: thử đạt 10.000 kết nối nhàn rỗi với ít tài nguyên hơn thread pool.</li>
+<li>Tạo fuzz target cho <code>parse_request</code> và <code>url_decode</code> (chương 18); chạy libFuzzer với ASan/UBSan và sửa mọi lỗi tìm được.</li>
+<li>(Thử thách) Thêm hỗ trợ <code>POST /upload</code> nhận file (tới 1 MB) lưu vào thư mục <code>uploads/</code> với tên file được <strong>tạo ngẫu nhiên</strong> (không dùng tên client gửi), kiểm tra kích thước, và ghi bằng <code>O_EXCL</code>.</li>
+</ol>
+<p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-20">code/chapter-20</a></p>
 
 </article>
 <div class="chapter-nav"><a class="nav-prev" href="chapter-19.html">&larr; Project: Trình biên dịch / Interpreter mini</a><a class="nav-next" href="chapter-21.html">Testing & CI cho C &rarr;</a></div>

@@ -12,42 +12,536 @@
 <main class="content">
 <article>
 <h1>Chương 14 — Tiền xử lý &amp; macro nâng cao</h1>
-<p>Mục tiêu chương:</p>
+<h2>Mục tiêu chương</h2>
 <ul>
-<li>Hiểu chi tiết về macro, các lỗi phổ biến, và khi nào nên dùng inline function thay vì macro.</li>
-<li>Học X-macros và conditional compilation để tổ chức code linh hoạt.</li>
+<li>Hiểu <strong>bộ tiền xử lý</strong> làm gì, ở giai đoạn nào, và nó chỉ thao tác trên <strong>văn bản</strong>.</li>
+<li>Viết macro có tham số đúng cách, tránh các bẫy: thiếu ngoặc, đánh giá nhiều lần, <code>;</code> thừa, tên trùng.</li>
+<li>Dùng <code>#</code> (chuỗi hóa) và <code>##</code> (nối token); macro biến thiên <code>__VA_ARGS__</code>.</li>
+<li>Dùng <strong>X-macro</strong> để sinh mã lặp lại từ một danh sách duy nhất.</li>
+<li>Biên dịch có điều kiện (<code>#if</code>, <code>#ifdef</code>), macro định sẵn, kiểm tra tính năng/nền tảng.</li>
+<li>Biết khi nào nên dùng hàm <code>static inline</code>, <code>_Generic</code>, <code>enum</code> thay cho macro.</li>
 </ul>
-<h2>1. Parametric macros, stringification và token-pasting</h2>
+<h2>14.1. Bộ tiền xử lý làm gì?</h2>
+<p>Trước khi compiler dịch mã, <strong>bộ tiền xử lý (preprocessor)</strong> biến đổi mã nguồn dạng văn bản:</p>
+<ol>
+<li>Ghép các dòng kết thúc bằng <code>\</code> (nối dòng).</li>
+<li>Xóa comment (thay bằng một khoảng trắng).</li>
+<li>Thực hiện các <strong>chỉ thị</strong> bắt đầu bằng <code>#</code>: <code>#include</code>, <code>#define</code>, <code>#if...</code>.</li>
+<li>Thay thế macro.</li>
+</ol>
+<p>Nó <strong>không hiểu C</strong>: không biết kiểu, không biết phạm vi, chỉ biết &quot;token&quot; và &quot;chuỗi&quot;. Đó vừa là sức mạnh (sinh mã linh hoạt) vừa là nguồn của nhiều lỗi khó thấy.</p>
+<p>Xem kết quả tiền xử lý:</p>
+<pre class="hljs"><code>gcc -E main.c            <span class="hljs-comment"># in mã sau tiền xử lý ra màn hình</span>
+gcc -E -P main.c &gt; out.i <span class="hljs-comment"># bỏ các dòng #line, ghi ra file</span>
+</code></pre>
+<p><code>gcc -E</code> là <strong>công cụ gỡ lỗi macro số một</strong>: khi macro cho kết quả kỳ lạ, hãy nhìn xem nó mở rộng thành gì.</p>
+<h3>Các chỉ thị chính</h3>
+<table>
+<thead>
+<tr>
+<th>Chỉ thị</th>
+<th>Tác dụng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>#include</code></td>
+<td>chèn nội dung file</td>
+</tr>
+<tr>
+<td><code>#define</code> / <code>#undef</code></td>
+<td>định nghĩa / hủy macro</td>
+</tr>
+<tr>
+<td><code>#if</code> / <code>#elif</code> / <code>#else</code> / <code>#endif</code></td>
+<td>biên dịch có điều kiện theo biểu thức hằng</td>
+</tr>
+<tr>
+<td><code>#ifdef</code> / <code>#ifndef</code></td>
+<td>kiểm tra macro có được định nghĩa không</td>
+</tr>
+<tr>
+<td><code>#error &quot;msg&quot;</code></td>
+<td>dừng biên dịch với thông báo</td>
+</tr>
+<tr>
+<td><code>#warning &quot;msg&quot;</code></td>
+<td>cảnh báo (gcc/clang; chuẩn hóa ở C23)</td>
+</tr>
+<tr>
+<td><code>#pragma ...</code></td>
+<td>chỉ thị đặc thù compiler</td>
+</tr>
+<tr>
+<td><code>#line</code>, <code>#</code> (rỗng)</td>
+<td>hiếm dùng</td>
+</tr>
+</tbody>
+</table>
+<h2>14.2. Macro dạng đối tượng và dạng hàm</h2>
+<h3>Macro dạng đối tượng (object-like)</h3>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> MAX_USERS 100</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> VERSION   <span class="hljs-string">&quot;1.2.0&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> PI        3.14159265358979323846</span>
+
+<span class="hljs-type">char</span> names[MAX_USERS][<span class="hljs-number">32</span>];
+</code></pre>
+<p>Bộ tiền xử lý thay thế <strong>từng token</strong> <code>MAX_USERS</code> bằng <code>100</code>. Không có kiểu, không có <code>;</code>. Đừng viết <code>#define MAX_USERS = 100;</code> (dấu <code>=</code> và <code>;</code> sẽ đi theo vào mã!).</p>
+<p>Với hằng số, ưu tiên <code>enum { MAX_USERS = 100 };</code> hoặc <code>static const</code>: có kiểu, xuất hiện trong debugger, theo phạm vi.</p>
+<h3>Macro dạng hàm (function-like)</h3>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> SQUARE(x) ((x) * (x))</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> MAX(a, b) ((a) &gt; (b) ? (a) : (b))</span>
+</code></pre>
+<p><strong>Không được có khoảng trắng giữa tên macro và dấu <code>(</code></strong> trong định nghĩa: <code>#define SQUARE (x) ...</code> là macro dạng đối tượng mở rộng thành <code>(x) ...</code>.</p>
+<h2>14.3. Các bẫy kinh điển của macro</h2>
+<h3>Bẫy 1: thiếu ngoặc</h3>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> DOUBLE(x) x * 2</span>
+<span class="hljs-type">int</span> r = DOUBLE(<span class="hljs-number">3</span> + <span class="hljs-number">4</span>);        <span class="hljs-comment">// mở rộng: 3 + 4 * 2 = 11  (mong đợi 14)</span>
+</code></pre>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> SQ(x) ((x) * (x))     <span class="hljs-comment">// ngoặc quanh từng tham số VÀ cả biểu thức</span></span>
+</code></pre>
+<p>Ngoặc quanh <strong>toàn bộ</strong> biểu thức bảo vệ khi macro nằm trong biểu thức lớn hơn:</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> ADD(a, b) (a) + (b)</span>
+<span class="hljs-type">int</span> r = ADD(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>) * <span class="hljs-number">3</span>;        <span class="hljs-comment">// 1 + 2 * 3 = 7 (mong đợi 9)   -&gt; phải là ((a) + (b))</span>
+</code></pre>
+<h3>Bẫy 2: đánh giá tham số nhiều lần</h3>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> MAX(a, b) ((a) &gt; (b) ? (a) : (b))</span>
+
+<span class="hljs-type">int</span> i = <span class="hljs-number">5</span>, j = <span class="hljs-number">3</span>;
+<span class="hljs-type">int</span> m = MAX(i++, j);          <span class="hljs-comment">// ((i++) &gt; (j) ? (i++) : (j)) -&gt; i tăng HAI lần nếu i &gt; j</span>
+</code></pre>
+<p>Nếu đối số có <strong>tác dụng phụ</strong> (<code>i++</code>, hàm có side effect, <code>rand()</code>), nó bị chạy nhiều lần. Cách khắc phục:</p>
 <ul>
-<li>#define SQR(x) ((x)*(x)) — ví dụ đơn giản nhưng có side-effects nếu x có tác dụng phụ.</li>
-<li>
-<h1>và ##: stringification (#x) và token-pasting (a ## b) hữu ích cho code-gen trong C.</h1>
-</li>
+<li>Dùng hàm <code>static inline</code> (mỗi đối số chỉ tính một lần).</li>
+<li>Với gcc/clang: dùng <em>statement expression</em> và <code>typeof</code> (không chuẩn):</li>
 </ul>
-<h2>2. Tránh side-effects trong macro</h2>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> MAX_SAFE(a, b) ({ __typeof__(a) _a = (a); __typeof__(b) _b = (b); _a &gt; _b ? _a : _b; })</span>
+</code></pre>
 <ul>
-<li>Macro không kiểm tra kiểu và có thể evaluate tham số nhiều lần. Giải pháp: dùng inline function cho các phép toán an toàn.</li>
+<li>Hoặc dùng <code>_Generic</code> (C11), xem 14.7.</li>
 </ul>
-<h2>3. X-macros pattern</h2>
+<h3>Bẫy 3: macro nhiều câu lệnh và dấu <code>;</code></h3>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> SWAP(a, b) int t = a; a = b; b = t;</span>
+
+<span class="hljs-keyword">if</span> (x &gt; y)
+    SWAP(x, y);               <span class="hljs-comment">// mở rộng: chỉ &quot;int t = x;&quot; thuộc if; hai câu sau LUÔN chạy!</span>
+<span class="hljs-keyword">else</span> ...                      <span class="hljs-comment">// và &quot;else&quot; bị lỗi cú pháp</span>
+</code></pre>
+<p>Cách đúng: bọc trong <code>do { ... } while (0)</code> để macro hành xử như <strong>một câu lệnh</strong> và yêu cầu <code>;</code> ở cuối:</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> SWAP(type, a, b) do { type _t = (a); (a) = (b); (b) = _t; } while (0)</span>
+
+<span class="hljs-keyword">if</span> (x &gt; y)
+    SWAP(<span class="hljs-type">int</span>, x, y);          <span class="hljs-comment">// đúng</span>
+<span class="hljs-keyword">else</span>
+    ...
+</code></pre>
+<p>Mẫu <code>do { ... } while (0)</code> là chuẩn mực cho macro nhiều lệnh.</p>
+<h3>Bẫy 4: va chạm tên (không có phạm vi)</h3>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> SWAP(a, b) do { int t = (a); (a) = (b); (b) = t; } while (0)</span>
+
+<span class="hljs-type">int</span> t = <span class="hljs-number">1</span>, u = <span class="hljs-number">2</span>;
+SWAP(t, u);                   <span class="hljs-comment">// int t = (t); ... -&gt; biến t trong macro che t bên ngoài -&gt; sai</span>
+</code></pre>
+<p>Đặt tên biến nội bộ khó trùng (<code>_t</code>, <code>swap_tmp__</code>) hoặc tránh macro và dùng hàm.</p>
+<h3>Bẫy 5: macro không có kiểu và bị nhân đôi mã</h3>
+<p>Vì là văn bản, <code>MAX(&quot;a&quot;, 5)</code> không gặp lỗi kiểu ở macro mà ở vị trí sử dụng, với thông báo lỗi khó đọc. Và mỗi lần dùng sinh ra một bản mã mới (phình mã).</p>
+<h3>Bẫy 6: đệ quy macro và tên trùng hàm</h3>
+<p>Macro <strong>không đệ quy</strong>: tên macro không được mở rộng lại bên trong chính nó. Và nếu một macro trùng tên với hàm/biến (ví dụ <code>#define min(a,b)</code>), nó có thể phá vỡ mã trong header hệ thống. Đặt tên macro bằng <strong>CHỮ HOA</strong> (quy ước) để dễ nhận ra.</p>
+<h2>14.4. Chuỗi hóa <code>#</code> và nối token <code>##</code></h2>
+<h3><code>#</code> — biến tham số thành chuỗi</h3>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> STR(x) #x</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> SHOW(expr) printf(#expr <span class="hljs-string">&quot; = %d\n&quot;</span>, (expr))</span>
+
+SHOW(<span class="hljs-number">3</span> + <span class="hljs-number">4</span>);                 <span class="hljs-comment">// printf(&quot;3 + 4&quot; &quot; = %d\n&quot;, (3 + 4));  -&gt; in: 3 + 4 = 7</span>
+<span class="hljs-built_in">puts</span>(STR(hello world));      <span class="hljs-comment">// &quot;hello world&quot;</span>
+</code></pre>
+<p>Chuỗi liền kề tự nối (<code>&quot;3 + 4&quot; &quot; = %d\n&quot;</code> thành một chuỗi). Rất hữu ích cho <code>assert</code> tự viết, in tên biến, in tên hàm.</p>
+<p><strong>Chuỗi hóa hai bước</strong> để mở rộng macro trước khi chuỗi hóa:</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> VERSION_MAJOR 2</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> STR_(x) #x</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> STR(x) STR_(x)              <span class="hljs-comment">// qua một tầng để x được mở rộng trước</span></span>
+
+<span class="hljs-type">const</span> <span class="hljs-type">char</span> *v = <span class="hljs-string">&quot;v&quot;</span> STR(VERSION_MAJOR);   <span class="hljs-comment">// &quot;v2&quot; (nếu chỉ dùng #x trực tiếp sẽ ra &quot;VERSION_MAJOR&quot;)</span>
+</code></pre>
+<h3><code>##</code> — nối hai token thành một</h3>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> CONCAT(a, b) a##b</span>
+<span class="hljs-type">int</span> <span class="hljs-title function_">CONCAT</span><span class="hljs-params">(var, <span class="hljs-number">1</span>)</span> = <span class="hljs-number">10</span>;            <span class="hljs-comment">// int var1 = 10;</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> DECLARE_GETTER(type, name) \
+    type get_##name(const Config *c) { return c-&gt;name; }</span>
+
+DECLARE_GETTER(<span class="hljs-type">int</span>, port)           <span class="hljs-comment">// int get_port(const Config *c) { return c-&gt;port; }</span>
+DECLARE_GETTER(<span class="hljs-type">double</span>, timeout)     <span class="hljs-comment">// double get_timeout(...)</span>
+</code></pre>
+<p>Dùng để sinh nhiều hàm/kiểu giống nhau (một dạng &quot;generic&quot; thô sơ trong C, ví dụ tạo <code>Vec_int</code>, <code>Vec_double</code>):</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEFINE_VEC(T)                                         \
+    typedef struct { T *data; size_t size, cap; } Vec_##T;    \
+    static inline int Vec_##T##_push(Vec_##T *v, T x) {       \
+        <span class="hljs-keyword">if</span> (v-&gt;size == v-&gt;cap) {                              \
+            size_t nc = v-&gt;cap ? v-&gt;cap * 2 : 4;              \
+            T *t = realloc(v-&gt;data, nc * sizeof *t);          \
+            <span class="hljs-keyword">if</span> (!t) return -1;                                \
+            v-&gt;data = t; v-&gt;cap = nc;                         \
+        }                                                     \
+        v-&gt;data[v-&gt;size++] = x;                               \
+        return 0;                                             \
+    }</span>
+
+DEFINE_VEC(<span class="hljs-type">int</span>)          <span class="hljs-comment">// sinh Vec_int và Vec_int_push</span>
+DEFINE_VEC(<span class="hljs-type">double</span>)       <span class="hljs-comment">// sinh Vec_double và Vec_double_push</span>
+</code></pre>
+<p>Nhược điểm: mã khó đọc, lỗi báo ở dòng macro, khó debug. Dùng có chừng mực.</p>
+<h3>Nối dòng bằng <code>\</code></h3>
+<p>Ký tự <code>\</code> ở cuối dòng nối dòng tiếp theo; <strong>không được có khoảng trắng sau <code>\</code></strong>.</p>
+<h2>14.5. Macro biến thiên (variadic)</h2>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> LOG(fmt, ...) fprintf(stderr, <span class="hljs-string">&quot;[%s:%d] &quot;</span> fmt <span class="hljs-string">&quot;\n&quot;</span>, __FILE__, __LINE__, __VA_ARGS__)</span>
+
+LOG(<span class="hljs-string">&quot;x = %d, y = %d&quot;</span>, x, y);       <span class="hljs-comment">// OK</span>
+LOG(<span class="hljs-string">&quot;khoi dong&quot;</span>);                  <span class="hljs-comment">// LỖI: sau fmt còn dấu phẩy thừa vì __VA_ARGS__ rỗng</span>
+</code></pre>
+<p>Cách khắc phục:</p>
+<pre class="hljs"><code><span class="hljs-comment">// gcc/clang (mở rộng): ## nuốt dấu phẩy khi __VA_ARGS__ rỗng</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> LOG(fmt, ...) fprintf(stderr, <span class="hljs-string">&quot;[%s:%d] &quot;</span> fmt <span class="hljs-string">&quot;\n&quot;</span>, __FILE__, __LINE__, ##__VA_ARGS__)</span>
+
+<span class="hljs-comment">// C chuẩn: gộp fmt vào __VA_ARGS__</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> LOG2(...) fprintf(stderr, <span class="hljs-string">&quot;[%s:%d] &quot;</span> __VA_ARGS__, __FILE__, __LINE__)</span>
+</code></pre>
+<p>(C23 chuẩn hóa <code>__VA_OPT__(,)</code>.) Macro biến thiên thường dùng cho log và debug.</p>
+<h3>Đếm số đối số (kỹ thuật nâng cao)</h3>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> COUNT_ARGS(...) COUNT_ARGS_(__VA_ARGS__, 5, 4, 3, 2, 1, 0)</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> COUNT_ARGS_(_1, _2, _3, _4, _5, N, ...) N</span>
+
+<span class="hljs-type">int</span> n = COUNT_ARGS(a, b, c);    <span class="hljs-comment">// 3</span>
+</code></pre>
+<p>Mẹo này đẩy dãy số về phía sau tùy số đối số thật; hữu ích để &quot;nạp chồng&quot; macro theo số lượng đối số.</p>
+<h2>14.6. X-macro — một danh sách, nhiều sản phẩm</h2>
+<p><strong>Vấn đề:</strong> bạn có một danh sách (mã lỗi, lệnh, kiểu token) cần dùng ở <strong>nhiều nơi</strong>: một <code>enum</code>, một bảng chuỗi tên, một bảng hàm xử lý. Nếu viết tay từng nơi, thêm một mục phải sửa 3 chỗ và dễ lệch nhau.</p>
+<p><strong>X-macro:</strong> viết danh sách <strong>một lần</strong> dưới dạng macro gọi <code>X(...)</code> cho mỗi mục; rồi định nghĩa <code>X</code> khác nhau tùy mục đích và &quot;mở rộng&quot; danh sách.</p>
+<pre class="hljs"><code><span class="hljs-comment">// Danh sách duy nhất</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> ERROR_LIST(X)                       \
+    X(ERR_OK,      <span class="hljs-string">&quot;thanh cong&quot;</span>)            \
+    X(ERR_IO,      <span class="hljs-string">&quot;loi vao/ra&quot;</span>)            \
+    X(ERR_OOM,     <span class="hljs-string">&quot;het bo nho&quot;</span>)            \
+    X(ERR_PARSE,   <span class="hljs-string">&quot;loi phan tich&quot;</span>)</span>
+
+<span class="hljs-comment">// Sản phẩm 1: enum</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> AS_ENUM(name, text) name,</span>
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">enum</span> {</span> ERROR_LIST(AS_ENUM) ERR_COUNT } ErrorCode;
+
+<span class="hljs-comment">// Sản phẩm 2: bảng chuỗi</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> AS_STRING(name, text) [name] = text,</span>
+<span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">char</span> *<span class="hljs-type">const</span> ERROR_TEXT[] = { ERROR_LIST(AS_STRING) };
+
+<span class="hljs-comment">// Sản phẩm 3: bảng tên hằng (để log/debug)</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> AS_NAME(name, text) [name] = #name,</span>
+<span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">char</span> *<span class="hljs-type">const</span> ERROR_NAME[] = { ERROR_LIST(AS_NAME) };
+
+<span class="hljs-type">const</span> <span class="hljs-type">char</span> *<span class="hljs-title function_">error_text</span><span class="hljs-params">(ErrorCode e)</span> {
+    <span class="hljs-keyword">return</span> (e &gt;= <span class="hljs-number">0</span> &amp;&amp; e &lt; ERR_COUNT) ? ERROR_TEXT[e] : <span class="hljs-string">&quot;?&quot;</span>;
+}
+</code></pre>
+<p>Sau tiền xử lý, <code>ERROR_LIST(AS_ENUM)</code> thành <code>ERR_OK, ERR_IO, ERR_OOM, ERR_PARSE,</code>; enum, bảng chuỗi và bảng tên luôn đồng bộ. <strong>Thêm một mã lỗi mới chỉ cần thêm một dòng</strong> vào <code>ERROR_LIST</code>.</p>
+<h3>X-macro cho lệnh CLI</h3>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> COMMANDS(X)                                   \
+    X(help,   <span class="hljs-string">&quot;hien tro giup&quot;</span>)                        \
+    X(start,  <span class="hljs-string">&quot;khoi dong dich vu&quot;</span>)                    \
+    X(stop,   <span class="hljs-string">&quot;dung dich vu&quot;</span>)</span>
+
+<span class="hljs-comment">// 1) khai báo hàm xử lý</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> DECL(name, desc) static int cmd_##name(int argc, char **argv);</span>
+COMMANDS(DECL)
+
+<span class="hljs-comment">// 2) bảng lệnh</span>
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span> <span class="hljs-type">const</span> <span class="hljs-type">char</span> *name; <span class="hljs-type">const</span> <span class="hljs-type">char</span> *desc; <span class="hljs-type">int</span> (*fn)(<span class="hljs-type">int</span>, <span class="hljs-type">char</span> **); } Command;
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> ROW(name, desc) { #name, desc, cmd_##name },</span>
+<span class="hljs-type">static</span> <span class="hljs-type">const</span> Command COMMAND_TABLE[] = { COMMANDS(ROW) };
+
+<span class="hljs-comment">// 3) cài đặt (mỗi lệnh một hàm)</span>
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">cmd_help</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> **argv)</span>  { (<span class="hljs-type">void</span>)argc; (<span class="hljs-type">void</span>)argv; <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;help&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>; }
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">cmd_start</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> **argv)</span> { (<span class="hljs-type">void</span>)argc; (<span class="hljs-type">void</span>)argv; <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;start&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>; }
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">cmd_stop</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> **argv)</span>  { (<span class="hljs-type">void</span>)argc; (<span class="hljs-type">void</span>)argv; <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;stop&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>; }
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">dispatch</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *name, <span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> **argv)</span> {
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">sizeof</span> COMMAND_TABLE / <span class="hljs-keyword">sizeof</span> COMMAND_TABLE[<span class="hljs-number">0</span>]; i++)
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strcmp</span>(COMMAND_TABLE[i].name, name) == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> COMMAND_TABLE[i].fn(argc, argv);
+    <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;lenh khong ton tai: %s\n&quot;</span>, name);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+}
+</code></pre>
+<p>Thêm lệnh mới: thêm một dòng vào <code>COMMANDS</code> và viết hàm <code>cmd_xxx</code>. Nếu quên viết hàm, compiler báo lỗi ngay (chưa định nghĩa) — tốt hơn nhiều so với để bảng và enum lệch nhau âm thầm.</p>
+<h2>14.7. Thay thế macro bằng cơ chế tốt hơn</h2>
+<h3><code>static inline</code> thay macro tính toán</h3>
+<pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-type">int</span> <span class="hljs-title function_">max_int</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span> { <span class="hljs-keyword">return</span> a &gt; b ? a : b; }
+</code></pre>
+<p>An toàn (một lần tính đối số), có kiểm tra kiểu, thấy được trong debugger. Compiler thường chèn thân hàm tại chỗ gọi (inlining) nên <strong>không chậm hơn</strong> macro.</p>
+<h3><code>enum</code> thay <code>#define</code> cho hằng nguyên</h3>
+<pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">enum</span> {</span> BUFFER_SIZE = <span class="hljs-number">4096</span>, MAX_RETRIES = <span class="hljs-number">3</span> };
+</code></pre>
+<h3><code>_Generic</code> (C11) — chọn theo kiểu</h3>
+<p><code>_Generic(expr, kiểu1: giá_trị1, kiểu2: giá_trị2, default: ...)</code> chọn biểu thức dựa vào <strong>kiểu</strong> của <code>expr</code> lúc biên dịch:</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> ABS(x) _Generic((x),         \
+    int:    abs,                     \
+    long:   labs,                    \
+    double: fabs,                    \
+    float:  fabsf                    \
+)(x)</span>
+
+<span class="hljs-type">int</span>    a = ABS(<span class="hljs-number">-5</span>);        <span class="hljs-comment">// gọi abs</span>
+<span class="hljs-type">double</span> b = ABS(<span class="hljs-number">-2.5</span>);      <span class="hljs-comment">// gọi fabs</span>
+</code></pre>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> TYPE_NAME(x) _Generic((x), \
+    int: <span class="hljs-string">&quot;int&quot;</span>, double: <span class="hljs-string">&quot;double&quot;</span>, char *: <span class="hljs-string">&quot;char*&quot;</span>, default: <span class="hljs-string">&quot;khac&quot;</span>)</span>
+
+<span class="hljs-built_in">puts</span>(TYPE_NAME(<span class="hljs-number">1</span>));        <span class="hljs-comment">// int</span>
+<span class="hljs-built_in">puts</span>(TYPE_NAME(<span class="hljs-number">2.0</span>));      <span class="hljs-comment">// double</span>
+</code></pre>
+<p>Đây là cách C hiện đại tạo &quot;hàm nạp chồng&quot; (như <code>tgmath.h</code>).</p>
+<h3>Khi nào macro vẫn là lựa chọn đúng?</h3>
 <ul>
-<li>X-macros giúp giữ danh sách hằng số/structs/handlers ở một nơi và generate code lặp lại an toàn.</li>
-<li>Ví dụ: định nghĩa danh sách lỗi một nơi và generate enum + string table.</li>
+<li>Điều kiện biên dịch (<code>#ifdef</code>).</li>
+<li>Chuỗi hóa/nối token (<code>#</code>, <code>##</code>).</li>
+<li><code>__FILE__</code>, <code>__LINE__</code>, <code>__func__</code> (cần vị trí <strong>nơi gọi</strong>).</li>
+<li>X-macro và sinh mã lặp lại.</li>
+<li>Khai báo macro như <code>container_of</code>, <code>ARRAY_SIZE</code> cần làm việc với kiểu và tên.</li>
 </ul>
-<h2>4. Conditional compilation</h2>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))   <span class="hljs-comment">// chỉ dùng cho MẢNG thật, không phải con trỏ</span></span>
+</code></pre>
+<h2>14.8. Biên dịch có điều kiện</h2>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">if</span> defined(DEBUG)</span>
+    <span class="hljs-meta">#<span class="hljs-keyword">define</span> TRACE(...) fprintf(stderr, __VA_ARGS__)</span>
+<span class="hljs-meta">#<span class="hljs-keyword">else</span></span>
+    <span class="hljs-meta">#<span class="hljs-keyword">define</span> TRACE(...) ((void)0)</span>
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+</code></pre>
+<h3><code>#if</code> với biểu thức hằng</h3>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> VERSION 3</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">if</span> VERSION &gt;= 3</span>
+    <span class="hljs-comment">/* mã cho v3 trở lên */</span>
+<span class="hljs-meta">#<span class="hljs-keyword">elif</span> VERSION == 2</span>
+    <span class="hljs-comment">/* mã cho v2 */</span>
+<span class="hljs-meta">#<span class="hljs-keyword">else</span></span>
+    <span class="hljs-meta">#<span class="hljs-keyword">error</span> <span class="hljs-string">&quot;phien ban khong ho tro&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+</code></pre>
+<p><code>#if</code> chỉ tính <strong>biểu thức nguyên hằng</strong>: macro chưa định nghĩa được xem là <code>0</code>; không dùng được <code>sizeof</code>, ép kiểu. <code>defined(X)</code> (hoặc <code>defined X</code>) trả 1 nếu <code>X</code> được định nghĩa.</p>
+<p>Tắt tạm một đoạn mã (kể cả có chứa comment): <code>#if 0 ... #endif</code>.</p>
+<h3>Macro định sẵn (predefined)</h3>
+<table>
+<thead>
+<tr>
+<th>Macro</th>
+<th>Ý nghĩa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>__FILE__</code></td>
+<td>tên file nguồn (chuỗi)</td>
+</tr>
+<tr>
+<td><code>__LINE__</code></td>
+<td>số dòng hiện tại (số nguyên)</td>
+</tr>
+<tr>
+<td><code>__func__</code></td>
+<td>tên hàm hiện tại (C99; biến chuỗi, không phải macro)</td>
+</tr>
+<tr>
+<td><code>__DATE__</code>, <code>__TIME__</code></td>
+<td>ngày/giờ biên dịch</td>
+</tr>
+<tr>
+<td><code>__STDC_VERSION__</code></td>
+<td>phiên bản chuẩn (<code>201112L</code> cho C11)</td>
+</tr>
+<tr>
+<td><code>__cplusplus</code></td>
+<td>có định nghĩa nếu biên dịch bằng C++</td>
+</tr>
+<tr>
+<td><code>__GNUC__</code></td>
+<td>phiên bản chính của gcc (cũng được clang định nghĩa)</td>
+</tr>
+<tr>
+<td><code>_WIN32</code>, <code>__linux__</code>, <code>__APPLE__</code></td>
+<td>nền tảng</td>
+</tr>
+<tr>
+<td><code>__x86_64__</code>, <code>__aarch64__</code></td>
+<td>kiến trúc CPU</td>
+</tr>
+<tr>
+<td><code>NDEBUG</code></td>
+<td>tắt <code>assert</code> nếu được định nghĩa</td>
+</tr>
+</tbody>
+</table>
+<p>Xem toàn bộ macro compiler định nghĩa sẵn: <code>gcc -dM -E - &lt; /dev/null</code>.</p>
+<h3>Mã cho nhiều nền tảng</h3>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">if</span> defined(_WIN32)</span>
+    <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;windows.h&gt;</span></span>
+    <span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">sleep_ms</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> ms)</span> { Sleep(ms); }
+<span class="hljs-meta">#<span class="hljs-keyword">elif</span> defined(__unix__) || defined(__APPLE__)</span>
+    <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span>
+    <span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">sleep_ms</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> ms)</span> { usleep(ms * <span class="hljs-number">1000</span>); }
+<span class="hljs-meta">#<span class="hljs-keyword">else</span></span>
+    <span class="hljs-meta">#<span class="hljs-keyword">error</span> <span class="hljs-string">&quot;Nen tang khong duoc ho tro&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+</code></pre>
+<p>Giữ mã phụ thuộc nền tảng <strong>gom vào một chỗ</strong> (một file/một lớp bọc) thay vì rải <code>#ifdef</code> khắp nơi — mã sẽ dễ đọc hơn nhiều.</p>
+<h3>Feature test macros</h3>
+<p>Nhiều hàm POSIX (<code>strdup</code>, <code>getline</code>, <code>clock_gettime</code>) chỉ được khai báo khi bạn yêu cầu, đặc biệt với <code>-std=c11</code> nghiêm ngặt. Đặt <strong>trước mọi <code>#include</code></strong>:</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> _POSIX_C_SOURCE 200809L</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;time.h&gt;</span></span>
+</code></pre>
+<p>Nếu không, bạn nhận cảnh báo <code>implicit declaration of function 'strdup'</code>.</p>
+<h3><code>#pragma</code></h3>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">pragma</span> once                      <span class="hljs-comment">// include guard ngắn gọn (không phải chuẩn nhưng rất phổ biến)</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack(push, 1)             <span class="hljs-comment">// bỏ padding trong struct</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack(pop)</span>
+</code></pre>
+<p>C99 còn có <code>_Pragma(&quot;...&quot;)</code> để dùng <code>#pragma</code> bên trong macro.</p>
+<h3>Include guard và kiểm tra cấu hình</h3>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> CONFIG_H</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> CONFIG_H</span>
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+</code></pre>
+<p><code>#error</code> giúp bắt sớm cấu hình sai:</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">if</span> !defined(USE_SSL) &amp;&amp; !defined(USE_PLAIN)</span>
+    <span class="hljs-meta">#<span class="hljs-keyword">error</span> <span class="hljs-string">&quot;Phai dinh nghia USE_SSL hoac USE_PLAIN&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+</code></pre>
+<p>Cũng nên dùng <code>_Static_assert</code> (chương 13) cho kiểm tra dựa trên kích thước/kiểu.</p>
+<h2>14.9. Ví dụ hoàn chỉnh: bộ dò lỗi nhẹ</h2>
+<pre class="hljs"><code><span class="hljs-comment">// tiny_test.h — khung kiểm thử tối giản dựa trên macro</span>
+<span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> TINY_TEST_H</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> TINY_TEST_H</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> tt_run = <span class="hljs-number">0</span>, tt_failed = <span class="hljs-number">0</span>;
+
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> CHECK(cond) do {                                                     \
+        tt_run++;                                                            \
+        <span class="hljs-keyword">if</span> (!(cond)) {                                                       \
+            tt_failed++;                                                     \
+            fprintf(stderr, <span class="hljs-string">&quot;%s:%d: CHECK(%s) that bai\n&quot;</span>, __FILE__, __LINE__, #cond); \
+        }                                                                    \
+    } while (0)</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> CHECK_EQ_INT(actual, expected) do {                                  \
+        long long _a = (actual), _e = (expected);                            \
+        tt_run++;                                                            \
+        <span class="hljs-keyword">if</span> (_a != _e) {                                                      \
+            tt_failed++;                                                     \
+            fprintf(stderr, <span class="hljs-string">&quot;%s:%d: %s = %lld, mong doi %lld\n&quot;</span>,             \
+                    __FILE__, __LINE__, #actual, _a, _e);                    \
+        }                                                                    \
+    } while (0)</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> TEST_SUMMARY() \
+    (printf(<span class="hljs-string">&quot;%d kiem tra, %d that bai\n&quot;</span>, tt_run, tt_failed), tt_failed ? 1 : 0)</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+</code></pre>
+<pre class="hljs"><code><span class="hljs-comment">// test_math.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;tiny_test.h&quot;</span></span>
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">add</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span> { <span class="hljs-keyword">return</span> a + b; }
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    CHECK(add(<span class="hljs-number">2</span>, <span class="hljs-number">3</span>) == <span class="hljs-number">5</span>);
+    CHECK_EQ_INT(add(<span class="hljs-number">-1</span>, <span class="hljs-number">1</span>), <span class="hljs-number">0</span>);
+    CHECK_EQ_INT(add(<span class="hljs-number">2</span>, <span class="hljs-number">2</span>), <span class="hljs-number">5</span>);        <span class="hljs-comment">// cố tình sai để xem thông báo</span>
+    <span class="hljs-keyword">return</span> TEST_SUMMARY();
+}
+</code></pre>
+<p>Kết quả:</p>
+<pre class="hljs"><code>test_math.c:9: add(2, 2) = 4, mong doi 5
+3 kiem tra, 1 that bai
+</code></pre>
+<p>Ví dụ này dùng đủ kỹ thuật: <code>do { } while (0)</code>, <code>#cond</code> (chuỗi hóa biểu thức), <code>__FILE__</code>/<code>__LINE__</code>, biến cục bộ <code>_a</code>/<code>_e</code> để <strong>đánh giá đối số đúng một lần</strong>. Chương 21 dùng tiếp ý tưởng này.</p>
+<h2>14.10. Lỗi thường gặp</h2>
+<table>
+<thead>
+<tr>
+<th>Lỗi</th>
+<th>Ví dụ</th>
+<th>Cách tránh</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Thiếu ngoặc</td>
+<td><code>#define SQ(x) x*x</code></td>
+<td><code>((x)*(x))</code></td>
+</tr>
+<tr>
+<td>Tác dụng phụ bị đánh giá nhiều lần</td>
+<td><code>MAX(i++, j)</code></td>
+<td>Dùng <code>static inline</code></td>
+</tr>
+<tr>
+<td>Macro nhiều câu lệnh không có <code>do-while</code></td>
+<td><code>#define S(a,b) t=a; a=b;</code></td>
+<td><code>do { ... } while (0)</code></td>
+</tr>
+<tr>
+<td>Thêm <code>;</code> hoặc <code>=</code> vào <code>#define</code></td>
+<td><code>#define N = 10;</code></td>
+<td><code>#define N 10</code></td>
+</tr>
+<tr>
+<td>Khoảng trắng sau <code>\</code> nối dòng</td>
+<td>lỗi khó thấy</td>
+<td>Không để khoảng trắng</td>
+</tr>
+<tr>
+<td>Quên mở rộng macro trước khi chuỗi hóa</td>
+<td><code>#x</code> cho ra tên macro</td>
+<td>Dùng hai tầng <code>STR_(x)</code></td>
+</tr>
+<tr>
+<td>Tên macro trùng tên hàm/biến</td>
+<td>phá header hệ thống</td>
+<td>Đặt CHỮ HOA, thêm tiền tố dự án</td>
+</tr>
+<tr>
+<td><code>#ifdef</code> rải khắp nơi</td>
+<td>mã rối, khó kiểm thử</td>
+<td>Gom vào một lớp bọc nền tảng</td>
+</tr>
+<tr>
+<td>Quên <code>_POSIX_C_SOURCE</code></td>
+<td><code>implicit declaration</code></td>
+<td>Định nghĩa trước mọi <code>#include</code></td>
+</tr>
+</tbody>
+</table>
+<h2>14.11. Tóm tắt</h2>
 <ul>
-<li>#ifdef FEATURE_X để bật/tắt code theo nền tảng hoặc flags biên dịch.</li>
-<li>Sử dụng feature test macros để kiểm tra hàm thư viện của platform.</li>
+<li>Bộ tiền xử lý làm việc trên văn bản; dùng <code>gcc -E</code> để xem kết quả mở rộng.</li>
+<li>Macro cần ngoặc quanh tham số và cả biểu thức; tránh đối số có tác dụng phụ; dùng <code>do { } while (0)</code> cho macro nhiều câu lệnh.</li>
+<li><code>#</code> chuỗi hóa, <code>##</code> nối token; macro biến thiên với <code>__VA_ARGS__</code>.</li>
+<li><strong>X-macro</strong> giữ một danh sách nguồn duy nhất để sinh enum, bảng chuỗi, bảng hàm.</li>
+<li>Ưu tiên <code>static inline</code>, <code>enum</code>, <code>_Generic</code>, <code>const</code>; giữ macro cho điều kiện biên dịch, chuỗi hóa, vị trí nguồn.</li>
+<li>Biên dịch có điều kiện dựa trên nền tảng/tính năng; gom mã phụ thuộc nền tảng vào một chỗ.</li>
 </ul>
-<h2>5. Ví dụ thực hành</h2>
-<ul>
-<li>Viết LOG(level, fmt, ...) macro và so sánh với static inline void log(level, const char*, ...).</li>
-<li>Dùng X-macro để generate enum và lookup table cho các lỗi.</li>
-</ul>
-<p>Bài tập</p>
-<ul>
-<li>Viết X-macro cho danh sách lệnh CLI và generate switch-case xử lý tự động.</li>
-</ul>
-<p>Ghi chú: kèm ví dụ trong <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-14">code/chapter-14</a>, và so sánh compile-time outputs.</p>
+<h2>14.12. Bài tập</h2>
+<ol>
+<li>Viết macro <code>SWAP(type, a, b)</code> an toàn và chứng minh nó dùng đúng trong <code>if/else</code> không ngoặc nhọn.</li>
+<li>Viết <code>MIN</code>, <code>MAX</code>, <code>CLAMP(x, lo, hi)</code> bằng macro; chỉ ra điều gì hỏng với <code>CLAMP(i++, 0, 10)</code>; sau đó viết lại bằng <code>static inline</code> hoặc <code>_Generic</code>.</li>
+<li>Viết macro <code>LOG(level, fmt, ...)</code> xuất <code>file:line</code> và tên hàm; so sánh với phiên bản <code>static inline void log(...)</code> dùng <code>va_list</code> (hàm không tự biết <code>__LINE__</code> của nơi gọi — hãy giải thích).</li>
+<li>Dùng X-macro để sinh cho danh sách trạng thái <code>{IDLE, RUNNING, PAUSED, STOPPED}</code>: <code>enum</code>, mảng tên chuỗi, và hàm <code>state_from_string(const char *)</code>.</li>
+<li>Dùng X-macro cho danh sách lệnh CLI, tự sinh <code>switch-case</code>/bảng phân phối xử lý; thêm một lệnh chỉ cần thêm một dòng.</li>
+<li>Viết macro <code>DEFINE_STACK(T)</code> sinh <code>Stack_T</code> với <code>push</code>/<code>pop</code>; dùng với <code>int</code> và <code>double</code>. Bàn về ưu/nhược so với <code>void *</code>.</li>
+<li>Viết <code>#ifdef</code> để một chương trình in &quot;Windows&quot;/&quot;Linux&quot;/&quot;macOS&quot; và cung cấp hàm <code>sleep_ms</code> đa nền tảng.</li>
+<li>Dùng <code>gcc -E</code> trên một chương trình có macro lồng nhau, đọc kết quả và giải thích từng bước mở rộng.</li>
+<li>(Thử thách) Dùng <code>_Generic</code> cài đặt macro <code>PRINT(x)</code> in đúng định dạng cho <code>int</code>, <code>double</code>, <code>char *</code>, <code>char</code>.</li>
+</ol>
+<p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-14">code/chapter-14</a></p>
 
 </article>
 <div class="chapter-nav"><a class="nav-prev" href="chapter-13.html">&larr; Xử lý lỗi & ngoại lệ trong C</a><a class="nav-next" href="chapter-15.html">Đa luồng & đồng bộ (POSIX threads) &rarr;</a></div>

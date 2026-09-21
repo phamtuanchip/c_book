@@ -12,56 +12,487 @@
 <main class="content">
 <article>
 <h1>Chương 9 — Quản lý bộ nhớ và lỗi phổ biến</h1>
-<p>Mục tiêu chương:</p>
+<h2>Mục tiêu chương</h2>
 <ul>
-<li>Hiểu chính xác sự khác nhau giữa stack và heap, cách malloc/calloc/realloc/free hoạt động.</li>
-<li>Nhận diện và sửa các lỗi bộ nhớ phổ biến: memory leak, use-after-free, double-free, dangling pointer.</li>
-<li>Sử dụng công cụ dynamic (Valgrind, ASAN) và static (clang-tidy, cppcheck) để tìm lỗi.</li>
+<li>Hiểu chính xác <strong>stack</strong> và <strong>heap</strong> khác nhau ở đâu, khi nào dùng cái nào.</li>
+<li>Dùng <code>malloc</code>, <code>calloc</code>, <code>realloc</code>, <code>free</code> đúng cách, biết ý nghĩa của từng hàm và các bẫy.</li>
+<li>Nhận diện, tái hiện và sửa các lỗi bộ nhớ: rò rỉ, use-after-free, double free, tràn heap, đọc bộ nhớ chưa khởi tạo.</li>
+<li>Xác định <strong>quyền sở hữu (ownership)</strong> của bộ nhớ và thiết kế API rõ ràng.</li>
+<li>Dùng thành thạo công cụ: AddressSanitizer, Valgrind, cppcheck/clang-tidy.</li>
+<li>Xây dựng cấu trúc dữ liệu động (mảng động, cây nhị phân) và giải phóng nó đúng cách.</li>
 </ul>
-<h2>1. Stack vs Heap — minh hoạ</h2>
-<ul>
-<li>Stack: lưu biến cục bộ, tự động giải phóng khi rời scope. Kích thước giới hạn.</li>
-<li>Heap: cấp phát động qua malloc/calloc/realloc; phải free thủ công.</li>
-</ul>
-<p>Ví dụ ngắn:</p>
-<pre class="hljs"><code><span class="hljs-type">int</span> *<span class="hljs-title function_">make_array</span><span class="hljs-params">(<span class="hljs-type">size_t</span> n)</span> {
-    <span class="hljs-comment">// Trả pointer tới heap; caller phải free</span>
-    <span class="hljs-type">int</span> *a = <span class="hljs-built_in">malloc</span>(n * <span class="hljs-keyword">sizeof</span> *a);
-    <span class="hljs-keyword">if</span> (!a) <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
-    <span class="hljs-keyword">return</span> a;
+<h2>9.1. Stack và heap</h2>
+<p>Chương 2 đã giới thiệu; ở đây ta đi sâu.</p>
+<table>
+<thead>
+<tr>
+<th>Tiêu chí</th>
+<th>Stack</th>
+<th>Heap</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ai quản lý</td>
+<td>Compiler tự động</td>
+<td>Lập trình viên (<code>malloc</code>/<code>free</code>)</td>
+</tr>
+<tr>
+<td>Tốc độ cấp phát</td>
+<td>Rất nhanh (dịch một thanh ghi)</td>
+<td>Chậm hơn (allocator tìm khối trống)</td>
+</tr>
+<tr>
+<td>Kích thước</td>
+<td>Nhỏ, cố định (thường 1–8 MB)</td>
+<td>Lớn, giới hạn bởi RAM</td>
+</tr>
+<tr>
+<td>Thời gian sống</td>
+<td>Đến khi hàm kết thúc</td>
+<td>Đến khi bạn <code>free</code></td>
+</tr>
+<tr>
+<td>Lỗi điển hình</td>
+<td>Stack overflow (đệ quy sâu, mảng cục bộ quá lớn)</td>
+<td>Rò rỉ, use-after-free, double free</td>
+</tr>
+<tr>
+<td>Kích thước biết khi nào</td>
+<td>Lúc biên dịch (trừ VLA)</td>
+<td>Lúc chạy</td>
+</tr>
+</tbody>
+</table>
+<p>Khi nào <strong>bắt buộc</strong> dùng heap?</p>
+<ol>
+<li><strong>Kích thước chỉ biết lúc chạy</strong> (đọc n từ đầu vào rồi tạo mảng n phần tử).</li>
+<li><strong>Dữ liệu cần sống lâu hơn hàm tạo ra nó</strong> (trả về chuỗi/struct cho người gọi).</li>
+<li><strong>Dữ liệu lớn</strong> (ảnh, bộ đệm hàng MB) — không nên đặt trên stack.</li>
+<li><strong>Cấu trúc động</strong> (danh sách liên kết, cây, bảng băm) có số phần tử thay đổi.</li>
+</ol>
+<h2>9.2. Các hàm cấp phát (<code>&lt;stdlib.h&gt;</code>)</h2>
+<h3><code>malloc</code></h3>
+<pre class="hljs"><code><span class="hljs-type">void</span> *<span class="hljs-title function_">malloc</span><span class="hljs-params">(<span class="hljs-type">size_t</span> size)</span>;
+</code></pre>
+<p>Xin <code>size</code> <strong>byte</strong> liên tiếp. Trả về con trỏ tới vùng nhớ (nội dung <strong>chưa được khởi tạo</strong> — là rác), hoặc <code>NULL</code> nếu thất bại.</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> *arr = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">10</span> * <span class="hljs-keyword">sizeof</span> *arr);    <span class="hljs-comment">// 10 số nguyên</span>
+<span class="hljs-keyword">if</span> (arr == <span class="hljs-literal">NULL</span>) {
+    <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;het bo nho\n&quot;</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
 }
 </code></pre>
-<h2>2. Các lỗi thường gặp (chi tiết &amp; cách sửa)</h2>
+<p>Mẹo và quy tắc:</p>
 <ul>
-<li>Memory leak: quên free. Cách: xác định ownership, mỗi malloc phải có free tương ứng, viết tests và dùng Valgrind.</li>
-<li>Use-after-free: dùng con trỏ sau khi free → undefined behavior. Sửa: đặt pointer = NULL sau free; kiểm tra NULL.</li>
-<li>Double free: free cùng địa chỉ hai lần → crash; giữ ownership rõ ràng.</li>
-<li>Dangling pointer: con trỏ trỏ tới vùng đã free; tránh bằng NULL và thiết kế API rõ ràng.</li>
+<li>Dùng <code>sizeof *arr</code> (thay vì <code>sizeof(int)</code>) để luôn đúng khi bạn đổi kiểu của <code>arr</code>.</li>
+<li><strong>Luôn kiểm tra <code>NULL</code>.</strong> Trên máy hiện đại <code>malloc</code> hiếm khi thất bại với vùng nhỏ, nhưng trên hệ nhúng hoặc khi xin lượng lớn, nó xảy ra thật.</li>
+<li>Khi nhân để tính kích thước, hãy cẩn thận <strong>tràn số</strong> (<code>n * sizeof *arr</code> với <code>n</code> do người dùng nhập). Kiểm tra: <code>if (n &gt; SIZE_MAX / sizeof *arr) /* lỗi */</code>, hoặc dùng <code>calloc</code>.</li>
+<li><code>malloc(0)</code> có kết quả do triển khai quy định (có thể <code>NULL</code> hoặc một con trỏ hợp lệ không dùng được) — tránh.</li>
 </ul>
-<h2>3. Công cụ và cách dùng</h2>
+<h3><code>calloc</code></h3>
+<pre class="hljs"><code><span class="hljs-type">void</span> *<span class="hljs-title function_">calloc</span><span class="hljs-params">(<span class="hljs-type">size_t</span> count, <span class="hljs-type">size_t</span> size)</span>;
+</code></pre>
+<p>Cấp phát <code>count × size</code> byte và <strong>khởi tạo tất cả bằng 0</strong>. Nó còn <strong>kiểm tra tràn</strong> phép nhân giúp bạn — nên tốt hơn <code>malloc(count * size)</code> khi <code>count</code> không tin cậy.</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> *zeros = <span class="hljs-built_in">calloc</span>(<span class="hljs-number">100</span>, <span class="hljs-keyword">sizeof</span> *zeros);   <span class="hljs-comment">// 100 số 0</span>
+</code></pre>
+<h3><code>realloc</code></h3>
+<pre class="hljs"><code><span class="hljs-type">void</span> *<span class="hljs-title function_">realloc</span><span class="hljs-params">(<span class="hljs-type">void</span> *ptr, <span class="hljs-type">size_t</span> new_size)</span>;
+</code></pre>
+<p>Đổi kích thước một khối đã cấp phát. Nội dung cũ được giữ (đến mức nhỏ hơn của hai kích thước). Có thể <strong>mở rộng tại chỗ</strong> hoặc <strong>cấp khối mới, chép dữ liệu, giải phóng khối cũ</strong> — nên con trỏ trả về <strong>có thể khác</strong> <code>ptr</code>.</p>
+<p><strong>Cách dùng đúng:</strong> dùng con trỏ tạm, để không mất con trỏ cũ khi thất bại.</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> *tmp = <span class="hljs-built_in">realloc</span>(arr, new_n * <span class="hljs-keyword">sizeof</span> *arr);
+<span class="hljs-keyword">if</span> (tmp == <span class="hljs-literal">NULL</span>) {
+    <span class="hljs-comment">// arr VẪN hợp lệ và VẪN cần free</span>
+    <span class="hljs-built_in">free</span>(arr);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+}
+arr = tmp;             <span class="hljs-comment">// chỉ gán lại khi thành công</span>
+</code></pre>
+<p><strong>Cách sai kinh điển:</strong></p>
+<pre class="hljs"><code>arr = <span class="hljs-built_in">realloc</span>(arr, new_n * <span class="hljs-keyword">sizeof</span> *arr);   <span class="hljs-comment">// nếu thất bại: arr = NULL và khối cũ bị RÒ RỈ</span>
+</code></pre>
+<p>Ngoài ra, mọi con trỏ khác đang trỏ vào khối cũ (<code>int *first = arr;</code>) có thể trở thành <strong>treo</strong> sau <code>realloc</code>.</p>
+<h3><code>free</code></h3>
+<pre class="hljs"><code><span class="hljs-type">void</span> <span class="hljs-title function_">free</span><span class="hljs-params">(<span class="hljs-type">void</span> *ptr)</span>;
+</code></pre>
+<p>Trả khối nhớ về cho hệ thống. Quy tắc:</p>
 <ul>
-<li>Valgrind (Linux): valgrind --leak-check=full ./prog — liệt kê leak, use-after-free.</li>
-<li>AddressSanitizer: gcc -fsanitize=address -g -o prog prog.c — phát hiện use-after-free, OOB.</li>
-<li>static analyzers: clang-tidy, cppcheck — tìm pattern nguy hiểm trước khi chạy.</li>
+<li>Chỉ <code>free</code> con trỏ <strong>được trả về từ <code>malloc</code>/<code>calloc</code>/<code>realloc</code></strong> (chính xác địa chỉ đó, không phải <code>p + 1</code>).</li>
+<li><code>free(NULL)</code> <strong>an toàn</strong> (không làm gì) — nên không cần <code>if (p) free(p)</code>.</li>
+<li>Sau <code>free</code>, <strong>không được dùng</strong> vùng nhớ nữa. Thói quen tốt: <code>p = NULL;</code> ngay sau.</li>
+<li>Không <code>free</code> hai lần (double free), không <code>free</code> biến trên stack hay chuỗi literal.</li>
 </ul>
-<h2>4. Patterns an toàn</h2>
-<ul>
-<li>Kiểm tra kết quả malloc/calloc: if (!ptr) { /* xử lý lỗi */ }</li>
-<li>Dùng RAII-like patterns trong C: wrapper struct có hàm init/free để tránh leak.</li>
-<li>Dùng valgrind/asan trong CI cho bài tập và ví dụ.</li>
-</ul>
-<h2>5. Ví dụ thực hành</h2>
-<ul>
-<li><a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-09">code/chapter-09</a>/leak_example.c: tạo leak cố tình và sửa.</li>
-<li><a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-09">code/chapter-09</a>/use_after_free.c: minh hoạ và cách phát hiện bằng ASAN.</li>
-<li><a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-09">code/chapter-09</a>/tree.c: cấp phát/giải phóng đúng cho binary tree.</li>
-</ul>
-<p>Bài tập</p>
+<h3>Allocator hoạt động thế nào (bức tranh)</h3>
+<p><code>malloc</code> không xin hệ điều hành mỗi lần. Nó quản lý một &quot;kho&quot; bộ nhớ lấy từ hệ điều hành (qua <code>brk</code>/<code>mmap</code>), chia thành các khối và giữ <strong>metadata</strong> (kích thước khối...) ngay trước khối bạn nhận được:</p>
+<pre class="hljs"><code>   ┌──────────────┬────────────────────────────────┐
+   │  metadata    │      vùng người dùng (bạn)      │
+   │ (kích thước) │  ← con trỏ malloc trả về       │
+   └──────────────┴────────────────────────────────┘
+</code></pre>
+<p>Vì thế ghi tràn khỏi khối của bạn <strong>phá metadata</strong> của khối kế, và lỗi thường chỉ bộc lộ về sau, khi gọi <code>malloc</code>/<code>free</code> lần khác — rất khó truy vết nếu không có công cụ.</p>
+<h2>9.3. Các lỗi bộ nhớ phổ biến</h2>
+<p>Với mỗi lỗi, hãy hiểu <strong>nguyên nhân</strong>, <strong>hậu quả</strong>, <strong>cách phát hiện</strong>, <strong>cách sửa</strong>.</p>
+<h3>1. Rò rỉ bộ nhớ (memory leak)</h3>
+<p>Cấp phát nhưng <strong>quên <code>free</code></strong> (hoặc mất con trỏ trước khi kịp <code>free</code>). Bộ nhớ không dùng được nữa nhưng cũng không được trả lại.</p>
+<pre class="hljs"><code><span class="hljs-comment">// leak_demo.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">process</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">char</span> *buf = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">1024</span>);
+    <span class="hljs-keyword">if</span> (!buf) <span class="hljs-keyword">return</span>;
+    <span class="hljs-built_in">strcpy</span>(buf, <span class="hljs-string">&quot;hello&quot;</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%s\n&quot;</span>, buf);
+    <span class="hljs-comment">// quên free(buf)  -&gt; rò rỉ 1024 byte mỗi lần gọi</span>
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">1000</span>; i++) process();    <span class="hljs-comment">// rò rỉ ~1 MB</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Hậu quả: chương trình chạy lâu (server, daemon) dần ăn hết RAM và bị hệ điều hành kill. Với chương trình chạy ngắn, hệ điều hành thu hồi mọi thứ khi thoát, nên rò rỉ &quot;vô hại&quot; — nhưng vẫn là lỗi cần sửa.</p>
+<p>Các dạng rò rỉ khác:</p>
+<pre class="hljs"><code><span class="hljs-type">char</span> *p = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">10</span>);
+p = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">20</span>);           <span class="hljs-comment">// mất địa chỉ khối 10 byte -&gt; rò rỉ</span>
+</code></pre>
+<pre class="hljs"><code><span class="hljs-type">int</span> *<span class="hljs-title function_">f</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> *a = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">100</span>);
+    <span class="hljs-keyword">if</span> (!a) <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+    <span class="hljs-type">int</span> *b = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">100</span>);
+    <span class="hljs-keyword">if</span> (!b) <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;  <span class="hljs-comment">// quên free(a) trên đường lỗi -&gt; rò rỉ</span>
+    ...
+}
+</code></pre>
+<p>Sửa: mỗi <code>malloc</code> phải có đúng một <code>free</code> <strong>trên mọi đường thoát</strong> (kể cả đường lỗi) — dùng mẫu <code>goto cleanup</code> (chương 5 và 13).</p>
+<h3>2. Use-after-free (dùng sau khi giải phóng)</h3>
+<pre class="hljs"><code><span class="hljs-comment">// use_after_free.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> *p = <span class="hljs-built_in">malloc</span>(<span class="hljs-keyword">sizeof</span> *p);
+    *p = <span class="hljs-number">42</span>;
+    <span class="hljs-built_in">free</span>(p);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, *p);      <span class="hljs-comment">// LỖI: đọc vùng nhớ đã trả lại -&gt; UB</span>
+    *p = <span class="hljs-number">7</span>;                  <span class="hljs-comment">// còn tệ hơn: ghi -&gt; có thể phá dữ liệu của phần khác</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Nguy hiểm vì chương trình <strong>thường vẫn &quot;chạy đúng&quot;</strong> (dữ liệu chưa bị ghi đè), nhưng lỗi bùng phát ở thời điểm không đoán trước; và đây là nguồn của nhiều lỗ hổng khai thác được. Phát hiện: AddressSanitizer (<code>heap-use-after-free</code>). Sửa: gán <code>p = NULL</code> sau <code>free</code>, thiết kế quyền sở hữu rõ ràng.</p>
+<h3>3. Double free</h3>
+<pre class="hljs"><code><span class="hljs-type">char</span> *s = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">10</span>);
+<span class="hljs-built_in">free</span>(s);
+<span class="hljs-built_in">free</span>(s);                 <span class="hljs-comment">// LỖI: giải phóng hai lần -&gt; hỏng cấu trúc của allocator, crash hoặc bị khai thác</span>
+</code></pre>
+<p>Thường xảy ra khi <strong>hai nơi cùng nghĩ mình sở hữu</strong> khối nhớ. Sửa: xác định ai sở hữu; gán <code>NULL</code> sau <code>free</code>.</p>
+<h3>4. Tràn heap (heap buffer overflow)</h3>
+<pre class="hljs"><code><span class="hljs-type">char</span> *s = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">5</span>);
+<span class="hljs-built_in">strcpy</span>(s, <span class="hljs-string">&quot;hello&quot;</span>);      <span class="hljs-comment">// cần 6 byte (5 ký tự + &#x27;\0&#x27;): ghi tràn 1 byte</span>
+</code></pre>
+<p>Lỗi <em>off-by-one</em> rất hay gặp khi quên <code>+1</code> cho <code>'\0'</code>. Sửa: <code>malloc(strlen(str) + 1)</code>. Phát hiện: AddressSanitizer (<code>heap-buffer-overflow</code>).</p>
+<h3>5. Đọc bộ nhớ chưa khởi tạo</h3>
+<pre class="hljs"><code><span class="hljs-type">int</span> *a = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">3</span> * <span class="hljs-keyword">sizeof</span> *a);
+<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, a[<span class="hljs-number">0</span>]);    <span class="hljs-comment">// giá trị rác. Dùng calloc hoặc gán trước khi đọc.</span>
+</code></pre>
+<p>Valgrind báo <code>Conditional jump or move depends on uninitialised value(s)</code>; MemorySanitizer (clang) cũng bắt được.</p>
+<h3>6. Free sai con trỏ</h3>
+<pre class="hljs"><code><span class="hljs-type">int</span> arr[<span class="hljs-number">10</span>];
+<span class="hljs-built_in">free</span>(arr);               <span class="hljs-comment">// LỖI: arr nằm trên stack</span>
+<span class="hljs-type">char</span> *s = <span class="hljs-string">&quot;abc&quot;</span>;
+<span class="hljs-built_in">free</span>(s);                 <span class="hljs-comment">// LỖI: literal không được cấp phát bằng malloc</span>
+<span class="hljs-type">int</span> *p = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">10</span> * <span class="hljs-keyword">sizeof</span> *p);
+<span class="hljs-built_in">free</span>(p + <span class="hljs-number">1</span>);             <span class="hljs-comment">// LỖI: không phải địa chỉ mà malloc trả về</span>
+</code></pre>
+<h3>7. Con trỏ treo (dangling pointer)</h3>
+<p>Bất kỳ con trỏ nào còn giữ địa chỉ của vùng nhớ <strong>đã hết hiệu lực</strong> (đã <code>free</code>, hoặc là biến cục bộ đã ra khỏi phạm vi, hoặc <code>realloc</code> đã di chuyển khối).</p>
+<h3>8. Stack overflow</h3>
+<pre class="hljs"><code><span class="hljs-type">void</span> <span class="hljs-title function_">recurse</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> { recurse(); }         <span class="hljs-comment">// đệ quy vô hạn</span>
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> { <span class="hljs-type">char</span> big[<span class="hljs-number">100</span> * <span class="hljs-number">1024</span> * <span class="hljs-number">1024</span>]; }   <span class="hljs-comment">// mảng cục bộ 100 MB</span>
+</code></pre>
+<p>Triệu chứng: <code>Segmentation fault</code> hoặc <code>Stack overflow</code>. Sửa: dùng heap cho dữ liệu lớn, thêm điều kiện dừng cho đệ quy.</p>
+<h2>9.4. Công cụ phát hiện lỗi</h2>
+<h3>AddressSanitizer (ASan) — công cụ số một</h3>
+<p>Được tích hợp trong gcc và clang; <strong>chỉ cần thêm cờ biên dịch</strong>:</p>
+<pre class="hljs"><code>gcc -std=c11 -g -O1 -fsanitize=address -fno-omit-frame-pointer -o prog prog.c
+./prog
+</code></pre>
+<p>Ví dụ báo cáo cho <code>use_after_free.c</code>:</p>
+<pre class="hljs"><code>==12345==ERROR: AddressSanitizer: heap-use-after-free on address 0x602000000010
+READ of size 4 at 0x602000000010 thread T0
+    #0 0x... in main use_after_free.c:9
+0x602000000010 is located 0 bytes inside of 4-byte region [0x602000000010,0x602000000014)
+freed by thread T0 here:
+    #0 0x... in free
+    #1 0x... in main use_after_free.c:8
+previously allocated by thread T0 here:
+    #0 0x... in malloc
+    #1 0x... in main use_after_free.c:6
+</code></pre>
+<p>Cách đọc: dòng đầu là <strong>loại lỗi</strong> (<code>heap-use-after-free</code>); tiếp theo là <strong>nơi lỗi xảy ra</strong> (dòng 9); rồi <strong>nơi khối bị free</strong> (dòng 8) và <strong>nơi được cấp phát</strong> (dòng 6). Ba thông tin đó thường đủ để tìm ra nguyên nhân. ASan cũng phát hiện rò rỉ khi chương trình kết thúc (LeakSanitizer, có sẵn trên Linux/macOS).</p>
+<p>Kết hợp thêm <code>-fsanitize=undefined</code> để bắt UB (tràn số, dịch bit...). Chạy chậm hơn khoảng 2×, nên dùng khi phát triển/kiểm thử chứ không phải bản phát hành.</p>
+<p>Trên Windows (MinGW) hỗ trợ ASan còn hạn chế; hãy dùng <strong>WSL</strong>, hoặc MSVC (<code>cl /fsanitize=address</code>).</p>
+<h3>Valgrind (Linux, macOS cũ)</h3>
+<pre class="hljs"><code>gcc -std=c11 -g -O0 -o prog prog.c
+valgrind --leak-check=full --show-leak-kinds=all --track-origins=<span class="hljs-built_in">yes</span> ./prog
+</code></pre>
+<p>Valgrind không cần biên dịch lại đặc biệt, phát hiện được rò rỉ, use-after-free, đọc dữ liệu chưa khởi tạo. Chạy chậm hơn 20–50×. Báo cáo rò rỉ điển hình:</p>
+<pre class="hljs"><code>==999== 1,024 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==999==    at 0x4C2FB0F: malloc (vg_replace_malloc.c:299)
+==999==    by 0x4005A7: process (leak_demo.c:7)
+==999==    by 0x4005D6: main (leak_demo.c:15)
+==999== LEAK SUMMARY:
+==999==    definitely lost: 1,024 bytes in 1 blocks
+</code></pre>
+<p><code>definitely lost</code> là rò rỉ chắc chắn; <code>still reachable</code> là bộ nhớ còn con trỏ tới lúc thoát (thường không nghiêm trọng).</p>
+<h3>Phân tích tĩnh</h3>
+<p>Chương trình phân tích mã <strong>không cần chạy</strong>:</p>
+<pre class="hljs"><code>cppcheck --<span class="hljs-built_in">enable</span>=all --std=c11 src/
+clang-tidy src/*.c -- -std=c11
+gcc -Wall -Wextra -fanalyzer src/*.c      <span class="hljs-comment"># gcc 10+ có bộ phân tích tĩnh</span>
+</code></pre>
+<p>Chúng tìm được <code>malloc</code> không kiểm tra, rò rỉ trên đường lỗi, dùng biến chưa khởi tạo... Kết hợp cả <strong>tĩnh</strong> (rẻ, chạy sớm) và <strong>động</strong> (chính xác, phải chạy qua đường mã).</p>
+<h2>9.5. Quyền sở hữu (ownership)</h2>
+<p>Hầu hết lỗi bộ nhớ đến từ việc <strong>không rõ ai chịu trách nhiệm <code>free</code></strong>. C không có cơ chế của ngôn ngữ, nên phải thống nhất bằng quy ước và ghi chú tài liệu.</p>
+<p>Quy tắc rõ ràng:</p>
 <ol>
-<li>Viết và test một binary tree: allocate và free mọi node; kiểm tra bằng Valgrind.</li>
-<li>Viết ví dụ minh họa use-after-free và sửa nó bằng ownership rõ ràng.</li>
+<li><strong>Mỗi khối nhớ có đúng một &quot;chủ&quot;.</strong> Chủ chịu trách nhiệm <code>free</code>.</li>
+<li>Khi truyền con trỏ, nói rõ: <strong>cho mượn</strong> (người nhận chỉ dùng, không <code>free</code>) hay <strong>chuyển quyền sở hữu</strong> (người nhận <code>free</code>).</li>
+<li>Đặt tên và tài liệu hóa cho rõ:</li>
 </ol>
-<p>Ghi chú: kèm README hướng dẫn sử dụng Valgrind và cách build với -fsanitize=address.</p>
+<pre class="hljs"><code><span class="hljs-comment">/* Trả về chuỗi mới được cấp phát; NGƯỜI GỌI phải free(). Trả về NULL nếu hết bộ nhớ. */</span>
+<span class="hljs-type">char</span> *<span class="hljs-title function_">str_dup</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *s)</span>;
+
+<span class="hljs-comment">/* Chỉ ĐỌC s; không giữ con trỏ sau khi hàm trả về. */</span>
+<span class="hljs-type">size_t</span> <span class="hljs-title function_">str_count_words</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *s)</span>;
+
+<span class="hljs-comment">/* Lấy quyền sở hữu buf: hàm này sẽ free(buf). */</span>
+<span class="hljs-type">void</span> <span class="hljs-title function_">consume_buffer</span><span class="hljs-params">(<span class="hljs-type">char</span> *buf)</span>;
+</code></pre>
+<ol start="4">
+<li><strong>Cặp hàm tạo/hủy:</strong> đặt tên đối xứng: <code>thing_create</code> ↔ <code>thing_destroy</code>, <code>list_new</code> ↔ <code>list_free</code>.</li>
+<li>Cấu trúc chứa con trỏ cấp phát động phải có hàm hủy giải phóng <strong>toàn bộ</strong> thành viên.</li>
+</ol>
+<h3>Mẫu <code>init</code>/<code>destroy</code> (giống RAII của C)</h3>
+<pre class="hljs"><code><span class="hljs-comment">// vec.c — mảng động (dynamic array)</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span>
+    <span class="hljs-type">int</span>    *data;
+    <span class="hljs-type">size_t</span>  size;      <span class="hljs-comment">// số phần tử đang dùng</span>
+    <span class="hljs-type">size_t</span>  cap;       <span class="hljs-comment">// sức chứa hiện có</span>
+} Vec;
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">vec_init</span><span class="hljs-params">(Vec *v)</span> {
+    v-&gt;data = <span class="hljs-literal">NULL</span>;
+    v-&gt;size = <span class="hljs-number">0</span>;
+    v-&gt;cap  = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">vec_destroy</span><span class="hljs-params">(Vec *v)</span> {
+    <span class="hljs-built_in">free</span>(v-&gt;data);
+    v-&gt;data = <span class="hljs-literal">NULL</span>;
+    v-&gt;size = v-&gt;cap = <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">vec_push</span><span class="hljs-params">(Vec *v, <span class="hljs-type">int</span> value)</span> {
+    <span class="hljs-keyword">if</span> (v-&gt;size == v-&gt;cap) {                        <span class="hljs-comment">// hết chỗ -&gt; tăng gấp đôi</span>
+        <span class="hljs-type">size_t</span> new_cap = v-&gt;cap ? v-&gt;cap * <span class="hljs-number">2</span> : <span class="hljs-number">4</span>;
+        <span class="hljs-type">int</span> *tmp = <span class="hljs-built_in">realloc</span>(v-&gt;data, new_cap * <span class="hljs-keyword">sizeof</span> *tmp);
+        <span class="hljs-keyword">if</span> (tmp == <span class="hljs-literal">NULL</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;                 <span class="hljs-comment">// v-&gt;data còn nguyên, không rò rỉ</span>
+        v-&gt;data = tmp;
+        v-&gt;cap  = new_cap;
+    }
+    v-&gt;data[v-&gt;size++] = value;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    Vec v;
+    vec_init(&amp;v);
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">1000</span>; i++) {
+        <span class="hljs-keyword">if</span> (vec_push(&amp;v, i * i) != <span class="hljs-number">0</span>) { vec_destroy(&amp;v); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+    }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;size = %zu, cap = %zu, last = %d\n&quot;</span>, v.size, v.cap, v.data[v.size - <span class="hljs-number">1</span>]);
+    vec_destroy(&amp;v);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Vì sao tăng <strong>gấp đôi</strong> sức chứa? Nếu tăng thêm hằng số (ví dụ +4 mỗi lần), thêm <code>n</code> phần tử sẽ gọi <code>realloc</code> ~<code>n/4</code> lần và tổng chi phí sao chép là <code>O(n²)</code>. Tăng theo cấp số nhân làm chi phí trung bình mỗi lần <code>push</code> là <code>O(1)</code> (<em>amortized</em>). Đây là cách hoạt động của <code>std::vector</code> (C++) và <code>list</code> (Python).</p>
+<h2>9.6. Mẫu dọn dẹp trên đường lỗi</h2>
+<p>Khi hàm cấp phát nhiều tài nguyên, dùng <code>goto cleanup</code> để mọi đường thoát đều dọn dẹp:</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> <span class="hljs-title function_">load_data</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *path, <span class="hljs-type">char</span> **out_buf, <span class="hljs-type">size_t</span> *out_len)</span> {
+    <span class="hljs-type">int</span> rc = <span class="hljs-number">-1</span>;
+    FILE *f = <span class="hljs-literal">NULL</span>;
+    <span class="hljs-type">char</span> *buf = <span class="hljs-literal">NULL</span>;
+
+    f = fopen(path, <span class="hljs-string">&quot;rb&quot;</span>);
+    <span class="hljs-keyword">if</span> (!f) <span class="hljs-keyword">goto</span> done;
+
+    <span class="hljs-keyword">if</span> (fseek(f, <span class="hljs-number">0</span>, SEEK_END) != <span class="hljs-number">0</span>) <span class="hljs-keyword">goto</span> done;
+    <span class="hljs-type">long</span> len = ftell(f);
+    <span class="hljs-keyword">if</span> (len &lt; <span class="hljs-number">0</span>) <span class="hljs-keyword">goto</span> done;
+    rewind(f);
+
+    buf = <span class="hljs-built_in">malloc</span>((<span class="hljs-type">size_t</span>)len + <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">if</span> (!buf) <span class="hljs-keyword">goto</span> done;
+    <span class="hljs-keyword">if</span> (fread(buf, <span class="hljs-number">1</span>, (<span class="hljs-type">size_t</span>)len, f) != (<span class="hljs-type">size_t</span>)len) <span class="hljs-keyword">goto</span> done;
+    buf[len] = <span class="hljs-string">&#x27;\0&#x27;</span>;
+
+    *out_buf = buf;            <span class="hljs-comment">// chuyển quyền sở hữu cho người gọi</span>
+    *out_len = (<span class="hljs-type">size_t</span>)len;
+    buf = <span class="hljs-literal">NULL</span>;                <span class="hljs-comment">// đánh dấu &quot;đã chuyển đi&quot; để không free ở dưới</span>
+    rc = <span class="hljs-number">0</span>;
+
+done:
+    <span class="hljs-built_in">free</span>(buf);                 <span class="hljs-comment">// NULL nếu đã chuyển đi -&gt; an toàn</span>
+    <span class="hljs-keyword">if</span> (f) fclose(f);
+    <span class="hljs-keyword">return</span> rc;
+}
+</code></pre>
+<p>Điểm khéo: đặt <code>buf = NULL</code> sau khi giao cho người gọi để đoạn dọn dẹp cuối không <code>free</code> nhầm.</p>
+<h2>9.7. Ví dụ hoàn chỉnh: cây nhị phân tìm kiếm</h2>
+<p>Một cấu trúc động điển hình: mỗi nút được cấp phát riêng; việc giải phóng phải duyệt cả cây.</p>
+<pre class="hljs"><code><span class="hljs-comment">// tree.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Node</span> {</span>
+    <span class="hljs-type">int</span> key;
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Node</span> *<span class="hljs-title">left</span>, *<span class="hljs-title">right</span>;</span>
+} Node;
+
+<span class="hljs-type">static</span> Node *<span class="hljs-title function_">node_new</span><span class="hljs-params">(<span class="hljs-type">int</span> key)</span> {
+    Node *n = <span class="hljs-built_in">malloc</span>(<span class="hljs-keyword">sizeof</span> *n);
+    <span class="hljs-keyword">if</span> (!n) <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+    n-&gt;key = key;
+    n-&gt;left = n-&gt;right = <span class="hljs-literal">NULL</span>;
+    <span class="hljs-keyword">return</span> n;
+}
+
+<span class="hljs-comment">// Chèn khóa vào cây; trả về gốc mới (có thể là cùng gốc cũ). Trả NULL nếu hết bộ nhớ ở gốc.</span>
+Node *<span class="hljs-title function_">tree_insert</span><span class="hljs-params">(Node *root, <span class="hljs-type">int</span> key)</span> {
+    <span class="hljs-keyword">if</span> (root == <span class="hljs-literal">NULL</span>) <span class="hljs-keyword">return</span> node_new(key);
+    <span class="hljs-keyword">if</span> (key &lt; root-&gt;key) {
+        Node *r = tree_insert(root-&gt;left, key);
+        <span class="hljs-keyword">if</span> (r == <span class="hljs-literal">NULL</span>) <span class="hljs-keyword">return</span> root;                 <span class="hljs-comment">// hết bộ nhớ: bỏ qua, giữ nguyên cây</span>
+        root-&gt;left = r;
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (key &gt; root-&gt;key) {
+        Node *r = tree_insert(root-&gt;right, key);
+        <span class="hljs-keyword">if</span> (r == <span class="hljs-literal">NULL</span>) <span class="hljs-keyword">return</span> root;
+        root-&gt;right = r;
+    }                                                <span class="hljs-comment">// key trùng: không làm gì</span>
+    <span class="hljs-keyword">return</span> root;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">tree_contains</span><span class="hljs-params">(<span class="hljs-type">const</span> Node *root, <span class="hljs-type">int</span> key)</span> {
+    <span class="hljs-keyword">while</span> (root) {
+        <span class="hljs-keyword">if</span> (key == root-&gt;key) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+        root = key &lt; root-&gt;key ? root-&gt;left : root-&gt;right;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-comment">// Duyệt trung thứ tự: in các khóa tăng dần</span>
+<span class="hljs-type">void</span> <span class="hljs-title function_">tree_print</span><span class="hljs-params">(<span class="hljs-type">const</span> Node *root)</span> {
+    <span class="hljs-keyword">if</span> (!root) <span class="hljs-keyword">return</span>;
+    tree_print(root-&gt;left);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d &quot;</span>, root-&gt;key);
+    tree_print(root-&gt;right);
+}
+
+<span class="hljs-comment">// Giải phóng: phải free con trước, rồi mới free cha (thứ tự hậu tố)</span>
+<span class="hljs-type">void</span> <span class="hljs-title function_">tree_free</span><span class="hljs-params">(Node *root)</span> {
+    <span class="hljs-keyword">if</span> (!root) <span class="hljs-keyword">return</span>;
+    tree_free(root-&gt;left);
+    tree_free(root-&gt;right);
+    <span class="hljs-built_in">free</span>(root);
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> keys[] = {<span class="hljs-number">50</span>, <span class="hljs-number">30</span>, <span class="hljs-number">70</span>, <span class="hljs-number">20</span>, <span class="hljs-number">40</span>, <span class="hljs-number">60</span>, <span class="hljs-number">80</span>, <span class="hljs-number">30</span>};
+    Node *root = <span class="hljs-literal">NULL</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">sizeof</span> keys / <span class="hljs-keyword">sizeof</span> keys[<span class="hljs-number">0</span>]; i++)
+        root = tree_insert(root, keys[i]);
+
+    tree_print(root);                                   <span class="hljs-comment">// 20 30 40 50 60 70 80</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\ncontains 60: %d, contains 65: %d\n&quot;</span>, tree_contains(root, <span class="hljs-number">60</span>), tree_contains(root, <span class="hljs-number">65</span>));
+
+    tree_free(root);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Sơ đồ cây được tạo:</p>
+<pre class="hljs"><code>          50
+        /    \
+      30      70
+     /  \    /  \
+   20   40  60   80
+</code></pre>
+<p>Nếu <code>tree_free</code> giải phóng cha <strong>trước</strong>, ta sẽ mất địa chỉ hai con và rò rỉ toàn bộ. Kiểm tra bằng:</p>
+<pre class="hljs"><code>gcc -std=c11 -g -fsanitize=address,undefined -o tree tree.c &amp;&amp; ./tree
+</code></pre>
+<p>Kết quả không có báo cáo lỗi/rò rỉ nghĩa là quản lý bộ nhớ đúng.</p>
+<h2>9.8. Kỹ thuật phòng thủ</h2>
+<ol>
+<li><strong>Gán <code>NULL</code> sau <code>free</code></strong> (dùng macro nếu muốn):<pre class="hljs"><code>
+</code></pre>
+</li>
+</ol>
+<pre class="hljs"><code>   <span class="hljs-meta">#<span class="hljs-keyword">define</span> SAFE_FREE(p) do { free(p); (p) = NULL; } while (0)</span>
+</code></pre>
+<pre class="hljs"><code>2. **Không tự viết tay `sizeof(kiểu)`**: dùng `sizeof *ptr`.
+3. **Bọc `malloc` trong hàm kiểm tra** khi chương trình coi hết bộ nhớ là lỗi nghiêm trọng:
+```c
+
+```c
+void *xmalloc(size_t n) {
+    void *p = malloc(n);
+    if (!p) { fprintf(stderr, &quot;het bo nho\n&quot;); exit(EXIT_FAILURE); }
+    return p;
+}
+</code></pre>
+<pre class="hljs"><code>4. **Xóa dữ liệu nhạy cảm** (mật khẩu, khóa) trước khi `free`: dùng `memset_s` / `explicit_bzero` (vì `memset` thường bị compiler tối ưu bỏ).
+5. **Dùng `calloc`** khi cần bộ nhớ khởi tạo về 0 và kiểm tra tràn.
+6. **Tránh cấp phát nhỏ lặp đi lặp lại trong vòng lặp nóng** (chậm, gây phân mảnh); cấp phát một lần rồi tái sử dụng, hoặc dùng *arena/pool allocator*.
+7. **Chạy sanitizer trong CI** để bắt lỗi trước khi phát hành (chương 21).
+
+## 9.9. Bảng tóm tắt lỗi
+
+| Lỗi | Dấu hiệu | Công cụ | Cách sửa |
+|---|---|---|---|
+| Rò rỉ | RAM tăng dần; Valgrind `definitely lost` | Valgrind, LeakSanitizer | Mỗi `malloc` một `free` trên mọi đường thoát |
+| Use-after-free | ASan `heap-use-after-free` | ASan, Valgrind | Gán NULL sau free; rõ ownership |
+| Double free | Crash trong `free`; ASan `attempting double-free` | ASan | Một chủ duy nhất |
+| Heap overflow | ASan `heap-buffer-overflow` | ASan | Tính đủ kích thước (+1 cho `'\0'`) |
+| Đọc chưa khởi tạo | Kết quả ngẫu nhiên | Valgrind, MSan | `calloc`/khởi tạo trước |
+| Free sai chỗ | ASan `attempting free on address which was not malloc()-ed` | ASan | Chỉ free con trỏ gốc từ malloc |
+| Stack overflow | Segfault khi đệ quy sâu | ASan, gdb | Điều kiện dừng; dùng heap |
+
+## 9.10. Tóm tắt
+
+- Stack tự động và nhanh nhưng nhỏ; heap linh hoạt nhưng bạn phải `free`.
+- `malloc` không khởi tạo; `calloc` khởi tạo 0; `realloc` dùng con trỏ tạm; `free(NULL)` an toàn.
+- Lỗi chính: rò rỉ, use-after-free, double free, tràn heap, đọc chưa khởi tạo.
+- **Ownership rõ ràng** là chìa khóa: mỗi khối một chủ, ghi trong tài liệu hàm.
+- Dùng **AddressSanitizer** và **Valgrind** như một phần bình thường của quy trình, không chỉ khi gặp lỗi.
+
+## 9.11. Bài tập
+
+1. Chạy `leak_demo.c` với Valgrind và ASan. Đọc báo cáo, tìm dòng gây rò rỉ, sửa và xác nhận báo cáo sạch.
+2. Viết chương trình tái hiện lần lượt: use-after-free, double free, heap overflow (off-by-one). Chạy với ASan và ghi lại thông báo của từng lỗi.
+3. Viết hàm `char *str_dup(const char *s)` và `char *str_concat(const char *a, const char *b)`. Ghi rõ ai phải `free`.
+4. Mở rộng `Vec` với `vec_pop`, `vec_get`, `vec_insert(v, index, value)`, `vec_remove(v, index)`. Viết test và chạy với ASan.
+5. Cài đặt `tree_delete` (xóa một khóa khỏi cây nhị phân tìm kiếm) và `tree_height`. Kiểm tra bằng Valgrind rằng không có rò rỉ.
+6. Viết chương trình đọc toàn bộ một file văn bản vào một bộ đệm động (dùng `fread` + `realloc` tăng dần) và in số dòng.
+7. Viết bộ cấp phát *arena* đơn giản: xin một khối lớn một lần, `arena_alloc(n)` cắt dần từ khối đó, `arena_free_all()` trả lại tất cả một lần. Thảo luận khi nào nó hữu ích.
+8. (Thử thách) Viết wrapper `tracked_malloc`/`tracked_free` đếm số lần cấp phát/giải phóng và tổng byte, in báo cáo khi thoát (`atexit`), để tự phát hiện rò rỉ mà không cần công cụ ngoài.
+
+Mã nguồn mẫu: [code/chapter-09](https://github.com/phamtuanchip/c_book/tree/main/code/chapter-09)
+</code></pre>
 
 </article>
 <div class="chapter-nav"><a class="nav-prev" href="chapter-08.html">&larr; Con trỏ chi tiết (Pointers Deep Dive)</a><a class="nav-next" href="chapter-10.html">Struct, union, enum &rarr;</a></div>

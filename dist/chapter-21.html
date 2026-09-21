@@ -12,22 +12,859 @@
 <main class="content">
 <article>
 <h1>Chương 21 — Testing &amp; CI cho C</h1>
-<p>Mục tiêu</p>
+<h2>Mục tiêu chương</h2>
 <ul>
-<li>Thiết lập unit tests cho C và tích hợp CI (GitHub Actions).</li>
-<li>Viết testable code và mock dependencies nếu cần.</li>
+<li>Hiểu vì sao kiểm thử tự động đặc biệt quan trọng với C và <strong>kim tự tháp kiểm thử</strong>.</li>
+<li>Viết mã <strong>dễ kiểm thử</strong> (testable): tách logic khỏi I/O, dùng phụ thuộc có thể thay thế.</li>
+<li>Viết <strong>unit test</strong> bằng khung tự làm và bằng framework: <strong>Unity</strong>, <strong>Check</strong>, <strong>Criterion</strong> (so sánh).</li>
+<li>Dùng <strong>mock/stub/fake</strong> để cô lập mã cần thử: con trỏ hàm, <em>link seam</em>, fault injection.</li>
+<li>Tích hợp với build: <strong><code>make test</code></strong> và <strong>CTest (CMake)</strong>.</li>
+<li>Đo <strong>độ phủ mã (coverage)</strong> bằng <code>gcov</code>/<code>lcov</code>; hiểu chỉ số này nói được gì và không nói được gì.</li>
+<li>Chạy <strong>sanitizer</strong>, <strong>fuzz</strong>, và phân tích tĩnh trong kiểm thử.</li>
+<li>Thiết lập <strong>CI</strong> với <strong>GitHub Actions</strong>: build ma trận (Linux/macOS/Windows, gcc/clang), chạy test, sanitizer, coverage, lưu artifact.</li>
 </ul>
-<p>Nội dung</p>
+<h2>21.1. Vì sao phải kiểm thử tự động?</h2>
+<p>Trong C, một thay đổi nhỏ có thể phá hỏng chỗ rất xa (con trỏ, bộ nhớ, macro). Không có kiểm thử, bạn chỉ phát hiện lỗi khi người dùng gặp. Kiểm thử tự động mang lại:</p>
 <ol>
-<li>Unit test frameworks: Unity, Check, Criterion</li>
-<li>Viết test cases và test runner</li>
-<li>GitHub Actions: workflow build, test, report</li>
-<li>Coverage basics</li>
+<li><strong>Phát hiện hồi quy (regression):</strong> mỗi lần sửa mã, chạy lại toàn bộ bài thử trong vài giây.</li>
+<li><strong>Tự tin refactor/tối ưu</strong> (chương 17): kết quả vẫn đúng thì yên tâm.</li>
+<li><strong>Tài liệu sống:</strong> bài thử cho thấy cách dùng hàm và các trường hợp biên.</li>
+<li><strong>Thiết kế tốt hơn:</strong> mã khó kiểm thử thường là mã ghép nối chặt, khó tái sử dụng.</li>
+<li><strong>Bắt lỗi bộ nhớ</strong> khi kết hợp sanitizer (chương 9, 18).</li>
 </ol>
-<p>Bài tập</p>
+<h3>Kim tự tháp kiểm thử</h3>
+<pre class="hljs"><code>                /\
+               /  \      Kiểm thử đầu-cuối (E2E): chạy cả chương trình
+              /----\     ít, chậm, mong manh
+             /      \    Kiểm thử tích hợp: nhiều module cùng nhau
+            /--------\   vừa phải
+           /          \  Kiểm thử đơn vị (unit): từng hàm/module
+          /____________\ nhiều, nhanh (mili-giây), ổn định
+</code></pre>
+<p>Nguyên tắc: <strong>nhiều unit test nhanh ở đáy, ít test chậm ở đỉnh.</strong> Một bộ unit test tốt chạy toàn bộ trong vài giây.</p>
+<h3>Một unit test tốt</h3>
 <ul>
-<li>Thêm test cho một module và cấu hình GitHub Actions để chạy tests.</li>
+<li><strong>Nhanh</strong> (mili-giây), <strong>độc lập</strong> (không phụ thuộc thứ tự chạy, không phụ thuộc test khác), <strong>lặp lại được</strong> (cùng kết quả mỗi lần, không phụ thuộc giờ/mạng/ngẫu nhiên).</li>
+<li><strong>Tự kiểm tra:</strong> đạt/không đạt do máy quyết định, không cần con người đọc đầu ra.</li>
+<li><strong>Một ý một test</strong>, tên nói rõ <strong>cái gì, trong điều kiện nào, kết quả mong đợi</strong>: <code>test_parse_int_rejects_trailing_garbage</code>.</li>
+<li>Mẫu <strong>Arrange – Act – Assert</strong>: chuẩn bị dữ liệu → gọi hàm → so sánh kết quả.</li>
 </ul>
+<h2>21.2. Viết mã dễ kiểm thử</h2>
+<p>Kiểm thử khó khi hàm <strong>làm quá nhiều việc cùng lúc</strong>: đọc file, tính toán, in ra, đọc giờ hệ thống.</p>
+<h3>Ví dụ khó kiểm thử</h3>
+<pre class="hljs"><code><span class="hljs-comment">// KHÓ THỬ: trộn I/O, tính toán và trạng thái toàn cục</span>
+<span class="hljs-type">void</span> <span class="hljs-title function_">report</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    FILE *f = fopen(<span class="hljs-string">&quot;scores.txt&quot;</span>, <span class="hljs-string">&quot;r&quot;</span>);          <span class="hljs-comment">// phụ thuộc file thật</span>
+    <span class="hljs-type">int</span> sum = <span class="hljs-number">0</span>, n = <span class="hljs-number">0</span>, x;
+    <span class="hljs-keyword">while</span> (<span class="hljs-built_in">fscanf</span>(f, <span class="hljs-string">&quot;%d&quot;</span>, &amp;x) == <span class="hljs-number">1</span>) { sum += x; n++; }
+    fclose(f);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Trung binh: %.2f\n&quot;</span>, (<span class="hljs-type">double</span>)sum / n);   <span class="hljs-comment">// kết quả đi thẳng ra màn hình, và chia cho 0 nếu n = 0</span>
+}
+</code></pre>
+<h3>Tách phần lõi thuần khiết</h3>
+<pre class="hljs"><code><span class="hljs-comment">// stats.h — logic THUẦN: nhận dữ liệu, trả kết quả, không I/O, không toàn cục</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stddef.h&gt;</span></span>
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span> <span class="hljs-type">size_t</span> count; <span class="hljs-type">double</span> mean, min, max; } Stats;
+
+<span class="hljs-comment">// Trả 0 nếu tính được, -1 nếu n == 0 hoặc data == NULL.</span>
+<span class="hljs-type">int</span> <span class="hljs-title function_">stats_compute</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">int</span> *data, <span class="hljs-type">size_t</span> n, Stats *out)</span>;
+</code></pre>
+<pre class="hljs"><code><span class="hljs-comment">// stats.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stats.h&quot;</span></span>
+<span class="hljs-type">int</span> <span class="hljs-title function_">stats_compute</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">int</span> *data, <span class="hljs-type">size_t</span> n, Stats *out)</span> {
+    <span class="hljs-keyword">if</span> (!data || n == <span class="hljs-number">0</span> || !out) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    <span class="hljs-type">long</span> sum = <span class="hljs-number">0</span>;
+    <span class="hljs-type">int</span> mn = data[<span class="hljs-number">0</span>], mx = data[<span class="hljs-number">0</span>];
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) {
+        sum += data[i];
+        <span class="hljs-keyword">if</span> (data[i] &lt; mn) mn = data[i];
+        <span class="hljs-keyword">if</span> (data[i] &gt; mx) mx = data[i];
+    }
+    out-&gt;count = n;
+    out-&gt;mean  = (<span class="hljs-type">double</span>)sum / (<span class="hljs-type">double</span>)n;
+    out-&gt;min   = mn;
+    out-&gt;max   = mx;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p><code>main</code> (mỏng) lo I/O và gọi lõi. Lõi được test dễ dàng bằng mảng nhỏ trong bộ nhớ.</p>
+<h3>Nguyên tắc thiết kế cho khả năng kiểm thử</h3>
+<ol>
+<li><strong>Tách logic khỏi I/O:</strong> hàm thuần dễ thử nhất. Đưa I/O ra rìa (imperative shell, functional core).</li>
+<li><strong>Tránh trạng thái toàn cục</strong> (hoặc cho phép reset). Truyền ngữ cảnh qua tham số/struct.</li>
+<li><strong>Trả kết quả và mã lỗi</strong> thay vì in trực tiếp — test kiểm tra được giá trị.</li>
+<li><strong>Nhận phụ thuộc qua tham số</strong> (con trỏ hàm, struct chứa các hàm) để thay bằng bản giả khi thử.</li>
+<li><strong>Đừng gọi <code>exit()</code> trong thư viện</strong> (làm sập cả bộ test).</li>
+<li><strong>Header rõ ràng, hàm nhỏ</strong>, dùng <code>static</code> cho nội bộ nhưng <strong>test qua giao diện công khai</strong>; nếu cần thử hàm <code>static</code>, cân nhắc <code>#include &quot;file.c&quot;</code> trong file test, hoặc nâng nó lên thành công khai có tiền tố nội bộ.</li>
+<li><strong>Tất định (deterministic):</strong> thời gian, số ngẫu nhiên, ID đều nhận từ bên ngoài (ví dụ truyền <code>seed</code>, truyền hàm <code>now()</code>).</li>
+</ol>
+<h2>21.3. Khung kiểm thử tối giản tự làm</h2>
+<p>Bạn đã thấy <code>tiny_test.h</code> ở chương 14. Bản mở rộng có <strong>tên test, đếm, và tự đăng ký</strong>:</p>
+<pre class="hljs"><code><span class="hljs-comment">// mini_test.h</span>
+<span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> MINI_TEST_H</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> MINI_TEST_H</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;math.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> mt_checks = <span class="hljs-number">0</span>, mt_failed = <span class="hljs-number">0</span>, mt_current_failed = <span class="hljs-number">0</span>;
+
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> ASSERT_TRUE(cond) do {                                                   \
+        mt_checks++;                                                             \
+        <span class="hljs-keyword">if</span> (!(cond)) {                                                           \
+            mt_failed++; mt_current_failed = 1;                                  \
+            fprintf(stderr, <span class="hljs-string">&quot;  %s:%d: ASSERT_TRUE(%s) that bai\n&quot;</span>, __FILE__, __LINE__, #cond); \
+        }                                                                        \
+    } while (0)</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> ASSERT_EQ_INT(actual, expected) do {                                     \
+        long long a_ = (actual), e_ = (expected);                                \
+        mt_checks++;                                                             \
+        <span class="hljs-keyword">if</span> (a_ != e_) {                                                          \
+            mt_failed++; mt_current_failed = 1;                                  \
+            fprintf(stderr, <span class="hljs-string">&quot;  %s:%d: %s = %lld, mong doi %lld\n&quot;</span>, __FILE__, __LINE__, #actual, a_, e_); \
+        }                                                                        \
+    } while (0)</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> ASSERT_EQ_STR(actual, expected) do {                                     \
+        const char *a_ = (actual), *e_ = (expected);                             \
+        mt_checks++;                                                             \
+        <span class="hljs-keyword">if</span> (a_ == NULL || e_ == NULL || strcmp(a_, e_) != 0) {                   \
+            mt_failed++; mt_current_failed = 1;                                  \
+            fprintf(stderr, <span class="hljs-string">&quot;  %s:%d: %s = \&quot;%s\&quot;, mong doi \&quot;%s\&quot;\n&quot;</span>, __FILE__, __LINE__, #actual, a_ ? a_ : <span class="hljs-string">&quot;(null)&quot;</span>, e_ ? e_ : <span class="hljs-string">&quot;(null)&quot;</span>); \
+        }                                                                        \
+    } while (0)</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> ASSERT_NEAR(actual, expected, eps) do {                                  \
+        double a_ = (actual), e_ = (expected);                                   \
+        mt_checks++;                                                             \
+        <span class="hljs-keyword">if</span> (fabs(a_ - e_) &gt; (eps)) {                                             \
+            mt_failed++; mt_current_failed = 1;                                  \
+            fprintf(stderr, <span class="hljs-string">&quot;  %s:%d: %s = %g, mong doi %g (+-%g)\n&quot;</span>, __FILE__, __LINE__, #actual, a_, e_, (double)(eps)); \
+        }                                                                        \
+    } while (0)</span>
+
+<span class="hljs-comment">// Chạy một test và in kết quả</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> RUN_TEST(fn) do {                                                        \
+        mt_current_failed = 0;                                                   \
+        fn();                                                                    \
+        printf(<span class="hljs-string">&quot;[%s] %s\n&quot;</span>, mt_current_failed ? <span class="hljs-string">&quot;FAIL&quot;</span> : <span class="hljs-string">&quot; OK &quot;</span>, #fn);           \
+    } while (0)</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> TEST_MAIN_END() do {                                                     \
+        printf(<span class="hljs-string">&quot;\n%d kiem tra, %d that bai\n&quot;</span>, mt_checks, mt_failed);            \
+        return mt_failed ? 1 : 0;                                                \
+    } while (0)</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+</code></pre>
+<pre class="hljs"><code><span class="hljs-comment">// test_stats.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;mini_test.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stats.h&quot;</span></span>
+
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">test_compute_basic</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> d[] = {<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>};
+    Stats s;
+    ASSERT_EQ_INT(stats_compute(d, <span class="hljs-number">5</span>, &amp;s), <span class="hljs-number">0</span>);
+    ASSERT_NEAR(s.mean, <span class="hljs-number">3.0</span>, <span class="hljs-number">1e-9</span>);
+    ASSERT_EQ_INT((<span class="hljs-type">long</span> <span class="hljs-type">long</span>)s.min, <span class="hljs-number">1</span>);
+    ASSERT_EQ_INT((<span class="hljs-type">long</span> <span class="hljs-type">long</span>)s.max, <span class="hljs-number">5</span>);
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">test_compute_single</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> d[] = {<span class="hljs-number">42</span>};
+    Stats s;
+    ASSERT_EQ_INT(stats_compute(d, <span class="hljs-number">1</span>, &amp;s), <span class="hljs-number">0</span>);
+    ASSERT_NEAR(s.mean, <span class="hljs-number">42.0</span>, <span class="hljs-number">1e-9</span>);
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">test_compute_negative</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> d[] = {<span class="hljs-number">-5</span>, <span class="hljs-number">-1</span>, <span class="hljs-number">-10</span>};
+    Stats s;
+    ASSERT_EQ_INT(stats_compute(d, <span class="hljs-number">3</span>, &amp;s), <span class="hljs-number">0</span>);
+    ASSERT_EQ_INT((<span class="hljs-type">long</span> <span class="hljs-type">long</span>)s.min, <span class="hljs-number">-10</span>);
+    ASSERT_EQ_INT((<span class="hljs-type">long</span> <span class="hljs-type">long</span>)s.max, <span class="hljs-number">-1</span>);
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">test_compute_rejects_empty</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    Stats s;
+    ASSERT_EQ_INT(stats_compute(<span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, &amp;s), <span class="hljs-number">-1</span>);
+    <span class="hljs-type">int</span> d[] = {<span class="hljs-number">1</span>};
+    ASSERT_EQ_INT(stats_compute(d, <span class="hljs-number">0</span>, &amp;s), <span class="hljs-number">-1</span>);    <span class="hljs-comment">// n == 0</span>
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    RUN_TEST(test_compute_basic);
+    RUN_TEST(test_compute_single);
+    RUN_TEST(test_compute_negative);
+    RUN_TEST(test_compute_rejects_empty);
+    TEST_MAIN_END();
+}
+</code></pre>
+<p>Biên dịch và chạy (<strong>mã thoát khác 0 khi có test lỗi</strong> — đây là điều CI/<code>make test</code> dùng để nhận biết):</p>
+<pre class="hljs"><code>gcc -std=c11 -Wall -Wextra -g -fsanitize=address,undefined test_stats.c stats.c -o test_stats -lm
+./test_stats; <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;exit=$?&quot;</span>
+</code></pre>
+<p>Kết quả mong đợi:</p>
+<pre class="hljs"><code>[ OK ] test_compute_basic
+[ OK ] test_compute_single
+[ OK ] test_compute_negative
+[ OK ] test_compute_rejects_empty
+
+11 kiem tra, 0 that bai
+</code></pre>
+<p>Một khung tự làm rất gọn cho dự án nhỏ, nhưng thiếu: <code>setUp</code>/<code>tearDown</code>, chạy độc lập từng test, báo cáo XML cho CI, cô lập crash (một test <code>segfault</code> làm sập cả chương trình). Framework thật giải quyết những thứ đó.</p>
+<h2>21.4. Các framework kiểm thử cho C</h2>
+<table>
+<thead>
+<tr>
+<th>Framework</th>
+<th>Đặc điểm</th>
+<th>Phù hợp</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Unity</strong> (ThrowTheSwitch)</td>
+<td>Rất nhẹ (1 file <code>.c</code> + 2 <code>.h</code>), di động, chạy được trên vi điều khiển; nhiều macro assert; kèm CMock/Ceedling</td>
+<td>Dự án nhúng, muốn tối giản</td>
+</tr>
+<tr>
+<td><strong>Check</strong></td>
+<td>Chạy mỗi test trong <strong>tiến trình con</strong> (<code>fork</code>) nên crash không làm hỏng bộ test; hỗ trợ fixture, timeout</td>
+<td>Linux/macOS, cần cô lập</td>
+</tr>
+<tr>
+<td><strong>Criterion</strong></td>
+<td>Hiện đại: tự đăng ký test, tham số hóa, xuất TAP/JSON/XML, nhiều output đẹp</td>
+<td>Dự án Linux/macOS mới</td>
+</tr>
+<tr>
+<td><strong>CMocka</strong></td>
+<td>Có sẵn <strong>mock</strong> (dùng linker <code>--wrap</code>), di động</td>
+<td>Cần mock hàm C</td>
+</tr>
+<tr>
+<td><strong>cmocka/µnit/greatest</strong></td>
+<td>Nhẹ, một header</td>
+<td>Nhỏ gọn</td>
+</tr>
+<tr>
+<td><strong>GoogleTest (C++)</strong></td>
+<td>Rất mạnh; có thể test mã C nếu chấp nhận biên dịch C++</td>
+<td>Dự án hỗn hợp C/C++</td>
+</tr>
+</tbody>
+</table>
+<h3>Ví dụ với Unity</h3>
+<pre class="hljs"><code><span class="hljs-comment">// test_stats_unity.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;unity.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stats.h&quot;</span></span>
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">setUp</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>    { <span class="hljs-comment">/* chạy TRƯỚC mỗi test */</span> }
+<span class="hljs-type">void</span> <span class="hljs-title function_">tearDown</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> { <span class="hljs-comment">/* chạy SAU mỗi test */</span> }
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">test_mean_of_five</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> d[] = {<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>};
+    Stats s;
+    TEST_ASSERT_EQUAL_INT(<span class="hljs-number">0</span>, stats_compute(d, <span class="hljs-number">5</span>, &amp;s));
+    TEST_ASSERT_EQUAL_DOUBLE(<span class="hljs-number">3.0</span>, s.mean);
+    TEST_ASSERT_EQUAL_INT(<span class="hljs-number">1</span>, (<span class="hljs-type">int</span>)s.min);
+}
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">test_empty_input_fails</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    Stats s;
+    TEST_ASSERT_EQUAL_INT(<span class="hljs-number">-1</span>, stats_compute(<span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, &amp;s));
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    UNITY_BEGIN();
+    RUN_TEST(test_mean_of_five);
+    RUN_TEST(test_empty_input_fails);
+    <span class="hljs-keyword">return</span> UNITY_END();
+}
+</code></pre>
+<p>Unity in kết quả kiểu <code>test_stats_unity.c:12:test_mean_of_five:PASS</code> và tóm tắt <code>2 Tests 0 Failures 0 Ignored</code>. Có các assert: <code>TEST_ASSERT_EQUAL_STRING</code>, <code>TEST_ASSERT_EQUAL_MEMORY</code>, <code>TEST_ASSERT_NULL</code>, <code>TEST_ASSERT_FLOAT_WITHIN(delta, expected, actual)</code>, <code>TEST_ASSERT_EQUAL_INT_ARRAY</code>...</p>
+<p>Lấy Unity: sao chép <code>unity.c</code>, <code>unity.h</code>, <code>unity_internals.h</code> vào <code>third_party/unity/</code>, hoặc dùng CMake <code>FetchContent</code>.</p>
+<h3>Ví dụ với Check</h3>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;check.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stats.h&quot;</span></span>
+
+START_TEST(test_mean) {
+    <span class="hljs-type">int</span> d[] = {<span class="hljs-number">2</span>, <span class="hljs-number">4</span>, <span class="hljs-number">6</span>};
+    Stats s;
+    ck_assert_int_eq(stats_compute(d, <span class="hljs-number">3</span>, &amp;s), <span class="hljs-number">0</span>);
+    ck_assert_double_eq_tol(s.mean, <span class="hljs-number">4.0</span>, <span class="hljs-number">1e-9</span>);
+}
+END_TEST
+
+<span class="hljs-type">static</span> Suite *<span class="hljs-title function_">stats_suite</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    Suite *s = suite_create(<span class="hljs-string">&quot;stats&quot;</span>);
+    TCase *tc = tcase_create(<span class="hljs-string">&quot;core&quot;</span>);
+    tcase_add_test(tc, test_mean);
+    suite_add_tcase(s, tc);
+    <span class="hljs-keyword">return</span> s;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    SRunner *sr = srunner_create(stats_suite());
+    srunner_run_all(sr, CK_NORMAL);
+    <span class="hljs-type">int</span> failed = srunner_ntests_failed(sr);
+    srunner_free(sr);
+    <span class="hljs-keyword">return</span> failed ? <span class="hljs-number">1</span> : <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Biên dịch: <code>gcc test.c stats.c $(pkg-config --cflags --libs check) -o test</code>.</p>
+<h3>Ví dụ với Criterion</h3>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;criterion/criterion.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stats.h&quot;</span></span>
+
+Test(stats, mean_of_three) {
+    <span class="hljs-type">int</span> d[] = {<span class="hljs-number">2</span>, <span class="hljs-number">4</span>, <span class="hljs-number">6</span>};
+    Stats s;
+    cr_assert_eq(stats_compute(d, <span class="hljs-number">3</span>, &amp;s), <span class="hljs-number">0</span>);
+    cr_assert_float_eq(s.mean, <span class="hljs-number">4.0</span>, <span class="hljs-number">1e-9</span>);
+}
+</code></pre>
+<p>Không cần <code>main</code> — Criterion tự sinh và tự phát hiện test. Liên kết: <code>-lcriterion</code>.</p>
+<h3>Chọn cái nào?</h3>
+<ul>
+<li><strong>Dự án nhỏ/học tập:</strong> khung tự làm hoặc Unity (ít phụ thuộc).</li>
+<li><strong>Cần cô lập crash và fixture:</strong> Check hoặc Criterion (Linux/macOS).</li>
+<li><strong>Cần mock hàm C:</strong> CMocka hoặc CMock (đi cùng Unity).</li>
+<li><strong>Ưu tiên tiện lợi và đầu ra đẹp:</strong> Criterion.</li>
+</ul>
+<p>Điều quan trọng hơn framework: <strong>có bộ test chạy tự động trong CI</strong>.</p>
+<h2>21.5. Mock, stub và fake — cô lập phụ thuộc</h2>
+<p>Khi hàm cần thử phụ thuộc vào thứ <strong>chậm, không tất định, hoặc khó tạo lỗi</strong> (đĩa, mạng, giờ hệ thống, <code>malloc</code> lỗi), ta thay nó bằng một bản giả trong lúc thử.</p>
+<table>
+<thead>
+<tr>
+<th>Thuật ngữ</th>
+<th>Ý nghĩa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Stub</strong></td>
+<td>Trả về giá trị cố định được lập trình sẵn</td>
+</tr>
+<tr>
+<td><strong>Fake</strong></td>
+<td>Cài đặt đơn giản có hành vi thật (ví dụ hệ thống file trong bộ nhớ)</td>
+</tr>
+<tr>
+<td><strong>Mock</strong></td>
+<td>Stub có thể <strong>kiểm tra xem nó đã được gọi thế nào</strong> (đúng đối số, số lần)</td>
+</tr>
+</tbody>
+</table>
+<h3>Kỹ thuật 1: Nhận phụ thuộc qua con trỏ hàm</h3>
+<pre class="hljs"><code><span class="hljs-comment">// cache.h</span>
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span>
+    <span class="hljs-type">time_t</span> (*now)(<span class="hljs-type">void</span>);                       <span class="hljs-comment">// nguồn thời gian có thể thay</span>
+} Clock;
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">session_is_expired</span><span class="hljs-params">(<span class="hljs-type">const</span> Session *s, <span class="hljs-type">const</span> Clock *clk)</span>;
+</code></pre>
+<pre class="hljs"><code><span class="hljs-comment">// session.c</span>
+<span class="hljs-type">int</span> <span class="hljs-title function_">session_is_expired</span><span class="hljs-params">(<span class="hljs-type">const</span> Session *s, <span class="hljs-type">const</span> Clock *clk)</span> {
+    <span class="hljs-keyword">return</span> clk-&gt;now() &gt; s-&gt;expires_at;         <span class="hljs-comment">// dùng &quot;đồng hồ&quot; được tiêm vào</span>
+}
+</code></pre>
+<pre class="hljs"><code><span class="hljs-comment">// test_session.c</span>
+<span class="hljs-type">static</span> <span class="hljs-type">time_t</span> fake_now_value;
+<span class="hljs-type">static</span> <span class="hljs-type">time_t</span> <span class="hljs-title function_">fake_now</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> { <span class="hljs-keyword">return</span> fake_now_value; }
+
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">test_session_expires</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    Session s = { .expires_at = <span class="hljs-number">1000</span> };
+    Clock clk = { .now = fake_now };
+
+    fake_now_value = <span class="hljs-number">999</span>;   ASSERT_EQ_INT(session_is_expired(&amp;s, &amp;clk), <span class="hljs-number">0</span>);
+    fake_now_value = <span class="hljs-number">1001</span>;  ASSERT_EQ_INT(session_is_expired(&amp;s, &amp;clk), <span class="hljs-number">1</span>);
+}
+</code></pre>
+<p>Trong sản phẩm, truyền <code>Clock real = { .now = time_wrapper };</code>. Bài thử không phải chờ hay phụ thuộc giờ thật.</p>
+<h3>Kỹ thuật 2: Đường nối liên kết (link seam) — thay hàm lúc liên kết</h3>
+<p>Với thư viện bạn không sửa được, hoặc hàm gọi trực tiếp (không qua con trỏ), có thể <strong>định nghĩa lại hàm trong file test</strong> và liên kết file test thay vì bản thật:</p>
+<pre class="hljs"><code><span class="hljs-comment">// production: net.c gọi send_data(...) — cài đặt thật trong net_real.c</span>
+<span class="hljs-comment">// test: định nghĩa bản giả</span>
+<span class="hljs-type">static</span> <span class="hljs-type">char</span> last_sent[<span class="hljs-number">256</span>]; <span class="hljs-type">static</span> <span class="hljs-type">int</span> send_calls;
+<span class="hljs-type">int</span> <span class="hljs-title function_">send_data</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *buf, <span class="hljs-type">size_t</span> n)</span> {         <span class="hljs-comment">// bản giả trong test_client.c</span>
+    send_calls++;
+    <span class="hljs-built_in">snprintf</span>(last_sent, <span class="hljs-keyword">sizeof</span> last_sent, <span class="hljs-string">&quot;%.*s&quot;</span>, (<span class="hljs-type">int</span>)n, buf);
+    <span class="hljs-keyword">return</span> (<span class="hljs-type">int</span>)n;
+}
+</code></pre>
+<p>Biên dịch test <strong>không</strong> kèm <code>net_real.c</code>: <code>gcc test_client.c client.c -o test_client</code>. Đây là cách CMock/Ceedling tự sinh.</p>
+<p>Với gcc/ld: <code>-Wl,--wrap=malloc</code> cho phép chặn lời gọi <code>malloc</code>: mọi lời gọi <code>malloc</code> được chuyển thành <code>__wrap_malloc</code> (bạn định nghĩa), và <code>__real_malloc</code> là bản gốc.</p>
+<pre class="hljs"><code><span class="hljs-keyword">extern</span> <span class="hljs-type">void</span> *__real_malloc(<span class="hljs-type">size_t</span> n);
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> g_fail_malloc;
+<span class="hljs-type">void</span> *__wrap_malloc(<span class="hljs-type">size_t</span> n) {
+    <span class="hljs-keyword">if</span> (g_fail_malloc) <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;                <span class="hljs-comment">// giả lập hết bộ nhớ</span>
+    <span class="hljs-keyword">return</span> __real_malloc(n);
+}
+</code></pre>
+<pre class="hljs"><code>gcc test_vec.c vec.c -Wl,--wrap=malloc -o test_vec
+</code></pre>
+<p>Nhờ đó <strong>kiểm thử đường lỗi</strong> (<code>malloc</code> trả NULL) một cách tất định — bổ sung cho fault injection ở chương 13.</p>
+<h3>Kỹ thuật 3: Fake trong bộ nhớ</h3>
+<p>Thay vì thử với file thật, cung cấp <code>FILE *</code> từ bộ nhớ: <code>fmemopen(buf, size, &quot;r&quot;)</code> (POSIX) hoặc <code>tmpfile()</code>; hoặc thiết kế hàm nhận <code>const char *</code> thay vì <code>FILE *</code> để không cần file:</p>
+<pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">test_parse_csv_line_from_string</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    FILE *f = fmemopen((<span class="hljs-type">void</span> *)<span class="hljs-string">&quot;an,9\nbinh,8\n&quot;</span>, <span class="hljs-number">12</span>, <span class="hljs-string">&quot;r&quot;</span>);
+    <span class="hljs-comment">/* ... gọi hàm đọc từ f ... */</span>
+    fclose(f);
+}
+</code></pre>
+<h2>21.6. Các loại test cần có</h2>
+<h3>1. Trường hợp thường, biên và lỗi</h3>
+<p>Với mỗi hàm, hãy nghĩ tới:</p>
+<ul>
+<li><strong>Đầu vào điển hình.</strong></li>
+<li><strong>Biên:</strong> 0, 1, phần tử đầu/cuối, <code>INT_MAX</code>, <code>INT_MIN</code>, chuỗi rỗng, chuỗi dài đúng bằng bộ đệm, chuỗi dài bộ đệm + 1.</li>
+<li><strong>Đầu vào không hợp lệ:</strong> <code>NULL</code>, số âm, ký tự lạ.</li>
+<li><strong>Trạng thái lỗi:</strong> hết bộ nhớ, file không có, đầu vào bị cắt cụt.</li>
+</ul>
+<h3>2. Test hồi quy</h3>
+<p>Mỗi khi gặp bug: <strong>viết test làm bug tái hiện (fail)</strong> trước, sửa mã, test chuyển thành pass, giữ test mãi mãi.</p>
+<h3>3. Test dựa trên thuộc tính (property-based) — thủ công</h3>
+<p>Thay vì chọn ví dụ, kiểm tra <strong>tính chất luôn đúng</strong> trên nhiều đầu vào ngẫu nhiên có seed cố định:</p>
+<pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">test_sort_property</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    srand(<span class="hljs-number">12345</span>);                                       <span class="hljs-comment">// seed cố định -&gt; lặp lại được</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> iter = <span class="hljs-number">0</span>; iter &lt; <span class="hljs-number">1000</span>; iter++) {
+        <span class="hljs-type">int</span> n = rand() % <span class="hljs-number">100</span>;
+        <span class="hljs-type">int</span> a[<span class="hljs-number">100</span>], b[<span class="hljs-number">100</span>];
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) a[i] = b[i] = rand() % <span class="hljs-number">50</span> - <span class="hljs-number">25</span>;
+
+        my_sort(a, (<span class="hljs-type">size_t</span>)n);
+        qsort(b, (<span class="hljs-type">size_t</span>)n, <span class="hljs-keyword">sizeof</span> b[<span class="hljs-number">0</span>], cmp_int);      <span class="hljs-comment">// tham chiếu (&quot;oracle&quot;)</span>
+        ASSERT_TRUE(<span class="hljs-built_in">memcmp</span>(a, b, (<span class="hljs-type">size_t</span>)n * <span class="hljs-keyword">sizeof</span> a[<span class="hljs-number">0</span>]) == <span class="hljs-number">0</span>);
+    }
+}
+</code></pre>
+<p>So với một <strong>bản tham chiếu đúng</strong> (oracle) hoặc kiểm tra tính chất (đầu ra đã sắp xếp, là hoán vị của đầu vào). In <code>seed</code> và <code>iter</code> khi lỗi để tái hiện.</p>
+<h3>3b. Test vi sai (differential)</h3>
+<p>So kết quả của hai cài đặt (bản đơn giản và bản tối ưu, chương 17; evaluator và VM, chương 19) trên cùng đầu vào — rất hiệu quả bắt lỗi.</p>
+<h3>4. Test dữ liệu mẫu (&quot;golden file&quot;)</h3>
+<p>Chạy chương trình với input cố định và so đầu ra với file mẫu đã duyệt (<code>expected.txt</code>): tiện cho trình biên dịch, bộ định dạng.</p>
+<pre class="hljs"><code>./calc &lt; tests/case1.<span class="hljs-keyword">in</span> &gt; /tmp/out.txt &amp;&amp; diff -u tests/case1.expected /tmp/out.txt
+</code></pre>
+<h3>5. Test tích hợp/đầu-cuối</h3>
+<p>Chạy chương trình thật, kiểm tra mã thoát và đầu ra; với server: khởi chạy, gửi yêu cầu bằng <code>curl</code>, so phản hồi:</p>
+<pre class="hljs"><code><span class="hljs-meta">#!/usr/bin/env bash</span>
+<span class="hljs-built_in">set</span> -euo pipefail
+./server 18080 2 ./www &amp; PID=$!
+<span class="hljs-built_in">trap</span> <span class="hljs-string">&#x27;kill $PID 2&gt;/dev/null || true&#x27;</span> EXIT
+<span class="hljs-built_in">sleep</span> 0.5
+code=$(curl -s -o /dev/null -w <span class="hljs-string">&#x27;%{http_code}&#x27;</span> http://127.0.0.1:18080/)
+[ <span class="hljs-string">&quot;<span class="hljs-variable">$code</span>&quot;</span> = <span class="hljs-string">&quot;200&quot;</span> ] || { <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;GET / -&gt; <span class="hljs-variable">$code</span> (mong doi 200)&quot;</span>; <span class="hljs-built_in">exit</span> 1; }
+code=$(curl -s -o /dev/null -w <span class="hljs-string">&#x27;%{http_code}&#x27;</span> --path-as-is http://127.0.0.1:18080/../server.c)
+[ <span class="hljs-string">&quot;<span class="hljs-variable">$code</span>&quot;</span> = <span class="hljs-string">&quot;403&quot;</span> ] || { <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;traversal -&gt; <span class="hljs-variable">$code</span> (mong doi 403)&quot;</span>; <span class="hljs-built_in">exit</span> 1; }
+<span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;OK&quot;</span>
+</code></pre>
+<h2>21.7. Tích hợp vào build: <code>make test</code> và CTest</h2>
+<h3>Makefile</h3>
+<pre class="hljs"><code>CC      := gcc
+CFLAGS  := -std=c11 -Wall -Wextra -Wpedantic -g -O1 -Iinclude
+SAN     ?= -fsanitize=address,undefined -fno-omit-frame-pointer
+
+TEST_SRCS := <span class="hljs-variable">$(<span class="hljs-built_in">wildcard</span> tests/test_*.c)</span>
+TEST_BINS := <span class="hljs-variable">$(<span class="hljs-built_in">patsubst</span> tests/%.c,build/%,<span class="hljs-variable">$(TEST_SRCS)</span>)</span>
+LIB_SRCS  := <span class="hljs-variable">$(<span class="hljs-built_in">filter</span>-out src/main.c,$(<span class="hljs-built_in">wildcard</span> src/*.c)</span>)
+
+<span class="hljs-meta"><span class="hljs-keyword">.PHONY</span>: test clean</span>
+<span class="hljs-section">test: <span class="hljs-variable">$(TEST_BINS)</span></span>
+	@fail=0; for t in <span class="hljs-variable">$(TEST_BINS)</span>; do \
+	    echo <span class="hljs-string">&quot;== $$t&quot;</span>; ./$$t || fail=1; \
+	done; \
+	exit $$fail
+
+<span class="hljs-section">build/test_%: tests/test_%.c <span class="hljs-variable">$(LIB_SRCS)</span> | build</span>
+	<span class="hljs-variable">$(CC)</span> <span class="hljs-variable">$(CFLAGS)</span> <span class="hljs-variable">$(SAN)</span> <span class="hljs-variable">$^</span> -o <span class="hljs-variable">$@</span> -lm
+
+<span class="hljs-section">build:</span>
+	mkdir -p build
+
+<span class="hljs-section">clean:</span>
+	rm -rf build
+</code></pre>
+<p><code>make test</code> biên dịch từng <code>tests/test_*.c</code> cùng thư viện (không kèm <code>main.c</code>), bật sanitizer, chạy tất cả và <strong>trả mã khác 0 nếu bất kỳ test nào lỗi</strong>.</p>
+<h3>CMake + CTest</h3>
+<pre class="hljs"><code><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.16</span>)
+<span class="hljs-keyword">project</span>(myproj C)
+<span class="hljs-keyword">set</span>(CMAKE_C_STANDARD <span class="hljs-number">11</span>)
+<span class="hljs-keyword">set</span>(CMAKE_C_STANDARD_REQUIRED <span class="hljs-keyword">ON</span>)
+
+<span class="hljs-keyword">option</span>(ENABLE_SANITIZERS <span class="hljs-string">&quot;Bat ASan/UBSan&quot;</span> <span class="hljs-keyword">ON</span>)
+<span class="hljs-keyword">option</span>(ENABLE_COVERAGE   <span class="hljs-string">&quot;Bat gcov&quot;</span>        <span class="hljs-keyword">OFF</span>)
+
+<span class="hljs-keyword">add_library</span>(core src/stats.c)
+<span class="hljs-keyword">target_include_directories</span>(core PUBLIC <span class="hljs-keyword">include</span>)
+<span class="hljs-keyword">target_compile_options</span>(core PRIVATE -Wall -Wextra -Wpedantic)
+
+<span class="hljs-keyword">if</span>(ENABLE_SANITIZERS)
+    <span class="hljs-keyword">add_compile_options</span>(-fsanitize=address,undefined -fno-omit-frame-pointer)
+    <span class="hljs-keyword">add_link_options</span>(-fsanitize=address,undefined)
+<span class="hljs-keyword">endif</span>()
+<span class="hljs-keyword">if</span>(ENABLE_COVERAGE)
+    <span class="hljs-keyword">add_compile_options</span>(--coverage -O0 -g)
+    <span class="hljs-keyword">add_link_options</span>(--coverage)
+<span class="hljs-keyword">endif</span>()
+
+<span class="hljs-keyword">add_executable</span>(app src/main.c)
+<span class="hljs-keyword">target_link_libraries</span>(app PRIVATE core m)
+
+<span class="hljs-keyword">enable_testing</span>()
+<span class="hljs-keyword">foreach</span>(t test_stats test_parser)
+    <span class="hljs-keyword">add_executable</span>(<span class="hljs-variable">${t}</span> tests/<span class="hljs-variable">${t}</span>.c)
+    <span class="hljs-keyword">target_link_libraries</span>(<span class="hljs-variable">${t}</span> PRIVATE core m)
+    <span class="hljs-keyword">add_test</span>(NAME <span class="hljs-variable">${t}</span> <span class="hljs-keyword">COMMAND</span> <span class="hljs-variable">${t}</span>)
+<span class="hljs-keyword">endforeach</span>()
+
+<span class="hljs-comment"># test đầu-cuối bằng script</span>
+<span class="hljs-keyword">add_test</span>(NAME e2e <span class="hljs-keyword">COMMAND</span> <span class="hljs-variable">${CMAKE_SOURCE_DIR}</span>/tests/e2e.sh $&lt;TARGET_FILE:app&gt;)
+</code></pre>
+<pre class="hljs"><code>cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+cmake --build build
+ctest --test-dir build --output-on-failure        <span class="hljs-comment"># chạy tất cả test; in đầu ra của test lỗi</span>
+ctest --test-dir build -R stats -V                <span class="hljs-comment"># chạy test tên khớp &quot;stats&quot;, chi tiết</span>
+</code></pre>
+<p>CTest thu thập kết quả, hỗ trợ chạy song song (<code>-j4</code>), thời gian chờ (<code>set_tests_properties(... TIMEOUT 10)</code>), và xuất báo cáo JUnit cho CI.</p>
+<h2>21.8. Độ phủ mã (coverage)</h2>
+<p><strong>Coverage</strong> cho biết <strong>dòng/nhánh mã nào đã được test chạy tới</strong>. Công cụ của gcc: <code>gcov</code>; báo cáo HTML: <code>lcov</code> + <code>genhtml</code>, hoặc <code>gcovr</code>.</p>
+<pre class="hljs"><code>gcc -std=c11 --coverage -O0 -g test_stats.c stats.c -o test_stats -lm
+./test_stats                                       <span class="hljs-comment"># sinh file .gcda</span>
+gcov stats.c                                       <span class="hljs-comment"># sinh stats.c.gcov: từng dòng kèm số lần chạy</span>
+</code></pre>
+<p>Kết quả <code>stats.c.gcov</code> (rút gọn):</p>
+<pre class="hljs"><code>        5:    5:int stats_compute(const int *data, size_t n, Stats *out) {
+        5:    6:    if (!data || n == 0 || !out) return -1;
+        3:    7:    long sum = 0;
+    #####:   19:    /* dòng chưa từng chạy */
+</code></pre>
+<p><code>#####</code> là dòng <strong>chưa được test chạy tới</strong>. Báo cáo HTML:</p>
+<pre class="hljs"><code>lcov --capture --directory . --output-file coverage.info
+lcov --remove coverage.info <span class="hljs-string">&#x27;/usr/*&#x27;</span> <span class="hljs-string">&#x27;tests/*&#x27;</span> --output-file coverage.info
+genhtml coverage.info --output-directory coverage_html
+<span class="hljs-comment"># hoặc gọn hơn:</span>
+gcovr -r . --html-details -o coverage.html --exclude <span class="hljs-string">&#x27;tests/&#x27;</span>
+</code></pre>
+<h3>Các loại coverage</h3>
+<table>
+<thead>
+<tr>
+<th>Loại</th>
+<th>Đo</th>
+<th>Ghi chú</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Dòng (line)</strong></td>
+<td>Dòng nào được chạy</td>
+<td>Phổ biến nhất</td>
+</tr>
+<tr>
+<td><strong>Nhánh (branch)</strong></td>
+<td>Mỗi <code>if</code> đã thử cả đúng và sai chưa</td>
+<td><code>gcov -b</code>; giá trị hơn dòng</td>
+</tr>
+<tr>
+<td><strong>Hàm (function)</strong></td>
+<td>Hàm nào được gọi</td>
+<td>Thô</td>
+</tr>
+<tr>
+<td><strong>MC/DC</strong></td>
+<td>Từng điều kiện con trong biểu thức</td>
+<td>Yêu cầu trong hàng không/ô tô</td>
+</tr>
+</tbody>
+</table>
+<h3>Coverage nói được gì — và không nói được gì</h3>
+<ul>
+<li>Mã <strong>chưa được chạy</strong> chắc chắn <strong>chưa được kiểm thử</strong> → phát hiện chỗ thiếu test. Đây là công dụng chính.</li>
+<li>Nhưng <strong>coverage cao ≠ test tốt.</strong> Test có thể chạy qua mã mà không kiểm tra gì (không assert). 100% coverage vẫn có thể bỏ sót lỗi.</li>
+<li>Đừng biến nó thành mục tiêu tự thân (ép 100%). Mục tiêu hợp lý: <strong>80–90% dòng cho mã lõi</strong>, kèm test biên và test lỗi; quan tâm <strong>nhánh chưa phủ</strong> ở đường xử lý lỗi.</li>
+<li>Biên dịch bản coverage với <code>-O0</code> để số liệu tương ứng mã nguồn.</li>
+</ul>
+<h2>21.9. Sanitizer, phân tích tĩnh và fuzz trong kiểm thử</h2>
+<p>Kết hợp để bộ test <strong>đồng thời bắt lỗi bộ nhớ</strong> (chương 9 và 18):</p>
+<table>
+<thead>
+<tr>
+<th>Công cụ</th>
+<th>Khi nào chạy</th>
+<th>Cách</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ASan + UBSan</strong></td>
+<td>Mọi lần chạy test</td>
+<td><code>-fsanitize=address,undefined</code></td>
+</tr>
+<tr>
+<td><strong>TSan</strong></td>
+<td>Với mã đa luồng (bản build riêng)</td>
+<td><code>-fsanitize=thread</code></td>
+</tr>
+<tr>
+<td><strong>MSan</strong> (clang)</td>
+<td>Bản build riêng</td>
+<td><code>-fsanitize=memory</code></td>
+</tr>
+<tr>
+<td><strong>Valgrind</strong></td>
+<td>Định kỳ (chậm)</td>
+<td><code>valgrind --error-exitcode=1 --leak-check=full ./test</code></td>
+</tr>
+<tr>
+<td><strong>cppcheck / clang-tidy</strong></td>
+<td>Mỗi commit</td>
+<td><code>cppcheck --error-exitcode=1 ...</code></td>
+</tr>
+<tr>
+<td><strong><code>gcc -fanalyzer</code></strong></td>
+<td>Mỗi commit</td>
+<td>thêm cờ biên dịch</td>
+</tr>
+<tr>
+<td><strong>Fuzz</strong></td>
+<td>Chạy định kỳ / khi đổi parser</td>
+<td>libFuzzer/AFL++ (chương 18)</td>
+</tr>
+<tr>
+<td><strong><code>-Werror</code></strong></td>
+<td>CI</td>
+<td>biến cảnh báo thành lỗi</td>
+</tr>
+</tbody>
+</table>
+<p>Đặt <strong><code>-Werror</code></strong> trong CI (nhưng không nhất thiết trên máy nhà phát triển) để không cho cảnh báo tích tụ.</p>
+<p>Mã thoát đặc biệt: ASan mặc định thoát mã khác 0 khi phát hiện lỗi, nên CI tự thấy đỏ. Với Valgrind dùng <code>--error-exitcode=1</code>.</p>
+<h2>21.10. Tích hợp liên tục (CI) với GitHub Actions</h2>
+<p><strong>CI (Continuous Integration):</strong> mỗi lần đẩy mã (<code>push</code>) hoặc mở pull request, một máy chủ <strong>tự động</strong> build và chạy kiểm thử. Lỗi được phát hiện ngay, trước khi hòa nhập vào nhánh chính.</p>
+<p><strong>GitHub Actions</strong> định nghĩa CI bằng file YAML trong <code>.github/workflows/</code>.</p>
+<h3>Khái niệm</h3>
+<ul>
+<li><strong>Workflow:</strong> một file YAML mô tả quy trình.</li>
+<li><strong>Event (<code>on</code>):</strong> điều gì kích hoạt (<code>push</code>, <code>pull_request</code>, <code>schedule</code>, <code>workflow_dispatch</code>).</li>
+<li><strong>Job:</strong> nhóm bước chạy trên một máy (runner); các job chạy song song mặc định.</li>
+<li><strong>Step:</strong> một lệnh shell (<code>run:</code>) hoặc một action dùng lại (<code>uses:</code>).</li>
+<li><strong>Runner:</strong> máy ảo (<code>ubuntu-latest</code>, <code>macos-latest</code>, <code>windows-latest</code>).</li>
+<li><strong>Matrix:</strong> chạy cùng job với nhiều tổ hợp tham số (hệ điều hành × compiler).</li>
+</ul>
+<h3>Workflow cơ bản: build + test</h3>
+<pre class="hljs"><code><span class="hljs-comment"># .github/workflows/ci.yml</span>
+<span class="hljs-attr">name:</span> <span class="hljs-string">CI</span>
+
+<span class="hljs-attr">on:</span>
+  <span class="hljs-attr">push:</span>
+    <span class="hljs-attr">branches:</span> [<span class="hljs-string">main</span>]
+  <span class="hljs-attr">pull_request:</span>
+
+<span class="hljs-attr">jobs:</span>
+  <span class="hljs-attr">test:</span>
+    <span class="hljs-attr">runs-on:</span> <span class="hljs-string">ubuntu-latest</span>
+    <span class="hljs-attr">steps:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/checkout@v4</span>
+
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Cai</span> <span class="hljs-string">cong</span> <span class="hljs-string">cu</span>
+        <span class="hljs-attr">run:</span> <span class="hljs-string">sudo</span> <span class="hljs-string">apt-get</span> <span class="hljs-string">update</span> <span class="hljs-string">&amp;&amp;</span> <span class="hljs-string">sudo</span> <span class="hljs-string">apt-get</span> <span class="hljs-string">install</span> <span class="hljs-string">-y</span> <span class="hljs-string">build-essential</span> <span class="hljs-string">cmake</span> <span class="hljs-string">valgrind</span> <span class="hljs-string">cppcheck</span>
+
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Cau</span> <span class="hljs-string">hinh</span>
+        <span class="hljs-attr">run:</span> <span class="hljs-string">cmake</span> <span class="hljs-string">-S</span> <span class="hljs-string">.</span> <span class="hljs-string">-B</span> <span class="hljs-string">build</span> <span class="hljs-string">-DCMAKE_BUILD_TYPE=Debug</span>
+
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Build</span>
+        <span class="hljs-attr">run:</span> <span class="hljs-string">cmake</span> <span class="hljs-string">--build</span> <span class="hljs-string">build</span> <span class="hljs-string">-j</span>
+
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Test</span>
+        <span class="hljs-attr">run:</span> <span class="hljs-string">ctest</span> <span class="hljs-string">--test-dir</span> <span class="hljs-string">build</span> <span class="hljs-string">--output-on-failure</span>
+</code></pre>
+<p>Đẩy file này lên nhánh <code>main</code> rồi xem tab <strong>Actions</strong> trên trang GitHub của kho mã. Dấu ✓ xanh hoặc ✗ đỏ hiện cạnh mỗi commit và pull request.</p>
+<h3>Ma trận nhiều nền tảng và compiler</h3>
+<pre class="hljs"><code><span class="hljs-attr">jobs:</span>
+  <span class="hljs-attr">build-test:</span>
+    <span class="hljs-attr">name:</span> <span class="hljs-string">${{</span> <span class="hljs-string">matrix.os</span> <span class="hljs-string">}}</span> <span class="hljs-string">/</span> <span class="hljs-string">${{</span> <span class="hljs-string">matrix.cc</span> <span class="hljs-string">}}</span>
+    <span class="hljs-attr">runs-on:</span> <span class="hljs-string">${{</span> <span class="hljs-string">matrix.os</span> <span class="hljs-string">}}</span>
+    <span class="hljs-attr">strategy:</span>
+      <span class="hljs-attr">fail-fast:</span> <span class="hljs-literal">false</span>                     <span class="hljs-comment"># một tổ hợp lỗi không hủy các tổ hợp khác</span>
+      <span class="hljs-attr">matrix:</span>
+        <span class="hljs-attr">os:</span> [<span class="hljs-string">ubuntu-latest</span>, <span class="hljs-string">macos-latest</span>]
+        <span class="hljs-attr">cc:</span> [<span class="hljs-string">gcc</span>, <span class="hljs-string">clang</span>]
+        <span class="hljs-attr">exclude:</span>
+          <span class="hljs-bullet">-</span> <span class="hljs-attr">os:</span> <span class="hljs-string">macos-latest</span>
+            <span class="hljs-attr">cc:</span> <span class="hljs-string">gcc</span>                         <span class="hljs-comment"># trên macOS &quot;gcc&quot; là alias của clang</span>
+    <span class="hljs-attr">env:</span>
+      <span class="hljs-attr">CC:</span> <span class="hljs-string">${{</span> <span class="hljs-string">matrix.cc</span> <span class="hljs-string">}}</span>
+    <span class="hljs-attr">steps:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/checkout@v4</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">run:</span> <span class="hljs-string">cmake</span> <span class="hljs-string">-S</span> <span class="hljs-string">.</span> <span class="hljs-string">-B</span> <span class="hljs-string">build</span> <span class="hljs-string">-DCMAKE_BUILD_TYPE=Debug</span> <span class="hljs-string">-DCMAKE_C_COMPILER=$CC</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">run:</span> <span class="hljs-string">cmake</span> <span class="hljs-string">--build</span> <span class="hljs-string">build</span> <span class="hljs-string">-j</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">run:</span> <span class="hljs-string">ctest</span> <span class="hljs-string">--test-dir</span> <span class="hljs-string">build</span> <span class="hljs-string">--output-on-failure</span>
+</code></pre>
+<p>Thêm Windows: <code>windows-latest</code> (dùng MSVC mặc định; hoặc cài MinGW/MSYS2 qua <code>msys2/setup-msys2</code>). Chạy nhiều tổ hợp giúp phát hiện mã <strong>không di động</strong> (kích thước kiểu, <code>long</code> trên Windows, hàm POSIX không có trên MSVC...).</p>
+<h3>Job sanitizer, phân tích tĩnh, coverage</h3>
+<pre class="hljs"><code>  <span class="hljs-attr">sanitizers:</span>
+    <span class="hljs-attr">runs-on:</span> <span class="hljs-string">ubuntu-latest</span>
+    <span class="hljs-attr">steps:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/checkout@v4</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">ASan</span> <span class="hljs-string">+</span> <span class="hljs-string">UBSan</span>
+        <span class="hljs-attr">run:</span> <span class="hljs-string">|
+          cmake -S . -B build-asan -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=ON
+          cmake --build build-asan -j
+          ctest --test-dir build-asan --output-on-failure
+</span>        <span class="hljs-attr">env:</span>
+          <span class="hljs-attr">ASAN_OPTIONS:</span> <span class="hljs-string">detect_leaks=1:abort_on_error=1</span>
+          <span class="hljs-attr">UBSAN_OPTIONS:</span> <span class="hljs-string">print_stacktrace=1:halt_on_error=1</span>
+
+  <span class="hljs-attr">static-analysis:</span>
+    <span class="hljs-attr">runs-on:</span> <span class="hljs-string">ubuntu-latest</span>
+    <span class="hljs-attr">steps:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/checkout@v4</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">run:</span> <span class="hljs-string">sudo</span> <span class="hljs-string">apt-get</span> <span class="hljs-string">update</span> <span class="hljs-string">&amp;&amp;</span> <span class="hljs-string">sudo</span> <span class="hljs-string">apt-get</span> <span class="hljs-string">install</span> <span class="hljs-string">-y</span> <span class="hljs-string">cppcheck</span> <span class="hljs-string">clang-tidy</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">run:</span> <span class="hljs-string">cppcheck</span> <span class="hljs-string">--enable=warning,performance,portability</span> <span class="hljs-string">--error-exitcode=1</span> <span class="hljs-string">--inline-suppr</span> <span class="hljs-string">src/</span>
+
+  <span class="hljs-attr">coverage:</span>
+    <span class="hljs-attr">runs-on:</span> <span class="hljs-string">ubuntu-latest</span>
+    <span class="hljs-attr">steps:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/checkout@v4</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">run:</span> <span class="hljs-string">sudo</span> <span class="hljs-string">apt-get</span> <span class="hljs-string">update</span> <span class="hljs-string">&amp;&amp;</span> <span class="hljs-string">sudo</span> <span class="hljs-string">apt-get</span> <span class="hljs-string">install</span> <span class="hljs-string">-y</span> <span class="hljs-string">lcov</span> <span class="hljs-string">cmake</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">run:</span> <span class="hljs-string">|
+          cmake -S . -B build-cov -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON -DENABLE_SANITIZERS=OFF
+          cmake --build build-cov -j
+          ctest --test-dir build-cov
+          lcov --capture --directory build-cov --output-file coverage.info
+          lcov --remove coverage.info &#x27;/usr/*&#x27; &#x27;*/tests/*&#x27; --output-file coverage.info
+          lcov --summary coverage.info
+</span>      <span class="hljs-bullet">-</span> <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/upload-artifact@v4</span>
+        <span class="hljs-attr">with:</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">coverage-report</span>
+          <span class="hljs-attr">path:</span> <span class="hljs-string">coverage.info</span>
+</code></pre>
+<h3>Lưu artifact và nhật ký khi lỗi</h3>
+<pre class="hljs"><code>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Tai</span> <span class="hljs-string">len</span> <span class="hljs-string">ket</span> <span class="hljs-string">qua</span> <span class="hljs-string">khi</span> <span class="hljs-string">that</span> <span class="hljs-string">bai</span>
+        <span class="hljs-attr">if:</span> <span class="hljs-string">failure()</span>
+        <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/upload-artifact@v4</span>
+        <span class="hljs-attr">with:</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">test-logs</span>
+          <span class="hljs-attr">path:</span> <span class="hljs-string">build/Testing/Temporary/LastTest.log</span>
+</code></pre>
+<h3>Bộ nhớ đệm để build nhanh hơn</h3>
+<pre class="hljs"><code>      <span class="hljs-bullet">-</span> <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/cache@v4</span>
+        <span class="hljs-attr">with:</span>
+          <span class="hljs-attr">path:</span> <span class="hljs-string">~/.cache/ccache</span>
+          <span class="hljs-attr">key:</span> <span class="hljs-string">ccache-${{</span> <span class="hljs-string">runner.os</span> <span class="hljs-string">}}-${{</span> <span class="hljs-string">github.sha</span> <span class="hljs-string">}}</span>
+          <span class="hljs-attr">restore-keys:</span> <span class="hljs-string">ccache-${{</span> <span class="hljs-string">runner.os</span> <span class="hljs-string">}}-</span>
+</code></pre>
+<p>(Kết hợp với <code>ccache</code> để không biên dịch lại file không đổi.)</p>
+<h3>Bảo vệ nhánh chính</h3>
+<p>Trong <strong>Settings → Branches → Branch protection rules</strong> của kho mã: yêu cầu các job CI phải <strong>xanh</strong> trước khi merge pull request. Khi đó không thể đưa mã làm hỏng test vào <code>main</code>.</p>
+<h3>Huy hiệu (badge) trạng thái</h3>
+<p>Thêm vào <code>README.md</code> để hiện trạng thái build:</p>
+<pre class="hljs"><code>![<span class="hljs-string">CI</span>](<span class="hljs-link">https://github.com/&lt;user&gt;/&lt;repo&gt;/actions/workflows/ci.yml/badge.svg</span>)
+</code></pre>
+<h3>Bảo mật của CI</h3>
+<ul>
+<li>Dùng <code>permissions: contents: read</code> ở mức workflow để <strong>hạn chế quyền</strong> của token.</li>
+<li><strong>Ghim phiên bản action</strong> (<code>@v4</code>, tốt hơn là SHA commit) và cẩn trọng với action bên thứ ba.</li>
+<li><strong>Không in bí mật</strong> ra log; lưu bí mật trong <strong>Settings → Secrets</strong>, không đặt trong mã. Không chạy mã từ pull request của người lạ với quyền truy cập bí mật (<code>pull_request_target</code> cần rất cẩn thận).</li>
+</ul>
+<h2>21.11. Quy trình làm việc đề xuất</h2>
+<ol>
+<li><strong>Viết test cho hành vi mong muốn</strong> (hoặc cho bug) → thấy nó lỗi.</li>
+<li><strong>Viết/sửa mã</strong> cho test qua.</li>
+<li><strong>Chạy cục bộ:</strong> <code>make test</code> (kèm sanitizer) — nhanh, trước khi commit.</li>
+<li><strong>Đẩy lên</strong> → CI chạy ma trận, sanitizer, phân tích tĩnh, coverage.</li>
+<li><strong>Xem xét (review)</strong> kết quả CI cùng mã trong pull request; chỉ merge khi xanh.</li>
+<li><strong>Bổ sung test hồi quy</strong> cho mọi lỗi tìm thấy sau đó.</li>
+</ol>
+<p>Đây là <strong>TDD (Test-Driven Development)</strong> khi bạn viết test trước; không bắt buộc, nhưng thói quen &quot;mỗi bug một test&quot; thì nên có.</p>
+<h2>21.12. Lỗi thường gặp khi kiểm thử</h2>
+<table>
+<thead>
+<tr>
+<th>Sai lầm</th>
+<th>Hậu quả</th>
+<th>Cách tránh</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Test phụ thuộc thứ tự chạy/trạng thái toàn cục</td>
+<td>Lúc đạt lúc không</td>
+<td>Mỗi test tự dựng và dọn dẹp; reset toàn cục</td>
+</tr>
+<tr>
+<td>Test phụ thuộc giờ, mạng, số ngẫu nhiên không cố định</td>
+<td>Mong manh (flaky)</td>
+<td>Tiêm phụ thuộc; seed cố định</td>
+</tr>
+<tr>
+<td>Không assert gì (chỉ gọi hàm)</td>
+<td>Coverage cao nhưng vô dụng</td>
+<td>Mỗi test phải kiểm tra kết quả</td>
+</tr>
+<tr>
+<td>Test làm rò rỉ hoặc UB mà không ai thấy</td>
+<td>Lỗi lọt</td>
+<td>Luôn chạy với ASan/UBSan</td>
+</tr>
+<tr>
+<td>Test quá lớn, kiểm tra nhiều thứ</td>
+<td>Khó biết cái gì hỏng</td>
+<td>Một ý một test, tên rõ ràng</td>
+</tr>
+<tr>
+<td>Sửa test cho khớp mã sai</td>
+<td>Che giấu lỗi</td>
+<td>Xác nhận kỳ vọng từ yêu cầu, không từ kết quả hiện tại</td>
+</tr>
+<tr>
+<td>So sánh <code>double</code> bằng <code>==</code></td>
+<td>Test sai</td>
+<td><code>ASSERT_NEAR</code></td>
+</tr>
+<tr>
+<td>Bỏ qua test lỗi (&quot;để sau&quot;)</td>
+<td>Nợ kỹ thuật</td>
+<td>Sửa hoặc xóa; không để đỏ kéo dài</td>
+</tr>
+<tr>
+<td>CI chỉ chạy một compiler/nền tảng</td>
+<td>Lỗi di động lọt</td>
+<td>Ma trận</td>
+</tr>
+<tr>
+<td>CI quá chậm</td>
+<td>Người ta bỏ qua</td>
+<td>Cache, song song hóa, tách job nhanh/chậm</td>
+</tr>
+</tbody>
+</table>
+<h2>21.13. Tóm tắt</h2>
+<ul>
+<li>Kiểm thử tự động giúp phát hiện hồi quy, cho phép refactor an toàn; xây kim tự tháp: nhiều unit test nhanh, ít test tích hợp/đầu-cuối.</li>
+<li>Viết mã dễ kiểm thử: tách logic khỏi I/O, tránh toàn cục, tiêm phụ thuộc, tất định.</li>
+<li>Framework: tự làm/Unity (nhẹ), Check/Criterion (cô lập, đẹp), CMocka/CMock (mock); quan trọng là chạy tự động và trả mã thoát đúng.</li>
+<li>Mock bằng con trỏ hàm, link seam, <code>--wrap</code>; kiểm thử cả đường lỗi.</li>
+<li>Coverage (<code>gcov</code>/<code>lcov</code>) chỉ ra mã chưa được thử, không chứng minh test tốt.</li>
+<li>CI bằng GitHub Actions: build ma trận, ASan/UBSan, phân tích tĩnh, coverage; bảo vệ nhánh <code>main</code>.</li>
+</ul>
+<h2>21.14. Bài tập</h2>
+<ol>
+<li>Thêm bộ test cho module <code>Vec</code> (chương 9): kiểm tra <code>push</code> nhiều phần tử, tăng sức chứa, <code>pop</code> trên rỗng, và (dùng <code>--wrap=realloc</code>) hết bộ nhớ ở lần <code>push</code> thứ <code>k</code>. Chạy dưới ASan.</li>
+<li>Viết bộ test cho <code>parse_int</code> (chương 13) gồm ít nhất 15 trường hợp biên; sau đó tạo test theo thuộc tính: với mọi <code>int</code> ngẫu nhiên, <code>parse_int(to_string(x)) == x</code>.</li>
+<li>Cấu hình CTest cho một dự án nhiều module; thêm bài test đầu-cuối bằng script shell so đầu ra với &quot;golden file&quot;.</li>
+<li>Đo coverage của module bạn; tìm các nhánh chưa phủ; viết thêm test để phủ ít nhất một đường xử lý lỗi. Nhận xét: coverage tăng có nghĩa là gì và không có nghĩa là gì?</li>
+<li>Viết <code>.github/workflows/ci.yml</code> với ma trận Ubuntu/macOS × gcc/clang, một job ASan+UBSan, một job <code>cppcheck</code>; cố ý commit một lỗi (use-after-free, cảnh báo) để thấy CI đỏ, rồi sửa.</li>
+<li>Thêm fuzz target cho một parser của bạn vào CI như một job chạy 60 giây mỗi lần; lưu mọi đầu vào gây crash làm artifact.</li>
+<li>Refactor một chương trình &quot;khó test&quot; (trộn I/O và logic) từ các chương trước thành lõi thuần + lớp I/O mỏng, rồi viết test cho lõi. Mô tả những gì bạn phải đổi.</li>
+<li>Viết test dùng <strong>đồng hồ giả</strong> để kiểm tra một bộ đếm thời gian sống (TTL cache) mà không dùng <code>sleep</code>.</li>
+<li>(Thử thách) Thiết lập CI có thêm job đo hiệu năng (chương 17) so sánh với lần chạy trước và <strong>thất bại nếu chậm hơn quá 20%</strong>; bàn về độ nhiễu của runner dùng chung và cách giảm nó (ví dụ dùng <code>callgrind</code> để đếm lệnh).</li>
+</ol>
+<p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-21">code/chapter-21</a></p>
 
 </article>
 <div class="chapter-nav"><a class="nav-prev" href="chapter-20.html">&larr; Project: Web server đơn giản</a><a class="nav-next" href="chapter-22.html">Packaging & deploy &rarr;</a></div>

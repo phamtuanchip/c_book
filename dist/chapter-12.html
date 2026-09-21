@@ -12,43 +12,746 @@
 <main class="content">
 <article>
 <h1>Chương 12 — File I/O &amp; thao tác hệ thống</h1>
-<p>Mục tiêu chương:</p>
+<h2>Mục tiêu chương</h2>
 <ul>
-<li>Đọc/ghi file text và binary bằng fopen/fgets/fscanf/fprintf/fread/fwrite.</li>
-<li>Hiểu buffering, modes, và xử lý lỗi I/O; khái niệm mmap và portability.</li>
+<li>Hiểu khái niệm <strong>luồng (stream)</strong>, <code>FILE *</code>, và ba luồng chuẩn <code>stdin</code>, <code>stdout</code>, <code>stderr</code>.</li>
+<li>Đọc/ghi file <strong>văn bản</strong> (<code>fopen</code>, <code>fgets</code>, <code>fprintf</code>, <code>fscanf</code>) và file <strong>nhị phân</strong> (<code>fread</code>, <code>fwrite</code>).</li>
+<li>Hiểu <strong>bộ đệm (buffering)</strong>, <code>fflush</code>, <code>fclose</code>, và khi nào dữ liệu thật sự được ghi xuống đĩa.</li>
+<li>Định vị trong file (<code>fseek</code>, <code>ftell</code>, <code>rewind</code>), xác định kích thước file.</li>
+<li>Xử lý lỗi I/O đúng cách: kiểm tra giá trị trả về, <code>feof</code>/<code>ferror</code>, <code>perror</code>, <code>errno</code>.</li>
+<li>Viết các chương trình thực tế: sao chép file, đọc CSV, đếm từ, tìm chuỗi trong file lớn.</li>
+<li>Biết sơ lược về thao tác hệ thống: thư mục, biến môi trường, <code>mmap</code> và tính di động.</li>
 </ul>
-<h2>1. File text I/O</h2>
+<h2>12.1. Luồng (stream) và <code>FILE *</code></h2>
+<p>Thư viện chuẩn C trừu tượng hóa mọi thao tác nhập/xuất (file, bàn phím, màn hình, ống dẫn) thành <strong>luồng byte</strong>. Bạn thao tác với luồng qua một con trỏ kiểu <code>FILE *</code> (định nghĩa trong <code>&lt;stdio.h&gt;</code>); bên trong nó lưu vị trí đọc/ghi, bộ đệm, cờ lỗi/EOF.</p>
+<p>Ba luồng có sẵn khi chương trình khởi động:</p>
+<table>
+<thead>
+<tr>
+<th>Luồng</th>
+<th>Vai trò</th>
+<th>Mặc định nối tới</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>stdin</code></td>
+<td>đầu vào chuẩn</td>
+<td>bàn phím</td>
+</tr>
+<tr>
+<td><code>stdout</code></td>
+<td>đầu ra chuẩn</td>
+<td>màn hình</td>
+</tr>
+<tr>
+<td><code>stderr</code></td>
+<td>lỗi chuẩn (thông báo lỗi)</td>
+<td>màn hình</td>
+</tr>
+</tbody>
+</table>
+<p>Các hàm bạn đã dùng thực ra là dạng rút gọn: <code>printf(...)</code> ≡ <code>fprintf(stdout, ...)</code>, <code>scanf(...)</code> ≡ <code>fscanf(stdin, ...)</code>, <code>getchar()</code> ≡ <code>fgetc(stdin)</code>. Nhờ vậy, mọi hàm làm việc với <code>stdin/stdout</code> cũng làm việc với file.</p>
+<p><strong>Chuyển hướng (redirection)</strong> ở shell nối các luồng này với file mà không cần sửa mã:</p>
+<pre class="hljs"><code>./prog &lt; input.txt &gt; output.txt 2&gt; errors.txt
+</code></pre>
+<p>Vì vậy hãy in thông báo lỗi ra <code>stderr</code> để chúng không lẫn vào <code>output.txt</code>.</p>
+<h2>12.2. Mở và đóng file</h2>
+<pre class="hljs"><code>FILE *<span class="hljs-title function_">fopen</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *path, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *mode)</span>;
+<span class="hljs-type">int</span>   <span class="hljs-title function_">fclose</span><span class="hljs-params">(FILE *stream)</span>;
+</code></pre>
+<p><code>fopen</code> trả về <code>FILE *</code> nếu thành công, <strong><code>NULL</code> nếu thất bại</strong> (file không tồn tại, không có quyền, ...). Luôn kiểm tra.</p>
+<h3>Chế độ mở (mode)</h3>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Ý nghĩa</th>
+<th>File chưa tồn tại</th>
+<th>File đã tồn tại</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&quot;r&quot;</code></td>
+<td>đọc</td>
+<td><strong>lỗi</strong> (trả NULL)</td>
+<td>đọc từ đầu</td>
+</tr>
+<tr>
+<td><code>&quot;w&quot;</code></td>
+<td>ghi</td>
+<td>tạo mới</td>
+<td><strong>xóa sạch nội dung</strong> rồi ghi</td>
+</tr>
+<tr>
+<td><code>&quot;a&quot;</code></td>
+<td>ghi nối thêm (append)</td>
+<td>tạo mới</td>
+<td>ghi vào <strong>cuối</strong></td>
+</tr>
+<tr>
+<td><code>&quot;r+&quot;</code></td>
+<td>đọc và ghi</td>
+<td>lỗi</td>
+<td>đọc/ghi từ đầu, không xóa</td>
+</tr>
+<tr>
+<td><code>&quot;w+&quot;</code></td>
+<td>đọc và ghi</td>
+<td>tạo mới</td>
+<td><strong>xóa sạch</strong></td>
+</tr>
+<tr>
+<td><code>&quot;a+&quot;</code></td>
+<td>đọc và nối thêm</td>
+<td>tạo mới</td>
+<td>ghi luôn vào cuối</td>
+</tr>
+</tbody>
+</table>
+<p>Thêm <strong><code>b</code></strong> cho chế độ <strong>nhị phân</strong> (<code>&quot;rb&quot;</code>, <code>&quot;wb&quot;</code>). Trên <strong>Windows</strong>, chế độ văn bản dịch <code>\n</code> ↔ <code>\r\n</code> và coi byte <code>0x1A</code> là hết file; trên Linux/macOS không có khác biệt. Vì vậy: <strong>luôn dùng <code>&quot;rb&quot;</code>/<code>&quot;wb&quot;</code> cho dữ liệu nhị phân</strong> để mã chạy đúng trên mọi nền tảng.</p>
+<p>C11 thêm chế độ <code>&quot;x&quot;</code> (ví dụ <code>&quot;wx&quot;</code>): tạo file <strong>và báo lỗi nếu đã tồn tại</strong> — tránh ghi đè vô ý.</p>
+<h3>Mẫu chuẩn: mở, dùng, đóng, kiểm tra</h3>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;errno.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    FILE *f = fopen(<span class="hljs-string">&quot;data.txt&quot;</span>, <span class="hljs-string">&quot;r&quot;</span>);
+    <span class="hljs-keyword">if</span> (f == <span class="hljs-literal">NULL</span>) {
+        <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;Khong mo duoc data.txt: %s\n&quot;</span>, strerror(errno));
+        <span class="hljs-comment">// hoặc: perror(&quot;fopen&quot;);</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    }
+
+    <span class="hljs-comment">/* ... đọc/ghi ... */</span>
+
+    <span class="hljs-keyword">if</span> (fclose(f) != <span class="hljs-number">0</span>) {           <span class="hljs-comment">// fclose cũng có thể lỗi (ví dụ đĩa đầy khi xả bộ đệm cuối)</span>
+        perror(<span class="hljs-string">&quot;fclose&quot;</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
 <ul>
-<li>fopen(path, &quot;r&quot;/&quot;w&quot;/&quot;a&quot;) để mở file.</li>
-<li>fgets để đọc line an toàn; fprintf để ghi.</li>
-<li>Kiểm tra return của fopen, fgets, fprintf; dùng perror hoặc strerror(errno).</li>
+<li><code>errno</code> (trong <code>&lt;errno.h&gt;</code>) chứa mã lỗi của lần gọi hệ thống gần nhất bị lỗi. <code>strerror(errno)</code> đổi nó thành thông báo đọc được; <code>perror(&quot;tiền tố&quot;)</code> in luôn ra <code>stderr</code> dạng <code>tiền tố: thông báo</code>.</li>
+<li><strong>Phải <code>fclose</code> mọi file đã mở</strong>: giải phóng tài nguyên, và quan trọng hơn, <strong>xả (flush) bộ đệm</strong> để dữ liệu ghi thật sự ra đĩa. Mỗi tiến trình bị giới hạn số file mở đồng thời (thường ~1024), nên quên <code>fclose</code> trong vòng lặp sẽ sớm gặp lỗi <code>Too many open files</code>.</li>
 </ul>
-<h2>2. Binary I/O</h2>
+<h2>12.3. Đọc và ghi file văn bản</h2>
+<h3>Ghi</h3>
+<pre class="hljs"><code><span class="hljs-type">int</span>  <span class="hljs-title function_">fputc</span><span class="hljs-params">(<span class="hljs-type">int</span> c, FILE *f)</span>;                         <span class="hljs-comment">// một ký tự</span>
+<span class="hljs-type">int</span>  <span class="hljs-title function_">fputs</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *s, FILE *f)</span>;                 <span class="hljs-comment">// một chuỗi (KHÔNG thêm &#x27;\n&#x27;)</span>
+<span class="hljs-type">int</span>  <span class="hljs-title function_">fprintf</span><span class="hljs-params">(FILE *f, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *fmt, ...)</span>;        <span class="hljs-comment">// có định dạng</span>
+</code></pre>
+<pre class="hljs"><code><span class="hljs-comment">// write_text.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    FILE *f = fopen(<span class="hljs-string">&quot;scores.txt&quot;</span>, <span class="hljs-string">&quot;w&quot;</span>);
+    <span class="hljs-keyword">if</span> (!f) { perror(<span class="hljs-string">&quot;fopen&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+
+    <span class="hljs-type">const</span> <span class="hljs-type">char</span> *names[] = {<span class="hljs-string">&quot;An&quot;</span>, <span class="hljs-string">&quot;Binh&quot;</span>, <span class="hljs-string">&quot;Cuong&quot;</span>};
+    <span class="hljs-type">int</span> scores[] = {<span class="hljs-number">8</span>, <span class="hljs-number">9</span>, <span class="hljs-number">7</span>};
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">3</span>; i++) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">fprintf</span>(f, <span class="hljs-string">&quot;%s,%d\n&quot;</span>, names[i], scores[i]) &lt; <span class="hljs-number">0</span>) {   <span class="hljs-comment">// fprintf trả số âm khi lỗi</span>
+            perror(<span class="hljs-string">&quot;fprintf&quot;</span>);
+            fclose(f);
+            <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+        }
+    }
+    <span class="hljs-keyword">return</span> fclose(f) == <span class="hljs-number">0</span> ? <span class="hljs-number">0</span> : <span class="hljs-number">1</span>;
+}
+</code></pre>
+<h3>Đọc theo dòng: <code>fgets</code></h3>
+<pre class="hljs"><code><span class="hljs-type">char</span> *<span class="hljs-title function_">fgets</span><span class="hljs-params">(<span class="hljs-type">char</span> *buf, <span class="hljs-type">int</span> size, FILE *f)</span>;
+</code></pre>
+<p>Đọc tối đa <code>size - 1</code> ký tự (dừng sau <code>'\n'</code>), thêm <code>'\0'</code>. Trả <code>NULL</code> khi hết file hoặc lỗi. Đây là cách <strong>an toàn và được khuyến nghị</strong> để đọc văn bản.</p>
+<pre class="hljs"><code><span class="hljs-comment">// print_lines.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> *argv[])</span> {
+    <span class="hljs-keyword">if</span> (argc != <span class="hljs-number">2</span>) { <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;Cach dung: %s &lt;file&gt;\n&quot;</span>, argv[<span class="hljs-number">0</span>]); <span class="hljs-keyword">return</span> <span class="hljs-number">2</span>; }
+
+    FILE *f = fopen(argv[<span class="hljs-number">1</span>], <span class="hljs-string">&quot;r&quot;</span>);
+    <span class="hljs-keyword">if</span> (!f) { perror(argv[<span class="hljs-number">1</span>]); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+
+    <span class="hljs-type">char</span> line[<span class="hljs-number">256</span>];
+    <span class="hljs-type">int</span> n = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">while</span> (fgets(line, <span class="hljs-keyword">sizeof</span> line, f) != <span class="hljs-literal">NULL</span>) {
+        line[<span class="hljs-built_in">strcspn</span>(line, <span class="hljs-string">&quot;\r\n&quot;</span>)] = <span class="hljs-string">&#x27;\0&#x27;</span>;        <span class="hljs-comment">// bỏ ký tự xuống dòng (kể cả \r nếu file từ Windows)</span>
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%3d: %s\n&quot;</span>, ++n, line);
+    }
+    <span class="hljs-keyword">if</span> (ferror(f)) perror(<span class="hljs-string">&quot;doc file&quot;</span>);             <span class="hljs-comment">// phân biệt lỗi với hết file bình thường</span>
+
+    fclose(f);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p><strong>Vấn đề với dòng dài hơn bộ đệm:</strong> nếu dòng dài hơn 255 ký tự, <code>fgets</code> chỉ trả về một phần, phần còn lại được trả ở lần gọi sau (dòng bị &quot;tách đôi&quot;). Nếu bạn cần dòng có độ dài bất kỳ, dùng <code>getline</code> (POSIX) hoặc tự viết hàm mở rộng bộ đệm:</p>
+<pre class="hljs"><code><span class="hljs-comment">// Đọc một dòng dài tùy ý. Trả về chuỗi cấp phát bằng malloc (người gọi free), hoặc NULL nếu hết file/lỗi.</span>
+<span class="hljs-type">char</span> *<span class="hljs-title function_">read_line</span><span class="hljs-params">(FILE *f)</span> {
+    <span class="hljs-type">size_t</span> cap = <span class="hljs-number">128</span>, len = <span class="hljs-number">0</span>;
+    <span class="hljs-type">char</span> *buf = <span class="hljs-built_in">malloc</span>(cap);
+    <span class="hljs-keyword">if</span> (!buf) <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+
+    <span class="hljs-type">int</span> c;
+    <span class="hljs-keyword">while</span> ((c = fgetc(f)) != EOF &amp;&amp; c != <span class="hljs-string">&#x27;\n&#x27;</span>) {
+        <span class="hljs-keyword">if</span> (len + <span class="hljs-number">1</span> &gt;= cap) {
+            cap *= <span class="hljs-number">2</span>;
+            <span class="hljs-type">char</span> *tmp = <span class="hljs-built_in">realloc</span>(buf, cap);
+            <span class="hljs-keyword">if</span> (!tmp) { <span class="hljs-built_in">free</span>(buf); <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>; }
+            buf = tmp;
+        }
+        buf[len++] = (<span class="hljs-type">char</span>)c;
+    }
+    <span class="hljs-keyword">if</span> (c == EOF &amp;&amp; len == <span class="hljs-number">0</span>) { <span class="hljs-built_in">free</span>(buf); <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>; }    <span class="hljs-comment">// không còn dữ liệu</span>
+    buf[len] = <span class="hljs-string">&#x27;\0&#x27;</span>;
+    <span class="hljs-keyword">return</span> buf;
+}
+</code></pre>
+<h3>Đọc có định dạng: <code>fscanf</code></h3>
+<pre class="hljs"><code><span class="hljs-type">int</span> <span class="hljs-title function_">fscanf</span><span class="hljs-params">(FILE *f, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *fmt, ...)</span>;
+</code></pre>
+<pre class="hljs"><code><span class="hljs-type">int</span> a, b;
+<span class="hljs-keyword">while</span> (<span class="hljs-built_in">fscanf</span>(f, <span class="hljs-string">&quot;%d %d&quot;</span>, &amp;a, &amp;b) == <span class="hljs-number">2</span>) {        <span class="hljs-comment">// == 2: cả hai giá trị đều đọc được</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d + %d = %d\n&quot;</span>, a, b, a + b);
+}
+</code></pre>
+<p><code>fscanf</code> tiện nhưng khó xử lý lỗi (khi gặp dữ liệu sai, nó dừng và để nguyên đầu vào, dễ lặp vô hạn) nên với dữ liệu không tin cậy hãy <strong>đọc dòng bằng <code>fgets</code> rồi dùng <code>sscanf</code>/<code>strtol</code></strong> để phân tích:</p>
+<pre class="hljs"><code><span class="hljs-type">char</span> line[<span class="hljs-number">128</span>];
+<span class="hljs-keyword">while</span> (fgets(line, <span class="hljs-keyword">sizeof</span> line, f)) {
+    <span class="hljs-type">char</span> name[<span class="hljs-number">32</span>];
+    <span class="hljs-type">int</span> score;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">sscanf</span>(line, <span class="hljs-string">&quot;%31[^,],%d&quot;</span>, name, &amp;score) == <span class="hljs-number">2</span>) {   <span class="hljs-comment">// %31[^,]: đọc tới dấu phẩy, tối đa 31 ký tự</span>
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%s co diem %d\n&quot;</span>, name, score);
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;dong khong hop le: %s&quot;</span>, line);
+    }
+}
+</code></pre>
+<h3>Đọc từng ký tự: <code>fgetc</code>, <code>getc</code></h3>
+<p>Giá trị trả về là <code>int</code>, không phải <code>char</code>, để phân biệt được <code>EOF</code> (thường là <code>-1</code>) với ký tự có giá trị 255:</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> c;
+<span class="hljs-type">long</span> count = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">while</span> ((c = fgetc(f)) != EOF) {
+    <span class="hljs-keyword">if</span> (c == <span class="hljs-string">&#x27;\n&#x27;</span>) count++;
+}
+<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%ld dong\n&quot;</span>, count);
+</code></pre>
+<h3>Hết file (EOF) — hiểu đúng</h3>
+<p>Sai lầm phổ biến:</p>
+<pre class="hljs"><code><span class="hljs-keyword">while</span> (!feof(f)) {            <span class="hljs-comment">// SAI!</span>
+    fgets(line, <span class="hljs-keyword">sizeof</span> line, f);
+    process(line);            <span class="hljs-comment">// lần cuối xử lý dữ liệu cũ vì feof chỉ đúng SAU khi đã thử đọc vượt cuối</span>
+}
+</code></pre>
+<p><code>feof</code> chỉ trả về đúng <strong>sau khi</strong> một thao tác đọc thất bại vì hết file. Cách đúng là <strong>kiểm tra giá trị trả về của hàm đọc</strong> trong điều kiện vòng lặp (<code>while (fgets(...) != NULL)</code>); dùng <code>feof</code>/<code>ferror</code> <strong>sau</strong> vòng lặp để phân biệt hết file với lỗi.</p>
+<h2>12.4. Đọc và ghi nhị phân</h2>
+<pre class="hljs"><code><span class="hljs-type">size_t</span> <span class="hljs-title function_">fread</span> <span class="hljs-params">(<span class="hljs-type">void</span> *buf,       <span class="hljs-type">size_t</span> size, <span class="hljs-type">size_t</span> count, FILE *f)</span>;
+<span class="hljs-type">size_t</span> <span class="hljs-title function_">fwrite</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">void</span> *buf, <span class="hljs-type">size_t</span> size, <span class="hljs-type">size_t</span> count, FILE *f)</span>;
+</code></pre>
+<p>Đọc/ghi <code>count</code> phần tử, mỗi phần tử <code>size</code> byte; trả về <strong>số phần tử</strong> thực sự xử lý được (nhỏ hơn <code>count</code> nghĩa là hết file hoặc lỗi).</p>
+<h3>Ví dụ: sao chép file (mọi loại)</h3>
+<pre class="hljs"><code><span class="hljs-comment">// copy_file.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> *argv[])</span> {
+    <span class="hljs-keyword">if</span> (argc != <span class="hljs-number">3</span>) {
+        <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;Cach dung: %s &lt;nguon&gt; &lt;dich&gt;\n&quot;</span>, argv[<span class="hljs-number">0</span>]);
+        <span class="hljs-keyword">return</span> <span class="hljs-number">2</span>;
+    }
+
+    FILE *in  = fopen(argv[<span class="hljs-number">1</span>], <span class="hljs-string">&quot;rb&quot;</span>);
+    <span class="hljs-keyword">if</span> (!in) { perror(argv[<span class="hljs-number">1</span>]); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+    FILE *out = fopen(argv[<span class="hljs-number">2</span>], <span class="hljs-string">&quot;wb&quot;</span>);
+    <span class="hljs-keyword">if</span> (!out) { perror(argv[<span class="hljs-number">2</span>]); fclose(in); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> buf[<span class="hljs-number">8192</span>];             <span class="hljs-comment">// bộ đệm 8 KB</span>
+    <span class="hljs-type">size_t</span> n;
+    <span class="hljs-type">int</span> rc = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">while</span> ((n = fread(buf, <span class="hljs-number">1</span>, <span class="hljs-keyword">sizeof</span> buf, in)) &gt; <span class="hljs-number">0</span>) {
+        <span class="hljs-keyword">if</span> (fwrite(buf, <span class="hljs-number">1</span>, n, out) != n) {          <span class="hljs-comment">// ghi thiếu -&gt; lỗi (đĩa đầy...)</span>
+            perror(<span class="hljs-string">&quot;fwrite&quot;</span>);
+            rc = <span class="hljs-number">1</span>;
+            <span class="hljs-keyword">break</span>;
+        }
+    }
+    <span class="hljs-keyword">if</span> (ferror(in)) { perror(<span class="hljs-string">&quot;fread&quot;</span>); rc = <span class="hljs-number">1</span>; }
+
+    <span class="hljs-keyword">if</span> (fclose(out) != <span class="hljs-number">0</span>) { perror(<span class="hljs-string">&quot;fclose&quot;</span>); rc = <span class="hljs-number">1</span>; }
+    fclose(in);
+    <span class="hljs-keyword">return</span> rc;
+}
+</code></pre>
+<p>Điểm đáng nhớ: dùng <code>size = 1</code> và <code>count = n</code> để biết chính xác <strong>số byte</strong> đã đọc; đọc theo khối (8 KB) hiệu quả hơn nhiều so với từng byte.</p>
+<h3>Ghi/đọc mảng và struct nhị phân</h3>
+<pre class="hljs"><code><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span> <span class="hljs-type">int</span> id; <span class="hljs-type">double</span> score; } Record;
+
+Record recs[<span class="hljs-number">3</span>] = { {<span class="hljs-number">1</span>, <span class="hljs-number">9.5</span>}, {<span class="hljs-number">2</span>, <span class="hljs-number">8.0</span>}, {<span class="hljs-number">3</span>, <span class="hljs-number">7.25</span>} };
+
+FILE *f = fopen(<span class="hljs-string">&quot;data.bin&quot;</span>, <span class="hljs-string">&quot;wb&quot;</span>);
+fwrite(recs, <span class="hljs-keyword">sizeof</span> recs[<span class="hljs-number">0</span>], <span class="hljs-number">3</span>, f);
+fclose(f);
+
+Record back[<span class="hljs-number">3</span>];
+f = fopen(<span class="hljs-string">&quot;data.bin&quot;</span>, <span class="hljs-string">&quot;rb&quot;</span>);
+<span class="hljs-type">size_t</span> got = fread(back, <span class="hljs-keyword">sizeof</span> back[<span class="hljs-number">0</span>], <span class="hljs-number">3</span>, f);
+fclose(f);
+</code></pre>
+<p><strong>Cảnh báo về tính di động:</strong> cách này ghi <strong>nguyên khối byte của struct</strong>, gồm cả <strong>padding</strong>, kích thước kiểu và <strong>thứ tự byte (endianness)</strong> của máy hiện tại. File tạo ra trên máy này có thể <strong>không đọc đúng</strong> trên máy khác (khác endianness, khác <code>sizeof(long)</code>, khác padding). Với dữ liệu trao đổi giữa hệ thống, hãy <strong>tuần tự hóa từng trường</strong> với kiểu có kích thước cố định:</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdint.h&gt;</span></span>
+
+<span class="hljs-comment">// Ghi uint32_t theo thứ tự byte big-endian, không phụ thuộc máy</span>
+<span class="hljs-type">int</span> <span class="hljs-title function_">write_u32_be</span><span class="hljs-params">(FILE *f, <span class="hljs-type">uint32_t</span> v)</span> {
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> b[<span class="hljs-number">4</span>] = {
+        (<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>)(v &gt;&gt; <span class="hljs-number">24</span>), (<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>)(v &gt;&gt; <span class="hljs-number">16</span>),
+        (<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>)(v &gt;&gt; <span class="hljs-number">8</span>),  (<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>)v
+    };
+    <span class="hljs-keyword">return</span> fwrite(b, <span class="hljs-number">1</span>, <span class="hljs-number">4</span>, f) == <span class="hljs-number">4</span> ? <span class="hljs-number">0</span> : <span class="hljs-number">-1</span>;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">read_u32_be</span><span class="hljs-params">(FILE *f, <span class="hljs-type">uint32_t</span> *out)</span> {
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> b[<span class="hljs-number">4</span>];
+    <span class="hljs-keyword">if</span> (fread(b, <span class="hljs-number">1</span>, <span class="hljs-number">4</span>, f) != <span class="hljs-number">4</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    *out = ((<span class="hljs-type">uint32_t</span>)b[<span class="hljs-number">0</span>] &lt;&lt; <span class="hljs-number">24</span>) | ((<span class="hljs-type">uint32_t</span>)b[<span class="hljs-number">1</span>] &lt;&lt; <span class="hljs-number">16</span>) | ((<span class="hljs-type">uint32_t</span>)b[<span class="hljs-number">2</span>] &lt;&lt; <span class="hljs-number">8</span>) | b[<span class="hljs-number">3</span>];
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<h2>12.5. Di chuyển trong file</h2>
+<pre class="hljs"><code><span class="hljs-type">int</span>  <span class="hljs-title function_">fseek</span><span class="hljs-params">(FILE *f, <span class="hljs-type">long</span> offset, <span class="hljs-type">int</span> whence)</span>;   <span class="hljs-comment">// whence: SEEK_SET (đầu), SEEK_CUR (hiện tại), SEEK_END (cuối)</span>
+<span class="hljs-type">long</span> <span class="hljs-title function_">ftell</span><span class="hljs-params">(FILE *f)</span>;                            <span class="hljs-comment">// vị trí hiện tại (byte)</span>
+<span class="hljs-type">void</span> <span class="hljs-title function_">rewind</span><span class="hljs-params">(FILE *f)</span>;                           <span class="hljs-comment">// về đầu file và xóa cờ lỗi</span>
+</code></pre>
+<h3>Lấy kích thước file</h3>
+<pre class="hljs"><code><span class="hljs-type">long</span> <span class="hljs-title function_">file_size</span><span class="hljs-params">(FILE *f)</span> {
+    <span class="hljs-type">long</span> cur = ftell(f);
+    <span class="hljs-keyword">if</span> (cur &lt; <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    <span class="hljs-keyword">if</span> (fseek(f, <span class="hljs-number">0</span>, SEEK_END) != <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    <span class="hljs-type">long</span> size = ftell(f);
+    fseek(f, cur, SEEK_SET);                    <span class="hljs-comment">// trả về vị trí cũ</span>
+    <span class="hljs-keyword">return</span> size;
+}
+</code></pre>
+<h3>Đọc toàn bộ file vào bộ nhớ</h3>
+<pre class="hljs"><code><span class="hljs-comment">// Trả về bộ đệm cấp phát bằng malloc chứa toàn bộ file (kèm &#x27;\0&#x27; cuối); *out_len là số byte.</span>
+<span class="hljs-type">char</span> *<span class="hljs-title function_">read_all</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *path, <span class="hljs-type">size_t</span> *out_len)</span> {
+    FILE *f = fopen(path, <span class="hljs-string">&quot;rb&quot;</span>);
+    <span class="hljs-keyword">if</span> (!f) <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+
+    <span class="hljs-keyword">if</span> (fseek(f, <span class="hljs-number">0</span>, SEEK_END) != <span class="hljs-number">0</span>) { fclose(f); <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>; }
+    <span class="hljs-type">long</span> size = ftell(f);
+    <span class="hljs-keyword">if</span> (size &lt; <span class="hljs-number">0</span>) { fclose(f); <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>; }
+    rewind(f);
+
+    <span class="hljs-type">char</span> *buf = <span class="hljs-built_in">malloc</span>((<span class="hljs-type">size_t</span>)size + <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">if</span> (!buf) { fclose(f); <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>; }
+
+    <span class="hljs-type">size_t</span> got = fread(buf, <span class="hljs-number">1</span>, (<span class="hljs-type">size_t</span>)size, f);
+    fclose(f);
+    <span class="hljs-keyword">if</span> (got != (<span class="hljs-type">size_t</span>)size) { <span class="hljs-built_in">free</span>(buf); <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>; }
+
+    buf[size] = <span class="hljs-string">&#x27;\0&#x27;</span>;
+    <span class="hljs-keyword">if</span> (out_len) *out_len = (<span class="hljs-type">size_t</span>)size;
+    <span class="hljs-keyword">return</span> buf;
+}
+</code></pre>
+<p>Với file lớn hơn RAM, <strong>không</strong> đọc hết vào bộ nhớ; hãy xử lý theo dòng/khối (mục 12.8). <code>long</code> trên Windows chỉ 32 bit nên <code>ftell</code> giới hạn 2 GB; với file lớn dùng <code>_fseeki64</code>/<code>fseeko</code>.</p>
+<h3>Truy cập ngẫu nhiên: cập nhật một bản ghi</h3>
+<pre class="hljs"><code><span class="hljs-comment">// Đọc bản ghi thứ i và sửa nó, dùng file &quot;r+b&quot;</span>
+FILE *f = fopen(<span class="hljs-string">&quot;data.bin&quot;</span>, <span class="hljs-string">&quot;r+b&quot;</span>);
+fseek(f, (<span class="hljs-type">long</span>)(i * <span class="hljs-keyword">sizeof</span>(Record)), SEEK_SET);
+Record r;
+fread(&amp;r, <span class="hljs-keyword">sizeof</span> r, <span class="hljs-number">1</span>, f);
+r.score += <span class="hljs-number">1.0</span>;
+fseek(f, (<span class="hljs-type">long</span>)(i * <span class="hljs-keyword">sizeof</span>(Record)), SEEK_SET);   <span class="hljs-comment">// BẮT BUỘC fseek trước khi chuyển giữa đọc và ghi</span>
+fwrite(&amp;r, <span class="hljs-keyword">sizeof</span> r, <span class="hljs-number">1</span>, f);
+fclose(f);
+</code></pre>
+<h2>12.6. Bộ đệm (buffering)</h2>
+<p>Gọi hệ thống để ghi từng byte rất chậm nên thư viện C dùng <strong>bộ đệm</strong>: dữ liệu ghi được gom vào bộ nhớ và chỉ chuyển cho hệ điều hành khi bộ đệm đầy, khi bạn <code>fflush</code>, hoặc khi <code>fclose</code>.</p>
+<p>Có ba chế độ:</p>
+<table>
+<thead>
+<tr>
+<th>Chế độ</th>
+<th>Khi nào xả</th>
+<th>Mặc định của</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Đệm đầy (fully buffered)</strong></td>
+<td>khi bộ đệm đầy</td>
+<td>file thường</td>
+</tr>
+<tr>
+<td><strong>Đệm theo dòng (line buffered)</strong></td>
+<td>khi gặp <code>'\n'</code></td>
+<td><code>stdout</code> nối vào terminal</td>
+</tr>
+<tr>
+<td><strong>Không đệm (unbuffered)</strong></td>
+<td>ngay lập tức</td>
+<td><code>stderr</code></td>
+</tr>
+</tbody>
+</table>
+<p>Hệ quả thực tế:</p>
+<ol>
+<li><strong><code>printf</code> không có <code>\n</code> có thể không hiện ngay</strong> khi <code>stdout</code> là terminal (đệm theo dòng), và <strong>không hiện ngay khi nối vào file/ống</strong> (đệm đầy). Nếu chương trình crash, dòng chưa xả sẽ <strong>mất</strong>. Dùng <code>fflush(stdout)</code> khi cần hoặc in ra <code>stderr</code>.</li>
+<li>Trước khi đọc từ bàn phím, để lời nhắc không có <code>\n</code> hiện ra kịp thời: <code>printf(&quot;Nhap: &quot;); fflush(stdout);</code>. (Thực tế nhiều hệ thống tự xả <code>stdout</code> khi đọc <code>stdin</code>, nhưng đừng dựa vào đó.)</li>
+<li><code>fflush(f)</code> chỉ đẩy dữ liệu từ bộ đệm C cho hệ điều hành; hệ điều hành lại có <strong>bộ đệm riêng</strong> trước khi xuống đĩa. Để bảo đảm dữ liệu đã <strong>thật sự nằm trên đĩa</strong> (chống mất điện), cần <code>fsync(fileno(f))</code> (POSIX) hoặc <code>_commit</code> (Windows).</li>
+</ol>
+<pre class="hljs"><code>setvbuf(f, <span class="hljs-literal">NULL</span>, _IOFBF, <span class="hljs-number">65536</span>);   <span class="hljs-comment">// đặt bộ đệm 64 KB, đệm đầy (gọi ngay sau fopen, trước mọi thao tác khác)</span>
+setvbuf(<span class="hljs-built_in">stdout</span>, <span class="hljs-literal">NULL</span>, _IONBF, <span class="hljs-number">0</span>);  <span class="hljs-comment">// tắt bộ đệm stdout</span>
+</code></pre>
+<p><strong>Ghi file an toàn</strong> (không để file dở dang nếu chương trình bị dừng giữa chừng): ghi ra file tạm rồi <code>rename</code> đè lên file đích (thao tác <code>rename</code> là nguyên tử trên hệ POSIX):</p>
+<pre class="hljs"><code>FILE *f = fopen(<span class="hljs-string">&quot;config.tmp&quot;</span>, <span class="hljs-string">&quot;w&quot;</span>);
+<span class="hljs-comment">/* ... ghi ... */</span>
+fclose(f);
+rename(<span class="hljs-string">&quot;config.tmp&quot;</span>, <span class="hljs-string">&quot;config.txt&quot;</span>);
+</code></pre>
+<h2>12.7. Xử lý lỗi I/O — tổng hợp</h2>
+<table>
+<thead>
+<tr>
+<th>Hàm</th>
+<th>Dấu hiệu lỗi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fopen</code></td>
+<td>trả <code>NULL</code> (đặt <code>errno</code>)</td>
+</tr>
+<tr>
+<td><code>fgets</code></td>
+<td>trả <code>NULL</code> (hết file hoặc lỗi — phân biệt bằng <code>feof</code>/<code>ferror</code>)</td>
+</tr>
+<tr>
+<td><code>fgetc</code>/<code>getchar</code></td>
+<td>trả <code>EOF</code></td>
+</tr>
+<tr>
+<td><code>fread</code>/<code>fwrite</code></td>
+<td>trả về số phần tử <strong>nhỏ hơn</strong> yêu cầu</td>
+</tr>
+<tr>
+<td><code>fprintf</code>/<code>fputs</code></td>
+<td>trả số âm / <code>EOF</code></td>
+</tr>
+<tr>
+<td><code>fscanf</code></td>
+<td>trả số mục đọc được ít hơn mong đợi (hoặc <code>EOF</code>)</td>
+</tr>
+<tr>
+<td><code>fseek</code></td>
+<td>trả khác 0</td>
+</tr>
+<tr>
+<td><code>fclose</code></td>
+<td>trả khác 0</td>
+</tr>
+</tbody>
+</table>
+<p>Mẫu hàm bọc để kiểm tra lỗi đồng nhất:</p>
+<pre class="hljs"><code>FILE *<span class="hljs-title function_">xfopen</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *path, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *mode)</span> {
+    FILE *f = fopen(path, mode);
+    <span class="hljs-keyword">if</span> (!f) {
+        <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;loi: khong mo duoc &#x27;%s&#x27; (%s): %s\n&quot;</span>, path, mode, strerror(errno));
+        <span class="hljs-built_in">exit</span>(EXIT_FAILURE);
+    }
+    <span class="hljs-keyword">return</span> f;
+}
+</code></pre>
+<p>Những nguyên nhân thất bại thường gặp: sai đường dẫn (<code>ENOENT</code>), không có quyền (<code>EACCES</code>), thư mục thay vì file (<code>EISDIR</code>), đĩa đầy (<code>ENOSPC</code>), quá nhiều file mở (<code>EMFILE</code>). Chương 13 bàn kỹ hơn về chiến lược xử lý lỗi.</p>
+<p><strong>Đường dẫn trên Windows:</strong> dùng <code>/</code> hoặc <code>\\</code> (trong chuỗi C, dấu <code>\</code> phải viết <code>\\</code>): <code>&quot;C:\\data\\a.txt&quot;</code>. Đường dẫn tương đối tính từ <strong>thư mục làm việc hiện tại</strong> (nơi bạn chạy chương trình), không phải nơi chứa file <code>.exe</code>.</p>
+<h2>12.8. Ví dụ thực tế</h2>
+<h3>CSV đơn giản có trường trong dấu nháy kép</h3>
+<p>Định dạng CSV: các trường phân cách bằng dấu phẩy; trường chứa dấu phẩy hoặc xuống dòng được bao trong <code>&quot;...&quot;</code>, và dấu <code>&quot;</code> bên trong viết thành <code>&quot;&quot;</code>.</p>
+<pre class="hljs"><code><span class="hljs-comment">// csv_parser.c — phân tích một dòng CSV vào mảng trường</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-comment">// Tách `line` (SẼ BỊ SỬA) thành các trường, lưu con trỏ vào fields[]; trả về số trường.</span>
+<span class="hljs-type">size_t</span> <span class="hljs-title function_">csv_split</span><span class="hljs-params">(<span class="hljs-type">char</span> *line, <span class="hljs-type">char</span> *fields[], <span class="hljs-type">size_t</span> max_fields)</span> {
+    <span class="hljs-type">size_t</span> n = <span class="hljs-number">0</span>;
+    <span class="hljs-type">char</span> *p = line;
+
+    <span class="hljs-keyword">while</span> (n &lt; max_fields) {
+        <span class="hljs-type">char</span> *out;
+        <span class="hljs-keyword">if</span> (*p == <span class="hljs-string">&#x27;&quot;&#x27;</span>) {                     <span class="hljs-comment">// trường có nháy kép</span>
+            p++;
+            out = p;
+            <span class="hljs-type">char</span> *w = p;                     <span class="hljs-comment">// con trỏ ghi (nén &quot;&quot; thành &quot;)</span>
+            <span class="hljs-keyword">while</span> (*p) {
+                <span class="hljs-keyword">if</span> (*p == <span class="hljs-string">&#x27;&quot;&#x27;</span>) {
+                    <span class="hljs-keyword">if</span> (p[<span class="hljs-number">1</span>] == <span class="hljs-string">&#x27;&quot;&#x27;</span>) { *w++ = <span class="hljs-string">&#x27;&quot;&#x27;</span>; p += <span class="hljs-number">2</span>; <span class="hljs-keyword">continue</span>; }   <span class="hljs-comment">// &quot;&quot; -&gt; &quot;</span>
+                    p++;                     <span class="hljs-comment">// nháy đóng</span>
+                    <span class="hljs-keyword">break</span>;
+                }
+                *w++ = *p++;
+            }
+            *w = <span class="hljs-string">&#x27;\0&#x27;</span>;
+        } <span class="hljs-keyword">else</span> {                             <span class="hljs-comment">// trường thường</span>
+            out = p;
+            <span class="hljs-keyword">while</span> (*p &amp;&amp; *p != <span class="hljs-string">&#x27;,&#x27;</span>) p++;
+        }
+        fields[n++] = out;
+
+        <span class="hljs-keyword">if</span> (*p == <span class="hljs-string">&#x27;,&#x27;</span>) { *p++ = <span class="hljs-string">&#x27;\0&#x27;</span>; }      <span class="hljs-comment">// kết thúc trường, sang trường kế</span>
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (*p == <span class="hljs-string">&#x27;\0&#x27;</span>) <span class="hljs-keyword">break</span>;          <span class="hljs-comment">// hết dòng</span>
+        <span class="hljs-keyword">else</span> { <span class="hljs-comment">/* ký tự lạ sau nháy đóng: bỏ qua đến dấu phẩy */</span>
+            <span class="hljs-keyword">while</span> (*p &amp;&amp; *p != <span class="hljs-string">&#x27;,&#x27;</span>) p++;
+            <span class="hljs-keyword">if</span> (*p == <span class="hljs-string">&#x27;,&#x27;</span>) *p++ = <span class="hljs-string">&#x27;\0&#x27;</span>; <span class="hljs-keyword">else</span> <span class="hljs-keyword">break</span>;
+        }
+    }
+    <span class="hljs-keyword">return</span> n;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> *argv[])</span> {
+    FILE *f = argc &gt; <span class="hljs-number">1</span> ? fopen(argv[<span class="hljs-number">1</span>], <span class="hljs-string">&quot;r&quot;</span>) : <span class="hljs-built_in">stdin</span>;
+    <span class="hljs-keyword">if</span> (!f) { perror(<span class="hljs-string">&quot;fopen&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+
+    <span class="hljs-type">char</span> line[<span class="hljs-number">1024</span>];
+    <span class="hljs-keyword">while</span> (fgets(line, <span class="hljs-keyword">sizeof</span> line, f)) {
+        line[<span class="hljs-built_in">strcspn</span>(line, <span class="hljs-string">&quot;\r\n&quot;</span>)] = <span class="hljs-string">&#x27;\0&#x27;</span>;
+        <span class="hljs-type">char</span> *fields[<span class="hljs-number">16</span>];
+        <span class="hljs-type">size_t</span> n = csv_split(line, fields, <span class="hljs-number">16</span>);
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%zu truong:&quot;</span>, n);
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot; [%s]&quot;</span>, fields[i]);
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n&quot;</span>);
+    }
+    <span class="hljs-keyword">if</span> (f != <span class="hljs-built_in">stdin</span>) fclose(f);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Ví dụ <code>an,&quot;Nguyen, Van B&quot;,&quot;noi &quot;&quot;hay&quot;&quot;&quot;</code> cho ba trường: <code>an</code>, <code>Nguyen, Van B</code>, <code>noi &quot;hay&quot;</code>. Mã này cố ý gọn, đủ dạy nguyên lý; bộ phân tích CSV thực tế cần xử lý cả trường chứa xuống dòng và các trường hợp hỏng.</p>
+<h3>Đếm dòng, từ, byte (giống <code>wc</code>)</h3>
+<pre class="hljs"><code><span class="hljs-comment">// wc_lite.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;ctype.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> *argv[])</span> {
+    FILE *f = argc &gt; <span class="hljs-number">1</span> ? fopen(argv[<span class="hljs-number">1</span>], <span class="hljs-string">&quot;rb&quot;</span>) : <span class="hljs-built_in">stdin</span>;
+    <span class="hljs-keyword">if</span> (!f) { perror(argv[<span class="hljs-number">1</span>]); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> lines = <span class="hljs-number">0</span>, words = <span class="hljs-number">0</span>, bytes = <span class="hljs-number">0</span>;
+    <span class="hljs-type">int</span> in_word = <span class="hljs-number">0</span>, c;
+    <span class="hljs-keyword">while</span> ((c = fgetc(f)) != EOF) {
+        bytes++;
+        <span class="hljs-keyword">if</span> (c == <span class="hljs-string">&#x27;\n&#x27;</span>) lines++;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isspace</span>(c)) in_word = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!in_word) { in_word = <span class="hljs-number">1</span>; words++; }
+    }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%lu %lu %lu\n&quot;</span>, lines, words, bytes);
+    <span class="hljs-keyword">if</span> (f != <span class="hljs-built_in">stdin</span>) fclose(f);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<h3>Tìm chuỗi trong file lớn (streaming)</h3>
+<p>Đọc từng dòng, giữ bộ nhớ hằng số bất kể file lớn thế nào — giống <code>grep</code> đơn giản:</p>
+<pre class="hljs"><code><span class="hljs-comment">// mini_grep.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> *argv[])</span> {
+    <span class="hljs-keyword">if</span> (argc != <span class="hljs-number">3</span>) { <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;Cach dung: %s &lt;mau&gt; &lt;file&gt;\n&quot;</span>, argv[<span class="hljs-number">0</span>]); <span class="hljs-keyword">return</span> <span class="hljs-number">2</span>; }
+    FILE *f = fopen(argv[<span class="hljs-number">2</span>], <span class="hljs-string">&quot;r&quot;</span>);
+    <span class="hljs-keyword">if</span> (!f) { perror(argv[<span class="hljs-number">2</span>]); <span class="hljs-keyword">return</span> <span class="hljs-number">2</span>; }
+
+    <span class="hljs-type">char</span> line[<span class="hljs-number">4096</span>];
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> lineno = <span class="hljs-number">0</span>;
+    <span class="hljs-type">int</span> found = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">while</span> (fgets(line, <span class="hljs-keyword">sizeof</span> line, f)) {
+        lineno++;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strstr</span>(line, argv[<span class="hljs-number">1</span>])) {
+            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%s:%lu: %s&quot;</span>, argv[<span class="hljs-number">2</span>], lineno, line);
+            found = <span class="hljs-number">1</span>;
+        }
+    }
+    fclose(f);
+    <span class="hljs-keyword">return</span> found ? <span class="hljs-number">0</span> : <span class="hljs-number">1</span>;             <span class="hljs-comment">// giống grep: 0 nếu tìm thấy, 1 nếu không</span>
+}
+</code></pre>
+<p>Hạn chế: mẫu bị cắt đôi ở ranh giới hai lần đọc khi một dòng dài hơn 4095 ký tự sẽ bị bỏ sót. Muốn chắc chắn, dùng <code>getline</code> hoặc <code>read_line</code> ở trên.</p>
+<h3>Ghép nhiều file (<code>cat</code>)</h3>
+<pre class="hljs"><code><span class="hljs-comment">// merge_files.c — nối các file đầu vào vào một file đầu ra</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> *argv[])</span> {
+    <span class="hljs-keyword">if</span> (argc &lt; <span class="hljs-number">3</span>) { <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;Cach dung: %s &lt;dich&gt; &lt;nguon&gt;...\n&quot;</span>, argv[<span class="hljs-number">0</span>]); <span class="hljs-keyword">return</span> <span class="hljs-number">2</span>; }
+
+    FILE *out = fopen(argv[<span class="hljs-number">1</span>], <span class="hljs-string">&quot;wb&quot;</span>);
+    <span class="hljs-keyword">if</span> (!out) { perror(argv[<span class="hljs-number">1</span>]); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+
+    <span class="hljs-type">int</span> rc = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">2</span>; i &lt; argc; i++) {
+        FILE *in = fopen(argv[i], <span class="hljs-string">&quot;rb&quot;</span>);
+        <span class="hljs-keyword">if</span> (!in) { perror(argv[i]); rc = <span class="hljs-number">1</span>; <span class="hljs-keyword">continue</span>; }      <span class="hljs-comment">// bỏ qua file lỗi, vẫn xử lý file khác</span>
+        <span class="hljs-type">char</span> buf[<span class="hljs-number">8192</span>];
+        <span class="hljs-type">size_t</span> n;
+        <span class="hljs-keyword">while</span> ((n = fread(buf, <span class="hljs-number">1</span>, <span class="hljs-keyword">sizeof</span> buf, in)) &gt; <span class="hljs-number">0</span>) {
+            <span class="hljs-keyword">if</span> (fwrite(buf, <span class="hljs-number">1</span>, n, out) != n) { perror(<span class="hljs-string">&quot;fwrite&quot;</span>); rc = <span class="hljs-number">1</span>; <span class="hljs-keyword">break</span>; }
+        }
+        fclose(in);
+    }
+    <span class="hljs-keyword">if</span> (fclose(out) != <span class="hljs-number">0</span>) { perror(<span class="hljs-string">&quot;fclose&quot;</span>); rc = <span class="hljs-number">1</span>; }
+    <span class="hljs-keyword">return</span> rc;
+}
+</code></pre>
+<h2>12.9. Thao tác hệ thống cơ bản</h2>
+<p>Thư viện chuẩn C có một số hàm thao tác file ở mức tên:</p>
+<pre class="hljs"><code>remove(<span class="hljs-string">&quot;old.txt&quot;</span>);                <span class="hljs-comment">// xóa file (trả 0 nếu thành công)</span>
+rename(<span class="hljs-string">&quot;a.txt&quot;</span>, <span class="hljs-string">&quot;b.txt&quot;</span>);         <span class="hljs-comment">// đổi tên/di chuyển (trong cùng hệ thống file)</span>
+FILE *t = tmpfile();              <span class="hljs-comment">// file tạm tự xóa khi đóng/thoát</span>
+</code></pre>
+<h3>Tham số dòng lệnh và mã thoát</h3>
+<pre class="hljs"><code><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> *argv[])</span>   <span class="hljs-comment">// argc: số đối số, argv[0]: tên chương trình</span>
+</code></pre>
+<p>Dùng <code>return</code>/<code>exit</code> với <code>EXIT_SUCCESS</code> (0) hoặc <code>EXIT_FAILURE</code> (1) hoặc mã riêng. Quy ước của công cụ dòng lệnh: <code>0</code> thành công; <code>1</code> lỗi chung; <code>2</code> dùng sai cú pháp.</p>
+<h3>Biến môi trường</h3>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-type">const</span> <span class="hljs-type">char</span> *home = getenv(<span class="hljs-string">&quot;HOME&quot;</span>);         <span class="hljs-comment">// NULL nếu không có (Windows: &quot;USERPROFILE&quot;)</span>
+</code></pre>
+<h3>Chạy lệnh ngoài</h3>
+<pre class="hljs"><code><span class="hljs-type">int</span> status = system(<span class="hljs-string">&quot;ls -l&quot;</span>);              <span class="hljs-comment">// chạy lệnh qua shell (tiện nhưng nguy hiểm nếu ghép chuỗi từ người dùng)</span>
+</code></pre>
+<p><strong>Không</strong> đưa dữ liệu người dùng vào <code>system()</code> (nguy cơ <strong>command injection</strong>); nếu cần chạy tiến trình con hãy dùng <code>fork</code>/<code>exec</code> hoặc <code>posix_spawn</code> (POSIX), <code>CreateProcess</code> (Windows).</p>
+<h3>Thao tác thư mục và metadata (POSIX; Windows có API tương tự)</h3>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;dirent.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/stat.h&gt;</span></span>
+
+DIR *d = opendir(<span class="hljs-string">&quot;.&quot;</span>);
+<span class="hljs-keyword">if</span> (d) {
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">dirent</span> *<span class="hljs-title">e</span>;</span>
+    <span class="hljs-keyword">while</span> ((e = readdir(d)) != <span class="hljs-literal">NULL</span>) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%s\n&quot;</span>, e-&gt;d_name);
+    closedir(d);
+}
+
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">stat</span> <span class="hljs-title">st</span>;</span>
+<span class="hljs-keyword">if</span> (stat(<span class="hljs-string">&quot;data.txt&quot;</span>, &amp;st) == <span class="hljs-number">0</span>) {
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;kich thuoc: %lld byte\n&quot;</span>, (<span class="hljs-type">long</span> <span class="hljs-type">long</span>)st.st_size);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;la thu muc? %s\n&quot;</span>, S_ISDIR(st.st_mode) ? <span class="hljs-string">&quot;co&quot;</span> : <span class="hljs-string">&quot;khong&quot;</span>);
+}
+</code></pre>
+<p>Các hàm này thuộc <strong>POSIX</strong>, không thuộc chuẩn C. Trên Windows dùng <code>FindFirstFile</code>/<code>FindNextFile</code>, <code>GetFileAttributes</code>, hoặc thư viện đa nền tảng; MinGW cung cấp <code>dirent.h</code> và <code>stat</code> tương thích.</p>
+<h3>Truy cập mức thấp: file descriptor (POSIX)</h3>
+<p><code>open</code>/<code>read</code>/<code>write</code>/<code>close</code> làm việc với <strong>số nguyên</strong> (file descriptor), <strong>không đệm</strong> ở mức thư viện — nền tảng của socket (chương 16):</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;fcntl.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span>
+
+<span class="hljs-type">int</span> fd = open(<span class="hljs-string">&quot;data.txt&quot;</span>, O_RDONLY);
+<span class="hljs-keyword">if</span> (fd &gt;= <span class="hljs-number">0</span>) {
+    <span class="hljs-type">char</span> buf[<span class="hljs-number">256</span>];
+    <span class="hljs-type">ssize_t</span> n = read(fd, buf, <span class="hljs-keyword">sizeof</span> buf);    <span class="hljs-comment">// ssize_t có dấu: -1 khi lỗi</span>
+    close(fd);
+}
+</code></pre>
+<h2>12.10. <code>mmap</code> — ánh xạ file vào bộ nhớ (khái niệm)</h2>
+<p>Thay vì <code>read</code>/<code>fread</code>, có thể <strong>ánh xạ</strong> file vào không gian địa chỉ và truy cập nó như một mảng byte; hệ điều hành nạp trang từ đĩa khi cần:</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/mman.h&gt;</span>     <span class="hljs-comment">// POSIX</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/stat.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;fcntl.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span>
+
+<span class="hljs-type">int</span> fd = open(<span class="hljs-string">&quot;big.dat&quot;</span>, O_RDONLY);
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">stat</span> <span class="hljs-title">st</span>;</span>
+fstat(fd, &amp;st);
+<span class="hljs-type">const</span> <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> *data = mmap(<span class="hljs-literal">NULL</span>, st.st_size, PROT_READ, MAP_PRIVATE, fd, <span class="hljs-number">0</span>);
+<span class="hljs-keyword">if</span> (data != MAP_FAILED) {
+    <span class="hljs-comment">// dùng data[i] như mảng bình thường</span>
+    munmap((<span class="hljs-type">void</span> *)data, st.st_size);
+}
+close(fd);
+</code></pre>
+<p>Ưu điểm: nhanh cho truy cập ngẫu nhiên trên file lớn, không sao chép qua bộ đệm. Nhược điểm: <strong>không thuộc chuẩn C</strong>, khó xử lý lỗi I/O (lỗi xuất hiện như tín hiệu <code>SIGBUS</code> khi đọc), và <strong>khác biệt giữa nền tảng</strong> (Windows dùng <code>CreateFileMapping</code> + <code>MapViewOfFile</code>). Khuyến nghị: dùng <code>fread</code>/<code>fwrite</code> trừ khi cần hiệu năng đặc biệt.</p>
+<h2>12.11. Lỗi thường gặp</h2>
+<table>
+<thead>
+<tr>
+<th>Lỗi</th>
+<th>Hậu quả</th>
+<th>Cách tránh</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Không kiểm tra <code>fopen</code> trả <code>NULL</code></td>
+<td>Crash (dùng con trỏ NULL)</td>
+<td><code>if (!f) { perror(...); }</code></td>
+</tr>
+<tr>
+<td>Quên <code>fclose</code></td>
+<td>Mất dữ liệu chưa xả, rò rỉ descriptor</td>
+<td>Đóng trên mọi đường thoát</td>
+</tr>
+<tr>
+<td><code>while (!feof(f))</code></td>
+<td>Xử lý thừa một lần</td>
+<td>Kiểm tra giá trị trả về của hàm đọc</td>
+</tr>
+<tr>
+<td>Dùng <code>char c = fgetc(f)</code></td>
+<td>Không phân biệt được EOF</td>
+<td>Dùng <code>int</code></td>
+</tr>
+<tr>
+<td>Mở <code>&quot;w&quot;</code> khi định thêm vào file</td>
+<td>Mất sạch nội dung cũ</td>
+<td>Dùng <code>&quot;a&quot;</code></td>
+</tr>
+<tr>
+<td>Dùng <code>&quot;r&quot;</code>/<code>&quot;w&quot;</code> cho dữ liệu nhị phân trên Windows</td>
+<td>Dữ liệu bị dịch/cắt</td>
+<td>Dùng <code>&quot;rb&quot;</code>/<code>&quot;wb&quot;</code></td>
+</tr>
+<tr>
+<td>Ghi struct thô ra file để chia sẻ</td>
+<td>Không di động</td>
+<td>Tuần tự hóa từng trường</td>
+</tr>
+<tr>
+<td><code>fgets</code> rồi quên bỏ <code>'\n'</code></td>
+<td>Chuỗi có xuống dòng thừa</td>
+<td><code>strcspn(line, &quot;\r\n&quot;)</code></td>
+</tr>
+<tr>
+<td>Chuyển giữa đọc/ghi không <code>fseek</code>/<code>fflush</code></td>
+<td>Hành vi không xác định</td>
+<td>Gọi <code>fseek</code> giữa hai thao tác</td>
+</tr>
+<tr>
+<td><code>system()</code> với đầu vào người dùng</td>
+<td>Command injection</td>
+<td>Tránh, hoặc kiểm tra/loại bỏ nghiêm ngặt</td>
+</tr>
+</tbody>
+</table>
+<h2>12.12. Tóm tắt</h2>
 <ul>
-<li>fread/fwrite để đọc/ghi block bytes; hữu ích cho file nhị phân hoặc sao chép file.</li>
-<li>Ví dụ copy: đọc buffer 8KB và fwrite cho tới hết file.</li>
+<li>I/O trong C dựa trên <strong>luồng</strong> <code>FILE *</code>; <code>stdin</code>/<code>stdout</code>/<code>stderr</code> là ba luồng có sẵn.</li>
+<li>Văn bản: <code>fgets</code> + <code>sscanf</code>/<code>strtol</code> an toàn hơn <code>fscanf</code>; nhị phân: <code>fread</code>/<code>fwrite</code> với <code>&quot;rb&quot;</code>/<code>&quot;wb&quot;</code>.</li>
+<li>Kiểm tra <strong>mọi</strong> giá trị trả về; dùng <code>perror</code>/<code>strerror(errno)</code>; <code>feof</code> chỉ sau khi đọc thất bại.</li>
+<li>Dữ liệu ghi được <strong>đệm</strong>; <code>fclose</code>/<code>fflush</code> xả ra; <code>fsync</code> để đảm bảo xuống đĩa.</li>
+<li>Ghi struct thô không di động; tuần tự hóa từng trường với kiểu cố định.</li>
+<li><code>mmap</code>, thư mục, <code>stat</code> thuộc POSIX chứ không thuộc chuẩn C.</li>
 </ul>
-<h2>3. Buffering và fflush</h2>
-<ul>
-<li>stdout thường được buffered line-by-line hoặc fully buffered; fflush để đảm bảo ghi ra disk.</li>
-<li>File modes: &quot;rb&quot;/&quot;wb&quot; cho binary trên Windows</li>
-</ul>
-<h2>4. mmap (khái niệm)</h2>
-<ul>
-<li>mmap ánh xạ file vào bộ nhớ — nhanh cho đọc/ghi lớn; portability khác nhau giữa POSIX và Windows (MapViewOfFile).</li>
-<li>Giải thích ngắn, khuyến nghị dùng fread/fwrite cho portability trừ khi cần hiệu năng đặc biệt.</li>
-</ul>
-<h2>5. Ví dụ thực hành</h2>
-<ul>
-<li><a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-12">code/chapter-12</a>/copy_file.c: copy binary file with fread/fwrite.</li>
-<li><a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-12">code/chapter-12</a>/csv_parser.c: simple CSV reader handling quoted fields.</li>
-</ul>
-<p>Bài tập</p>
-<ul>
-<li>Viết chương trình merge nhiều file text vào một file, xử lý lỗi I/O.</li>
-<li>Viết chương trình tìm kiếm chuỗi trong file lớn bằng buffer streaming.</li>
-</ul>
-<p>Ghi chú: kèm README chỉ dẫn build/run và test files.</p>
+<h2>12.13. Bài tập</h2>
+<ol>
+<li>Viết chương trình ghi 10 dòng vào file và sau đó đọc lại, in số thứ tự dòng. Thử mở với <code>&quot;w&quot;</code> hai lần và quan sát.</li>
+<li>Viết <code>mycat</code> (in nội dung file ra stdout) và <code>mywc</code> (đếm dòng/từ/byte) hỗ trợ nhiều file và đọc từ stdin khi không có đối số.</li>
+<li>Viết chương trình <strong>sao chép file</strong> bằng <code>fread</code>/<code>fwrite</code>, in ra số byte đã chép; kiểm tra bằng <code>cmp</code> (Linux) hoặc <code>fc /b</code> (Windows) rằng bản sao giống hệt.</li>
+<li>Viết chương trình <strong>ghép nhiều file</strong> văn bản vào một file, xử lý file không mở được (báo lỗi, tiếp tục file khác).</li>
+<li>Viết chương trình đọc file CSV điểm (<code>ten,diem</code>), tính điểm trung bình, tìm người điểm cao nhất; bỏ qua và báo cáo dòng lỗi.</li>
+<li>Viết chương trình lưu/đọc mảng struct <code>Student</code> nhị phân bằng cách ghi <strong>từng trường</strong> với kích thước cố định (<code>uint32_t</code>, <code>double</code> theo định dạng bạn tự quy định), kèm header có magic number và số phiên bản.</li>
+<li>Viết chương trình tìm chuỗi trong file lớn theo kiểu <strong>streaming</strong>, đúng cả khi mẫu bị cắt ở ranh giới khối (gợi ý: giữ lại <code>len(mẫu) - 1</code> byte cuối của khối trước).</li>
+<li>Viết chương trình đảo ngược thứ tự dòng của file (gợi ý: đọc hết vào danh sách liên kết hoặc dùng <code>fseek</code> từ cuối file).</li>
+<li>(Thử thách) Viết chương trình <strong>ghi nhật ký (logger)</strong> xoay vòng: khi file <code>app.log</code> vượt quá 1 MB thì đổi tên thành <code>app.log.1</code> và bắt đầu file mới.</li>
+</ol>
+<p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-12">code/chapter-12</a></p>
 
 </article>
 <div class="chapter-nav"><a class="nav-prev" href="chapter-11.html">&larr; Header, Makefile, build systems</a><a class="nav-next" href="chapter-13.html">Xử lý lỗi & ngoại lệ trong C &rarr;</a></div>

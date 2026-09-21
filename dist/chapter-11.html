@@ -12,48 +12,460 @@
 <main class="content">
 <article>
 <h1>Chương 11 — Header, Makefile, build systems</h1>
-<p>Mục tiêu chương:</p>
+<h2>Mục tiêu chương</h2>
 <ul>
-<li>Biết tổ chức dự án C nhiều file: header an toàn, tách interface/implementation.</li>
-<li>Viết Makefile cơ bản và giới thiệu CMake để build cross-platform.</li>
+<li>Tổ chức dự án C nhiều file: tách <strong>giao diện (header)</strong> khỏi <strong>cài đặt (source)</strong>.</li>
+<li>Hiểu <strong>khai báo</strong> so với <strong>định nghĩa</strong>, và vì sao header chỉ nên chứa khai báo.</li>
+<li>Hiểu quá trình biên dịch riêng từng file (<code>.o</code>) rồi liên kết, cùng các lỗi <em>linker</em> thường gặp.</li>
+<li>Viết <code>Makefile</code> có biến, quy tắc mẫu, phụ thuộc tự động (<code>-MMD</code>), target <code>all</code>/<code>clean</code>/<code>test</code>.</li>
+<li>Biết dùng <strong>CMake</strong> cho dự án đa nền tảng.</li>
+<li>Tạo và dùng <strong>thư viện tĩnh</strong> (<code>.a</code>) và <strong>thư viện động</strong> (<code>.so</code>/<code>.dll</code>).</li>
 </ul>
-<h2>1. Header design</h2>
+<h2>11.1. Vì sao phải chia nhiều file?</h2>
+<p>Chương trình nhỏ nằm trong một file <code>main.c</code> không sao. Nhưng khi lớn lên:</p>
 <ul>
-<li>Include guard:</li>
+<li>File dài hàng nghìn dòng khó đọc, khó tìm.</li>
+<li>Mọi thay đổi buộc biên dịch lại tất cả.</li>
+<li>Nhiều người cùng sửa một file dễ xung đột.</li>
+<li>Không tái sử dụng được một phần cho dự án khác.</li>
 </ul>
-<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> MYLIB_H</span>
-<span class="hljs-meta">#<span class="hljs-keyword">define</span> MYLIB_H</span>
+<p>Giải pháp: chia thành <strong>module</strong>. Mỗi module có:</p>
+<ul>
+<li><strong>Header <code>.h</code></strong> — <em>giao diện</em> công khai: prototype hàm, kiểu, hằng số mà module cho phép bên ngoài dùng.</li>
+<li><strong>Source <code>.c</code></strong> — <em>cài đặt</em>: định nghĩa hàm và dữ liệu nội bộ.</li>
+</ul>
+<p>Người dùng module chỉ cần <code>#include</code> header, không cần biết cài đặt.</p>
+<h2>11.2. Khai báo và định nghĩa</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Khai báo (declaration)</th>
+<th>Định nghĩa (definition)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ý nghĩa</td>
+<td>&quot;Có một thứ tên X kiểu Y tồn tại ở đâu đó&quot;</td>
+<td>&quot;Đây là X, và đây là bộ nhớ/mã của nó&quot;</td>
+</tr>
+<tr>
+<td>Hàm</td>
+<td><code>int add(int a, int b);</code></td>
+<td><code>int add(int a, int b) { return a + b; }</code></td>
+</tr>
+<tr>
+<td>Biến</td>
+<td><code>extern int counter;</code></td>
+<td><code>int counter = 0;</code></td>
+</tr>
+<tr>
+<td>Cấp bộ nhớ?</td>
+<td>Không</td>
+<td>Có</td>
+</tr>
+<tr>
+<td>Được lặp lại?</td>
+<td>Nhiều lần, nhiều file</td>
+<td><strong>Đúng một lần</strong> trong cả chương trình</td>
+</tr>
+</tbody>
+</table>
+<p>Quy tắc <strong>một định nghĩa (One Definition Rule)</strong>: mỗi hàm và biến toàn cục phải được định nghĩa đúng <strong>một lần</strong> trong toàn bộ chương trình. Vì <code>#include</code> chép nguyên văn nội dung header vào mọi file <code>.c</code> nào include nó, header chứa <strong>định nghĩa</strong> sẽ tạo ra định nghĩa lặp → lỗi liên kết <code>multiple definition of ...</code>.</p>
+<p>Vì thế, <strong>header chỉ nên chứa:</strong></p>
+<ul>
+<li>Prototype hàm.</li>
+<li>Khai báo <code>extern</code> biến toàn cục (nếu thật sự cần).</li>
+<li>Định nghĩa kiểu: <code>struct</code>, <code>enum</code>, <code>typedef</code>, <code>union</code>.</li>
+<li>Hằng số và macro.</li>
+<li>Hàm <code>static inline</code> nhỏ (mỗi file <code>.c</code> có bản riêng nên không xung đột).</li>
+</ul>
+<p><strong>Không đặt</strong> trong header: thân hàm thường, biến toàn cục có khởi tạo.</p>
+<h2>11.3. Thiết kế một header tốt</h2>
+<pre class="hljs"><code><span class="hljs-comment">// include/geometry.h</span>
+<span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> GEOMETRY_H</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> GEOMETRY_H</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stddef.h&gt;</span>          <span class="hljs-comment">// size_t: header này cần tự include những gì nó dùng</span></span>
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span>
+    <span class="hljs-type">double</span> x, y;
+} Point;
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span>
+    Point *pts;
+    <span class="hljs-type">size_t</span> count;
+} Polygon;
+
+<span class="hljs-comment">/* Khoảng cách Euclid giữa a và b. */</span>
+<span class="hljs-type">double</span> <span class="hljs-title function_">geo_distance</span><span class="hljs-params">(Point a, Point b)</span>;
+
+<span class="hljs-comment">/*
+ * Diện tích đa giác theo công thức Shoelace.
+ * Trả về 0 nếu poly có ít hơn 3 đỉnh.
+ */</span>
+<span class="hljs-type">double</span> <span class="hljs-title function_">geo_polygon_area</span><span class="hljs-params">(<span class="hljs-type">const</span> Polygon *poly)</span>;
+
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span> <span class="hljs-comment">/* GEOMETRY_H */</span></span>
 </code></pre>
-<p>...</p>
-<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+<p>Những nguyên tắc rút ra:</p>
+<ol>
+<li><strong>Include guard</strong> (<code>#ifndef ... #define ... #endif</code>): tránh bị include hai lần gây lỗi trùng định nghĩa kiểu. Tên guard nên duy nhất, thường theo <code>TÊN_FILE_H</code> (hoặc thêm tên dự án).</li>
+<li><strong>Header tự đủ (self-contained):</strong> include header đó <strong>một mình</strong> trong file <code>.c</code> trống phải biên dịch được. Nếu header dùng <code>size_t</code>, nó phải tự <code>#include &lt;stddef.h&gt;</code>.</li>
+<li><strong>Tối thiểu hóa include:</strong> chỉ include cái gì thật sự cần trong header; include còn lại đặt trong <code>.c</code> để giảm phụ thuộc và thời gian biên dịch.</li>
+<li><strong>Đặt tiền tố</strong> tên hàm theo module (<code>geo_</code>, <code>vec_</code>, <code>net_</code>) để tránh trùng tên vì C không có namespace.</li>
+<li><strong>Ghi chú hợp đồng</strong> ngay trên prototype: hàm làm gì, tham số nào có thể NULL, ai giải phóng bộ nhớ, giá trị trả về khi lỗi.</li>
+<li><strong>Dùng <code>const</code></strong> cho tham số con trỏ chỉ đọc.</li>
+</ol>
+<h3>Thứ tự <code>#include</code> gợi ý</h3>
+<p>Trong <code>geometry.c</code>:</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;geometry.h&quot;</span>      <span class="hljs-comment">// 1. header tương ứng đặt ĐẦU TIÊN: kiểm chứng nó tự đủ</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;math.h&gt;</span>          <span class="hljs-comment">// 2. header hệ thống/thư viện chuẩn</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;util.h&quot;</span>          <span class="hljs-comment">// 3. header khác của dự án</span></span>
+</code></pre>
+<p>Đặt header tương ứng đầu tiên là mẹo hay: nếu header thiếu <code>#include</code> nào đó, lỗi lộ ra ngay thay vì bị &quot;che&quot; bởi các include phía trước.</p>
+<h3>Khai báo chuyển tiếp (forward declaration) và include vòng</h3>
+<p>Nếu <code>a.h</code> include <code>b.h</code> và <code>b.h</code> include <code>a.h</code>, bạn gặp <strong>include vòng</strong>. Khi một header chỉ dùng <strong>con trỏ</strong> tới kiểu khác, có thể chỉ cần khai báo chuyển tiếp thay vì include:</p>
+<pre class="hljs"><code><span class="hljs-comment">// parser.h</span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Lexer</span>;</span>                          <span class="hljs-comment">// forward declaration: &quot;có struct Lexer, chi tiết ở nơi khác&quot;</span>
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Parser</span> {</span>
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Lexer</span> *<span class="hljs-title">lexer</span>;</span>               <span class="hljs-comment">// chỉ là con trỏ nên không cần biết kích thước Lexer</span>
+    <span class="hljs-type">int</span> errors;
+} Parser;
+</code></pre>
+<p>Nhờ vậy <code>parser.h</code> không cần <code>#include &quot;lexer.h&quot;</code>.</p>
+<h3><code>extern &quot;C&quot;</code> cho tương thích C++</h3>
+<p>Nếu thư viện của bạn có thể được gọi từ C++, thêm:</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">ifdef</span> __cplusplus</span>
+<span class="hljs-keyword">extern</span> <span class="hljs-string">&quot;C&quot;</span> {
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+
+<span class="hljs-comment">/* ... prototype ... */</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">ifdef</span> __cplusplus</span>
+}
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+</code></pre>
+<h2>11.4. Biên dịch nhiều file — chi tiết</h2>
+<p>Với ba file:</p>
+<pre class="hljs"><code>project/
+├── include/geometry.h
+├── src/geometry.c
+└── src/main.c
+</code></pre>
+<pre class="hljs"><code><span class="hljs-comment">// src/geometry.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;geometry.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;math.h&gt;</span></span>
+
+<span class="hljs-type">double</span> <span class="hljs-title function_">geo_distance</span><span class="hljs-params">(Point a, Point b)</span> {
+    <span class="hljs-type">double</span> dx = a.x - b.x, dy = a.y - b.y;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">sqrt</span>(dx * dx + dy * dy);
+}
+
+<span class="hljs-type">double</span> <span class="hljs-title function_">geo_polygon_area</span><span class="hljs-params">(<span class="hljs-type">const</span> Polygon *poly)</span> {
+    <span class="hljs-keyword">if</span> (poly == <span class="hljs-literal">NULL</span> || poly-&gt;count &lt; <span class="hljs-number">3</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0.0</span>;
+    <span class="hljs-type">double</span> sum = <span class="hljs-number">0.0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; poly-&gt;count; i++) {
+        Point p = poly-&gt;pts[i];
+        Point q = poly-&gt;pts[(i + <span class="hljs-number">1</span>) % poly-&gt;count];
+        sum += p.x * q.y - q.x * p.y;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">fabs</span>(sum) / <span class="hljs-number">2.0</span>;
+}
+</code></pre>
+<pre class="hljs"><code><span class="hljs-comment">// src/main.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;geometry.h&quot;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    Point square[] = {{<span class="hljs-number">0</span>, <span class="hljs-number">0</span>}, {<span class="hljs-number">4</span>, <span class="hljs-number">0</span>}, {<span class="hljs-number">4</span>, <span class="hljs-number">3</span>}, {<span class="hljs-number">0</span>, <span class="hljs-number">3</span>}};
+    Polygon poly = { square, <span class="hljs-number">4</span> };
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;dien tich = %.2f\n&quot;</span>, geo_polygon_area(&amp;poly));           <span class="hljs-comment">// 12.00</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;khoang cach = %.2f\n&quot;</span>, geo_distance(square[<span class="hljs-number">0</span>], square[<span class="hljs-number">2</span>]));   <span class="hljs-comment">// 5.00</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Biên dịch <strong>từng file thành object file</strong> rồi <strong>liên kết</strong>:</p>
+<pre class="hljs"><code>gcc -std=c11 -Wall -Wextra -g -Iinclude -c src/geometry.c -o build/geometry.o
+gcc -std=c11 -Wall -Wextra -g -Iinclude -c src/main.c     -o build/main.o
+gcc build/geometry.o build/main.o -o build/app -lm
 </code></pre>
 <ul>
-<li>Quy tắc include order: corresponding header first, then &lt;...&gt;, then project headers.</li>
-<li>Forward declaration để tránh include vòng.</li>
+<li><code>-c</code>: chỉ biên dịch tới <code>.o</code>, không liên kết.</li>
+<li><code>-Iinclude</code>: thêm thư mục <code>include</code> vào đường tìm header (cho <code>#include &quot;geometry.h&quot;</code>).</li>
+<li><code>-lm</code>: liên kết thư viện toán (<code>libm</code>) — <strong>đặt sau</strong> các file <code>.o</code> cần nó. Thứ tự đối số của linker quan trọng: thư viện phải đứng <strong>sau</strong> các file object dùng nó.</li>
 </ul>
-<h2>2. Makefile cơ bản</h2>
+<p>Lợi ích: sửa <code>main.c</code> chỉ cần biên dịch lại <code>main.o</code> rồi liên kết lại, không phải biên dịch <code>geometry.c</code>. Với dự án hàng nghìn file, điều này tiết kiệm rất nhiều thời gian — và đó chính là việc mà <code>make</code> tự động làm.</p>
+<h3>Các lỗi liên kết (linker) thường gặp</h3>
+<table>
+<thead>
+<tr>
+<th>Thông báo</th>
+<th>Nguyên nhân</th>
+<th>Cách sửa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>undefined reference to 'geo_distance'</code></td>
+<td>Khai báo có nhưng không có định nghĩa được liên kết (quên file <code>.c</code>/<code>.o</code>, hoặc gõ sai tên)</td>
+<td>Thêm file vào lệnh liên kết; kiểm tra chính tả và chữ ký</td>
+</tr>
+<tr>
+<td><code>undefined reference to 'sqrt'</code></td>
+<td>Chưa liên kết thư viện</td>
+<td>Thêm <code>-lm</code></td>
+</tr>
+<tr>
+<td><code>multiple definition of 'counter'</code></td>
+<td>Định nghĩa biến/hàm trong header, hoặc hai <code>.c</code> cùng định nghĩa</td>
+<td>Chuyển định nghĩa sang một <code>.c</code>; header dùng <code>extern</code>/prototype</td>
+</tr>
+<tr>
+<td><code>fatal error: geometry.h: No such file or directory</code></td>
+<td>Thiếu <code>-I</code></td>
+<td>Thêm <code>-Iinclude</code></td>
+</tr>
+<tr>
+<td><code>redefinition of 'struct Point'</code></td>
+<td>Header include hai lần, thiếu guard</td>
+<td>Thêm include guard</td>
+</tr>
+<tr>
+<td><code>undefined reference to 'main'</code></td>
+<td>Không có hàm <code>main</code></td>
+<td>Đảm bảo có đúng một <code>main</code></td>
+</tr>
+</tbody>
+</table>
+<p>Phân biệt: <code>No such file</code> là lỗi <strong>tiền xử lý</strong>; <code>undefined reference</code> là lỗi <strong>linker</strong>, xảy ra sau khi biên dịch xong tất cả file.</p>
+<h2>11.5. Makefile</h2>
+<p><code>make</code> đọc file tên <code>Makefile</code>, mô tả <strong>cái gì phụ thuộc cái gì</strong> và <strong>cách tạo ra nó</strong>. Khi bạn chạy <code>make</code>, nó so sánh <strong>thời gian sửa</strong> của file nguồn và file đích, và chỉ chạy lệnh cho những đích <strong>lỗi thời</strong>.</p>
+<blockquote>
+<p><strong>Windows:</strong> dùng <code>make</code> trong MSYS2 (gõ <code>make</code> trong shell MSYS2/MinGW, hoặc <code>mingw32-make</code> từ <code>mingw-w64-x86_64-make</code>), hoặc chạy trong WSL.</p>
+</blockquote>
+<h3>Quy tắc cơ bản</h3>
+<pre class="hljs"><code><span class="hljs-section">target: dependencies</span>
+&lt;TAB&gt;command
+</code></pre>
+<p><strong>Quan trọng:</strong> dòng lệnh phải bắt đầu bằng <strong>ký tự TAB</strong>, không phải dấu cách. Đây là lỗi kinh điển: <code>Makefile:5: *** missing separator. Stop.</code></p>
+<pre class="hljs"><code><span class="hljs-comment"># Makefile tối giản</span>
+<span class="hljs-section">app: main.o geometry.o</span>
+	gcc main.o geometry.o -o app -lm
+
+<span class="hljs-section">main.o: src/main.c include/geometry.h</span>
+	gcc -std=c11 -Wall -Wextra -Iinclude -c src/main.c
+
+<span class="hljs-section">geometry.o: src/geometry.c include/geometry.h</span>
+	gcc -std=c11 -Wall -Wextra -Iinclude -c src/geometry.c
+</code></pre>
+<p>Chạy <code>make</code> → tạo <code>app</code>. Chạy lại lần nữa → &quot;<code>make: 'app' is up to date.</code>&quot;. Sửa <code>geometry.c</code> rồi <code>make</code> → chỉ biên dịch lại <code>geometry.o</code> và liên kết lại.</p>
+<h3>Makefile hoàn chỉnh, đầy đủ</h3>
+<pre class="hljs"><code><span class="hljs-comment"># ---- Cấu hình ----</span>
+CC      := gcc
+CFLAGS  := -std=c11 -Wall -Wextra -Wpedantic -g -O0 -Iinclude
+LDFLAGS :=
+LDLIBS  := -lm
+
+SRC_DIR   := src
+BUILD_DIR := build
+TARGET    := <span class="hljs-variable">$(BUILD_DIR)</span>/app
+
+SRCS := <span class="hljs-variable">$(<span class="hljs-built_in">wildcard</span> <span class="hljs-variable">$(SRC_DIR)</span>/*.c)</span>                     <span class="hljs-comment"># mọi file .c trong src/</span>
+OBJS := <span class="hljs-variable">$(<span class="hljs-built_in">patsubst</span> <span class="hljs-variable">$(SRC_DIR)</span>/%.c,<span class="hljs-variable">$(BUILD_DIR)</span>/%.o,<span class="hljs-variable">$(SRCS)</span>)</span>
+DEPS := $(OBJS:.o=.d)                                  <span class="hljs-comment"># file phụ thuộc tự sinh</span>
+
+<span class="hljs-comment"># ---- Mục tiêu ----</span>
+<span class="hljs-meta"><span class="hljs-keyword">.PHONY</span>: all clean run test</span>
+
+<span class="hljs-section">all: <span class="hljs-variable">$(TARGET)</span></span>
+
+<span class="hljs-variable">$(TARGET)</span>: <span class="hljs-variable">$(OBJS)</span>
+	<span class="hljs-variable">$(CC)</span> <span class="hljs-variable">$(LDFLAGS)</span> <span class="hljs-variable">$^</span> -o <span class="hljs-variable">$@</span> <span class="hljs-variable">$(LDLIBS)</span>
+
+<span class="hljs-comment"># Quy tắc mẫu: mỗi src/X.c -&gt; build/X.o</span>
+<span class="hljs-variable">$(BUILD_DIR)</span>/%.o: <span class="hljs-variable">$(SRC_DIR)</span>/%.c | <span class="hljs-variable">$(BUILD_DIR)</span>
+	<span class="hljs-variable">$(CC)</span> <span class="hljs-variable">$(CFLAGS)</span> -MMD -MP -c <span class="hljs-variable">$&lt;</span> -o <span class="hljs-variable">$@</span>
+
+<span class="hljs-variable">$(BUILD_DIR)</span>:
+	mkdir -p <span class="hljs-variable">$@</span>
+
+<span class="hljs-section">run: <span class="hljs-variable">$(TARGET)</span></span>
+	./<span class="hljs-variable">$(TARGET)</span>
+
+<span class="hljs-section">test: <span class="hljs-variable">$(TARGET)</span></span>
+	./tests/run_tests.sh
+
+<span class="hljs-section">clean:</span>
+	rm -rf <span class="hljs-variable">$(BUILD_DIR)</span>
+
+<span class="hljs-keyword">-include</span> <span class="hljs-variable">$(DEPS)</span>
+</code></pre>
+<p>Giải thích từng phần:</p>
 <ul>
-<li>Variables: CC = gcc, CFLAGS = -std=c11 -Wall -Wextra -g</li>
-<li>Targets: all, clean, test</li>
-<li>Pattern rule: %.o: %.c</li>
-<li>Ví dụ Makefile cho project 3 module: compile .c -&gt; .o; link các .o</li>
-</ul>
-<h2>3. CMake cơ bản</h2>
+<li><strong>Biến:</strong> <code>CC := gcc</code>; dùng bằng <code>$(CC)</code>. <code>:=</code> gán ngay lập tức. Đặt cờ ở đầu để dễ đổi (<code>make CC=clang</code>, <code>make CFLAGS=&quot;-O2&quot;</code>).</li>
+<li><strong><code>$(wildcard ...)</code></strong> liệt kê file; <strong><code>$(patsubst ...)</code></strong> biến đổi tên (<code>src/a.c</code> → <code>build/a.o</code>).</li>
+<li><strong>Biến tự động</strong> trong quy tắc:
 <ul>
-<li>CMakeLists.txt đơn giản: project(name C); add_executable(); target_include_directories();</li>
-<li>Lợi ích: tạo build dir, hỗ trợ nhiều generator, dễ tích hợp CI</li>
+<li><code>$@</code> — tên <strong>đích</strong> (target).</li>
+<li><code>$&lt;</code> — <strong>phụ thuộc đầu tiên</strong> (thường là file <code>.c</code>).</li>
+<li><code>$^</code> — <strong>tất cả</strong> phụ thuộc.</li>
 </ul>
-<h2>4. Best practices</h2>
+</li>
+<li><strong>Quy tắc mẫu <code>%</code>:</strong> <code>$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c</code> áp dụng cho mọi file — không phải viết từng quy tắc.</li>
+<li><strong><code>| $(BUILD_DIR)</code>:</strong> phụ thuộc &quot;order-only&quot;: đảm bảo thư mục tồn tại trước, nhưng thay đổi thư mục không kích hoạt biên dịch lại.</li>
+<li><strong><code>.PHONY</code>:</strong> khai báo các đích không phải file thật (<code>all</code>, <code>clean</code>...) để <code>make</code> luôn chạy chúng, kể cả khi vô tình tồn tại file tên <code>clean</code>.</li>
+<li><strong><code>-MMD -MP</code>:</strong> yêu cầu gcc sinh file <code>.d</code> liệt kê <strong>các header</strong> mà mỗi <code>.c</code> include. <strong><code>-include $(DEPS)</code></strong> nạp chúng, nên khi bạn sửa <code>geometry.h</code>, <code>make</code> tự biên dịch lại mọi <code>.c</code> phụ thuộc. Nếu thiếu bước này, sửa header sẽ <strong>không</strong> kích hoạt biên dịch lại — nguồn lỗi khó chịu (bạn thay đổi <code>struct</code> mà file cũ vẫn dùng bố cục cũ).</li>
+<li>Dấu <code>@</code> đầu lệnh (<code>@echo ...</code>) ẩn dòng lệnh khi chạy; <code>-</code> đầu lệnh bỏ qua lỗi.</li>
+</ul>
+<h3>Các mục tiêu thường thấy</h3>
+<pre class="hljs"><code>make            <span class="hljs-comment"># biên dịch mọi thứ (đích mặc định: đích đầu tiên, thường là all)</span>
+make clean      <span class="hljs-comment"># xóa file đã sinh</span>
+make run        <span class="hljs-comment"># biên dịch và chạy</span>
+make -j4        <span class="hljs-comment"># biên dịch song song 4 tiến trình</span>
+make V=1 ...    <span class="hljs-comment"># (tùy Makefile) hiện đầy đủ dòng lệnh</span>
+</code></pre>
+<h3>Các biến thể build</h3>
+<pre class="hljs"><code><span class="hljs-comment"># Đặt bản debug và release</span>
+<span class="hljs-keyword">ifeq</span> (<span class="hljs-variable">$(BUILD)</span>,release)
+    CFLAGS += -O2 -DNDEBUG
+<span class="hljs-keyword">else</span>
+    CFLAGS += -O0 -g
+<span class="hljs-keyword">endif</span>
+
+<span class="hljs-comment"># make BUILD=release</span>
+</code></pre>
+<p>Bản <strong>sanitizer</strong>:</p>
+<pre class="hljs"><code><span class="hljs-section">asan: CFLAGS += -fsanitize=address,undefined -fno-omit-frame-pointer</span>
+<span class="hljs-section">asan: LDFLAGS += -fsanitize=address,undefined</span>
+<span class="hljs-section">asan: clean all</span>
+</code></pre>
+<h2>11.6. Thư viện tĩnh và thư viện động</h2>
+<h3>Thư viện tĩnh (<code>.a</code>)</h3>
+<p>Gói nhiều file <code>.o</code> thành một file lưu trữ. Khi liên kết, linker <strong>chép</strong> phần mã cần dùng vào file thực thi.</p>
+<pre class="hljs"><code>gcc -c -Iinclude src/geometry.c -o build/geometry.o
+ar rcs build/libgeometry.a build/geometry.o            <span class="hljs-comment"># tạo thư viện tĩnh</span>
+gcc src/main.c -Iinclude -Lbuild -lgeometry -lm -o app <span class="hljs-comment"># -L: thư mục tìm; -lgeometry: tìm libgeometry.a</span>
+</code></pre>
+<p>Quy ước đặt tên: <code>libTÊN.a</code> được nhắc tới bằng <code>-lTÊN</code>. Ưu điểm: file chạy độc lập, không phụ thuộc file khác lúc chạy. Nhược điểm: file lớn hơn; cập nhật thư viện phải liên kết lại.</p>
+<h3>Thư viện động (<code>.so</code> trên Linux, <code>.dll</code> trên Windows, <code>.dylib</code> trên macOS)</h3>
+<p>Mã <strong>không</strong> được chép vào file thực thi; nó được nạp lúc chạy và có thể dùng chung giữa nhiều chương trình.</p>
+<pre class="hljs"><code><span class="hljs-comment"># Linux</span>
+gcc -fPIC -c -Iinclude src/geometry.c -o build/geometry.o    <span class="hljs-comment"># -fPIC: mã không phụ thuộc vị trí</span>
+gcc -shared build/geometry.o -o build/libgeometry.so
+gcc src/main.c -Iinclude -Lbuild -lgeometry -lm -o app
+LD_LIBRARY_PATH=build ./app                                   <span class="hljs-comment"># chỉ cho hệ thống biết chỗ tìm .so lúc chạy</span>
+</code></pre>
+<p>Trên Windows/MinGW: <code>gcc -shared -o geometry.dll geometry.o -Wl,--out-implib,libgeometry.a</code>. Lỗi thường gặp lúc chạy: <code>error while loading shared libraries: libgeometry.so: cannot open shared object file</code> — hệ thống không tìm thấy <code>.so</code> (đặt <code>LD_LIBRARY_PATH</code>, dùng <code>rpath</code> <code>-Wl,-rpath,'$ORIGIN'</code>, hoặc cài vào thư mục hệ thống).</p>
+<h2>11.7. CMake</h2>
+<p><strong>CMake</strong> là trình <strong>tạo hệ thống build</strong> (không tự biên dịch): từ một file mô tả <code>CMakeLists.txt</code>, nó sinh ra Makefile, dự án Ninja, Visual Studio, Xcode... — phù hợp dự án cần chạy trên nhiều nền tảng.</p>
+<p>Cài đặt: <code>sudo apt install cmake</code>, <code>brew install cmake</code>, hoặc tải từ <a href="http://cmake.org">cmake.org</a> (Windows).</p>
+<h3><code>CMakeLists.txt</code> cho dự án ở trên</h3>
+<pre class="hljs"><code><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.16</span>)
+<span class="hljs-keyword">project</span>(geometry_demo VERSION <span class="hljs-number">1.0</span> LANGUAGES C)
+
+<span class="hljs-keyword">set</span>(CMAKE_C_STANDARD <span class="hljs-number">11</span>)
+<span class="hljs-keyword">set</span>(CMAKE_C_STANDARD_REQUIRED <span class="hljs-keyword">ON</span>)
+<span class="hljs-keyword">set</span>(CMAKE_C_EXTENSIONS <span class="hljs-keyword">OFF</span>)                 <span class="hljs-comment"># -std=c11 thay vì gnu11</span>
+
+<span class="hljs-comment"># Thư viện tĩnh từ geometry.c</span>
+<span class="hljs-keyword">add_library</span>(geometry STATIC src/geometry.c)
+<span class="hljs-keyword">target_include_directories</span>(geometry PUBLIC <span class="hljs-keyword">include</span>)
+<span class="hljs-keyword">target_compile_options</span>(geometry PRIVATE -Wall -Wextra -Wpedantic)
+<span class="hljs-keyword">find_library</span>(MATH_LIB m)                    <span class="hljs-comment"># libm (trên Windows/MSVC không cần)</span>
+<span class="hljs-keyword">if</span>(MATH_LIB)
+    <span class="hljs-keyword">target_link_libraries</span>(geometry PUBLIC <span class="hljs-variable">${MATH_LIB}</span>)
+<span class="hljs-keyword">endif</span>()
+
+<span class="hljs-comment"># Chương trình chính</span>
+<span class="hljs-keyword">add_executable</span>(app src/main.c)
+<span class="hljs-keyword">target_link_libraries</span>(app PRIVATE geometry)
+
+<span class="hljs-comment"># Kiểm thử (ctest)</span>
+<span class="hljs-keyword">enable_testing</span>()
+<span class="hljs-keyword">add_test</span>(NAME smoke <span class="hljs-keyword">COMMAND</span> app)
+</code></pre>
+<h3>Quy trình dùng</h3>
+<pre class="hljs"><code>cmake -S . -B build                   <span class="hljs-comment"># cấu hình: sinh build system vào thư mục build/</span>
+cmake --build build                   <span class="hljs-comment"># biên dịch (dùng generator đã chọn)</span>
+ctest --test-dir build                <span class="hljs-comment"># chạy kiểm thử</span>
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release     <span class="hljs-comment"># bản release</span>
+cmake -S . -B build -G Ninja          <span class="hljs-comment"># dùng Ninja (nhanh hơn make)</span>
+</code></pre>
+<p>Các điểm mấu chốt của CMake hiện đại (&quot;target-based&quot;):</p>
 <ul>
-<li>Separate build directory (out-of-source build).</li>
-<li>Giữ header minimal; tránh include heavy headers trong header.</li>
-<li>Document API trong header comments.</li>
+<li>Mỗi thứ là một <strong>target</strong> (<code>add_library</code>, <code>add_executable</code>).</li>
+<li>Thông tin gắn vào target bằng <code>target_include_directories</code>, <code>target_compile_options</code>, <code>target_link_libraries</code>.</li>
+<li>Phạm vi <code>PUBLIC</code>/<code>PRIVATE</code>/<code>INTERFACE</code> cho biết thông tin có truyền sang target phụ thuộc hay không (ví dụ thư mục <code>include</code> của <code>geometry</code> là <code>PUBLIC</code> nên <code>app</code> tự nhận nó khi liên kết).</li>
+<li><strong>Out-of-source build:</strong> luôn build trong thư mục riêng (<code>build/</code>), không lẫn file sinh ra với mã nguồn; xóa nhanh bằng cách xóa thư mục đó.</li>
 </ul>
-<p>Bài tập</p>
+<h3>Make hay CMake?</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Make</th>
+<th>CMake</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Độ phức tạp</td>
+<td>Thấp, trực tiếp</td>
+<td>Cao hơn, thêm một lớp</td>
+</tr>
+<tr>
+<td>Đa nền tảng</td>
+<td>Khó (phụ thuộc shell/công cụ)</td>
+<td>Rất tốt (VS, Xcode, Ninja...)</td>
+</tr>
+<tr>
+<td>Tìm thư viện</td>
+<td>Tự làm (<code>pkg-config</code>)</td>
+<td><code>find_package</code>, <code>FetchContent</code></td>
+</tr>
+<tr>
+<td>Phù hợp</td>
+<td>Dự án nhỏ/vừa, Linux/macOS</td>
+<td>Dự án đa nền tảng, có phụ thuộc</td>
+</tr>
+</tbody>
+</table>
+<p>Hãy bắt đầu bằng <code>make</code>; chuyển sang CMake khi cần Windows/Visual Studio hoặc nhiều phụ thuộc.</p>
+<h2>11.8. Thực hành tốt</h2>
+<ol>
+<li><strong>Build ngoài mã nguồn:</strong> tất cả file sinh ra vào <code>build/</code>, thêm <code>build/</code> vào <code>.gitignore</code>.</li>
+<li><strong>Luôn bật cảnh báo</strong> trong Makefile/CMake (<code>-Wall -Wextra</code>); cân nhắc <code>-Werror</code> trong CI.</li>
+<li><strong>Tách cờ debug/release/sanitizer</strong> bằng biến hoặc mục tiêu riêng.</li>
+<li><strong>Giữ header nhỏ và tự đủ;</strong> chỉ lộ những gì cần lộ. Mọi thứ khác đánh dấu <code>static</code> trong <code>.c</code>.</li>
+<li><strong>Tự động hóa kiểm thử:</strong> <code>make test</code> hoặc <code>ctest</code> chạy cả bộ kiểm thử (chương 21).</li>
+<li><strong>Ghi cách build vào README</strong> (các lệnh chính xác).</li>
+<li><strong>Không commit file build</strong> (<code>*.o</code>, <code>*.exe</code>, thư mục <code>build/</code>); chỉ commit mã nguồn và file cấu hình.</li>
+</ol>
+<h2>11.9. Tóm tắt</h2>
 <ul>
-<li>Viết Makefile cho project có 3 module (math, utils, main) và chạy build/test; tạo CMakeLists.txt tương đương.</li>
+<li>Header chứa <strong>khai báo</strong>, source chứa <strong>định nghĩa</strong>; mỗi định nghĩa chỉ một lần.</li>
+<li>Include guard, header tự đủ, tiền tố tên, forward declaration giúp header bền vững.</li>
+<li>Biên dịch từng file (<code>-c</code>) rồi liên kết; đọc lỗi linker để phân biệt với lỗi biên dịch.</li>
+<li>Makefile: mục tiêu, phụ thuộc, biến tự động, quy tắc mẫu, <code>-MMD</code> để theo dõi header.</li>
+<li>Thư viện tĩnh <code>.a</code> (chép vào chương trình) và động <code>.so</code>/<code>.dll</code> (nạp lúc chạy).</li>
+<li>CMake mô tả dự án theo target và sinh hệ thống build cho mọi nền tảng.</li>
 </ul>
-<p>Ghi chú: kèm sample Makefile và CMakeLists trong <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-11">code/chapter-11</a> để người học chạy.</p>
+<h2>11.10. Bài tập</h2>
+<ol>
+<li>Tách chương trình máy tính (chương 4) thành <code>calc.h</code>/<code>calc.c</code>/<code>main.c</code>. Cố tình xóa include guard rồi include header hai lần để thấy lỗi <code>redefinition</code>.</li>
+<li>Cố tình đặt <strong>định nghĩa</strong> biến <code>int counter = 0;</code> trong header, include vào hai file <code>.c</code> và quan sát lỗi <code>multiple definition</code>. Sửa bằng <code>extern</code>.</li>
+<li>Viết Makefile cho dự án 3 module (<code>math</code>, <code>utils</code>, <code>main</code>) có <code>all</code>, <code>clean</code>, <code>run</code>, dùng quy tắc mẫu và <code>-MMD</code>. Kiểm chứng: sửa một header và xác nhận chỉ các file phụ thuộc được biên dịch lại.</li>
+<li>Thêm mục tiêu <code>asan</code> và <code>release</code> vào Makefile của bạn.</li>
+<li>Tạo thư viện tĩnh <code>libutils.a</code> từ các module và liên kết chương trình chính với nó bằng <code>-L</code> và <code>-l</code>.</li>
+<li>Tạo thư viện động và chạy chương trình dùng nó; thử xóa/đổi tên <code>.so</code> để thấy lỗi nạp lúc chạy.</li>
+<li>Viết <code>CMakeLists.txt</code> tương đương với Makefile ở bài 3; build bằng <code>cmake -S . -B build</code> và chạy <code>ctest</code>.</li>
+<li>(Thử thách) Thêm mục tiêu <code>format</code> (chạy <code>clang-format</code>) và <code>lint</code> (chạy <code>cppcheck</code>) vào Makefile.</li>
+</ol>
+<p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-11">code/chapter-11</a></p>
 
 </article>
 <div class="chapter-nav"><a class="nav-prev" href="chapter-10.html">&larr; Struct, union, enum</a><a class="nav-next" href="chapter-12.html">File I/O & thao tác hệ thống &rarr;</a></div>
