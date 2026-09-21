@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mạng cơ bản (sockets) — Lập trình C — Từ cơ bản đến nâng cao</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link active" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<main class="content">
+<article>
+<h1>Chương 16 — Mạng cơ bản (sockets)</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Hiểu nguyên tắc hoạt động của TCP/UDP sockets và viết client-server đơn giản.</li>
+<li>Biết xử lý blocking vs non-blocking sockets và cơ chế select/poll.</li>
+</ul>
+<h2>1. Cơ bản về socket API</h2>
+<ul>
+<li>socket(), bind(), listen(), accept(), connect(), close().</li>
+<li>sockaddr_in, htons/ntohs, inet_pton/inet_ntop để chuyển đổi địa chỉ.</li>
+</ul>
+<h2>2. Giao tiếp: send/recv vs read/write</h2>
+<ul>
+<li>send/recv cung cấp flags; read/write là wrapper POSIX.</li>
+<li>Luôn kiểm tra giá trị trả về — có thể partial send/recv.</li>
+</ul>
+<h2>3. Blocking vs non-blocking và multiplexing</h2>
+<ul>
+<li>Blocking socket chặn khi không có dữ liệu; non-blocking trả -1 với EAGAIN/EWOULDBLOCK.</li>
+<li>select()/poll()/epoll để multiplex nhiều socket trong một thread.</li>
+</ul>
+<h2>4. Ví dụ thực hành</h2>
+<ul>
+<li>echo_server.c: server TCP đơn giản multi-threaded (accept -&gt; spawn worker thread)</li>
+<li>http_request.c: gửi HTTP GET thô tới server và in response headers</li>
+</ul>
+<p>Bài tập</p>
+<ul>
+<li>Viết server echo TCP xử lý nhiều client (thread-per-connection) và phiên bản dùng select để xử lý nhiều client trong một thread.</li>
+</ul>
+<p>Ghi chú: kèm hướng dẫn build cho POSIX; trên Windows dùng Winsock (khác tên hàm: WSAStartup, closesocket).</p>
+
+</article>
+<div class="chapter-nav"><a class="nav-prev" href="chapter-15.html">&larr; Đa luồng & đồng bộ (POSIX threads)</a><a class="nav-next" href="chapter-17.html">Tối ưu hóa & profiling &rarr;</a></div>
+</main>
+</div>
+</body>
+</html>

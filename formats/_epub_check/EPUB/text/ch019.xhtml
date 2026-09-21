@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="vi" xml:lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <title>ch019.xhtml</title>
+  <style>
+  </style>
+  <link rel="stylesheet" type="text/css" href="../styles/stylesheet1.css" />
+</head>
+<body epub:type="bodymatter">
+<section id="chương-19-project-trình-biên-dịch-interpreter-mini" class="level1">
+<h1>Chương 19 — Project: Trình biên dịch / Interpreter mini</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Xây một mini language step-by-step: lexer → parser → AST → evaluator/codegen.</li>
+<li>Viết tests cho từng bước để đảm bảo đúng và có thể mở rộng.</li>
+</ul>
+<ol type="1">
+<li>Thiết kế ngôn ngữ con</li>
+</ol>
+<ul>
+<li>Bắt đầu với biểu thức số học, biến, và assignment: e.g., x = 1 + 2 * (3 - 4)</li>
+<li>Quy định grammar đơn giản (EBNF) và precedence.</li>
+</ul>
+<ol start="2" type="1">
+<li>Lexical analysis</li>
+</ol>
+<ul>
+<li>Viết lexer trả về token types: NUMBER, IDENT, PLUS, MINUS, STAR, SLASH, LPAREN, RPAREN, ASSIGN, SEMI.</li>
+<li>Xử lý whitespace và comments.</li>
+</ul>
+<ol start="3" type="1">
+<li>Parsing</li>
+</ol>
+<ul>
+<li>Dùng recursive-descent parser: expr -&gt; term { (+|-) term }</li>
+<li>Xây AST nodes: Number, BinaryOp, Variable, Assign</li>
+</ul>
+<ol start="4" type="1">
+<li>Evaluation / Codegen</li>
+</ol>
+<ul>
+<li>Interpreter: traverse AST và evaluate; giữ environment (map var-&gt;value).</li>
+<li>Optionally: codegen to stack bytecode and implement VM loop.</li>
+</ul>
+<ol start="5" type="1">
+<li>Testing &amp; incremental development</li>
+</ol>
+<ul>
+<li>TDD: viết tests cho lexer, parser and evaluator.</li>
+<li>Keep interfaces small and well-documented.</li>
+</ul>
+<ol start="6" type="1">
+<li>Ví dụ thực hành</li>
+</ol>
+<ul>
+<li>/code/chapter-19/lexer.c</li>
+<li>/code/chapter-19/parser.c</li>
+<li>/code/chapter-19/eval.c (main runs REPL)</li>
+</ul>
+<p>Bài tập dự án</p>
+<ul>
+<li>Bước 1: implement lexer and unit tests.</li>
+<li>Bước 2: parser + AST + evaluator; support variables.</li>
+<li>Bước 3: extend language: functions, if/else, while.</li>
+</ul>
+<p>Ghi chú: kèm Makefile và test scripts in /code/chapter-19.</p>
+</section>
+</body>
+</html>

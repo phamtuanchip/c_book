@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Project: Web server đơn giản — Lập trình C — Từ cơ bản đến nâng cao</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link active" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<main class="content">
+<article>
+<h1>Chương 20 — Project: Web server đơn giản</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Xây một web server nhỏ có thể serve static files và vài route động (JSON API).</li>
+<li>Hiểu trade-offs giữa thread-per-connection, thread-pool và non-blocking event loop.</li>
+</ul>
+<h2>1. Architecture cơ bản</h2>
+<ul>
+<li>Accept loop: accept() kết nối và xử lý request.</li>
+<li>Thread-per-connection: đơn giản nhưng tốn tài nguyên khi nhiều client.</li>
+<li>Thread pool: queue kết nối và worker threads xử lý; cân bằng throughput.</li>
+</ul>
+<h2>2. HTTP request parsing</h2>
+<ul>
+<li>Parsers đơn giản: đọc request line, headers, method, path.</li>
+<li>Không cần implement full HTTP/1.1 — focus vào GET và simple headers.</li>
+</ul>
+<h2>3. Serving static files</h2>
+<ul>
+<li>Map path -&gt; filesystem path; validate path để tránh directory traversal.</li>
+<li>Set Content-Type theo file extension (MIME map).</li>
+<li>Use sendfile on POSIX for efficiency where có.</li>
+</ul>
+<h2>4. Routing and logging</h2>
+<ul>
+<li>Map routes to handler functions; basic router supports prefix/static routes.</li>
+<li>Logging: request time, method, path, response code.</li>
+</ul>
+<h2>5. Ví dụ thực hành</h2>
+<ul>
+<li><a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-20">code/chapter-20</a>/simple_server.c: thread-per-connection server serving files from ./www</li>
+<li><a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-20">code/chapter-20</a>/thread_pool_server.c: server using fixed worker pool and request queue</li>
+</ul>
+<p>Bài tập</p>
+<ul>
+<li>Implement server serving static files and a /api/time JSON endpoint.</li>
+<li>Add graceful shutdown (signal handling) and basic rate-limiting.</li>
+</ul>
+<p>Ghi chú: provide POSIX build instructions; Windows users see alternative using Winsock or run in WSL.</p>
+
+</article>
+<div class="chapter-nav"><a class="nav-prev" href="chapter-19.html">&larr; Project: Trình biên dịch / Interpreter mini</a><a class="nav-next" href="chapter-21.html">Testing & CI cho C &rarr;</a></div>
+</main>
+</div>
+</body>
+</html>

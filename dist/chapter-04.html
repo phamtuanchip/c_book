@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cú pháp & cấu trúc chương trình C — Lập trình C — Từ cơ bản đến nâng cao</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link active" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<main class="content">
+<article>
+<h1>Chương 4 — Cú pháp &amp; cấu trúc chương trình C</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Nắm rõ cú pháp cơ bản: tokens, khai báo, biểu thức, câu lệnh điều khiển.</li>
+<li>Hiểu tiền xử lý (#include, #define), include guards và cách tổ chức header/source.</li>
+<li>Thực hành tách module, viết prototype, và so sánh macro vs inline function.</li>
+</ul>
+<h2>1. Tokens và cú pháp cơ bản</h2>
+<ul>
+<li>Tokens gồm identifiers (tên biến/hàm), keywords (int, return, if...), literals (số, ký tự, chuỗi), operators và punctuators.</li>
+<li>Câu lệnh kết thúc bằng dấu chấm phẩy <code>;</code>. Block được bao bởi <code>{ ... }</code>.</li>
+</ul>
+<h2>2. Kiểu dữ liệu và khai báo</h2>
+<ul>
+<li>Kiểu cơ bản: char, short, int, long, float, double, _Bool, void.</li>
+<li>Phân biệt signed/unsigned, và dùng các kiểu kích thước cố định (stdint.h): int8_t, int32_t, uint64_t.</li>
+<li>Khai báo và khởi tạo biến: int x = 0; const int MAX = 100;</li>
+</ul>
+<h2>3. Hàm, prototype và phạm vi</h2>
+<ul>
+<li>Prototype: đặt ở header (.h) để các file khác biết về hàm.</li>
+</ul>
+<pre class="hljs"><code>  Ví dụ: <span class="hljs-type">int</span> <span class="hljs-title function_">add</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span>;
+</code></pre>
+<ul>
+<li>Definition: int add(int a, int b) { return a + b; }</li>
+<li>Phạm vi (scope): local (biến trong hàm), file-scope (static biến ở đầu file), global (không nên dùng quá nhiều).</li>
+</ul>
+<h2>4. Tiền xử lý</h2>
+<ul>
+<li>#include &lt;stdio.h&gt; để lấy khai báo thư viện chuẩn.</li>
+<li>Include guard để tránh include lặp:</li>
+</ul>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> MATH_UTILS_H</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> MATH_UTILS_H</span>
+<span class="hljs-comment">/* declarations */</span>
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+</code></pre>
+<ul>
+<li>#define cho macro; cẩn thận với side-effects.</li>
+</ul>
+<p>Ví dụ macro nguy hiểm:</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> SQUARE(x) ((x)*(x))</span>
+<span class="hljs-comment">// SQUARE(i++) sẽ có hành vi không mong muốn</span>
+</code></pre>
+<h2>5. Macro vs inline function</h2>
+<ul>
+<li>Macro: expand text, không có type-checking, có thể gây side-effect.</li>
+<li>Inline function (static inline): an toàn hơn, có type-checking và tối ưu hoá tương đương macro khi compiler cho phép.</li>
+</ul>
+<p>Ví dụ:</p>
+<pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-type">int</span> <span class="hljs-title function_">square_int</span><span class="hljs-params">(<span class="hljs-type">int</span> x)</span> { <span class="hljs-keyword">return</span> x * x; }
+</code></pre>
+<h2>6. Tổ chức project nhỏ: header + source</h2>
+<ul>
+<li>Thư mục: src/, include/, tests/</li>
+<li>Ví dụ: math.h (declarations), math.c (implementation), main.c (sử dụng)</li>
+<li>Makefile: rules để compile từng module và link thành executable.</li>
+</ul>
+<h2>7. Bài tập</h2>
+<ul>
+<li>Viết macro SQUARE(x) và minh hoạ lỗi khi dùng SQUARE(i++).</li>
+<li>Viết inline function square_int và so sánh với macro.</li>
+<li>Tách chương trình thành math.h/math.c/main.c và build bằng Makefile.</li>
+</ul>
+<p>Ghi chú: kèm theo ví dụ minh họa trong <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-04">code/chapter-04</a>, mỗi ví dụ có README hướng dẫn biên dịch.</p>
+
+</article>
+<div class="chapter-nav"><a class="nav-prev" href="chapter-03.html">&larr; Lịch sử và triết lý của ngôn ngữ C</a><a class="nav-next" href="chapter-05.html">Điều khiển luồng (Control Flow) &rarr;</a></div>
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="vi" xml:lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <title>ch017.xhtml</title>
+  <style>
+  </style>
+  <link rel="stylesheet" type="text/css" href="../styles/stylesheet1.css" />
+</head>
+<body epub:type="bodymatter">
+<section id="chương-17-tối-ưu-hóa-profiling" class="level1">
+<h1>Chương 17 — Tối ưu hóa &amp; profiling</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Học cách đo hiệu năng thực tế, xác định hotspots và tối ưu hóa phù hợp.</li>
+<li>Hiểu khác biệt giữa tối ưu thuật toán và micro-optimizations (cache, inlining).</li>
+</ul>
+<ol type="1">
+<li>Đo và profiling</li>
+</ol>
+<ul>
+<li>Microbenchmark vs real workload: luôn test trên dữ liệu thực.</li>
+<li>Công cụ:
+<ul>
+<li>gprof: profiling cho chương trình được link với -pg (các hạn chế về inline).</li>
+<li>perf (Linux): đo CPU cycles, cache-misses, branch-misses.</li>
+<li>Valgrind Callgrind + kcachegrind: profile gọi hàm và số lần gọi.</li>
+</ul></li>
+</ul>
+<ol start="2" type="1">
+<li>Algorithmic optimization</li>
+</ol>
+<ul>
+<li>Đổi thuật toán thường đem lợi lớn nhất (O(n^2) -&gt; O(n log n) …).</li>
+<li>Trường hợp: dùng hash map thay vì tìm tuyến tính.</li>
+</ul>
+<ol start="3" type="1">
+<li>Micro-optimizations và cache-friendliness</li>
+</ol>
+<ul>
+<li>Data locality: tổ chức dữ liệu theo trình tự truy cập (AoS vs SoA).</li>
+<li>Prefetching, loop unrolling, inlining: cân nhắc trước khi áp dụng.</li>
+<li>Giữ critical loops đơn giản để compiler tối ưu.</li>
+</ul>
+<ol start="4" type="1">
+<li>Compiler optimizations and flags</li>
+</ol>
+<ul>
+<li>-O0, -O1, -O2, -O3, -Ofast, -march=native</li>
+<li>-flto (link-time optimization), -funroll-loops, -fprofile-guided</li>
+<li>Gợi ý: thử nhiều mức và profile để thấy tác động.</li>
+</ul>
+<ol start="5" type="1">
+<li>Benchmarking methodology</li>
+</ol>
+<ul>
+<li>Run multiple times, warm-up caches, pin CPU if cần.</li>
+<li>Use stable datasets and measure wall-clock and CPU time.</li>
+</ul>
+<ol start="6" type="1">
+<li>Ví dụ thực hành</li>
+</ol>
+<ul>
+<li>/code/chapter-17/sort_bench.c: so sánh quicksort vs mergesort vs std qsort với dữ liệu lớn và đo thời gian.</li>
+<li>/code/chapter-17/cache_demo.c: minh họa truy cập theo hàng vs cột trên matrix và đo cache effect.</li>
+</ul>
+<p>Bài tập</p>
+<ol type="1">
+<li>Profile hàm tìm kiếm và thay bằng cấu trúc dữ liệu phù hợp; trình bày số liệu trước/sau.</li>
+<li>Minh họa effect của memory layout bằng benchmark.</li>
+</ol>
+<p>Ghi chú: kèm hướng dẫn chạy perf/gprof và cách đọc báo cáo.</p>
+</section>
+</body>
+</html>

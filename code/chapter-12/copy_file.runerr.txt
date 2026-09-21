@@ -1,0 +1,7 @@
+﻿cmd.exe : Usage: C:\Users\phamt\project\c_book\code\chapter-12\copy_file.exe SOURCE DEST
+At line:33 char:13
++             & cmd /c $cmdline > $runOut 2> $runErr
++             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Usage: C:\Users...exe SOURCE DEST:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

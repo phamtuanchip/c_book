@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="vi" xml:lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <title>ch015.xhtml</title>
+  <style>
+  </style>
+  <link rel="stylesheet" type="text/css" href="../styles/stylesheet1.css" />
+</head>
+<body epub:type="bodymatter">
+<section id="chương-15-đa-luồng-đồng-bộ-posix-threads" class="level1">
+<h1>Chương 15 — Đa luồng &amp; đồng bộ (POSIX threads)</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Hiểu cách tạo/hủy thread bằng pthreads, đồng bộ hóa bằng mutex và condition variables.</li>
+<li>Nhận diện race condition, deadlock và cách phòng tránh.</li>
+</ul>
+<ol type="1">
+<li>Tạo và quản lý thread</li>
+</ol>
+<ul>
+<li>pthread_create, pthread_join: tạo thread và đợi thread kết thúc.</li>
+<li>Truyền tham số vào thread bằng struct, tránh truyền địa chỉ biến cục bộ đã biến mất.</li>
+</ul>
+<ol start="2" type="1">
+<li>Mutex và bảo vệ shared data</li>
+</ol>
+<ul>
+<li>pthread_mutex_t mutex; pthread_mutex_lock(&amp;mutex); /* critical section */ pthread_mutex_unlock(&amp;mutex);</li>
+<li>Giữ critical sections ngắn, tránh lock ordering khác nhau gây deadlock.</li>
+</ul>
+<ol start="3" type="1">
+<li>Condition variables</li>
+</ol>
+<ul>
+<li>pthread_cond_wait, pthread_cond_signal: dùng cho producer-consumer pattern.</li>
+<li>Luôn khóa mutex trước khi gọi pthread_cond_wait.</li>
+</ul>
+<ol start="4" type="1">
+<li>Race condition, deadlock và strategies</li>
+</ol>
+<ul>
+<li>Race: truy cập shared state không được bảo vệ.</li>
+<li>Deadlock: avoid by ordering locks consistently, using trylock or lock hierarchy.</li>
+</ul>
+<ol start="5" type="1">
+<li>Tools và debugging</li>
+</ol>
+<ul>
+<li>Helgrind (Valgrind tool) và ThreadSanitizer (TSAN) để phát hiện race.</li>
+</ul>
+<p>Bài tập</p>
+<ul>
+<li>Cài đặt producer-consumer với buffer giới hạn: multiple producers, multiple consumers, và kiểm thử với threads.</li>
+</ul>
+<p>Ghi chú: kèm code trong /code/chapter-15 với Makefile để build trên POSIX; trên Windows hướng dẫn tương đương với Win32 threads.</p>
+</section>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quản lý bộ nhớ và lỗi phổ biến — Lập trình C — Từ cơ bản đến nâng cao</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link active" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<main class="content">
+<article>
+<h1>Chương 9 — Quản lý bộ nhớ và lỗi phổ biến</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Hiểu chính xác sự khác nhau giữa stack và heap, cách malloc/calloc/realloc/free hoạt động.</li>
+<li>Nhận diện và sửa các lỗi bộ nhớ phổ biến: memory leak, use-after-free, double-free, dangling pointer.</li>
+<li>Sử dụng công cụ dynamic (Valgrind, ASAN) và static (clang-tidy, cppcheck) để tìm lỗi.</li>
+</ul>
+<h2>1. Stack vs Heap — minh hoạ</h2>
+<ul>
+<li>Stack: lưu biến cục bộ, tự động giải phóng khi rời scope. Kích thước giới hạn.</li>
+<li>Heap: cấp phát động qua malloc/calloc/realloc; phải free thủ công.</li>
+</ul>
+<p>Ví dụ ngắn:</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> *<span class="hljs-title function_">make_array</span><span class="hljs-params">(<span class="hljs-type">size_t</span> n)</span> {
+    <span class="hljs-comment">// Trả pointer tới heap; caller phải free</span>
+    <span class="hljs-type">int</span> *a = <span class="hljs-built_in">malloc</span>(n * <span class="hljs-keyword">sizeof</span> *a);
+    <span class="hljs-keyword">if</span> (!a) <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+    <span class="hljs-keyword">return</span> a;
+}
+</code></pre>
+<h2>2. Các lỗi thường gặp (chi tiết &amp; cách sửa)</h2>
+<ul>
+<li>Memory leak: quên free. Cách: xác định ownership, mỗi malloc phải có free tương ứng, viết tests và dùng Valgrind.</li>
+<li>Use-after-free: dùng con trỏ sau khi free → undefined behavior. Sửa: đặt pointer = NULL sau free; kiểm tra NULL.</li>
+<li>Double free: free cùng địa chỉ hai lần → crash; giữ ownership rõ ràng.</li>
+<li>Dangling pointer: con trỏ trỏ tới vùng đã free; tránh bằng NULL và thiết kế API rõ ràng.</li>
+</ul>
+<h2>3. Công cụ và cách dùng</h2>
+<ul>
+<li>Valgrind (Linux): valgrind --leak-check=full ./prog — liệt kê leak, use-after-free.</li>
+<li>AddressSanitizer: gcc -fsanitize=address -g -o prog prog.c — phát hiện use-after-free, OOB.</li>
+<li>static analyzers: clang-tidy, cppcheck — tìm pattern nguy hiểm trước khi chạy.</li>
+</ul>
+<h2>4. Patterns an toàn</h2>
+<ul>
+<li>Kiểm tra kết quả malloc/calloc: if (!ptr) { /* xử lý lỗi */ }</li>
+<li>Dùng RAII-like patterns trong C: wrapper struct có hàm init/free để tránh leak.</li>
+<li>Dùng valgrind/asan trong CI cho bài tập và ví dụ.</li>
+</ul>
+<h2>5. Ví dụ thực hành</h2>
+<ul>
+<li><a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-09">code/chapter-09</a>/leak_example.c: tạo leak cố tình và sửa.</li>
+<li><a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-09">code/chapter-09</a>/use_after_free.c: minh hoạ và cách phát hiện bằng ASAN.</li>
+<li><a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-09">code/chapter-09</a>/tree.c: cấp phát/giải phóng đúng cho binary tree.</li>
+</ul>
+<p>Bài tập</p>
+<ol>
+<li>Viết và test một binary tree: allocate và free mọi node; kiểm tra bằng Valgrind.</li>
+<li>Viết ví dụ minh họa use-after-free và sửa nó bằng ownership rõ ràng.</li>
+</ol>
+<p>Ghi chú: kèm README hướng dẫn sử dụng Valgrind và cách build với -fsanitize=address.</p>
+
+</article>
+<div class="chapter-nav"><a class="nav-prev" href="chapter-08.html">&larr; Con trỏ chi tiết (Pointers Deep Dive)</a><a class="nav-next" href="chapter-10.html">Struct, union, enum &rarr;</a></div>
+</main>
+</div>
+</body>
+</html>

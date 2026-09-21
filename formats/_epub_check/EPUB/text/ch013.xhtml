@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="vi" xml:lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <title>ch013.xhtml</title>
+  <style>
+  </style>
+  <link rel="stylesheet" type="text/css" href="../styles/stylesheet1.css" />
+</head>
+<body epub:type="bodymatter">
+<section id="chương-13-xử-lý-lỗi-ngoại-lệ-trong-c" class="level1">
+<h1>Chương 13 — Xử lý lỗi &amp; ngoại lệ trong C</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Hiểu cách báo lỗi hiệu quả trong C: mã trả về, errno, perror, strerror và assert.</li>
+<li>Thiết kế API có kiểm tra lỗi rõ ràng và logging để dễ debug.</li>
+</ul>
+<ol type="1">
+<li>Kiểm tra giá trị trả về và errno</li>
+</ol>
+<ul>
+<li>Luôn kiểm tra giá trị trả về của hàm I/O và hệ thống (fopen, malloc, read, write).</li>
+<li>errno (từ &lt;errno.h&gt;) chứa mã lỗi khi hàm hệ thống trả về lỗi; dùng perror hoặc strerror(errno) để in thông báo có nghĩa.</li>
+</ul>
+<p>Ví dụ: FILE <em>f = fopen(path, “r”); if (!f) { perror(“fopen”); /</em> xử lý lỗi */ }</p>
+<ol start="2" type="1">
+<li>assert vs runtime error handling</li>
+</ol>
+<ul>
+<li>assert() (từ &lt;assert.h&gt;) dùng để kiểm tra giả thiết nội bộ khi debug; không dùng assert cho kiểm soát luồng hoặc xử lý lỗi từ input.</li>
+<li>assert bị loại bỏ khi biên dịch với NDEBUG; dùng return codes và logging cho runtime.</li>
+</ul>
+<ol start="3" type="1">
+<li>Thiết kế mã lỗi và API</li>
+</ol>
+<ul>
+<li><p>Trả về int/error enum hoặc struct { int code; char *msg } cho các hàm phức tạp.</p></li>
+<li><p>Ví dụ: typedef enum { ERR_OK = 0, ERR_IO = 1, ERR_OOM = 2 } error_t; error_t read_config(const char *path);</p></li>
+<li><p>Document ownership: ai chịu free chuỗi lỗi, ai trả lỗi.</p></li>
+</ul>
+<ol start="4" type="1">
+<li>Logging và debug macros</li>
+</ol>
+<ul>
+<li>Dùng macro LOG(level, fmt, …) để chuẩn hoá thông báo. Ví dụ: #define LOG_ERR(fmt, …) fprintf(stderr, “ERROR:” fmt “”, ##<strong>VA_ARGS</strong>)</li>
+<li>Giữ logging nhẹ ở production hoặc điều khiển bằng macro #ifdef DEBUG.</li>
+</ul>
+<ol start="5" type="1">
+<li>Best practices</li>
+</ol>
+<ul>
+<li>Kiểm tra mọi return từ hàm có thể fail.</li>
+<li>Trả mã lỗi rõ ràng, tránh dùng -1/0 nếu không có ý nghĩa.</li>
+<li>Thử nghiệm: viết test cản lỗi (fault injection) để đảm bảo chương trình xử lý hỏng hóc.</li>
+</ul>
+<p>Bài tập</p>
+<ul>
+<li>Viết wrapper safe_fopen(path, mode, error_buf, bufsize) — trả NULL on error và ghi thông báo người dùng vào error_buf.</li>
+<li>Viết chương trình demo: cố ý gây lỗi I/O (không tồn tại file) và hiển thị thông báo hữu ích.</li>
+</ul>
+<p>Ghi chú: kèm ví dụ trong /code/chapter-13 bao gồm safe_fopen và tests.</p>
+</section>
+</body>
+</html>

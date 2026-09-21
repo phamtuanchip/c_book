@@ -1,0 +1,23 @@
+Title: Học lập trình C — Từ cơ bản đến nâng cao
+Author: [Tên Tác Giả]
+Language: Vietnamese
+
+Short description (for Amazon):
+Học lập trình C — Từ cơ bản đến nâng cao là một khóa học toàn diện, kèm ví dụ thực hành và kho mã mẫu, giúp bạn nắm vững nền tảng lập trình hệ thống và chuẩn bị cho các ngôn ngữ bậc cao hơn. Bao gồm hướng dẫn cài đặt môi trường, giải thích chi tiết các khái niệm (con trỏ, quản lý bộ nhớ, multi-threading), kỹ thuật tối ưu và các dự án thực tế.
+
+Long description (marketing blurb):
+Quyển sách này được thiết kế cho cả người mới bắt đầu và lập trình viên muốn củng cố nền tảng. Mỗi chương gồm lý thuyết, ví dụ code dễ chạy, bài tập có đáp án và hướng dẫn kiểm thử. Bạn sẽ học từ cách viết chương trình C đầu tiên tới xây dựng server, trình biên dịch mini và các kỹ thuật tối ưu và bảo mật quan trọng.
+
+Keywords:
+C, lập trình C, lập trình hệ thống, con trỏ, bộ nhớ, multi-threading, socket, hướng dẫn, ebook, KDP
+
+Book categories (suggested):
+- Computers & Technology › Programming Languages › C & C++
+- Computers & Technology › Software Development
+
+Author bio (short):
+[Tên Tác Giả] — lập trình viên/giảng viên với nhiều năm kinh nghiệm phát triển phần mềm hệ thống và đào tạo lập trình C.
+
+Notes:
+- Include sample code in the repository and link in the book description to GitHub.
+- Provide support email or GitHub link for errata and updates.

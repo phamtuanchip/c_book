@@ -1,0 +1,1 @@
+﻿Nhap hai so nguyen (dong 1): Gia tri khong hop le.

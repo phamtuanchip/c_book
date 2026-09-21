@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="vi" xml:lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <title>ch002.xhtml</title>
+  <style>
+  </style>
+  <link rel="stylesheet" type="text/css" href="../styles/stylesheet1.css" />
+</head>
+<body epub:type="bodymatter">
+<section id="chương-2-máy-tính-và-lập-trình-cơ-bản" class="level1">
+<h1>Chương 2 — Máy tính và lập trình cơ bản</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Hiểu cách máy tính lưu trữ dữ liệu: bit, byte, biểu diễn số và ký tự.</li>
+<li>Nắm rõ bộ nhớ (stack/heap), kích thước kiểu dữ liệu và ý nghĩa của sizeof.</li>
+<li>Hiểu vòng đời chương trình: tiền xử lý → biên dịch → liên kết → chạy.</li>
+<li>Thực hành: chuyển đổi số sang nhị phân, in bảng ASCII, và dùng malloc/free.</li>
+</ul>
+<ol type="1">
+<li>Bit, byte và biểu diễn số</li>
+</ol>
+<ul>
+<li>Bit: đơn vị thông tin nhỏ nhất (0 hoặc 1). 1 byte = 8 bit.</li>
+<li>Endianness: little-endian (LSB lưu ở địa chỉ thấp) vs big-endian (MSB ở địa chỉ thấp). Thực hành: in các byte của một int để thấy thứ tự.</li>
+<li>Số nguyên dấu (signed) dùng two’s complement để biểu diễn số âm; kích thước phụ thuộc vào nền tảng (sizeof(int)).</li>
+</ul>
+<p>Ví dụ: kiểm tra sizeof trên nền tảng</p>
+<p>#include &lt;stdio.h&gt; int main(void) { printf(“sizeof(char)=%zu, sizeof(int)=%zu, sizeof(long)=%zu”, sizeof(char), sizeof(int), sizeof(long)); }</p>
+<ol start="2" type="1">
+<li>Ký tự và chuỗi</li>
+</ol>
+<ul>
+<li>C dùng char (thường 1 byte) để lưu ký tự; ASCII là tập ký tự cơ bản, UTF-8 là encoding phổ biến cho Unicode.</li>
+<li>Hàm tiện ích: isdigit(), isalpha(), isspace() (include &lt;ctype.h&gt;).</li>
+<li>Chuỗi trong C là mảng char kết thúc bởi ‘\0’.</li>
+</ul>
+<ol start="3" type="1">
+<li>Bộ nhớ: stack vs heap</li>
+</ol>
+<ul>
+<li>Stack: lưu biến cục bộ, tự động cấp phát/giải phóng khi rời scope.</li>
+<li>Heap: cấp phát động qua malloc/calloc/realloc; phải free thủ công.</li>
+</ul>
+<p>Ví dụ phân bổ:</p>
+<p>#include &lt;stdlib.h&gt; #include &lt;stdio.h&gt; int main(void) { int <em>arr = malloc(10 </em> sizeof(int)); if (!arr) return 1; arr[0] = 42; free(arr); return 0; }</p>
+<ol start="4" type="1">
+<li>Quá trình build: tiền xử lý → compile → link</li>
+</ol>
+<ul>
+<li>Preprocessing: mở rộng macro, include headers → tạo file tạm (.i)</li>
+<li>Compiling: .i → mã máy trung gian (.s) hoặc object (.o)</li>
+<li>Linking: nhiều .o + thư viện → executable</li>
+<li>Công cụ: gcc -c file.c; gcc -o prog file.o -lm</li>
+</ul>
+<ol start="5" type="1">
+<li>Assembly và mối liên hệ với C (tóm tắt)</li>
+</ol>
+<ul>
+<li>Compiler sinh assembly; dùng gcc -S file.c để xem.</li>
+<li>Hiểu stack frame: lưu return address, local vars, và cách truyền tham số (platform dependent).</li>
+</ul>
+<ol start="6" type="1">
+<li>Bài thực hành</li>
+</ol>
+<ul>
+<li>bin_convert.c: viết hàm chuyển số nguyên sang chuỗi nhị phân.</li>
+<li>ascii_table.c: in bảng 0..127 với ký tự và mô tả.</li>
+<li>demo_malloc.c: minh hoạ malloc/realloc/free và kiểm tra rò bộ nhớ (dùng valgrind trên Linux).</li>
+</ul>
+<ol start="7" type="1">
+<li>Lưu ý an toàn</li>
+</ol>
+<ul>
+<li>Tránh buffer overflow: luôn giới hạn kích thước khi đọc chuỗi.</li>
+<li>Sau malloc, kiểm tra con trỏ NULL.</li>
+</ul>
+<p>Tài liệu tham khảo - K&amp;R, cppreference.com, tài liệu gcc</p>
+<hr />
+<p>Ghi chú: thêm minh hoạ bằng hình cho endianness và ví dụ gcc -S để sinh assembly.</p>
+</section>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Con trỏ chi tiết (Pointers Deep Dive) — Lập trình C — Từ cơ bản đến nâng cao</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link active" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<main class="content">
+<article>
+<h1>Chương 8 — Con trỏ chi tiết (Pointers Deep Dive)</h1>
+<p>Mục tiêu</p>
+<ul>
+<li>Hiểu con trỏ: khai báo, dereference (*), address-of (&amp;), pointer arithmetic.</li>
+<li>Biết con trỏ hàm, con trỏ tới mảng và mảng con trỏ.</li>
+<li>Nhận diện lỗi phổ biến: null pointer, uninitialized pointer, pointer to freed memory.</li>
+</ul>
+<p>Tổng quan</p>
+<p>Con trỏ là tính năng mạnh mẽ của C cho phép thao tác trực tiếp với địa chỉ bộ nhớ. Sử dụng con trỏ giúp viết code hiệu năng cao và mô tả cấu trúc dữ liệu động (linked lists, trees), nhưng cũng dễ dẫn đến lỗi nghiêm trọng nếu xử lý không cẩn thận.</p>
+<h2>1. Con trỏ cơ bản</h2>
+<ul>
+<li>Khai báo: int *p; char *s; void *pv;</li>
+<li>Lấy địa chỉ: int x = 5; int *p = &amp;x;</li>
+<li>Dereference: *p để truy cập/gán giá trị; luôn đảm bảo p != NULL trước khi deref.</li>
+</ul>
+<p>Ví dụ:</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> x = <span class="hljs-number">10</span>;
+<span class="hljs-type">int</span> *p = &amp;x;
+</code></pre>
+<p>*p = 20; // x = 20</p>
+<h2>2. Pointer arithmetic và mối quan hệ với mảng</h2>
+<ul>
+<li>Nếu p là int*, thì p + 1 tăng địa chỉ theo sizeof(int) bytes.</li>
+<li>Mảng khi truyền vào hàm sẽ hạ xuống thành pointer tới phần tử đầu; hàm nhận cả kích thước mảng để an toàn.</li>
+</ul>
+<p>Ví dụ:</p>
+<pre class="hljs"><code><span class="hljs-type">void</span> <span class="hljs-title function_">print_array</span><span class="hljs-params">(<span class="hljs-type">int</span> *a, <span class="hljs-type">size_t</span> n)</span> {
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d &quot;</span>, a[i]);
+}
+</code></pre>
+<h2>3. Con trỏ hàm</h2>
+<ul>
+<li>Khai báo: int (<em>cmp)(const void</em>, const void*);</li>
+<li>Dùng làm callback: qsort, bsearch, hoặc API event.</li>
+</ul>
+<p>Ví dụ comparator cho qsort:</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> <span class="hljs-title function_">cmp_int</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">void</span> *a, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *b)</span> {
+    <span class="hljs-type">int</span> ia = *(<span class="hljs-type">const</span> <span class="hljs-type">int</span>*)a;
+    <span class="hljs-type">int</span> ib = *(<span class="hljs-type">const</span> <span class="hljs-type">int</span>*)b;
+    <span class="hljs-keyword">return</span> (ia &gt; ib) - (ia &lt; ib);
+}
+</code></pre>
+<h2>4. Lỗi phổ biến và cách phòng tránh</h2>
+<ul>
+<li>Null dereference: luôn kiểm tra p != NULL.</li>
+<li>Use-after-free: sau khi free(p) gán p = NULL.</li>
+<li>Uninitialized pointer: khởi tạo pointer = NULL khi khai báo nếu chưa có địa chỉ.</li>
+<li>Buffer overflow: khi dùng pointer để viết vào vùng nhớ, đảm bảo chỉ ghi trong giới hạn.</li>
+</ul>
+<h2>5. Ví dụ thực hành</h2>
+<ul>
+<li>pointer_examples.c: minh hoạ truy cập, arithmetic, aliasing và cách tránh lỗi.</li>
+<li>linked_list.c: implement linked list với hàm add/remove/print; chú ý quản lý bộ nhớ.</li>
+</ul>
+<h2>6. Công cụ debug và kiểm thử</h2>
+<ul>
+<li>Valgrind (Linux) để dò rò bộ nhớ và use-after-free.</li>
+<li>ASAN (AddressSanitizer) khi build bằng clang/gcc với -fsanitize=address.</li>
+</ul>
+<p>Ghi chú: kèm sơ đồ vùng nhớ (stack/heap/data/text) và ví dụ chạy được trong <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-08">code/chapter-08</a>.</p>
+
+</article>
+<div class="chapter-nav"><a class="nav-prev" href="chapter-07.html">&larr; Mảng & chuỗi (Arrays & Strings)</a><a class="nav-next" href="chapter-09.html">Quản lý bộ nhớ và lỗi phổ biến &rarr;</a></div>
+</main>
+</div>
+</body>
+</html>

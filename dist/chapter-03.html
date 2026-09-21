@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lịch sử và triết lý của ngôn ngữ C — Lập trình C — Từ cơ bản đến nâng cao</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link active" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<main class="content">
+<article>
+<h1>Chương 3 — Lịch sử và triết lý của ngôn ngữ C</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Hiểu nguồn gốc, bối cảnh phát triển và các chuẩn chính của C.</li>
+<li>Nhận diện điểm khác biệt quan trọng giữa các chuẩn (K&amp;R, C89/C90, C99, C11, C17) và ảnh hưởng tới code khi di chuyển.</li>
+<li>Biết cách chọn cờ biên dịch để tương thích và tránh undefined behavior.</li>
+</ul>
+<h2>1. Tóm tắt lịch sử</h2>
+<ul>
+<li>1970s: Dennis Ritchie phát triển C tại Bell Labs để viết hệ điều hành (Unix). C ra đời từ ngôn ngữ B và ảnh hưởng bởi ASSEMBLY nhưng có tính trừu tượng hơn.</li>
+<li>1978: K&amp;R (Kernighan &amp; Ritchie) xuất bản cuốn &quot;The C Programming Language&quot; — tài liệu tham khảo ban đầu.</li>
+<li>1989/1990: ANSI C (C89/C90) tiêu chuẩn hóa cú pháp và thư viện chuẩn, giúp code di động hơn.</li>
+<li>1999: C99 thêm nhiều tính năng hiện đại (long long, // comment, restrict, inline, VLA).</li>
+<li>2011: C11 thêm atomic và multi-thread hỗ trợ; C17 sửa lỗi và ổn định.</li>
+</ul>
+<h2>2. Triết lý thiết kế của C</h2>
+<ul>
+<li>C theo đuổi hiệu năng và kiểm soát tài nguyên: cho phép thao tác gần phần cứng.</li>
+<li>Đơn giản về ngữ pháp nhưng mạnh mẽ về khả năng biểu diễn.</li>
+<li>Thiết kế theo kiểu &quot;một số công cụ cho lập trình viên&quot; thay vì che giấu mọi chi tiết.</li>
+</ul>
+<h2>3. Chuẩn C và tương thích</h2>
+<ul>
+<li>Khi viết mã để chạy trên nhiều nền tảng, luôn xác định chuẩn biên dịch: gcc -std=c11 -Wall -Wextra</li>
+<li>Một số tính năng mới (VLA, long long) yêu cầu chuẩn tương ứng; nếu cần hỗ trợ compiler cũ, tránh hoặc viết fallback.</li>
+<li>Undefined behavior: hành vi không xác định (ví dụ: dereference NULL, buffer overflow) cần tránh — compiler có thể tạo ra các tối ưu khiến lỗi khó dò.</li>
+</ul>
+<h2>4. Ví dụ minh họa</h2>
+<ul>
+<li>compatibility_test.c: minh họa dùng long long và các macro kiểm tra kích thước kiểu.</li>
+<li>Dùng gcc -std=c99 compatibility_test.c -o test để nhận biết khác biệt.</li>
+</ul>
+<h2>5. Bài tập và thí nghiệm</h2>
+<ul>
+<li>Thử biên dịch cùng file với -std=c89, -std=c99, -std=c11 và ghi lại lỗi/cảnh báo.</li>
+<li>Dùng gcc -S để sinh assembly và đọc phần prologue/epilogue của hàm.</li>
+</ul>
+<h2>6. Lời khuyên cho lập trình viên mới</h2>
+<ul>
+<li>Luôn đọc cảnh báo và sửa. Cảnh báo thường chỉ ra vấn đề tiềm ẩn.</li>
+<li>Tránh viết mã phụ thuộc vào kích thước kiểu (ví dụ assume int = 4 bytes). Dùng các kiểu cố định như int32_t khi cần.</li>
+</ul>
+<p>Tài nguyên</p>
+<ul>
+<li>K&amp;R &quot;The C Programming Language&quot;</li>
+<li><a href="http://cppreference.com">cppreference.com</a> và tài liệu GNU cho gcc</li>
+</ul>
+<p>Ghi chú: thêm bảng so sánh tính năng giữa các chuẩn và timeline minh hoạ.</p>
+<ul>
+<li>Lưu ý rõ các ví dụ lịch sử có thể không biên dịch trên compiler mặc định; ghi cách biên dịch (cờ -std) và mục đích giáo dục.</li>
+</ul>
+
+</article>
+<div class="chapter-nav"><a class="nav-prev" href="chapter-02.html">&larr; Máy tính và lập trình cơ bản</a><a class="nav-next" href="chapter-04.html">Cú pháp & cấu trúc chương trình C &rarr;</a></div>
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="vi" xml:lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <title>ch010.xhtml</title>
+  <style>
+  </style>
+  <link rel="stylesheet" type="text/css" href="../styles/stylesheet1.css" />
+</head>
+<body epub:type="bodymatter">
+<section id="chương-10-struct-union-enum" class="level1">
+<h1>Chương 10 — Struct, union, enum</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Nắm vững cách khai báo và sử dụng struct, union, enum; hiểu alignment, padding và ảnh hưởng tới sizeof.</li>
+<li>Biết cách dùng struct để xây dựng cấu trúc dữ liệu (linked list, stack, queue) và quản lý memory cho chúng.</li>
+</ul>
+<ol type="1">
+<li>Struct cơ bản</li>
+</ol>
+<ul>
+<li>Khai báo: struct Point { int x; int y; };</li>
+<li>Typedef để đơn giản: typedef struct Point Point;</li>
+<li>Truy cập: p.x, p.y; với pointer: p-&gt;x</li>
+</ul>
+<ol start="2" type="1">
+<li>Padding &amp; alignment</li>
+</ol>
+<ul>
+<li>Vì alignment, compiler có thể chèn padding giữa trường để thỏa điều kiện alignment.</li>
+<li>Dùng sizeof và offsetof để đo; sắp xếp trường (small-&gt;large) có thể giảm padding.</li>
+</ul>
+<p>Ví dụ: trước/sau tối ưu layout</p>
+<ol start="3" type="1">
+<li>Union và khi dùng</li>
+</ol>
+<ul>
+<li>union U { int i; float f; char s[4]; } — các trường chia sẻ cùng vùng nhớ.</li>
+<li>Dùng union cho variant hoặc overlay binary data; phải cẩn thận về field hiện tại hợp lệ.</li>
+</ul>
+<ol start="4" type="1">
+<li>Enum và bitfield</li>
+</ol>
+<ul>
+<li>enum Color { RED, GREEN, BLUE };</li>
+<li>Bitfield: struct Flags { unsigned a:1; unsigned b:1; }; chú ý portability giữa compiler.</li>
+</ul>
+<ol start="5" type="1">
+<li>Ứng dụng: cấu trúc dữ liệu</li>
+</ol>
+<ul>
+<li>Linked list: struct Node { int val; struct Node *next; };</li>
+<li>Quy tắc: viết các hàm create_node, insert, delete, free_list; luôn free cả danh sách.</li>
+</ul>
+<ol start="6" type="1">
+<li>Ví dụ thực hành</li>
+</ol>
+<ul>
+<li>/code/chapter-10/linked_list.c: insert/delete/find/iterate</li>
+<li>/code/chapter-10/stack.c: stack bằng dynamic array</li>
+<li>/code/chapter-10/queue.c: circular buffer implementation</li>
+</ul>
+<p>Bài tập</p>
+<ol type="1">
+<li>Implement doubly linked list with splice.</li>
+<li>Show size reduction by reordering fields in a struct and explain.</li>
+</ol>
+<p>Ghi chú: kèm diagram memory và test cases.</p>
+</section>
+</body>
+</html>

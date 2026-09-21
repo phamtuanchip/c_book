@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="vi" xml:lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <title>ch005.xhtml</title>
+  <style>
+  </style>
+  <link rel="stylesheet" type="text/css" href="../styles/stylesheet1.css" />
+</head>
+<body epub:type="bodymatter">
+<section id="chương-5-điều-khiển-luồng-control-flow" class="level1">
+<h1>Chương 5 — Điều khiển luồng (Control Flow)</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Hiểu và phân biệt if/else, switch, for, while, do-while.</li>
+<li>Biết dùng break và continue hợp lý.</li>
+<li>Viết chương trình kiểm soát luồng với input hợp lệ và tránh infinite loop.</li>
+</ul>
+<ol type="1">
+<li>If / else</li>
+</ol>
+<p>Cấu trúc:</p>
+<p>if (condition) { // code } else if (other_condition) { // code } else { // code }</p>
+<ul>
+<li>Condition là biểu thức trả về giá trị boolean (trong C, 0 = false, khác 0 = true).</li>
+<li>Short-circuit: với &amp;&amp; và ||, C sẽ không đánh giá biểu thức phải nếu kết quả đã rõ.</li>
+</ul>
+<p>Ví dụ: phân loại số</p>
+<ol start="2" type="1">
+<li>Switch</li>
+</ol>
+<p>switch (expr) { case 1: /* … <em>/ break; case 2: /</em> … <em>/ break; default: /</em> … */ }</p>
+<ul>
+<li>Lưu ý fall-through: nếu thiếu break, execution sẽ tiếp tục case tiếp theo.</li>
+<li>Thường dùng cho lựa chọn rời rạc (menu, xử lý enum).</li>
+</ul>
+<ol start="3" type="1">
+<li>Vòng lặp: for, while, do-while</li>
+</ol>
+<p>for (int i = 0; i &lt; n; i++) { /* … <em>/ } while (condition) { /</em> … <em>/ } do { /</em> … */ } while (condition);</p>
+<ul>
+<li>for thích hợp khi biết số lần lặp. while/do-while dùng cho lặp theo điều kiện.</li>
+<li>break: thoát vòng lặp; continue: bỏ phần còn lại và sang lần lặp tiếp theo.</li>
+</ul>
+<ol start="4" type="1">
+<li>Tránh infinite loop và lỗi logic</li>
+</ol>
+<ul>
+<li>Đảm bảo điều kiện vòng lặp sẽ thay đổi theo cách dẫn tới kết thúc.</li>
+<li>Thận trọng khi dùng biến unsigned trong phép so sánh (có thể vòng lặp không kết thúc).</li>
+</ul>
+<ol start="5" type="1">
+<li>Ví dụ thực hành</li>
+</ol>
+<ul>
+<li>In bảng cửu chương (for)</li>
+<li>Kiểm tra số nguyên tố (for with early exit)</li>
+<li>Menu đơn giản dùng switch</li>
+</ul>
+<ol start="6" type="1">
+<li>Bài tập</li>
+</ol>
+<ol type="1">
+<li>Viết chương trình in bảng cửu chương của 1..9 dùng for.</li>
+<li>Viết hàm is_prime(int n) và test từ 2..100.</li>
+<li>Viết menu: [1] In bảng cửu chương, [2] Kiểm tra số nguyên tố, [0] Thoát.</li>
+</ol>
+<p>Gợi ý biên dịch: gcc -std=c11 -Wall -Wextra -o prog file.c</p>
+<p>Ghi chú: kèm file mẫu trong /code/chapter-05 có README hướng dẫn và test cases.</p>
+</section>
+</body>
+</html>

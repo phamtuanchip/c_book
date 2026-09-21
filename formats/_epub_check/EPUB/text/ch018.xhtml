@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="vi" xml:lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <title>ch018.xhtml</title>
+  <style>
+  </style>
+  <link rel="stylesheet" type="text/css" href="../styles/stylesheet1.css" />
+</head>
+<body epub:type="bodymatter">
+<section id="chương-18-bảo-mật-an-toàn-bộ-nhớ" class="level1">
+<h1>Chương 18 — Bảo mật &amp; an toàn bộ nhớ</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Nhận diện các lỗ hổng an toàn bộ nhớ phổ biến (buffer overflow, format string, integer overflow) và biện pháp phòng tránh.</li>
+<li>Sử dụng static và dynamic analysis để phát hiện lỗi (clang-tidy, cppcheck, ASAN).</li>
+</ul>
+<ol type="1">
+<li>Các loại lỗ hổng phổ biến</li>
+</ol>
+<ul>
+<li>Buffer overflow: viết quá giới hạn mảng/chuỗi → remote code execution hoặc crash.</li>
+<li>Format string vulnerability: printf(user_input) → attacker kiểm soát format.</li>
+<li>Integer overflow/underflow: tính toán kích thước bộ nhớ dẫn tới allocation sai.</li>
+</ul>
+<ol start="2" type="1">
+<li>Defense-in-depth</li>
+</ol>
+<ul>
+<li>Biện pháp runtime: ASLR, DEP/NX, stack canaries, PIE.</li>
+<li>Biện pháp code: kiểm tra bound, dùng safe APIs (snprintf, strnlen), validate input.</li>
+</ul>
+<ol start="3" type="1">
+<li>Static/dynamic analysis</li>
+</ol>
+<ul>
+<li>clang-tidy/cppcheck: phát hiện pattern xấu, buffer misuse.</li>
+<li>AddressSanitizer (ASAN): gcc/clang với -fsanitize=address để phát hiện OOB và use-after-free.</li>
+</ul>
+<ol start="4" type="1">
+<li>Secure coding guidelines</li>
+</ol>
+<ul>
+<li>Validate all inputs, sử dụng size_t hợp lý, tránh signed/unsigned mismatch.</li>
+<li>Document ownership và lifetime của buffer/objects.</li>
+<li>Prefer bounds-checked APIs and explicit length tracking.</li>
+</ul>
+<ol start="5" type="1">
+<li>Ví dụ thực hành</li>
+</ol>
+<ul>
+<li>/code/chapter-18/buffer_overflow_demo.c: có lỗi có chủ đích và phiên bản đã vá.</li>
+<li>/code/chapter-18/format_string_demo.c: minh họa lỗi và fix bằng format-safe call.</li>
+</ul>
+<p>Bài tập</p>
+<ul>
+<li>Sửa một chương trình chứa buffer overflow; chứng minh bằng ASAN hoặc Valgrind.</li>
+</ul>
+<p>Ghi chú: kèm hướng dẫn build với -fsanitize=address và cách đọc output ASAN.</p>
+</section>
+</body>
+</html>

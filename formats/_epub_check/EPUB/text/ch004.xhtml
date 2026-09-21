@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="vi" xml:lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <title>ch004.xhtml</title>
+  <style>
+  </style>
+  <link rel="stylesheet" type="text/css" href="../styles/stylesheet1.css" />
+</head>
+<body epub:type="bodymatter">
+<section id="chương-4-cú-pháp-cấu-trúc-chương-trình-c" class="level1">
+<h1>Chương 4 — Cú pháp &amp; cấu trúc chương trình C</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Nắm rõ cú pháp cơ bản: tokens, khai báo, biểu thức, câu lệnh điều khiển.</li>
+<li>Hiểu tiền xử lý (#include, #define), include guards và cách tổ chức header/source.</li>
+<li>Thực hành tách module, viết prototype, và so sánh macro vs inline function.</li>
+</ul>
+<ol type="1">
+<li>Tokens và cú pháp cơ bản</li>
+</ol>
+<ul>
+<li>Tokens gồm identifiers (tên biến/hàm), keywords (int, return, if…), literals (số, ký tự, chuỗi), operators và punctuators.</li>
+<li>Câu lệnh kết thúc bằng dấu chấm phẩy <code>;</code>. Block được bao bởi <code>{ ... }</code>.</li>
+</ul>
+<ol start="2" type="1">
+<li>Kiểu dữ liệu và khai báo</li>
+</ol>
+<ul>
+<li>Kiểu cơ bản: char, short, int, long, float, double, _Bool, void.</li>
+<li>Phân biệt signed/unsigned, và dùng các kiểu kích thước cố định (stdint.h): int8_t, int32_t, uint64_t.</li>
+<li>Khai báo và khởi tạo biến: int x = 0; const int MAX = 100;</li>
+</ul>
+<ol start="3" type="1">
+<li>Hàm, prototype và phạm vi</li>
+</ol>
+<ul>
+<li>Prototype: đặt ở header (.h) để các file khác biết về hàm. Ví dụ: int add(int a, int b);</li>
+<li>Definition: int add(int a, int b) { return a + b; }</li>
+<li>Phạm vi (scope): local (biến trong hàm), file-scope (static biến ở đầu file), global (không nên dùng quá nhiều).</li>
+</ul>
+<ol start="4" type="1">
+<li>Tiền xử lý</li>
+</ol>
+<ul>
+<li>#include &lt;stdio.h&gt; để lấy khai báo thư viện chuẩn.</li>
+<li>Include guard để tránh include lặp:</li>
+</ul>
+<p>#ifndef MATH_UTILS_H #define MATH_UTILS_H /* declarations */ #endif</p>
+<ul>
+<li>#define cho macro; cẩn thận với side-effects.</li>
+</ul>
+<p>Ví dụ macro nguy hiểm: #define SQUARE(x) ((x)*(x)) // SQUARE(i++) sẽ có hành vi không mong muốn</p>
+<ol start="5" type="1">
+<li>Macro vs inline function</li>
+</ol>
+<ul>
+<li>Macro: expand text, không có type-checking, có thể gây side-effect.</li>
+<li>Inline function (static inline): an toàn hơn, có type-checking và tối ưu hoá tương đương macro khi compiler cho phép.</li>
+</ul>
+<p>Ví dụ: static inline int square_int(int x) { return x * x; }</p>
+<ol start="6" type="1">
+<li>Tổ chức project nhỏ: header + source</li>
+</ol>
+<ul>
+<li>Thư mục: src/, include/, tests/</li>
+<li>Ví dụ: math.h (declarations), math.c (implementation), main.c (sử dụng)</li>
+<li>Makefile: rules để compile từng module và link thành executable.</li>
+</ul>
+<ol start="7" type="1">
+<li>Bài tập</li>
+</ol>
+<ul>
+<li>Viết macro SQUARE(x) và minh hoạ lỗi khi dùng SQUARE(i++).</li>
+<li>Viết inline function square_int và so sánh với macro.</li>
+<li>Tách chương trình thành math.h/math.c/main.c và build bằng Makefile.</li>
+</ul>
+<p>Ghi chú: kèm theo ví dụ minh họa trong /code/chapter-04, mỗi ví dụ có README hướng dẫn biên dịch.</p>
+</section>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Xử lý lỗi & ngoại lệ trong C — Lập trình C — Từ cơ bản đến nâng cao</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link active" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<main class="content">
+<article>
+<h1>Chương 13 — Xử lý lỗi &amp; ngoại lệ trong C</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Hiểu cách báo lỗi hiệu quả trong C: mã trả về, errno, perror, strerror và assert.</li>
+<li>Thiết kế API có kiểm tra lỗi rõ ràng và logging để dễ debug.</li>
+</ul>
+<h2>1. Kiểm tra giá trị trả về và errno</h2>
+<ul>
+<li>Luôn kiểm tra giá trị trả về của hàm I/O và hệ thống (fopen, malloc, read, write).</li>
+<li>errno (từ &lt;errno.h&gt;) chứa mã lỗi khi hàm hệ thống trả về lỗi; dùng perror hoặc strerror(errno) để in thông báo có nghĩa.</li>
+</ul>
+<p>Ví dụ:</p>
+<pre class="hljs"><code>FILE *f = fopen(path, <span class="hljs-string">&quot;r&quot;</span>);
+<span class="hljs-keyword">if</span> (!f) { perror(<span class="hljs-string">&quot;fopen&quot;</span>); <span class="hljs-comment">/* xử lý lỗi */</span> }
+</code></pre>
+<h2>2. assert vs runtime error handling</h2>
+<ul>
+<li>assert() (từ &lt;assert.h&gt;) dùng để kiểm tra giả thiết nội bộ khi debug; không dùng assert cho kiểm soát luồng hoặc xử lý lỗi từ input.</li>
+<li>assert bị loại bỏ khi biên dịch với NDEBUG; dùng return codes và logging cho runtime.</li>
+</ul>
+<h2>3. Thiết kế mã lỗi và API</h2>
+<ul>
+<li>Trả về int/error enum hoặc struct { int code; char *msg } cho các hàm phức tạp.</li>
+<li>Ví dụ:</li>
+</ul>
+<pre class="hljs"><code><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">enum</span> {</span> ERR_OK = <span class="hljs-number">0</span>, ERR_IO = <span class="hljs-number">1</span>, ERR_OOM = <span class="hljs-number">2</span> } <span class="hljs-type">error_t</span>;
+<span class="hljs-type">error_t</span> <span class="hljs-title function_">read_config</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *path)</span>;
+</code></pre>
+<ul>
+<li>Document ownership: ai chịu free chuỗi lỗi, ai trả lỗi.</li>
+</ul>
+<h2>4. Logging và debug macros</h2>
+<ul>
+<li>Dùng macro LOG(level, fmt, ...) để chuẩn hoá thông báo. Ví dụ:</li>
+</ul>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> LOG_ERR(fmt, ...) fprintf(stderr, <span class="hljs-string">&quot;ERROR: &quot;</span> fmt <span class="hljs-string">&quot;\n&quot;</span>, ##__VA_ARGS__)</span>
+</code></pre>
+<ul>
+<li>Giữ logging nhẹ ở production hoặc điều khiển bằng macro #ifdef DEBUG.</li>
+</ul>
+<h2>5. Best practices</h2>
+<ul>
+<li>Kiểm tra mọi return từ hàm có thể fail.</li>
+<li>Trả mã lỗi rõ ràng, tránh dùng -1/0 nếu không có ý nghĩa.</li>
+<li>Thử nghiệm: viết test cản lỗi (fault injection) để đảm bảo chương trình xử lý hỏng hóc.</li>
+</ul>
+<p>Bài tập</p>
+<ul>
+<li>Viết wrapper safe_fopen(path, mode, error_buf, bufsize) — trả NULL on error và ghi thông báo người dùng vào error_buf.</li>
+<li>Viết chương trình demo: cố ý gây lỗi I/O (không tồn tại file) và hiển thị thông báo hữu ích.</li>
+</ul>
+<p>Ghi chú: kèm ví dụ trong <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-13">code/chapter-13</a> bao gồm safe_fopen và tests.</p>
+
+</article>
+<div class="chapter-nav"><a class="nav-prev" href="chapter-12.html">&larr; File I/O & thao tác hệ thống</a><a class="nav-next" href="chapter-14.html">Tiền xử lý & macro nâng cao &rarr;</a></div>
+</main>
+</div>
+</body>
+</html>

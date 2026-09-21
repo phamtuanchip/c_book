@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="vi" xml:lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <title>ch020.xhtml</title>
+  <style>
+  </style>
+  <link rel="stylesheet" type="text/css" href="../styles/stylesheet1.css" />
+</head>
+<body epub:type="bodymatter">
+<section id="chương-20-project-web-server-đơn-giản" class="level1">
+<h1>Chương 20 — Project: Web server đơn giản</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Xây một web server nhỏ có thể serve static files và vài route động (JSON API).</li>
+<li>Hiểu trade-offs giữa thread-per-connection, thread-pool và non-blocking event loop.</li>
+</ul>
+<ol type="1">
+<li>Architecture cơ bản</li>
+</ol>
+<ul>
+<li>Accept loop: accept() kết nối và xử lý request.</li>
+<li>Thread-per-connection: đơn giản nhưng tốn tài nguyên khi nhiều client.</li>
+<li>Thread pool: queue kết nối và worker threads xử lý; cân bằng throughput.</li>
+</ul>
+<ol start="2" type="1">
+<li>HTTP request parsing</li>
+</ol>
+<ul>
+<li>Parsers đơn giản: đọc request line, headers, method, path.</li>
+<li>Không cần implement full HTTP/1.1 — focus vào GET và simple headers.</li>
+</ul>
+<ol start="3" type="1">
+<li>Serving static files</li>
+</ol>
+<ul>
+<li>Map path -&gt; filesystem path; validate path để tránh directory traversal.</li>
+<li>Set Content-Type theo file extension (MIME map).</li>
+<li>Use sendfile on POSIX for efficiency where có.</li>
+</ul>
+<ol start="4" type="1">
+<li>Routing and logging</li>
+</ol>
+<ul>
+<li>Map routes to handler functions; basic router supports prefix/static routes.</li>
+<li>Logging: request time, method, path, response code.</li>
+</ul>
+<ol start="5" type="1">
+<li>Ví dụ thực hành</li>
+</ol>
+<ul>
+<li>/code/chapter-20/simple_server.c: thread-per-connection server serving files from ./www</li>
+<li>/code/chapter-20/thread_pool_server.c: server using fixed worker pool and request queue</li>
+</ul>
+<p>Bài tập</p>
+<ul>
+<li>Implement server serving static files and a /api/time JSON endpoint.</li>
+<li>Add graceful shutdown (signal handling) and basic rate-limiting.</li>
+</ul>
+<p>Ghi chú: provide POSIX build instructions; Windows users see alternative using Winsock or run in WSL.</p>
+</section>
+</body>
+</html>

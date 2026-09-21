@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="vi" xml:lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <title>ch011.xhtml</title>
+  <style>
+  </style>
+  <link rel="stylesheet" type="text/css" href="../styles/stylesheet1.css" />
+</head>
+<body epub:type="bodymatter">
+<section id="chương-11-header-makefile-build-systems" class="level1">
+<h1>Chương 11 — Header, Makefile, build systems</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Biết tổ chức dự án C nhiều file: header an toàn, tách interface/implementation.</li>
+<li>Viết Makefile cơ bản và giới thiệu CMake để build cross-platform.</li>
+</ul>
+<ol type="1">
+<li>Header design</li>
+</ol>
+<ul>
+<li>Include guard: #ifndef MYLIB_H #define MYLIB_H … #endif</li>
+<li>Quy tắc include order: corresponding header first, then &lt;…&gt;, then project headers.</li>
+<li>Forward declaration để tránh include vòng.</li>
+</ul>
+<ol start="2" type="1">
+<li>Makefile cơ bản</li>
+</ol>
+<ul>
+<li>Variables: CC = gcc, CFLAGS = -std=c11 -Wall -Wextra -g</li>
+<li>Targets: all, clean, test</li>
+<li>Pattern rule: %.o: %.c</li>
+<li>Ví dụ Makefile cho project 3 module: compile .c -&gt; .o; link các .o</li>
+</ul>
+<ol start="3" type="1">
+<li>CMake cơ bản</li>
+</ol>
+<ul>
+<li>CMakeLists.txt đơn giản: project(name C); add_executable(); target_include_directories();</li>
+<li>Lợi ích: tạo build dir, hỗ trợ nhiều generator, dễ tích hợp CI</li>
+</ul>
+<ol start="4" type="1">
+<li>Best practices</li>
+</ol>
+<ul>
+<li>Separate build directory (out-of-source build).</li>
+<li>Giữ header minimal; tránh include heavy headers trong header.</li>
+<li>Document API trong header comments.</li>
+</ul>
+<p>Bài tập</p>
+<ul>
+<li>Viết Makefile cho project có 3 module (math, utils, main) và chạy build/test; tạo CMakeLists.txt tương đương.</li>
+</ul>
+<p>Ghi chú: kèm sample Makefile và CMakeLists trong /code/chapter-11 để người học chạy.</p>
+</section>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="vi" xml:lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <title>ch012.xhtml</title>
+  <style>
+  </style>
+  <link rel="stylesheet" type="text/css" href="../styles/stylesheet1.css" />
+</head>
+<body epub:type="bodymatter">
+<section id="chương-12-file-io-thao-tác-hệ-thống" class="level1">
+<h1>Chương 12 — File I/O &amp; thao tác hệ thống</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Đọc/ghi file text và binary bằng fopen/fgets/fscanf/fprintf/fread/fwrite.</li>
+<li>Hiểu buffering, modes, và xử lý lỗi I/O; khái niệm mmap và portability.</li>
+</ul>
+<ol type="1">
+<li>File text I/O</li>
+</ol>
+<ul>
+<li>fopen(path, “r”/“w”/“a”) để mở file.</li>
+<li>fgets để đọc line an toàn; fprintf để ghi.</li>
+<li>Kiểm tra return của fopen, fgets, fprintf; dùng perror hoặc strerror(errno).</li>
+</ul>
+<ol start="2" type="1">
+<li>Binary I/O</li>
+</ol>
+<ul>
+<li>fread/fwrite để đọc/ghi block bytes; hữu ích cho file nhị phân hoặc sao chép file.</li>
+<li>Ví dụ copy: đọc buffer 8KB và fwrite cho tới hết file.</li>
+</ul>
+<ol start="3" type="1">
+<li>Buffering và fflush</li>
+</ol>
+<ul>
+<li>stdout thường được buffered line-by-line hoặc fully buffered; fflush để đảm bảo ghi ra disk.</li>
+<li>File modes: “rb”/“wb” cho binary trên Windows</li>
+</ul>
+<ol start="4" type="1">
+<li>mmap (khái niệm)</li>
+</ol>
+<ul>
+<li>mmap ánh xạ file vào bộ nhớ — nhanh cho đọc/ghi lớn; portability khác nhau giữa POSIX và Windows (MapViewOfFile).</li>
+<li>Giải thích ngắn, khuyến nghị dùng fread/fwrite cho portability trừ khi cần hiệu năng đặc biệt.</li>
+</ul>
+<ol start="5" type="1">
+<li>Ví dụ thực hành</li>
+</ol>
+<ul>
+<li>/code/chapter-12/copy_file.c: copy binary file with fread/fwrite.</li>
+<li>/code/chapter-12/csv_parser.c: simple CSV reader handling quoted fields.</li>
+</ul>
+<p>Bài tập</p>
+<ul>
+<li>Viết chương trình merge nhiều file text vào một file, xử lý lỗi I/O.</li>
+<li>Viết chương trình tìm kiếm chuỗi trong file lớn bằng buffer streaming.</li>
+</ul>
+<p>Ghi chú: kèm README chỉ dẫn build/run và test files.</p>
+</section>
+</body>
+</html>

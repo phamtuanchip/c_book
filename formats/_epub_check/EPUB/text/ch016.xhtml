@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="vi" xml:lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <title>ch016.xhtml</title>
+  <style>
+  </style>
+  <link rel="stylesheet" type="text/css" href="../styles/stylesheet1.css" />
+</head>
+<body epub:type="bodymatter">
+<section id="chương-16-mạng-cơ-bản-sockets" class="level1">
+<h1>Chương 16 — Mạng cơ bản (sockets)</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Hiểu nguyên tắc hoạt động của TCP/UDP sockets và viết client-server đơn giản.</li>
+<li>Biết xử lý blocking vs non-blocking sockets và cơ chế select/poll.</li>
+</ul>
+<ol type="1">
+<li>Cơ bản về socket API</li>
+</ol>
+<ul>
+<li>socket(), bind(), listen(), accept(), connect(), close().</li>
+<li>sockaddr_in, htons/ntohs, inet_pton/inet_ntop để chuyển đổi địa chỉ.</li>
+</ul>
+<ol start="2" type="1">
+<li>Giao tiếp: send/recv vs read/write</li>
+</ol>
+<ul>
+<li>send/recv cung cấp flags; read/write là wrapper POSIX.</li>
+<li>Luôn kiểm tra giá trị trả về — có thể partial send/recv.</li>
+</ul>
+<ol start="3" type="1">
+<li>Blocking vs non-blocking và multiplexing</li>
+</ol>
+<ul>
+<li>Blocking socket chặn khi không có dữ liệu; non-blocking trả -1 với EAGAIN/EWOULDBLOCK.</li>
+<li>select()/poll()/epoll để multiplex nhiều socket trong một thread.</li>
+</ul>
+<ol start="4" type="1">
+<li>Ví dụ thực hành</li>
+</ol>
+<ul>
+<li>echo_server.c: server TCP đơn giản multi-threaded (accept -&gt; spawn worker thread)</li>
+<li>http_request.c: gửi HTTP GET thô tới server và in response headers</li>
+</ul>
+<p>Bài tập</p>
+<ul>
+<li>Viết server echo TCP xử lý nhiều client (thread-per-connection) và phiên bản dùng select để xử lý nhiều client trong một thread.</li>
+</ul>
+<p>Ghi chú: kèm hướng dẫn build cho POSIX; trên Windows dùng Winsock (khác tên hàm: WSAStartup, closesocket).</p>
+</section>
+</body>
+</html>

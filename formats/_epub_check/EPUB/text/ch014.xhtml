@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="vi" xml:lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <title>ch014.xhtml</title>
+  <style>
+  </style>
+  <link rel="stylesheet" type="text/css" href="../styles/stylesheet1.css" />
+</head>
+<body epub:type="bodymatter">
+<section id="chương-14-tiền-xử-lý-macro-nâng-cao" class="level1">
+<h1>Chương 14 — Tiền xử lý &amp; macro nâng cao</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Hiểu chi tiết về macro, các lỗi phổ biến, và khi nào nên dùng inline function thay vì macro.</li>
+<li>Học X-macros và conditional compilation để tổ chức code linh hoạt.</li>
+</ul>
+<ol type="1">
+<li>Parametric macros, stringification và token-pasting</li>
+</ol>
+<ul>
+<li>#define SQR(x) ((x)*(x)) — ví dụ đơn giản nhưng có side-effects nếu x có tác dụng phụ.</li>
+<li><h1 id="và-stringification-x-và-token-pasting-a-b-hữu-ích-cho-code-gen-trong-c.">và ##: stringification (#x) và token-pasting (a ## b) hữu ích cho code-gen trong C.</h1></li>
+</ul>
+<ol start="2" type="1">
+<li>Tránh side-effects trong macro</li>
+</ol>
+<ul>
+<li>Macro không kiểm tra kiểu và có thể evaluate tham số nhiều lần. Giải pháp: dùng inline function cho các phép toán an toàn.</li>
+</ul>
+<ol start="3" type="1">
+<li>X-macros pattern</li>
+</ol>
+<ul>
+<li>X-macros giúp giữ danh sách hằng số/structs/handlers ở một nơi và generate code lặp lại an toàn.</li>
+<li>Ví dụ: định nghĩa danh sách lỗi một nơi và generate enum + string table.</li>
+</ul>
+<ol start="4" type="1">
+<li>Conditional compilation</li>
+</ol>
+<ul>
+<li>#ifdef FEATURE_X để bật/tắt code theo nền tảng hoặc flags biên dịch.</li>
+<li>Sử dụng feature test macros để kiểm tra hàm thư viện của platform.</li>
+</ul>
+<ol start="5" type="1">
+<li>Ví dụ thực hành</li>
+</ol>
+<ul>
+<li>Viết LOG(level, fmt, …) macro và so sánh với static inline void log(level, const char*, …).</li>
+<li>Dùng X-macro để generate enum và lookup table cho các lỗi.</li>
+</ul>
+<p>Bài tập</p>
+<ul>
+<li>Viết X-macro cho danh sách lệnh CLI và generate switch-case xử lý tự động.</li>
+</ul>
+<p>Ghi chú: kèm ví dụ trong /code/chapter-14, và so sánh compile-time outputs.</p>
+</section>
+</body>
+</html>

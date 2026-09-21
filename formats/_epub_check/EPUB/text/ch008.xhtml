@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="vi" xml:lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <title>ch008.xhtml</title>
+  <style>
+  </style>
+  <link rel="stylesheet" type="text/css" href="../styles/stylesheet1.css" />
+</head>
+<body epub:type="bodymatter">
+<section id="chương-8-con-trỏ-chi-tiết-pointers-deep-dive" class="level1">
+<h1>Chương 8 — Con trỏ chi tiết (Pointers Deep Dive)</h1>
+<p>Mục tiêu</p>
+<ul>
+<li>Hiểu con trỏ: khai báo, dereference (*), address-of (&amp;), pointer arithmetic.</li>
+<li>Biết con trỏ hàm, con trỏ tới mảng và mảng con trỏ.</li>
+<li>Nhận diện lỗi phổ biến: null pointer, uninitialized pointer, pointer to freed memory.</li>
+</ul>
+<p>Tổng quan</p>
+<p>Con trỏ là tính năng mạnh mẽ của C cho phép thao tác trực tiếp với địa chỉ bộ nhớ. Sử dụng con trỏ giúp viết code hiệu năng cao và mô tả cấu trúc dữ liệu động (linked lists, trees), nhưng cũng dễ dẫn đến lỗi nghiêm trọng nếu xử lý không cẩn thận.</p>
+<ol type="1">
+<li>Con trỏ cơ bản</li>
+</ol>
+<ul>
+<li>Khai báo: int <em>p; char </em>s; void *pv;</li>
+<li>Lấy địa chỉ: int x = 5; int *p = &amp;x;</li>
+<li>Dereference: *p để truy cập/gán giá trị; luôn đảm bảo p != NULL trước khi deref.</li>
+</ul>
+<p>Ví dụ: int x = 10; int <em>p = &amp;x; </em>p = 20; // x = 20</p>
+<ol start="2" type="1">
+<li>Pointer arithmetic và mối quan hệ với mảng</li>
+</ol>
+<ul>
+<li>Nếu p là int*, thì p + 1 tăng địa chỉ theo sizeof(int) bytes.</li>
+<li>Mảng khi truyền vào hàm sẽ hạ xuống thành pointer tới phần tử đầu; hàm nhận cả kích thước mảng để an toàn.</li>
+</ul>
+<p>Ví dụ: void print_array(int *a, size_t n) { for (size_t i = 0; i &lt; n; ++i) printf(“%d”, a[i]); }</p>
+<ol start="3" type="1">
+<li>Con trỏ hàm</li>
+</ol>
+<ul>
+<li>Khai báo: int (<em>cmp)(const void</em>, const void*);</li>
+<li>Dùng làm callback: qsort, bsearch, hoặc API event.</li>
+</ul>
+<p>Ví dụ comparator cho qsort: int cmp_int(const void <em>a, const void </em>b) { int ia = <em>(const int</em>)a; int ib = <em>(const int</em>)b; return (ia &gt; ib) - (ia &lt; ib); }</p>
+<ol start="4" type="1">
+<li>Lỗi phổ biến và cách phòng tránh</li>
+</ol>
+<ul>
+<li>Null dereference: luôn kiểm tra p != NULL.</li>
+<li>Use-after-free: sau khi free(p) gán p = NULL.</li>
+<li>Uninitialized pointer: khởi tạo pointer = NULL khi khai báo nếu chưa có địa chỉ.</li>
+<li>Buffer overflow: khi dùng pointer để viết vào vùng nhớ, đảm bảo chỉ ghi trong giới hạn.</li>
+</ul>
+<ol start="5" type="1">
+<li>Ví dụ thực hành</li>
+</ol>
+<ul>
+<li>pointer_examples.c: minh hoạ truy cập, arithmetic, aliasing và cách tránh lỗi.</li>
+<li>linked_list.c: implement linked list với hàm add/remove/print; chú ý quản lý bộ nhớ.</li>
+</ul>
+<ol start="6" type="1">
+<li>Công cụ debug và kiểm thử</li>
+</ol>
+<ul>
+<li>Valgrind (Linux) để dò rò bộ nhớ và use-after-free.</li>
+<li>ASAN (AddressSanitizer) khi build bằng clang/gcc với -fsanitize=address.</li>
+</ul>
+<p>Ghi chú: kèm sơ đồ vùng nhớ (stack/heap/data/text) và ví dụ chạy được trong /code/chapter-08.</p>
+</section>
+</body>
+</html>

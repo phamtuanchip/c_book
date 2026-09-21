@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Giới thiệu và chương trình C đầu tiên — Lập trình C — Từ cơ bản đến nâng cao</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link active" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<main class="content">
+<article>
+<h1>Chương 1 — Giới thiệu và chương trình C đầu tiên</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Hiểu vai trò và lịch sử ngắn gọn của ngôn ngữ C.</li>
+<li>Thiết lập môi trường phát triển (Windows, Linux, macOS).</li>
+<li>Viết, biên dịch, chạy chương trình C đầu tiên.</li>
+<li>Giải thích chi tiết cấu trúc nguồn, hàm main, include, và cách dùng compiler flags cơ bản.</li>
+</ul>
+<p>Tổng quan</p>
+<p>Chương này hướng dẫn từ cơ bản nhất để một người mới — chưa biết lập trình — có thể:</p>
+<ol>
+<li>chuẩn bị môi trường, 2) viết mã C đầu tiên, 3) biên dịch và chạy, và 4) đọc được các thông báo lỗi/cảnh báo cơ bản để sửa.</li>
+</ol>
+<h2>1. Vì sao học C?</h2>
+<ul>
+<li>C là một ngôn ngữ hệ thống, gần với phần cứng, giúp hiểu sâu cách máy tính hoạt động (bộ nhớ, con trỏ, quản lý tài nguyên).</li>
+<li>Nhiều ngôn ngữ hiện đại dựa trên C (C++, C#, Java có nhiều ảnh hưởng), nên nắm C giúp dễ học các ngôn ngữ khác.</li>
+</ul>
+<h2>2. Công cụ cơ bản và chuẩn bị môi trường (chi tiết thực hiện)</h2>
+<ul>
+<li>Cần: một trình soạn thảo (VSCode, Notepad++...), một terminal (PowerShell, bash), và một compiler (gcc/clang hoặc Visual Studio cl).</li>
+</ul>
+<p>Windows (MSYS2 + MinGW-w64) — cách nhanh và tương thích:</p>
+<ol>
+<li>Tải và cài MSYS2 từ <a href="https://www.msys2.org">https://www.msys2.org</a> theo hướng dẫn.</li>
+<li>Mở MSYS2 và cập nhật hệ thống: pacman -Syu (đóng/mở lại terminal nếu được yêu cầu).</li>
+<li>Cài toolchain 64-bit: pacman -S --needed mingw-w64-x86_64-toolchain mingw-w64-x86_64-make mingw-w64-x86_64-gdb</li>
+<li>Mở &quot;MSYS2 MinGW 64-bit&quot; shell để làm việc với gcc 64-bit.</li>
+<li>Kiểm tra: gcc --version, make --version, gdb --version</li>
+</ol>
+<p>Windows (Visual Studio) — nếu muốn dùng cl.exe:</p>
+<ul>
+<li>Cài Visual Studio Community với workload &quot;Desktop development with C++&quot;. Mở &quot;Developer Command Prompt&quot; để chạy cl.exe.</li>
+</ul>
+<p>Linux (Debian/Ubuntu):</p>
+<ul>
+<li>sudo apt update &amp;&amp; sudo apt install build-essential gdb valgrind make</li>
+</ul>
+<p>macOS (Homebrew):</p>
+<ul>
+<li>brew install gcc gdb make</li>
+</ul>
+<p>Lưu ý: Sau khi cài, hãy thêm đường dẫn compiler vào PATH nếu cần.</p>
+<h2>3. Cấu trúc chương trình C cơ bản — giải thích từng thành phần</h2>
+<p>Ví dụ tối thiểu (hello.c):</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Hello, World!\n&quot;</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Giải thích:</p>
+<ul>
+<li>#include &lt;stdio.h&gt;: đưa vào các khai báo cho hàm nhập/xuất (printf, scanf).</li>
+<li>int main(void): hàm main trả về int; hệ điều hành sử dụng giá trị trả về để biết trạng thái chương trình (0 = thành công).</li>
+<li>printf: in ra stdout; chuỗi có thể chứa escape sequences như \n (xuống dòng).</li>
+</ul>
+<h2>4. Biên dịch và các cờ thường dùng</h2>
+<ul>
+<li>Cơ bản: gcc -o hello hello.c</li>
+<li>Với cảnh báo và chuẩn: gcc -std=c11 -Wall -Wextra -O0 -g -o hello hello.c
+<ul>
+<li>-std=c11: chọn chuẩn C</li>
+<li>-Wall -Wextra: bật cảnh báo phổ thông</li>
+<li>-O0: tắt tối ưu để dễ debug</li>
+<li>-g: sinh symbol debug cho gdb</li>
+</ul>
+</li>
+</ul>
+<h2>5. Viết chương trình có input: ví dụ hello_name.c</h2>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">char</span> name[<span class="hljs-number">128</span>];
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Nhập tên: &quot;</span>);
+    <span class="hljs-keyword">if</span> (fgets(name, <span class="hljs-keyword">sizeof</span>(name), <span class="hljs-built_in">stdin</span>) != <span class="hljs-literal">NULL</span>) {
+        <span class="hljs-comment">/* loại bỏ newline nếu có */</span>
+        <span class="hljs-type">size_t</span> len = <span class="hljs-built_in">strlen</span>(name);
+        <span class="hljs-keyword">if</span> (len &gt; <span class="hljs-number">0</span> &amp;&amp; name[len<span class="hljs-number">-1</span>] == <span class="hljs-string">&#x27;\n&#x27;</span>) name[len<span class="hljs-number">-1</span>] = <span class="hljs-string">&#x27;\0&#x27;</span>;
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Xin chào, %s!\n&quot;</span>, name);
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Ghi chú an toàn:</p>
+<ul>
+<li>Tránh dùng gets(); dùng fgets() để hạn chế buffer overflow.</li>
+<li>Luôn kiểm tra giá trị trả về của hàm IO.</li>
+</ul>
+<h2>6. Ví dụ và mã nguồn trong <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-01">code/chapter-01</a></h2>
+<ul>
+<li>hello.c — &quot;Hello, World!&quot;</li>
+<li>hello_name.c — đọc tên người dùng và in lời chào (dùng fgets)</li>
+<li>arithmetic.c — nhập hai số và in tổng/hiệu/tích/thương với kiểm tra chia cho 0</li>
+<li>input_validation.c — ví dụ kiểm tra đầu vào hợp lệ</li>
+</ul>
+<p>Mỗi ví dụ có README hướng dẫn biên dịch: gcc -std=c11 -Wall -Wextra -o exe file.c</p>
+<h2>7. Bài tập thực hành (có lời giải trong /manuscript/solutions)</h2>
+<ul>
+<li>Bài tập 1: Viết chương trình in &quot;Hello, [Tên bạn]!&quot; — dùng fgets để đọc tên.</li>
+<li>Bài tập 2: Viết chương trình nhập hai số nguyên, in tổng, hiệu, tích, thương (xử lý chia cho 0).</li>
+<li>Bài tập 3: Viết chương trình đọc một chuỗi và in độ dài (dùng strlen).</li>
+</ul>
+<h2>8. Lỗi thường gặp và mẹo gỡ lỗi</h2>
+<ul>
+<li>Dùng -Wall -Wextra để bắt sớm lỗi khả nghi.</li>
+<li>Nếu chương trình crash (segfault), chạy với gdb: gdb ./prog; run; backtrace</li>
+<li>Kiểm tra giá trị trả về của scanf/fgets để biết input có hợp lệ hay không.</li>
+</ul>
+<p>Tài nguyên bổ sung</p>
+<ul>
+<li>K&amp;R, &quot;The C Programming Language&quot;</li>
+<li><a href="http://cppreference.com">cppreference.com</a>: trang tham khảo các hàm thư viện chuẩn</li>
+</ul>
+<hr>
+<p>Ghi chú kỹ thuật: giữ ví dụ ngắn, có comment tiếng Việt; kiểm tra các ví dụ biên dịch trên MinGW và Linux.</p>
+
+</article>
+<div class="chapter-nav"><span></span><a class="nav-next" href="chapter-02.html">Máy tính và lập trình cơ bản &rarr;</a></div>
+</main>
+</div>
+</body>
+</html>

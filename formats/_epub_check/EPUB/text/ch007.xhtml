@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="vi" xml:lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <title>ch007.xhtml</title>
+  <style>
+  </style>
+  <link rel="stylesheet" type="text/css" href="../styles/stylesheet1.css" />
+</head>
+<body epub:type="bodymatter">
+<section id="chương-7-mảng-chuỗi-arrays-strings" class="level1">
+<h1>Chương 7 — Mảng &amp; chuỗi (Arrays &amp; Strings)</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Hiểu cách khai báo, truyền và xử lý mảng tĩnh và động.</li>
+<li>Xử lý chuỗi (C-strings) an toàn, tránh buffer overflow.</li>
+<li>Hiểu pointer arithmetic và mối quan hệ giữa mảng và con trỏ.</li>
+</ul>
+<ol type="1">
+<li>Mảng tĩnh và khai báo</li>
+</ol>
+<ul>
+<li>Khai báo: int a[10]; a[0]..a[9]</li>
+<li>Lưu ý: truy cập ngoài ranh giới là undefined behavior.</li>
+<li>size_t và sizeof để xác định kích thước.</li>
+</ul>
+<ol start="2" type="1">
+<li>Mảng động (heap)</li>
+</ol>
+<ul>
+<li>Sử dụng malloc/calloc/realloc và free.</li>
+<li>Kiểm tra NULL sau malloc.</li>
+<li>Ví dụ: int <em>arr = malloc(n </em> sizeof *arr);</li>
+</ul>
+<ol start="3" type="1">
+<li>Chuỗi (C-strings)</li>
+</ol>
+<ul>
+<li>Chuỗi là mảng char kết thúc bằng ‘\0’.</li>
+<li>Dùng fgets để đọc chuỗi an toàn: fgets(buf, sizeof buf, stdin);</li>
+<li>Hàm an toàn: strncpy, strncat, snprintf; nhưng hiểu giới hạn của từng hàm.</li>
+</ul>
+<ol start="4" type="1">
+<li>Pointer arithmetic</li>
+</ol>
+<ul>
+<li>p + i tương đương &amp;p[i]; *(p + i) == p[i]</li>
+<li>Dùng pointer khi cần hiệu năng hoặc thao tác mảng chung.</li>
+</ul>
+<ol start="5" type="1">
+<li>Ví dụ thực hành</li>
+</ol>
+<ul>
+<li>reverse_string.c: đảo chuỗi nhập từ stdin bằng hoán vị cặp ký tự.</li>
+<li>dynamic_string.c: builder dùng realloc để nối chuỗi lớn.</li>
+</ul>
+<ol start="6" type="1">
+<li>Bài tập</li>
+</ol>
+<ul>
+<li>Viết safe_concat(dest, src, dest_size) đảm bảo không tràn.</li>
+<li>Viết dynamic vector int: push/pop/resize.</li>
+</ul>
+<p>Ghi chú: các ví dụ nằm trong /code/chapter-07; kèm README và test inputs.</p>
+</section>
+</body>
+</html>

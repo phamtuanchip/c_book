@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="vi" xml:lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <title>ch001.xhtml</title>
+  <style>
+  </style>
+  <link rel="stylesheet" type="text/css" href="../styles/stylesheet1.css" />
+</head>
+<body epub:type="bodymatter">
+<section id="chương-1-giới-thiệu-và-chương-trình-c-đầu-tiên" class="level1">
+<h1>Chương 1 — Giới thiệu và chương trình C đầu tiên</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Hiểu vai trò và lịch sử ngắn gọn của ngôn ngữ C.</li>
+<li>Thiết lập môi trường phát triển (Windows, Linux, macOS).</li>
+<li>Viết, biên dịch, chạy chương trình C đầu tiên.</li>
+<li>Giải thích chi tiết cấu trúc nguồn, hàm main, include, và cách dùng compiler flags cơ bản.</li>
+</ul>
+<p>Tổng quan</p>
+<p>Chương này hướng dẫn từ cơ bản nhất để một người mới — chưa biết lập trình — có thể: 1) chuẩn bị môi trường, 2) viết mã C đầu tiên, 3) biên dịch và chạy, và 4) đọc được các thông báo lỗi/cảnh báo cơ bản để sửa.</p>
+<ol type="1">
+<li>Vì sao học C?</li>
+</ol>
+<ul>
+<li>C là một ngôn ngữ hệ thống, gần với phần cứng, giúp hiểu sâu cách máy tính hoạt động (bộ nhớ, con trỏ, quản lý tài nguyên).</li>
+<li>Nhiều ngôn ngữ hiện đại dựa trên C (C++, C#, Java có nhiều ảnh hưởng), nên nắm C giúp dễ học các ngôn ngữ khác.</li>
+</ul>
+<ol start="2" type="1">
+<li>Công cụ cơ bản và chuẩn bị môi trường (chi tiết thực hiện)</li>
+</ol>
+<ul>
+<li>Cần: một trình soạn thảo (VSCode, Notepad++…), một terminal (PowerShell, bash), và một compiler (gcc/clang hoặc Visual Studio cl).</li>
+</ul>
+<p>Windows (MSYS2 + MinGW-w64) — cách nhanh và tương thích: 1. Tải và cài MSYS2 từ https://www.msys2.org theo hướng dẫn. 2. Mở MSYS2 và cập nhật hệ thống: pacman -Syu (đóng/mở lại terminal nếu được yêu cầu). 3. Cài toolchain 64-bit: pacman -S –needed mingw-w64-x86_64-toolchain mingw-w64-x86_64-make mingw-w64-x86_64-gdb 4. Mở “MSYS2 MinGW 64-bit” shell để làm việc với gcc 64-bit. 5. Kiểm tra: gcc –version, make –version, gdb –version</p>
+<p>Windows (Visual Studio) — nếu muốn dùng cl.exe: - Cài Visual Studio Community với workload “Desktop development with C++”. Mở “Developer Command Prompt” để chạy cl.exe.</p>
+<p>Linux (Debian/Ubuntu): - sudo apt update &amp;&amp; sudo apt install build-essential gdb valgrind make</p>
+<p>macOS (Homebrew): - brew install gcc gdb make</p>
+<p>Lưu ý: Sau khi cài, hãy thêm đường dẫn compiler vào PATH nếu cần.</p>
+<ol start="3" type="1">
+<li>Cấu trúc chương trình C cơ bản — giải thích từng thành phần</li>
+</ol>
+<p>Ví dụ tối thiểu (hello.c):</p>
+<p>#include &lt;stdio.h&gt;</p>
+<p>int main(void) { printf(“Hello, World!”); return 0; }</p>
+<p>Giải thích: - #include &lt;stdio.h&gt;: đưa vào các khai báo cho hàm nhập/xuất (printf, scanf). - int main(void): hàm main trả về int; hệ điều hành sử dụng giá trị trả về để biết trạng thái chương trình (0 = thành công). - printf: in ra stdout; chuỗi có thể chứa escape sequences như (xuống dòng).</p>
+<ol start="4" type="1">
+<li>Biên dịch và các cờ thường dùng</li>
+</ol>
+<ul>
+<li>Cơ bản: gcc -o hello hello.c</li>
+<li>Với cảnh báo và chuẩn: gcc -std=c11 -Wall -Wextra -O0 -g -o hello hello.c
+<ul>
+<li>-std=c11: chọn chuẩn C</li>
+<li>-Wall -Wextra: bật cảnh báo phổ thông</li>
+<li>-O0: tắt tối ưu để dễ debug</li>
+<li>-g: sinh symbol debug cho gdb</li>
+</ul></li>
+</ul>
+<ol start="5" type="1">
+<li>Viết chương trình có input: ví dụ hello_name.c</li>
+</ol>
+<p>#include &lt;stdio.h&gt;</p>
+<p>int main(void) { char name[128]; printf(“Nhập tên:”); if (fgets(name, sizeof(name), stdin) != NULL) { /* loại bỏ newline nếu có */ size_t len = strlen(name); if (len &gt; 0 &amp;&amp; name[len-1] == ‘’) name[len-1] = ‘\0’; printf(“Xin chào, %s!”, name); } return 0; }</p>
+<p>Ghi chú an toàn: - Tránh dùng gets(); dùng fgets() để hạn chế buffer overflow. - Luôn kiểm tra giá trị trả về của hàm IO.</p>
+<ol start="6" type="1">
+<li>Ví dụ và mã nguồn trong /code/chapter-01</li>
+</ol>
+<ul>
+<li>hello.c — “Hello, World!”</li>
+<li>hello_name.c — đọc tên người dùng và in lời chào (dùng fgets)</li>
+<li>arithmetic.c — nhập hai số và in tổng/hiệu/tích/thương với kiểm tra chia cho 0</li>
+<li>input_validation.c — ví dụ kiểm tra đầu vào hợp lệ</li>
+</ul>
+<p>Mỗi ví dụ có README hướng dẫn biên dịch: gcc -std=c11 -Wall -Wextra -o exe file.c</p>
+<ol start="7" type="1">
+<li>Bài tập thực hành (có lời giải trong /manuscript/solutions)</li>
+</ol>
+<ul>
+<li>Bài tập 1: Viết chương trình in “Hello, [Tên bạn]!” — dùng fgets để đọc tên.</li>
+<li>Bài tập 2: Viết chương trình nhập hai số nguyên, in tổng, hiệu, tích, thương (xử lý chia cho 0).</li>
+<li>Bài tập 3: Viết chương trình đọc một chuỗi và in độ dài (dùng strlen).</li>
+</ul>
+<ol start="8" type="1">
+<li>Lỗi thường gặp và mẹo gỡ lỗi</li>
+</ol>
+<ul>
+<li>Dùng -Wall -Wextra để bắt sớm lỗi khả nghi.</li>
+<li>Nếu chương trình crash (segfault), chạy với gdb: gdb ./prog; run; backtrace</li>
+<li>Kiểm tra giá trị trả về của scanf/fgets để biết input có hợp lệ hay không.</li>
+</ul>
+<p>Tài nguyên bổ sung</p>
+<ul>
+<li>K&amp;R, “The C Programming Language”</li>
+<li>cppreference.com: trang tham khảo các hàm thư viện chuẩn</li>
+</ul>
+<hr />
+<p>Ghi chú kỹ thuật: giữ ví dụ ngắn, có comment tiếng Việt; kiểm tra các ví dụ biên dịch trên MinGW và Linux.</p>
+</section>
+</body>
+</html>

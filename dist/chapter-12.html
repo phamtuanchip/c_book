@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>File I/O & thao tác hệ thống — Lập trình C — Từ cơ bản đến nâng cao</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link active" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<main class="content">
+<article>
+<h1>Chương 12 — File I/O &amp; thao tác hệ thống</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Đọc/ghi file text và binary bằng fopen/fgets/fscanf/fprintf/fread/fwrite.</li>
+<li>Hiểu buffering, modes, và xử lý lỗi I/O; khái niệm mmap và portability.</li>
+</ul>
+<h2>1. File text I/O</h2>
+<ul>
+<li>fopen(path, &quot;r&quot;/&quot;w&quot;/&quot;a&quot;) để mở file.</li>
+<li>fgets để đọc line an toàn; fprintf để ghi.</li>
+<li>Kiểm tra return của fopen, fgets, fprintf; dùng perror hoặc strerror(errno).</li>
+</ul>
+<h2>2. Binary I/O</h2>
+<ul>
+<li>fread/fwrite để đọc/ghi block bytes; hữu ích cho file nhị phân hoặc sao chép file.</li>
+<li>Ví dụ copy: đọc buffer 8KB và fwrite cho tới hết file.</li>
+</ul>
+<h2>3. Buffering và fflush</h2>
+<ul>
+<li>stdout thường được buffered line-by-line hoặc fully buffered; fflush để đảm bảo ghi ra disk.</li>
+<li>File modes: &quot;rb&quot;/&quot;wb&quot; cho binary trên Windows</li>
+</ul>
+<h2>4. mmap (khái niệm)</h2>
+<ul>
+<li>mmap ánh xạ file vào bộ nhớ — nhanh cho đọc/ghi lớn; portability khác nhau giữa POSIX và Windows (MapViewOfFile).</li>
+<li>Giải thích ngắn, khuyến nghị dùng fread/fwrite cho portability trừ khi cần hiệu năng đặc biệt.</li>
+</ul>
+<h2>5. Ví dụ thực hành</h2>
+<ul>
+<li><a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-12">code/chapter-12</a>/copy_file.c: copy binary file with fread/fwrite.</li>
+<li><a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-12">code/chapter-12</a>/csv_parser.c: simple CSV reader handling quoted fields.</li>
+</ul>
+<p>Bài tập</p>
+<ul>
+<li>Viết chương trình merge nhiều file text vào một file, xử lý lỗi I/O.</li>
+<li>Viết chương trình tìm kiếm chuỗi trong file lớn bằng buffer streaming.</li>
+</ul>
+<p>Ghi chú: kèm README chỉ dẫn build/run và test files.</p>
+
+</article>
+<div class="chapter-nav"><a class="nav-prev" href="chapter-11.html">&larr; Header, Makefile, build systems</a><a class="nav-next" href="chapter-13.html">Xử lý lỗi & ngoại lệ trong C &rarr;</a></div>
+</main>
+</div>
+</body>
+</html>

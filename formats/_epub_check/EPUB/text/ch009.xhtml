@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="vi" xml:lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <title>ch009.xhtml</title>
+  <style>
+  </style>
+  <link rel="stylesheet" type="text/css" href="../styles/stylesheet1.css" />
+</head>
+<body epub:type="bodymatter">
+<section id="chương-9-quản-lý-bộ-nhớ-và-lỗi-phổ-biến" class="level1">
+<h1>Chương 9 — Quản lý bộ nhớ và lỗi phổ biến</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Hiểu chính xác sự khác nhau giữa stack và heap, cách malloc/calloc/realloc/free hoạt động.</li>
+<li>Nhận diện và sửa các lỗi bộ nhớ phổ biến: memory leak, use-after-free, double-free, dangling pointer.</li>
+<li>Sử dụng công cụ dynamic (Valgrind, ASAN) và static (clang-tidy, cppcheck) để tìm lỗi.</li>
+</ul>
+<ol type="1">
+<li>Stack vs Heap — minh hoạ</li>
+</ol>
+<ul>
+<li>Stack: lưu biến cục bộ, tự động giải phóng khi rời scope. Kích thước giới hạn.</li>
+<li>Heap: cấp phát động qua malloc/calloc/realloc; phải free thủ công.</li>
+</ul>
+<p>Ví dụ ngắn:</p>
+<p>int <em>make_array(size_t n) { // Trả pointer tới heap; caller phải free int </em>a = malloc(n * sizeof *a); if (!a) return NULL; return a; }</p>
+<ol start="2" type="1">
+<li>Các lỗi thường gặp (chi tiết &amp; cách sửa)</li>
+</ol>
+<ul>
+<li>Memory leak: quên free. Cách: xác định ownership, mỗi malloc phải có free tương ứng, viết tests và dùng Valgrind.</li>
+<li>Use-after-free: dùng con trỏ sau khi free → undefined behavior. Sửa: đặt pointer = NULL sau free; kiểm tra NULL.</li>
+<li>Double free: free cùng địa chỉ hai lần → crash; giữ ownership rõ ràng.</li>
+<li>Dangling pointer: con trỏ trỏ tới vùng đã free; tránh bằng NULL và thiết kế API rõ ràng.</li>
+</ul>
+<ol start="3" type="1">
+<li>Công cụ và cách dùng</li>
+</ol>
+<ul>
+<li>Valgrind (Linux): valgrind –leak-check=full ./prog — liệt kê leak, use-after-free.</li>
+<li>AddressSanitizer: gcc -fsanitize=address -g -o prog prog.c — phát hiện use-after-free, OOB.</li>
+<li>static analyzers: clang-tidy, cppcheck — tìm pattern nguy hiểm trước khi chạy.</li>
+</ul>
+<ol start="4" type="1">
+<li>Patterns an toàn</li>
+</ol>
+<ul>
+<li>Kiểm tra kết quả malloc/calloc: if (!ptr) { /* xử lý lỗi */ }</li>
+<li>Dùng RAII-like patterns trong C: wrapper struct có hàm init/free để tránh leak.</li>
+<li>Dùng valgrind/asan trong CI cho bài tập và ví dụ.</li>
+</ul>
+<ol start="5" type="1">
+<li>Ví dụ thực hành</li>
+</ol>
+<ul>
+<li>/code/chapter-09/leak_example.c: tạo leak cố tình và sửa.</li>
+<li>/code/chapter-09/use_after_free.c: minh hoạ và cách phát hiện bằng ASAN.</li>
+<li>/code/chapter-09/tree.c: cấp phát/giải phóng đúng cho binary tree.</li>
+</ul>
+<p>Bài tập</p>
+<ol type="1">
+<li>Viết và test một binary tree: allocate và free mọi node; kiểm tra bằng Valgrind.</li>
+<li>Viết ví dụ minh họa use-after-free và sửa nó bằng ownership rõ ràng.</li>
+</ol>
+<p>Ghi chú: kèm README hướng dẫn sử dụng Valgrind và cách build với -fsanitize=address.</p>
+</section>
+</body>
+</html>

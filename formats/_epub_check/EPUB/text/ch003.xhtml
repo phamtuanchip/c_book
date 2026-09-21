@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="vi" xml:lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <title>ch003.xhtml</title>
+  <style>
+  </style>
+  <link rel="stylesheet" type="text/css" href="../styles/stylesheet1.css" />
+</head>
+<body epub:type="bodymatter">
+<section id="chương-3-lịch-sử-và-triết-lý-của-ngôn-ngữ-c" class="level1">
+<h1>Chương 3 — Lịch sử và triết lý của ngôn ngữ C</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Hiểu nguồn gốc, bối cảnh phát triển và các chuẩn chính của C.</li>
+<li>Nhận diện điểm khác biệt quan trọng giữa các chuẩn (K&amp;R, C89/C90, C99, C11, C17) và ảnh hưởng tới code khi di chuyển.</li>
+<li>Biết cách chọn cờ biên dịch để tương thích và tránh undefined behavior.</li>
+</ul>
+<ol type="1">
+<li>Tóm tắt lịch sử</li>
+</ol>
+<ul>
+<li>1970s: Dennis Ritchie phát triển C tại Bell Labs để viết hệ điều hành (Unix). C ra đời từ ngôn ngữ B và ảnh hưởng bởi ASSEMBLY nhưng có tính trừu tượng hơn.</li>
+<li>1978: K&amp;R (Kernighan &amp; Ritchie) xuất bản cuốn “The C Programming Language” — tài liệu tham khảo ban đầu.</li>
+<li>1989/1990: ANSI C (C89/C90) tiêu chuẩn hóa cú pháp và thư viện chuẩn, giúp code di động hơn.</li>
+<li>1999: C99 thêm nhiều tính năng hiện đại (long long, // comment, restrict, inline, VLA).</li>
+<li>2011: C11 thêm atomic và multi-thread hỗ trợ; C17 sửa lỗi và ổn định.</li>
+</ul>
+<ol start="2" type="1">
+<li>Triết lý thiết kế của C</li>
+</ol>
+<ul>
+<li>C theo đuổi hiệu năng và kiểm soát tài nguyên: cho phép thao tác gần phần cứng.</li>
+<li>Đơn giản về ngữ pháp nhưng mạnh mẽ về khả năng biểu diễn.</li>
+<li>Thiết kế theo kiểu “một số công cụ cho lập trình viên” thay vì che giấu mọi chi tiết.</li>
+</ul>
+<ol start="3" type="1">
+<li>Chuẩn C và tương thích</li>
+</ol>
+<ul>
+<li>Khi viết mã để chạy trên nhiều nền tảng, luôn xác định chuẩn biên dịch: gcc -std=c11 -Wall -Wextra</li>
+<li>Một số tính năng mới (VLA, long long) yêu cầu chuẩn tương ứng; nếu cần hỗ trợ compiler cũ, tránh hoặc viết fallback.</li>
+<li>Undefined behavior: hành vi không xác định (ví dụ: dereference NULL, buffer overflow) cần tránh — compiler có thể tạo ra các tối ưu khiến lỗi khó dò.</li>
+</ul>
+<ol start="4" type="1">
+<li>Ví dụ minh họa</li>
+</ol>
+<ul>
+<li>compatibility_test.c: minh họa dùng long long và các macro kiểm tra kích thước kiểu.</li>
+<li>Dùng gcc -std=c99 compatibility_test.c -o test để nhận biết khác biệt.</li>
+</ul>
+<ol start="5" type="1">
+<li>Bài tập và thí nghiệm</li>
+</ol>
+<ul>
+<li>Thử biên dịch cùng file với -std=c89, -std=c99, -std=c11 và ghi lại lỗi/cảnh báo.</li>
+<li>Dùng gcc -S để sinh assembly và đọc phần prologue/epilogue của hàm.</li>
+</ul>
+<ol start="6" type="1">
+<li>Lời khuyên cho lập trình viên mới</li>
+</ol>
+<ul>
+<li>Luôn đọc cảnh báo và sửa. Cảnh báo thường chỉ ra vấn đề tiềm ẩn.</li>
+<li>Tránh viết mã phụ thuộc vào kích thước kiểu (ví dụ assume int = 4 bytes). Dùng các kiểu cố định như int32_t khi cần.</li>
+</ul>
+<p>Tài nguyên</p>
+<ul>
+<li>K&amp;R “The C Programming Language”</li>
+<li>cppreference.com và tài liệu GNU cho gcc</li>
+</ul>
+<p>Ghi chú: thêm bảng so sánh tính năng giữa các chuẩn và timeline minh hoạ. - Lưu ý rõ các ví dụ lịch sử có thể không biên dịch trên compiler mặc định; ghi cách biên dịch (cờ -std) và mục đích giáo dục.</p>
+</section>
+</body>
+</html>

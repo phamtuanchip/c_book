@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ncx version="2005-1" xmlns="http://www.daisy.org/z3986/2005/ncx/">
+  <head>
+    <meta name="dtb:uid" content="urn:uuid:bca572a3-35fd-4850-9d0c-9e5f842ac0be" />
+    <meta name="dtb:depth" content="1" />
+    <meta name="dtb:totalPageCount" content="0" />
+    <meta name="dtb:maxPageNumber" content="0" />
+    <meta name="cover" content="cover_jpg" />
+  </head>
+  <docTitle>
+    <text>Học lập trình C</text>
+  </docTitle>
+  <navMap>
+    <navPoint id="navPoint-0">
+      <navLabel>
+        <text>Học lập trình C</text>
+      </navLabel>
+      <content src="text/title_page.xhtml" />
+    </navPoint>
+    <navPoint id="navPoint-1">
+      <navLabel>
+        <text>Chương 1 — Giới thiệu và chương trình C đầu tiên</text>
+      </navLabel>
+      <content src="text/ch001.xhtml#chương-1-giới-thiệu-và-chương-trình-c-đầu-tiên" />
+    </navPoint>
+    <navPoint id="navPoint-2">
+      <navLabel>
+        <text>Chương 2 — Máy tính và lập trình cơ bản</text>
+      </navLabel>
+      <content src="text/ch002.xhtml#chương-2-máy-tính-và-lập-trình-cơ-bản" />
+    </navPoint>
+    <navPoint id="navPoint-3">
+      <navLabel>
+        <text>Chương 3 — Lịch sử và triết lý của ngôn ngữ C</text>
+      </navLabel>
+      <content src="text/ch003.xhtml#chương-3-lịch-sử-và-triết-lý-của-ngôn-ngữ-c" />
+    </navPoint>
+    <navPoint id="navPoint-4">
+      <navLabel>
+        <text>Chương 4 — Cú pháp &amp; cấu trúc chương trình C</text>
+      </navLabel>
+      <content src="text/ch004.xhtml#chương-4-cú-pháp-cấu-trúc-chương-trình-c" />
+    </navPoint>
+    <navPoint id="navPoint-5">
+      <navLabel>
+        <text>Chương 5 — Điều khiển luồng (Control Flow)</text>
+      </navLabel>
+      <content src="text/ch005.xhtml#chương-5-điều-khiển-luồng-control-flow" />
+    </navPoint>
+    <navPoint id="navPoint-6">
+      <navLabel>
+        <text>Chương 6 — Hàm &amp; phạm vi biến (Functions &amp; Scope)</text>
+      </navLabel>
+      <content src="text/ch006.xhtml#chương-6-hàm-phạm-vi-biến-functions-scope" />
+    </navPoint>
+    <navPoint id="navPoint-7">
+      <navLabel>
+        <text>Chương 7 — Mảng &amp; chuỗi (Arrays &amp; Strings)</text>
+      </navLabel>
+      <content src="text/ch007.xhtml#chương-7-mảng-chuỗi-arrays-strings" />
+    </navPoint>
+    <navPoint id="navPoint-8">
+      <navLabel>
+        <text>Chương 8 — Con trỏ chi tiết (Pointers Deep Dive)</text>
+      </navLabel>
+      <content src="text/ch008.xhtml#chương-8-con-trỏ-chi-tiết-pointers-deep-dive" />
+    </navPoint>
+    <navPoint id="navPoint-9">
+      <navLabel>
+        <text>Chương 9 — Quản lý bộ nhớ và lỗi phổ biến</text>
+      </navLabel>
+      <content src="text/ch009.xhtml#chương-9-quản-lý-bộ-nhớ-và-lỗi-phổ-biến" />
+    </navPoint>
+    <navPoint id="navPoint-10">
+      <navLabel>
+        <text>Chương 10 — Struct, union, enum</text>
+      </navLabel>
+      <content src="text/ch010.xhtml#chương-10-struct-union-enum" />
+    </navPoint>
+    <navPoint id="navPoint-11">
+      <navLabel>
+        <text>Chương 11 — Header, Makefile, build systems</text>
+      </navLabel>
+      <content src="text/ch011.xhtml#chương-11-header-makefile-build-systems" />
+    </navPoint>
+    <navPoint id="navPoint-12">
+      <navLabel>
+        <text>Chương 12 — File I/O &amp; thao tác hệ thống</text>
+      </navLabel>
+      <content src="text/ch012.xhtml#chương-12-file-io-thao-tác-hệ-thống" />
+    </navPoint>
+    <navPoint id="navPoint-13">
+      <navLabel>
+        <text>Chương 13 — Xử lý lỗi &amp; ngoại lệ trong C</text>
+      </navLabel>
+      <content src="text/ch013.xhtml#chương-13-xử-lý-lỗi-ngoại-lệ-trong-c" />
+    </navPoint>
+    <navPoint id="navPoint-14">
+      <navLabel>
+        <text>Chương 14 — Tiền xử lý &amp; macro nâng cao</text>
+      </navLabel>
+      <content src="text/ch014.xhtml#chương-14-tiền-xử-lý-macro-nâng-cao" />
+    </navPoint>
+    <navPoint id="navPoint-15">
+      <navLabel>
+        <text>Chương 15 — Đa luồng &amp; đồng bộ (POSIX threads)</text>
+      </navLabel>
+      <content src="text/ch015.xhtml#chương-15-đa-luồng-đồng-bộ-posix-threads" />
+    </navPoint>
+    <navPoint id="navPoint-16">
+      <navLabel>
+        <text>Chương 16 — Mạng cơ bản (sockets)</text>
+      </navLabel>
+      <content src="text/ch016.xhtml#chương-16-mạng-cơ-bản-sockets" />
+    </navPoint>
+    <navPoint id="navPoint-17">
+      <navLabel>
+        <text>Chương 17 — Tối ưu hóa &amp; profiling</text>
+      </navLabel>
+      <content src="text/ch017.xhtml#chương-17-tối-ưu-hóa-profiling" />
+    </navPoint>
+    <navPoint id="navPoint-18">
+      <navLabel>
+        <text>Chương 18 — Bảo mật &amp; an toàn bộ nhớ</text>
+      </navLabel>
+      <content src="text/ch018.xhtml#chương-18-bảo-mật-an-toàn-bộ-nhớ" />
+    </navPoint>
+    <navPoint id="navPoint-19">
+      <navLabel>
+        <text>Chương 19 — Project: Trình biên dịch / Interpreter mini</text>
+      </navLabel>
+      <content src="text/ch019.xhtml#chương-19-project-trình-biên-dịch-interpreter-mini" />
+    </navPoint>
+    <navPoint id="navPoint-20">
+      <navLabel>
+        <text>Chương 20 — Project: Web server đơn giản</text>
+      </navLabel>
+      <content src="text/ch020.xhtml#chương-20-project-web-server-đơn-giản" />
+    </navPoint>
+    <navPoint id="navPoint-21">
+      <navLabel>
+        <text>Chương 21 — Testing &amp; CI cho C</text>
+      </navLabel>
+      <content src="text/ch021.xhtml#chương-21-testing-ci-cho-c" />
+    </navPoint>
+    <navPoint id="navPoint-22">
+      <navLabel>
+        <text>Chương 22 — Packaging &amp; deploy</text>
+      </navLabel>
+      <content src="text/ch022.xhtml#chương-22-packaging-deploy" />
+    </navPoint>
+  </navMap>
+</ncx>

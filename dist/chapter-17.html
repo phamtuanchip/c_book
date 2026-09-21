@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tối ưu hóa & profiling — Lập trình C — Từ cơ bản đến nâng cao</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link active" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<main class="content">
+<article>
+<h1>Chương 17 — Tối ưu hóa &amp; profiling</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Học cách đo hiệu năng thực tế, xác định hotspots và tối ưu hóa phù hợp.</li>
+<li>Hiểu khác biệt giữa tối ưu thuật toán và micro-optimizations (cache, inlining).</li>
+</ul>
+<h2>1. Đo và profiling</h2>
+<ul>
+<li>Microbenchmark vs real workload: luôn test trên dữ liệu thực.</li>
+<li>Công cụ:
+<ul>
+<li>gprof: profiling cho chương trình được link với -pg (các hạn chế về inline).</li>
+<li>perf (Linux): đo CPU cycles, cache-misses, branch-misses.</li>
+<li>Valgrind Callgrind + kcachegrind: profile gọi hàm và số lần gọi.</li>
+</ul>
+</li>
+</ul>
+<h2>2. Algorithmic optimization</h2>
+<ul>
+<li>Đổi thuật toán thường đem lợi lớn nhất (O(n^2) -&gt; O(n log n) ...).</li>
+<li>Trường hợp: dùng hash map thay vì tìm tuyến tính.</li>
+</ul>
+<h2>3. Micro-optimizations và cache-friendliness</h2>
+<ul>
+<li>Data locality: tổ chức dữ liệu theo trình tự truy cập (AoS vs SoA).</li>
+<li>Prefetching, loop unrolling, inlining: cân nhắc trước khi áp dụng.</li>
+<li>Giữ critical loops đơn giản để compiler tối ưu.</li>
+</ul>
+<h2>4. Compiler optimizations and flags</h2>
+<ul>
+<li>-O0, -O1, -O2, -O3, -Ofast, -march=native</li>
+<li>-flto (link-time optimization), -funroll-loops, -fprofile-guided</li>
+<li>Gợi ý: thử nhiều mức và profile để thấy tác động.</li>
+</ul>
+<h2>5. Benchmarking methodology</h2>
+<ul>
+<li>Run multiple times, warm-up caches, pin CPU if cần.</li>
+<li>Use stable datasets and measure wall-clock and CPU time.</li>
+</ul>
+<h2>6. Ví dụ thực hành</h2>
+<ul>
+<li><a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-17">code/chapter-17</a>/sort_bench.c: so sánh quicksort vs mergesort vs std qsort với dữ liệu lớn và đo thời gian.</li>
+<li><a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-17">code/chapter-17</a>/cache_demo.c: minh họa truy cập theo hàng vs cột trên matrix và đo cache effect.</li>
+</ul>
+<p>Bài tập</p>
+<ol>
+<li>Profile hàm tìm kiếm và thay bằng cấu trúc dữ liệu phù hợp; trình bày số liệu trước/sau.</li>
+<li>Minh họa effect của memory layout bằng benchmark.</li>
+</ol>
+<p>Ghi chú: kèm hướng dẫn chạy perf/gprof và cách đọc báo cáo.</p>
+
+</article>
+<div class="chapter-nav"><a class="nav-prev" href="chapter-16.html">&larr; Mạng cơ bản (sockets)</a><a class="nav-next" href="chapter-18.html">Bảo mật & an toàn bộ nhớ &rarr;</a></div>
+</main>
+</div>
+</body>
+</html>

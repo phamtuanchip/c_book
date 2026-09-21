@@ -1,0 +1,1 @@
+﻿Enter CSV lines (ctrl+D to end):

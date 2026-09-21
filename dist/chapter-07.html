@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mảng & chuỗi (Arrays & Strings) — Lập trình C — Từ cơ bản đến nâng cao</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link active" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<main class="content">
+<article>
+<h1>Chương 7 — Mảng &amp; chuỗi (Arrays &amp; Strings)</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Hiểu cách khai báo, truyền và xử lý mảng tĩnh và động.</li>
+<li>Xử lý chuỗi (C-strings) an toàn, tránh buffer overflow.</li>
+<li>Hiểu pointer arithmetic và mối quan hệ giữa mảng và con trỏ.</li>
+</ul>
+<h2>1. Mảng tĩnh và khai báo</h2>
+<ul>
+<li>Khai báo: int a[10]; a[0]..a[9]</li>
+<li>Lưu ý: truy cập ngoài ranh giới là undefined behavior.</li>
+<li>size_t và sizeof để xác định kích thước.</li>
+</ul>
+<h2>2. Mảng động (heap)</h2>
+<ul>
+<li>Sử dụng malloc/calloc/realloc và free.</li>
+<li>Kiểm tra NULL sau malloc.</li>
+<li>Ví dụ: int *arr = malloc(n * sizeof *arr);</li>
+</ul>
+<h2>3. Chuỗi (C-strings)</h2>
+<ul>
+<li>Chuỗi là mảng char kết thúc bằng '\0'.</li>
+<li>Dùng fgets để đọc chuỗi an toàn:</li>
+</ul>
+<pre class="hljs"><code>  fgets(buf, <span class="hljs-keyword">sizeof</span> buf, <span class="hljs-built_in">stdin</span>);
+</code></pre>
+<ul>
+<li>Hàm an toàn: strncpy, strncat, snprintf; nhưng hiểu giới hạn của từng hàm.</li>
+</ul>
+<h2>4. Pointer arithmetic</h2>
+<ul>
+<li>p + i tương đương &amp;p[i]; *(p + i) == p[i]</li>
+<li>Dùng pointer khi cần hiệu năng hoặc thao tác mảng chung.</li>
+</ul>
+<h2>5. Ví dụ thực hành</h2>
+<ul>
+<li>reverse_string.c: đảo chuỗi nhập từ stdin bằng hoán vị cặp ký tự.</li>
+<li>dynamic_string.c: builder dùng realloc để nối chuỗi lớn.</li>
+</ul>
+<h2>6. Bài tập</h2>
+<ul>
+<li>Viết safe_concat(dest, src, dest_size) đảm bảo không tràn.</li>
+<li>Viết dynamic vector int: push/pop/resize.</li>
+</ul>
+<p>Ghi chú: các ví dụ nằm trong <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-07">code/chapter-07</a>; kèm README và test inputs.</p>
+
+</article>
+<div class="chapter-nav"><a class="nav-prev" href="chapter-06.html">&larr; Hàm & phạm vi biến (Functions & Scope)</a><a class="nav-next" href="chapter-08.html">Con trỏ chi tiết (Pointers Deep Dive) &rarr;</a></div>
+</main>
+</div>
+</body>
+</html>

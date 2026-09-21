@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hàm & phạm vi biến (Functions & Scope) — Lập trình C — Từ cơ bản đến nâng cao</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link active" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<main class="content">
+<article>
+<h1>Chương 6 — Hàm &amp; phạm vi biến (Functions &amp; Scope)</h1>
+<p>Mục tiêu chương:</p>
+<ul>
+<li>Hiểu cách thiết kế hàm, prototype, và cách tổ chức mã theo modules (.h/.c).</li>
+<li>Khác biệt giữa pass-by-value và việc truyền con trỏ để thay đổi giá trị bên ngoài.</li>
+<li>Hiểu storage class: auto, static, extern; và best practices khi dùng biến toàn cục.</li>
+</ul>
+<h2>1. Prototype và definition</h2>
+<ul>
+<li>Prototype (khai báo) giúp compiler biết kiểu trả về và tham số trước khi gọi hàm.</li>
+<li>Đặt prototype trong header (.h), definition trong .c.</li>
+</ul>
+<p>Ví dụ:</p>
+<pre class="hljs"><code><span class="hljs-comment">// math.h</span>
+<span class="hljs-type">int</span> <span class="hljs-title function_">add</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span>;
+
+<span class="hljs-comment">// math.c</span>
+<span class="hljs-type">int</span> <span class="hljs-title function_">add</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span> { <span class="hljs-keyword">return</span> a + b; }
+</code></pre>
+<h2>2. Truyền tham số: giá trị vs địa chỉ</h2>
+<ul>
+<li>Mặc định: giá trị được truyền theo giá trị (copy). Thay đổi bên trong hàm không ảnh hưởng biến ở caller.</li>
+<li>Truyền con trỏ: hàm nhận địa chỉ để sửa giá trị ban đầu.</li>
+</ul>
+<p>Ví dụ swap bằng con trỏ:</p>
+<pre class="hljs"><code><span class="hljs-type">void</span> <span class="hljs-title function_">swap</span><span class="hljs-params">(<span class="hljs-type">int</span> *a, <span class="hljs-type">int</span> *b)</span> { <span class="hljs-type">int</span> t = *a; *a = *b; *b = t; }
+</code></pre>
+<h2>3. Storage class và scope</h2>
+<ul>
+<li>auto: mặc định cho biến cục bộ.</li>
+<li>static: nếu áp dụng cho biến file-scope, biến chỉ nhìn thấy trong translation unit; nếu cho biến cục bộ, biến giữ giá trị giữa các lần gọi.</li>
+<li>extern: khai báo biến toàn cục được định nghĩa ở file khác.</li>
+</ul>
+<h2>4. Function pointers</h2>
+<ul>
+<li>Khai báo: int (<em>cmp)(const void</em>, const void*);</li>
+<li>Dùng để truyền callback cho các hàm như qsort.</li>
+</ul>
+<h2>5. Tách module (header + source)</h2>
+<ul>
+<li>Quy tắc: header cho API công khai; .c cho implementation nội bộ.</li>
+<li>Ví dụ cấu trúc: include/math.h, src/math.c, examples/main.c</li>
+<li>Makefile: compile .c -&gt; .o và link thành exe.</li>
+</ul>
+<h2>6. Ví dụ thực hành</h2>
+<ul>
+<li>Viết thư viện vector_int: create, push, pop, free; test memory leak.</li>
+<li>Viết swap bằng con trỏ và so sánh với macro swap.</li>
+<li>Dùng qsort với comparator function pointer.</li>
+</ul>
+<h2>7. Bài tập</h2>
+<ol>
+<li>Tạo module math với add/sub/mul/div (xử lý chia cho 0). 2) Viết vector_int (push/pop). 3) Viết comparator và sort array bằng qsort.</li>
+</ol>
+<p>Ghi chú: đưa các ví dụ trong <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-06">code/chapter-06</a> kèm Makefile và test cases.</p>
+
+</article>
+<div class="chapter-nav"><a class="nav-prev" href="chapter-05.html">&larr; Điều khiển luồng (Control Flow)</a><a class="nav-next" href="chapter-07.html">Mảng & chuỗi (Arrays & Strings) &rarr;</a></div>
+</main>
+</div>
+</body>
+</html>
