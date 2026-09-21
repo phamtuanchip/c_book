@@ -4,7 +4,9 @@
   "private": true,
   "description": "Sach lap trinh C - build HTML tu manuscript Markdown",
   "scripts": {
-    "build:html": "node tools/build-html.js"
+    "build:html": "node tools/build-html.js",
+    "extract:code": "node tools/extract-code.js",
+    "check:code": "node tools/check-code.js"
   },
   "devDependencies": {
     "highlight.js": "^11.9.0",

@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lời giải chương 16 — Lập trình C — Từ cơ bản đến nâng cao</title>
+<script>try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.setAttribute('data-theme',t);var f=localStorage.getItem('fs');if(f)document.documentElement.style.setProperty('--fs',f+'px')}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar" id="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Phần I — Nhập môn</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp &amp; cấu trúc chương trình C</a></li></ul></li><li class="part"><div class="part-title">Phần II — Nền tảng ngôn ngữ</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm &amp; phạm vi biến (Functions &amp; Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng &amp; chuỗi (Arrays &amp; Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li></ul></li><li class="part"><div class="part-title">Phần III — Bộ nhớ, dữ liệu, xây dựng</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O &amp; thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi &amp; ngoại lệ trong C</a></li></ul></li><li class="part"><div class="part-title">Phần IV — Kỹ thuật nâng cao</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý &amp; macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng &amp; đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa &amp; profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật &amp; an toàn bộ nhớ</a></li></ul></li><li class="part"><div class="part-title">Phần V — Dự án và phát hành</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing &amp; CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging &amp; deploy</a></li></ul></li><li class="part"><div class="part-title">Phụ lục — Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li><li><a class="chapter-link" href="solutions-02.html">Lời giải chương 2</a></li><li><a class="chapter-link" href="solutions-03.html">Lời giải chương 3</a></li><li><a class="chapter-link" href="solutions-04.html">Lời giải chương 4</a></li><li><a class="chapter-link" href="solutions-05.html">Lời giải chương 5</a></li><li><a class="chapter-link" href="solutions-06.html">Lời giải chương 6</a></li><li><a class="chapter-link" href="solutions-07.html">Lời giải chương 7</a></li><li><a class="chapter-link" href="solutions-08.html">Lời giải chương 8</a></li><li><a class="chapter-link" href="solutions-09.html">Lời giải chương 9</a></li><li><a class="chapter-link" href="solutions-10.html">Lời giải chương 10</a></li><li><a class="chapter-link" href="solutions-11.html">Lời giải chương 11</a></li><li><a class="chapter-link" href="solutions-12.html">Lời giải chương 12</a></li><li><a class="chapter-link" href="solutions-13.html">Lời giải chương 13</a></li><li><a class="chapter-link" href="solutions-14.html">Lời giải chương 14</a></li><li><a class="chapter-link" href="solutions-15.html">Lời giải chương 15</a></li><li><a class="chapter-link active" href="solutions-16.html">Lời giải chương 16</a></li><li><a class="chapter-link" href="solutions-17.html">Lời giải chương 17</a></li><li><a class="chapter-link" href="solutions-18.html">Lời giải chương 18</a></li><li><a class="chapter-link" href="solutions-19.html">Lời giải chương 19</a></li><li><a class="chapter-link" href="solutions-20.html">Lời giải chương 20</a></li><li><a class="chapter-link" href="solutions-21.html">Lời giải chương 21</a></li><li><a class="chapter-link" href="solutions-22.html">Lời giải chương 22</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<div class="main-col">
+<header class="topbar"><button class="menu-btn" id="menu-btn" type="button" aria-label="Mục lục">☰</button><span class="crumb">Lời giải chương 16</span><span class="tools"><button data-fs="-1" type="button" title="Chữ nhỏ hơn">A−</button><button data-fs="1" type="button" title="Chữ lớn hơn">A+</button><button data-theme-btn="light" type="button" title="Nền sáng">Sáng</button><button data-theme-btn="sepia" type="button" title="Nền sepia">Sepia</button><button data-theme-btn="dark" type="button" title="Nền tối">Tối</button></span></header>
+<main class="content">
+<article>
+<header class="chapter-head"><div class="chapter-num">Chương 16</div><h1>Lời giải bài tập</h1></header><nav class="chapter-toc" aria-label="Trong chương này"><div class="toc-title">Trong chương này</div><ol><li><a href="#h-1">Bài 1: server tuần tự và hai nc</a></li><li><a href="#h-2">Bài 2: đo thời gian khứ hồi</a></li><li><a href="#h-3">Bài 3: thread-per-connection</a></li><li><a href="#h-4">Bài 4: một luồng bằng poll</a></li><li><a href="#h-5">Bài 5: giao thức dòng SET/GET/DEL</a></li><li><a href="#h-6">Bài 6: tiền tố độ dài</a></li><li><a href="#h-7">Bài 7: ping bằng UDP</a></li><li><a href="#h-8">Bài 8: HTTP GET, tách header và body</a></li><li><a href="#h-9">Bài 9: idle timeout cho server poll</a></li></ol></nav>
+<blockquote>
+<p>Chạy trên Linux, macOS hoặc WSL. Mọi ví dụ dùng <code>127.0.0.1</code>.</p>
+</blockquote>
+<h2 id="h-1">Bài 1: server tuần tự và hai <code>nc</code></h2>
+<p>Mở <code>./echo_server 8080</code>; terminal A: <code>nc 127.0.0.1 8080</code>, gõ chữ → nhận lại. Terminal B: <code>nc 127.0.0.1 8080</code>, gõ chữ → <strong>không có phản hồi</strong> cho đến khi A đóng. Lý do: vòng <code>while (recv...)</code> phục vụ client A không quay lại <code>accept()</code>; kết nối của B nằm trong hàng đợi <code>listen</code> (đã <code>connect</code> thành công ở mức TCP nhưng chưa được <code>accept</code>). Khi A đóng, server <code>accept</code> B và phản hồi dồn lại.</p>
+<h2 id="h-2">Bài 2: đo thời gian khứ hồi</h2>
+<pre class="hljs"><code><span class="hljs-comment">// rtt_client.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> _POSIX_C_SOURCE 200809L</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;arpa/inet.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;netinet/in.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/socket.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;time.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span>
+
+<span class="hljs-type">static</span> <span class="hljs-type">double</span> <span class="hljs-title function_">now</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> { <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">timespec</span> <span class="hljs-title">t</span>;</span> clock_gettime(CLOCK_MONOTONIC, &amp;t); <span class="hljs-keyword">return</span> (<span class="hljs-type">double</span>)t.tv_sec + (<span class="hljs-type">double</span>)t.tv_nsec * <span class="hljs-number">1e-9</span>; }
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> **argv)</span> {
+    <span class="hljs-type">int</span> port = argc &gt; <span class="hljs-number">1</span> ? atoi(argv[<span class="hljs-number">1</span>]) : <span class="hljs-number">8080</span>;
+    <span class="hljs-type">int</span> fd = socket(AF_INET, SOCK_STREAM, <span class="hljs-number">0</span>);
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">sockaddr_in</span> <span class="hljs-title">a</span> =</span> { .sin_family = AF_INET, .sin_port = htons((<span class="hljs-type">uint16_t</span>)port) };
+    inet_pton(AF_INET, <span class="hljs-string">&quot;127.0.0.1&quot;</span>, &amp;a.sin_addr);
+    <span class="hljs-keyword">if</span> (fd &lt; <span class="hljs-number">0</span> || connect(fd, (<span class="hljs-keyword">struct</span> sockaddr *)&amp;a, <span class="hljs-keyword">sizeof</span> a) &lt; <span class="hljs-number">0</span>) { perror(<span class="hljs-string">&quot;connect&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+
+    <span class="hljs-type">char</span> line[<span class="hljs-number">256</span>], reply[<span class="hljs-number">256</span>];
+    <span class="hljs-keyword">while</span> (fgets(line, <span class="hljs-keyword">sizeof</span> line, <span class="hljs-built_in">stdin</span>)) {
+        <span class="hljs-type">size_t</span> len = <span class="hljs-built_in">strlen</span>(line);
+        <span class="hljs-type">double</span> t0 = now();
+        <span class="hljs-keyword">if</span> (send(fd, line, len, <span class="hljs-number">0</span>) != (<span class="hljs-type">ssize_t</span>)len) <span class="hljs-keyword">break</span>;
+        <span class="hljs-type">ssize_t</span> n = recv(fd, reply, <span class="hljs-keyword">sizeof</span> reply - <span class="hljs-number">1</span>, <span class="hljs-number">0</span>);
+        <span class="hljs-keyword">if</span> (n &lt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">break</span>;
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;RTT %.3f ms\n&quot;</span>, (now() - t0) * <span class="hljs-number">1e3</span>);
+    }
+    close(fd);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Trên loopback RTT thường vài chục micro-giây.</p>
+<h2 id="h-3">Bài 3: thread-per-connection</h2>
+<p>Dùng <code>client_thread</code> ở mục 16.6; thử với 100 client bằng vòng lặp shell: <code>for i in $(seq 100); do (echo hi | nc -q1 127.0.0.1 8080 &amp;); done</code>. Kiểm tra: <code>ss -tan | grep 8080 | wc -l</code>. Cần <code>pthread_detach</code>, <code>Client</code> cấp phát heap, và giới hạn số kết nối đồng thời.</p>
+<h2 id="h-4">Bài 4: một luồng bằng <code>poll</code></h2>
+<p>Vòng lặp ở mục 16.7. So sánh với 1000 kết nối nhàn rỗi: bản đa luồng tạo 1000 luồng (mỗi luồng ~8 MB stack ảo, chi phí chuyển ngữ cảnh), bản <code>poll</code> chỉ dùng vài trăm KB và một luồng; đo bằng <code>ps -o nlwp,rss -p &lt;pid&gt;</code>.</p>
+<h2 id="h-5">Bài 5: giao thức dòng <code>SET/GET/DEL</code></h2>
+<p>Phân tích mỗi dòng bằng <code>sscanf(line, &quot;%15s %63s %63s&quot;, cmd, key, value)</code> (có giới hạn độ rộng), tra bảng băm (chương 10, bài 9) rồi trả <code>OK\n</code>, <code>VALUE &lt;v&gt;\n</code>, <code>NOTFOUND\n</code>, <code>ERR\n</code>. Kiểm thử bằng <code>printf 'SET a 1\nGET a\nDEL a\nGET a\n' | nc 127.0.0.1 8080</code>. Với <code>poll</code> phải giữ <strong>bộ đệm đọc riêng cho từng client</strong> vì một dòng có thể đến từng mảnh.</p>
+<h2 id="h-6">Bài 6: tiền tố độ dài</h2>
+<p>Dùng <code>send_msg</code>/<code>recv_msg</code> (mục 16.5). Client gửi 10 MB bằng một lần <code>send_msg</code> (bên trong <code>send_all</code> lặp nhiều lần vì <code>send</code> chỉ nhận một phần); server <code>recv_msg</code> với <code>max = 16 MB</code>, đảo byte rồi gửi trả. Kiểm tra <code>cmp</code> giữa dữ liệu gốc (đảo hai lần) và kết quả. Thử <code>len = 0xFFFFFFFF</code> để chắc chắn <code>max</code> chặn được.</p>
+<h2 id="h-7">Bài 7: ping bằng UDP</h2>
+<pre class="hljs"><code><span class="hljs-comment">// udp_ping.c (client)</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> _POSIX_C_SOURCE 200809L</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;arpa/inet.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;netinet/in.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdint.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/socket.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/time.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;time.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> fd = socket(AF_INET, SOCK_DGRAM, <span class="hljs-number">0</span>);
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">sockaddr_in</span> <span class="hljs-title">srv</span> =</span> { .sin_family = AF_INET, .sin_port = htons(<span class="hljs-number">9000</span>) };
+    inet_pton(AF_INET, <span class="hljs-string">&quot;127.0.0.1&quot;</span>, &amp;srv.sin_addr);
+
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">timeval</span> <span class="hljs-title">tv</span> =</span> { .tv_sec = <span class="hljs-number">1</span>, .tv_usec = <span class="hljs-number">0</span> };
+    setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &amp;tv, <span class="hljs-keyword">sizeof</span> tv);       <span class="hljs-comment">// chờ tối đa 1 giây cho mỗi gói</span>
+
+    <span class="hljs-type">int</span> lost = <span class="hljs-number">0</span>, got = <span class="hljs-number">0</span>;
+    <span class="hljs-type">double</span> total = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">uint32_t</span> seq = <span class="hljs-number">0</span>; seq &lt; <span class="hljs-number">100</span>; seq++) {
+        <span class="hljs-type">uint32_t</span> nseq = htonl(seq);
+        <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">timespec</span> <span class="hljs-title">a</span>, <span class="hljs-title">b</span>;</span>
+        clock_gettime(CLOCK_MONOTONIC, &amp;a);
+        sendto(fd, &amp;nseq, <span class="hljs-keyword">sizeof</span> nseq, <span class="hljs-number">0</span>, (<span class="hljs-keyword">struct</span> sockaddr *)&amp;srv, <span class="hljs-keyword">sizeof</span> srv);
+
+        <span class="hljs-type">uint32_t</span> reply;
+        <span class="hljs-type">ssize_t</span> n = recvfrom(fd, &amp;reply, <span class="hljs-keyword">sizeof</span> reply, <span class="hljs-number">0</span>, <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>);
+        clock_gettime(CLOCK_MONOTONIC, &amp;b);
+        <span class="hljs-keyword">if</span> (n == <span class="hljs-keyword">sizeof</span> reply &amp;&amp; ntohl(reply) == seq) {
+            total += (<span class="hljs-type">double</span>)(b.tv_sec - a.tv_sec) * <span class="hljs-number">1e3</span> + (<span class="hljs-type">double</span>)(b.tv_nsec - a.tv_nsec) * <span class="hljs-number">1e-6</span>;
+            got++;
+        } <span class="hljs-keyword">else</span> lost++;                                              <span class="hljs-comment">// mất gói hoặc quá hạn</span>
+    }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;nhan %d, mat %d, RTT trung binh %.3f ms\n&quot;</span>, got, lost, got ? total / got : <span class="hljs-number">0.0</span>);
+    close(fd);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Server là <code>recvfrom</code>/<code>sendto</code> echo như mục 16.8. Trên loopback hầu như không mất gói; để thấy mất gói dùng <code>tc qdisc add dev lo root netem loss 10%</code> (Linux, cần root).</p>
+<h2 id="h-8">Bài 8: HTTP GET, tách header và body</h2>
+<p>Thu toàn bộ phản hồi vào bộ đệm động (đọc đến khi <code>recv</code> trả 0 nhờ <code>Connection: close</code>), tìm <code>&quot;\r\n\r\n&quot;</code> bằng <code>strstr</code>/<code>memmem</code>; phần trước là header, phần sau là body. Ghi body bằng <code>fwrite</code> ra file (chế độ <code>&quot;wb&quot;</code>). Lưu ý phản hồi có thể dùng <code>Transfer-Encoding: chunked</code> — khi đó phải giải mã các khối <code>&lt;độ dài hex&gt;\r\n&lt;dữ liệu&gt;\r\n</code>; cách đơn giản để tránh: gửi <code>HTTP/1.0</code> thay cho <code>HTTP/1.1</code> (server thường không dùng chunked).</p>
+<h2 id="h-9">Bài 9: idle timeout cho server <code>poll</code></h2>
+<p>Lưu <code>last_active[i]</code> (<code>time(NULL)</code>) cho mỗi client, cập nhật mỗi khi nhận dữ liệu. Gọi <code>poll</code> với <code>timeout = 1000</code> ms; sau mỗi vòng, duyệt các client và đóng những kết nối có <code>now - last_active[i] &gt; 30</code>. Nhớ <strong>gỡ đúng cách khỏi mảng</strong> (hoán đổi với phần tử cuối và không tăng <code>i</code>) như trong vòng lặp mục 16.7.</p>
+
+</article>
+<nav class="chapter-nav" aria-label="Điều hướng chương"><a class="nav-prev" href="solutions-15.html"><small>← Trước</small>Lời giải chương 15</a><a class="nav-next" href="solutions-17.html"><small>Tiếp →</small>Lời giải chương 17</a></nav>
+</main>
+</div>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,store=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
+  function setTheme(t){if(t==='light')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);store('theme',t);
+    document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.setAttribute('aria-pressed',String((b.dataset.themeBtn===t)||(t==='light'&&b.dataset.themeBtn==='light')))})}
+  var cur=root.getAttribute('data-theme')||'light';setTheme(cur);
+  document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.addEventListener('click',function(){setTheme(b.dataset.themeBtn)})});
+  var fs=parseInt(getComputedStyle(root).getPropertyValue('--fs'))||19;
+  document.querySelectorAll('[data-fs]').forEach(function(b){b.addEventListener('click',function(){fs=Math.min(26,Math.max(14,fs+parseInt(b.dataset.fs)));root.style.setProperty('--fs',fs+'px');store('fs',fs)})});
+  var mb=document.getElementById('menu-btn');if(mb)mb.addEventListener('click',function(){document.body.classList.toggle('nav-open')});
+  document.addEventListener('click',function(e){if(document.body.classList.contains('nav-open')&&!e.target.closest('#sidebar')&&e.target.id!=='menu-btn')document.body.classList.remove('nav-open')});
+  document.querySelectorAll('pre').forEach(function(pre){var b=document.createElement('button');b.className='copy-btn';b.type='button';b.textContent='Sao chép';
+    b.addEventListener('click',function(){var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Đã chép'},function(){b.textContent='Lỗi'});setTimeout(function(){b.textContent='Sao chép'},1500)});pre.appendChild(b)});
+  var a=document.querySelector('.chapter-link.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'center'});
+})();
+</script>
+</body>
+</html>

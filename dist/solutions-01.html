@@ -4,19 +4,23 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lời giải chương 1 — Lập trình C — Từ cơ bản đến nâng cao</title>
+<script>try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.setAttribute('data-theme',t);var f=localStorage.getItem('fs');if(f)document.documentElement.style.setProperty('--fs',f+'px')}catch(e){}</script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="layout">
-<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link active" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<nav class="sidebar" id="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Phần I — Nhập môn</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp &amp; cấu trúc chương trình C</a></li></ul></li><li class="part"><div class="part-title">Phần II — Nền tảng ngôn ngữ</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm &amp; phạm vi biến (Functions &amp; Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng &amp; chuỗi (Arrays &amp; Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li></ul></li><li class="part"><div class="part-title">Phần III — Bộ nhớ, dữ liệu, xây dựng</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O &amp; thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi &amp; ngoại lệ trong C</a></li></ul></li><li class="part"><div class="part-title">Phần IV — Kỹ thuật nâng cao</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý &amp; macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng &amp; đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa &amp; profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật &amp; an toàn bộ nhớ</a></li></ul></li><li class="part"><div class="part-title">Phần V — Dự án và phát hành</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing &amp; CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging &amp; deploy</a></li></ul></li><li class="part"><div class="part-title">Phụ lục — Lời giải</div><ul class="chapter-list"><li><a class="chapter-link active" href="solutions-01.html">Lời giải chương 1</a></li><li><a class="chapter-link" href="solutions-02.html">Lời giải chương 2</a></li><li><a class="chapter-link" href="solutions-03.html">Lời giải chương 3</a></li><li><a class="chapter-link" href="solutions-04.html">Lời giải chương 4</a></li><li><a class="chapter-link" href="solutions-05.html">Lời giải chương 5</a></li><li><a class="chapter-link" href="solutions-06.html">Lời giải chương 6</a></li><li><a class="chapter-link" href="solutions-07.html">Lời giải chương 7</a></li><li><a class="chapter-link" href="solutions-08.html">Lời giải chương 8</a></li><li><a class="chapter-link" href="solutions-09.html">Lời giải chương 9</a></li><li><a class="chapter-link" href="solutions-10.html">Lời giải chương 10</a></li><li><a class="chapter-link" href="solutions-11.html">Lời giải chương 11</a></li><li><a class="chapter-link" href="solutions-12.html">Lời giải chương 12</a></li><li><a class="chapter-link" href="solutions-13.html">Lời giải chương 13</a></li><li><a class="chapter-link" href="solutions-14.html">Lời giải chương 14</a></li><li><a class="chapter-link" href="solutions-15.html">Lời giải chương 15</a></li><li><a class="chapter-link" href="solutions-16.html">Lời giải chương 16</a></li><li><a class="chapter-link" href="solutions-17.html">Lời giải chương 17</a></li><li><a class="chapter-link" href="solutions-18.html">Lời giải chương 18</a></li><li><a class="chapter-link" href="solutions-19.html">Lời giải chương 19</a></li><li><a class="chapter-link" href="solutions-20.html">Lời giải chương 20</a></li><li><a class="chapter-link" href="solutions-21.html">Lời giải chương 21</a></li><li><a class="chapter-link" href="solutions-22.html">Lời giải chương 22</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<div class="main-col">
+<header class="topbar"><button class="menu-btn" id="menu-btn" type="button" aria-label="Mục lục">☰</button><span class="crumb">Lời giải chương 1</span><span class="tools"><button data-fs="-1" type="button" title="Chữ nhỏ hơn">A−</button><button data-fs="1" type="button" title="Chữ lớn hơn">A+</button><button data-theme-btn="light" type="button" title="Nền sáng">Sáng</button><button data-theme-btn="sepia" type="button" title="Nền sepia">Sepia</button><button data-theme-btn="dark" type="button" title="Nền tối">Tối</button></span></header>
 <main class="content">
 <article>
-<h1>Chương 1 — Lời giải bài tập</h1>
+<header class="chapter-head"><div class="chapter-num">Chương 1</div><h1>Lời giải bài tập</h1></header><nav class="chapter-toc" aria-label="Trong chương này"><div class="toc-title">Trong chương này</div><ol><li><a href="#h-1">Bài 1: in tên, năm sinh, quê quán</a></li><li><a href="#h-2">Bài 2: đọc tên bằng fgets và chào</a></li><li><a href="#h-3">Bài 3: bốn phép toán, xử lý chia cho 0</a></li><li><a href="#h-4">Bài 4: độ dài chuỗi bằng strlen và bằng vòng lặp</a></li><li><a href="#h-5">Bài 5: quan sát các thông báo lỗi</a></li></ol></nav>
 <blockquote>
 <p>Hãy tự làm trước khi xem lời giải. Biên dịch mọi bài bằng <code>gcc -std=c11 -Wall -Wextra -g -o prog prog.c</code>.</p>
 </blockquote>
-<h2>Bài 1: in tên, năm sinh, quê quán</h2>
-<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<h2 id="h-1">Bài 1: in tên, năm sinh, quê quán</h2>
+<pre class="hljs"><code><span class="hljs-comment">// hello_info.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 
 <span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
     <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Ten:\t\tNguyen Van A\n&quot;</span>);
@@ -26,8 +30,9 @@
 }
 </code></pre>
 <p><code>\t</code> đưa con trỏ tới vị trí tab kế tiếp nên các giá trị thẳng hàng; <code>\n</code> xuống dòng.</p>
-<h2>Bài 2: đọc tên bằng <code>fgets</code> và chào</h2>
-<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<h2 id="h-2">Bài 2: đọc tên bằng <code>fgets</code> và chào</h2>
+<pre class="hljs"><code><span class="hljs-comment">// greet_name.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
 
 <span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
@@ -43,11 +48,13 @@
 }
 </code></pre>
 <p><code>strcspn(name, &quot;\r\n&quot;)</code> trả về vị trí của ký tự xuống dòng đầu tiên (hoặc độ dài chuỗi nếu không có), nên câu lệnh gán an toàn ở cả hai trường hợp.</p>
-<h2>Bài 3: bốn phép toán, xử lý chia cho 0</h2>
-<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<h2 id="h-3">Bài 3: bốn phép toán, xử lý chia cho 0</h2>
+<pre class="hljs"><code><span class="hljs-comment">// arith_safe.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;limits.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;errno.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
 
 <span class="hljs-comment">// Đọc một số nguyên từ một dòng; trả 0 nếu hợp lệ</span>
 <span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">read_int</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *prompt, <span class="hljs-type">int</span> *out)</span> {
@@ -58,7 +65,7 @@
     <span class="hljs-type">char</span> *end;
     errno = <span class="hljs-number">0</span>;
     <span class="hljs-type">long</span> v = strtol(buf, &amp;end, <span class="hljs-number">10</span>);
-    <span class="hljs-keyword">if</span> (end == buf || (*end != <span class="hljs-string">&#x27;\n&#x27;</span> &amp;&amp; *end != <span class="hljs-string">&#x27;\0&#x27;</span>)) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;   <span class="hljs-comment">// không phải số / có ký tự thừa</span>
+    <span class="hljs-keyword">if</span> (end == buf || <span class="hljs-built_in">strpbrk</span>(buf, <span class="hljs-string">&quot;0123456789&quot;</span>) == <span class="hljs-literal">NULL</span> || (*end != <span class="hljs-string">&#x27;\n&#x27;</span> &amp;&amp; *end != <span class="hljs-string">&#x27;\0&#x27;</span>)) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;   <span class="hljs-comment">// không phải số / có ký tự thừa</span>
     <span class="hljs-keyword">if</span> (errno == ERANGE || v &lt; INT_MIN || v &gt; INT_MAX) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;  <span class="hljs-comment">// ngoài phạm vi int</span>
     *out = (<span class="hljs-type">int</span>)v;
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
@@ -87,8 +94,9 @@
 }
 </code></pre>
 <p>Điểm đáng chú ý: (1) dùng <code>fgets</code> + <code>strtol</code> thay cho <code>scanf</code> để bắt được đầu vào sai như <code>12abc</code>; (2) ép sang <code>long long</code> trước khi cộng/trừ/nhân để không bị tràn số <code>int</code> (tràn số có dấu là UB); (3) kiểm tra <code>b == 0</code> <strong>trước</strong> khi chia hoặc lấy dư (chia số nguyên cho 0 là UB); (4) <code>INT_MIN / -1</code> cũng tràn; nếu muốn xử lý triệt để, kiểm tra thêm trường hợp <code>a == INT_MIN &amp;&amp; b == -1</code>.</p>
-<h2>Bài 4: độ dài chuỗi bằng <code>strlen</code> và bằng vòng lặp</h2>
-<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<h2 id="h-4">Bài 4: độ dài chuỗi bằng <code>strlen</code> và bằng vòng lặp</h2>
+<pre class="hljs"><code><span class="hljs-comment">// strlen_demo.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
 
 <span class="hljs-type">static</span> <span class="hljs-type">size_t</span> <span class="hljs-title function_">my_strlen</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *s)</span> {
@@ -112,7 +120,7 @@
 }
 </code></pre>
 <p>Với văn bản tiếng Việt có dấu (UTF-8), cả hai hàm đều đếm <strong>byte</strong>, không phải ký tự: <code>&quot;Việt&quot;</code> cho 6 chứ không phải 4 (xem chương 7).</p>
-<h2>Bài 5: quan sát các thông báo lỗi</h2>
+<h2 id="h-5">Bài 5: quan sát các thông báo lỗi</h2>
 <p>Thử ba chương trình sai dưới đây và đối chiếu với bảng ở mục 1.5.</p>
 <p><strong>(a) Thiếu dấu <code>;</code></strong></p>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
@@ -140,8 +148,26 @@
 <p>Nếu bạn không viết prototype ở (c) và gọi thẳng <code>khong_ton_tai();</code>, C89 chấp nhận (khai báo ngầm) và bạn chỉ thấy lỗi khi liên kết; từ C99, compiler hiện đại cảnh báo/báo lỗi ngay ở bước biên dịch — vì vậy luôn bật <code>-Wall -Wextra</code>.</p>
 
 </article>
-<div class="chapter-nav"><span></span><span></span></div>
+<nav class="chapter-nav" aria-label="Điều hướng chương"><span></span><a class="nav-next" href="solutions-02.html"><small>Tiếp →</small>Lời giải chương 2</a></nav>
 </main>
 </div>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,store=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
+  function setTheme(t){if(t==='light')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);store('theme',t);
+    document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.setAttribute('aria-pressed',String((b.dataset.themeBtn===t)||(t==='light'&&b.dataset.themeBtn==='light')))})}
+  var cur=root.getAttribute('data-theme')||'light';setTheme(cur);
+  document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.addEventListener('click',function(){setTheme(b.dataset.themeBtn)})});
+  var fs=parseInt(getComputedStyle(root).getPropertyValue('--fs'))||19;
+  document.querySelectorAll('[data-fs]').forEach(function(b){b.addEventListener('click',function(){fs=Math.min(26,Math.max(14,fs+parseInt(b.dataset.fs)));root.style.setProperty('--fs',fs+'px');store('fs',fs)})});
+  var mb=document.getElementById('menu-btn');if(mb)mb.addEventListener('click',function(){document.body.classList.toggle('nav-open')});
+  document.addEventListener('click',function(e){if(document.body.classList.contains('nav-open')&&!e.target.closest('#sidebar')&&e.target.id!=='menu-btn')document.body.classList.remove('nav-open')});
+  document.querySelectorAll('pre').forEach(function(pre){var b=document.createElement('button');b.className='copy-btn';b.type='button';b.textContent='Sao chép';
+    b.addEventListener('click',function(){var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Đã chép'},function(){b.textContent='Lỗi'});setTimeout(function(){b.textContent='Sao chép'},1500)});pre.appendChild(b)});
+  var a=document.querySelector('.chapter-link.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'center'});
+})();
+</script>
 </body>
 </html>

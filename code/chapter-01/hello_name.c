@@ -1,15 +1,17 @@
+// hello_name.c
 #include <stdio.h>
+#include <string.h>   // cần cho strlen
 
 int main(void) {
-    char name[100];
-    printf("Nhap ten cua ban: ");
-    if (fgets(name, sizeof(name), stdin) == NULL) return 1;
-    // remove newline if present
-    size_t i = 0;
-    while (name[i] != '\0') {
-        if (name[i] == '\n') { name[i] = '\0'; break; }
-        i++;
+    char name[128];   // mảng 128 ký tự để chứa tên
+
+    printf("Nhap ten: ");
+    if (fgets(name, sizeof(name), stdin) != NULL) {
+        size_t len = strlen(name);
+        if (len > 0 && name[len - 1] == '\n') {
+            name[len - 1] = '\0';   // xóa ký tự xuống dòng ở cuối
+        }
+        printf("Xin chao, %s!\n", name);
     }
-    printf("Hello, %s!\n", name);
     return 0;
 }

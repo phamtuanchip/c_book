@@ -4,15 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Quản lý bộ nhớ và lỗi phổ biến — Lập trình C — Từ cơ bản đến nâng cao</title>
+<script>try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.setAttribute('data-theme',t);var f=localStorage.getItem('fs');if(f)document.documentElement.style.setProperty('--fs',f+'px')}catch(e){}</script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="layout">
-<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link active" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<nav class="sidebar" id="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Phần I — Nhập môn</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp &amp; cấu trúc chương trình C</a></li></ul></li><li class="part"><div class="part-title">Phần II — Nền tảng ngôn ngữ</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm &amp; phạm vi biến (Functions &amp; Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng &amp; chuỗi (Arrays &amp; Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li></ul></li><li class="part"><div class="part-title">Phần III — Bộ nhớ, dữ liệu, xây dựng</div><ul class="chapter-list"><li><a class="chapter-link active" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O &amp; thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi &amp; ngoại lệ trong C</a></li></ul></li><li class="part"><div class="part-title">Phần IV — Kỹ thuật nâng cao</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý &amp; macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng &amp; đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa &amp; profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật &amp; an toàn bộ nhớ</a></li></ul></li><li class="part"><div class="part-title">Phần V — Dự án và phát hành</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing &amp; CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging &amp; deploy</a></li></ul></li><li class="part"><div class="part-title">Phụ lục — Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li><li><a class="chapter-link" href="solutions-02.html">Lời giải chương 2</a></li><li><a class="chapter-link" href="solutions-03.html">Lời giải chương 3</a></li><li><a class="chapter-link" href="solutions-04.html">Lời giải chương 4</a></li><li><a class="chapter-link" href="solutions-05.html">Lời giải chương 5</a></li><li><a class="chapter-link" href="solutions-06.html">Lời giải chương 6</a></li><li><a class="chapter-link" href="solutions-07.html">Lời giải chương 7</a></li><li><a class="chapter-link" href="solutions-08.html">Lời giải chương 8</a></li><li><a class="chapter-link" href="solutions-09.html">Lời giải chương 9</a></li><li><a class="chapter-link" href="solutions-10.html">Lời giải chương 10</a></li><li><a class="chapter-link" href="solutions-11.html">Lời giải chương 11</a></li><li><a class="chapter-link" href="solutions-12.html">Lời giải chương 12</a></li><li><a class="chapter-link" href="solutions-13.html">Lời giải chương 13</a></li><li><a class="chapter-link" href="solutions-14.html">Lời giải chương 14</a></li><li><a class="chapter-link" href="solutions-15.html">Lời giải chương 15</a></li><li><a class="chapter-link" href="solutions-16.html">Lời giải chương 16</a></li><li><a class="chapter-link" href="solutions-17.html">Lời giải chương 17</a></li><li><a class="chapter-link" href="solutions-18.html">Lời giải chương 18</a></li><li><a class="chapter-link" href="solutions-19.html">Lời giải chương 19</a></li><li><a class="chapter-link" href="solutions-20.html">Lời giải chương 20</a></li><li><a class="chapter-link" href="solutions-21.html">Lời giải chương 21</a></li><li><a class="chapter-link" href="solutions-22.html">Lời giải chương 22</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<div class="main-col">
+<header class="topbar"><button class="menu-btn" id="menu-btn" type="button" aria-label="Mục lục">☰</button><span class="crumb">Phần III · Chương 9</span><span class="tools"><button data-fs="-1" type="button" title="Chữ nhỏ hơn">A−</button><button data-fs="1" type="button" title="Chữ lớn hơn">A+</button><button data-theme-btn="light" type="button" title="Nền sáng">Sáng</button><button data-theme-btn="sepia" type="button" title="Nền sepia">Sepia</button><button data-theme-btn="dark" type="button" title="Nền tối">Tối</button></span></header>
 <main class="content">
 <article>
-<h1>Chương 9 — Quản lý bộ nhớ và lỗi phổ biến</h1>
-<h2>Mục tiêu chương</h2>
+<header class="chapter-head"><div class="chapter-num">Chương 9</div><h1>Quản lý bộ nhớ và lỗi phổ biến</h1></header><nav class="chapter-toc" aria-label="Trong chương này"><div class="toc-title">Trong chương này</div><ol><li><a href="#s9-1">9.1. Stack và heap</a></li><li><a href="#s9-2">9.2. Các hàm cấp phát (&lt;stdlib.h&gt;)</a></li><li><a href="#s9-3">9.3. Các lỗi bộ nhớ phổ biến</a></li><li><a href="#s9-4">9.4. Công cụ phát hiện lỗi</a></li><li><a href="#s9-5">9.5. Quyền sở hữu (ownership)</a></li><li><a href="#s9-6">9.6. Mẫu dọn dẹp trên đường lỗi</a></li><li><a href="#s9-7">9.7. Ví dụ hoàn chỉnh: cây nhị phân tìm kiếm</a></li><li><a href="#s9-8">9.8. Kỹ thuật phòng thủ</a></li></ol></nav>
+<h2 id="h-1">Mục tiêu chương</h2>
 <ul>
 <li>Hiểu chính xác <strong>stack</strong> và <strong>heap</strong> khác nhau ở đâu, khi nào dùng cái nào.</li>
 <li>Dùng <code>malloc</code>, <code>calloc</code>, <code>realloc</code>, <code>free</code> đúng cách, biết ý nghĩa của từng hàm và các bẫy.</li>
@@ -21,9 +24,9 @@
 <li>Dùng thành thạo công cụ: AddressSanitizer, Valgrind, cppcheck/clang-tidy.</li>
 <li>Xây dựng cấu trúc dữ liệu động (mảng động, cây nhị phân) và giải phóng nó đúng cách.</li>
 </ul>
-<h2>9.1. Stack và heap</h2>
+<h2 id="s9-1">9.1. Stack và heap</h2>
 <p>Chương 2 đã giới thiệu; ở đây ta đi sâu.</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Tiêu chí</th>
@@ -63,7 +66,7 @@
 <td>Lúc chạy</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Khi nào <strong>bắt buộc</strong> dùng heap?</p>
 <ol>
 <li><strong>Kích thước chỉ biết lúc chạy</strong> (đọc n từ đầu vào rồi tạo mảng n phần tử).</li>
@@ -71,8 +74,8 @@
 <li><strong>Dữ liệu lớn</strong> (ảnh, bộ đệm hàng MB) — không nên đặt trên stack.</li>
 <li><strong>Cấu trúc động</strong> (danh sách liên kết, cây, bảng băm) có số phần tử thay đổi.</li>
 </ol>
-<h2>9.2. Các hàm cấp phát (<code>&lt;stdlib.h&gt;</code>)</h2>
-<h3><code>malloc</code></h3>
+<h2 id="s9-2">9.2. Các hàm cấp phát (<code>&lt;stdlib.h&gt;</code>)</h2>
+<h3 id="h-2"><code>malloc</code></h3>
 <pre class="hljs"><code><span class="hljs-type">void</span> *<span class="hljs-title function_">malloc</span><span class="hljs-params">(<span class="hljs-type">size_t</span> size)</span>;
 </code></pre>
 <p>Xin <code>size</code> <strong>byte</strong> liên tiếp. Trả về con trỏ tới vùng nhớ (nội dung <strong>chưa được khởi tạo</strong> — là rác), hoặc <code>NULL</code> nếu thất bại.</p>
@@ -89,13 +92,13 @@
 <li>Khi nhân để tính kích thước, hãy cẩn thận <strong>tràn số</strong> (<code>n * sizeof *arr</code> với <code>n</code> do người dùng nhập). Kiểm tra: <code>if (n &gt; SIZE_MAX / sizeof *arr) /* lỗi */</code>, hoặc dùng <code>calloc</code>.</li>
 <li><code>malloc(0)</code> có kết quả do triển khai quy định (có thể <code>NULL</code> hoặc một con trỏ hợp lệ không dùng được) — tránh.</li>
 </ul>
-<h3><code>calloc</code></h3>
+<h3 id="h-3"><code>calloc</code></h3>
 <pre class="hljs"><code><span class="hljs-type">void</span> *<span class="hljs-title function_">calloc</span><span class="hljs-params">(<span class="hljs-type">size_t</span> count, <span class="hljs-type">size_t</span> size)</span>;
 </code></pre>
 <p>Cấp phát <code>count × size</code> byte và <strong>khởi tạo tất cả bằng 0</strong>. Nó còn <strong>kiểm tra tràn</strong> phép nhân giúp bạn — nên tốt hơn <code>malloc(count * size)</code> khi <code>count</code> không tin cậy.</p>
 <pre class="hljs"><code><span class="hljs-type">int</span> *zeros = <span class="hljs-built_in">calloc</span>(<span class="hljs-number">100</span>, <span class="hljs-keyword">sizeof</span> *zeros);   <span class="hljs-comment">// 100 số 0</span>
 </code></pre>
-<h3><code>realloc</code></h3>
+<h3 id="h-4"><code>realloc</code></h3>
 <pre class="hljs"><code><span class="hljs-type">void</span> *<span class="hljs-title function_">realloc</span><span class="hljs-params">(<span class="hljs-type">void</span> *ptr, <span class="hljs-type">size_t</span> new_size)</span>;
 </code></pre>
 <p>Đổi kích thước một khối đã cấp phát. Nội dung cũ được giữ (đến mức nhỏ hơn của hai kích thước). Có thể <strong>mở rộng tại chỗ</strong> hoặc <strong>cấp khối mới, chép dữ liệu, giải phóng khối cũ</strong> — nên con trỏ trả về <strong>có thể khác</strong> <code>ptr</code>.</p>
@@ -112,7 +115,7 @@ arr = tmp;             <span class="hljs-comment">// chỉ gán lại khi thành
 <pre class="hljs"><code>arr = <span class="hljs-built_in">realloc</span>(arr, new_n * <span class="hljs-keyword">sizeof</span> *arr);   <span class="hljs-comment">// nếu thất bại: arr = NULL và khối cũ bị RÒ RỈ</span>
 </code></pre>
 <p>Ngoài ra, mọi con trỏ khác đang trỏ vào khối cũ (<code>int *first = arr;</code>) có thể trở thành <strong>treo</strong> sau <code>realloc</code>.</p>
-<h3><code>free</code></h3>
+<h3 id="h-5"><code>free</code></h3>
 <pre class="hljs"><code><span class="hljs-type">void</span> <span class="hljs-title function_">free</span><span class="hljs-params">(<span class="hljs-type">void</span> *ptr)</span>;
 </code></pre>
 <p>Trả khối nhớ về cho hệ thống. Quy tắc:</p>
@@ -122,7 +125,7 @@ arr = tmp;             <span class="hljs-comment">// chỉ gán lại khi thành
 <li>Sau <code>free</code>, <strong>không được dùng</strong> vùng nhớ nữa. Thói quen tốt: <code>p = NULL;</code> ngay sau.</li>
 <li>Không <code>free</code> hai lần (double free), không <code>free</code> biến trên stack hay chuỗi literal.</li>
 </ul>
-<h3>Allocator hoạt động thế nào (bức tranh)</h3>
+<h3 id="h-6">Allocator hoạt động thế nào (bức tranh)</h3>
 <p><code>malloc</code> không xin hệ điều hành mỗi lần. Nó quản lý một &quot;kho&quot; bộ nhớ lấy từ hệ điều hành (qua <code>brk</code>/<code>mmap</code>), chia thành các khối và giữ <strong>metadata</strong> (kích thước khối...) ngay trước khối bạn nhận được:</p>
 <pre class="hljs"><code>   ┌──────────────┬────────────────────────────────┐
    │  metadata    │      vùng người dùng (bạn)      │
@@ -130,9 +133,9 @@ arr = tmp;             <span class="hljs-comment">// chỉ gán lại khi thành
    └──────────────┴────────────────────────────────┘
 </code></pre>
 <p>Vì thế ghi tràn khỏi khối của bạn <strong>phá metadata</strong> của khối kế, và lỗi thường chỉ bộc lộ về sau, khi gọi <code>malloc</code>/<code>free</code> lần khác — rất khó truy vết nếu không có công cụ.</p>
-<h2>9.3. Các lỗi bộ nhớ phổ biến</h2>
+<h2 id="s9-3">9.3. Các lỗi bộ nhớ phổ biến</h2>
 <p>Với mỗi lỗi, hãy hiểu <strong>nguyên nhân</strong>, <strong>hậu quả</strong>, <strong>cách phát hiện</strong>, <strong>cách sửa</strong>.</p>
-<h3>1. Rò rỉ bộ nhớ (memory leak)</h3>
+<h3 id="h-7">1. Rò rỉ bộ nhớ (memory leak)</h3>
 <p>Cấp phát nhưng <strong>quên <code>free</code></strong> (hoặc mất con trỏ trước khi kịp <code>free</code>). Bộ nhớ không dùng được nữa nhưng cũng không được trả lại.</p>
 <pre class="hljs"><code><span class="hljs-comment">// leak_demo.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
@@ -166,7 +169,7 @@ p = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">20</span
 }
 </code></pre>
 <p>Sửa: mỗi <code>malloc</code> phải có đúng một <code>free</code> <strong>trên mọi đường thoát</strong> (kể cả đường lỗi) — dùng mẫu <code>goto cleanup</code> (chương 5 và 13).</p>
-<h3>2. Use-after-free (dùng sau khi giải phóng)</h3>
+<h3 id="h-8">2. Use-after-free (dùng sau khi giải phóng)</h3>
 <pre class="hljs"><code><span class="hljs-comment">// use_after_free.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
@@ -181,23 +184,23 @@ p = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">20</span
 }
 </code></pre>
 <p>Nguy hiểm vì chương trình <strong>thường vẫn &quot;chạy đúng&quot;</strong> (dữ liệu chưa bị ghi đè), nhưng lỗi bùng phát ở thời điểm không đoán trước; và đây là nguồn của nhiều lỗ hổng khai thác được. Phát hiện: AddressSanitizer (<code>heap-use-after-free</code>). Sửa: gán <code>p = NULL</code> sau <code>free</code>, thiết kế quyền sở hữu rõ ràng.</p>
-<h3>3. Double free</h3>
+<h3 id="h-9">3. Double free</h3>
 <pre class="hljs"><code><span class="hljs-type">char</span> *s = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">10</span>);
 <span class="hljs-built_in">free</span>(s);
 <span class="hljs-built_in">free</span>(s);                 <span class="hljs-comment">// LỖI: giải phóng hai lần -&gt; hỏng cấu trúc của allocator, crash hoặc bị khai thác</span>
 </code></pre>
 <p>Thường xảy ra khi <strong>hai nơi cùng nghĩ mình sở hữu</strong> khối nhớ. Sửa: xác định ai sở hữu; gán <code>NULL</code> sau <code>free</code>.</p>
-<h3>4. Tràn heap (heap buffer overflow)</h3>
+<h3 id="h-10">4. Tràn heap (heap buffer overflow)</h3>
 <pre class="hljs"><code><span class="hljs-type">char</span> *s = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">5</span>);
 <span class="hljs-built_in">strcpy</span>(s, <span class="hljs-string">&quot;hello&quot;</span>);      <span class="hljs-comment">// cần 6 byte (5 ký tự + &#x27;\0&#x27;): ghi tràn 1 byte</span>
 </code></pre>
 <p>Lỗi <em>off-by-one</em> rất hay gặp khi quên <code>+1</code> cho <code>'\0'</code>. Sửa: <code>malloc(strlen(str) + 1)</code>. Phát hiện: AddressSanitizer (<code>heap-buffer-overflow</code>).</p>
-<h3>5. Đọc bộ nhớ chưa khởi tạo</h3>
+<h3 id="h-11">5. Đọc bộ nhớ chưa khởi tạo</h3>
 <pre class="hljs"><code><span class="hljs-type">int</span> *a = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">3</span> * <span class="hljs-keyword">sizeof</span> *a);
 <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, a[<span class="hljs-number">0</span>]);    <span class="hljs-comment">// giá trị rác. Dùng calloc hoặc gán trước khi đọc.</span>
 </code></pre>
 <p>Valgrind báo <code>Conditional jump or move depends on uninitialised value(s)</code>; MemorySanitizer (clang) cũng bắt được.</p>
-<h3>6. Free sai con trỏ</h3>
+<h3 id="h-12">6. Free sai con trỏ</h3>
 <pre class="hljs"><code><span class="hljs-type">int</span> arr[<span class="hljs-number">10</span>];
 <span class="hljs-built_in">free</span>(arr);               <span class="hljs-comment">// LỖI: arr nằm trên stack</span>
 <span class="hljs-type">char</span> *s = <span class="hljs-string">&quot;abc&quot;</span>;
@@ -205,15 +208,15 @@ p = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">20</span
 <span class="hljs-type">int</span> *p = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">10</span> * <span class="hljs-keyword">sizeof</span> *p);
 <span class="hljs-built_in">free</span>(p + <span class="hljs-number">1</span>);             <span class="hljs-comment">// LỖI: không phải địa chỉ mà malloc trả về</span>
 </code></pre>
-<h3>7. Con trỏ treo (dangling pointer)</h3>
+<h3 id="h-13">7. Con trỏ treo (dangling pointer)</h3>
 <p>Bất kỳ con trỏ nào còn giữ địa chỉ của vùng nhớ <strong>đã hết hiệu lực</strong> (đã <code>free</code>, hoặc là biến cục bộ đã ra khỏi phạm vi, hoặc <code>realloc</code> đã di chuyển khối).</p>
-<h3>8. Stack overflow</h3>
+<h3 id="h-14">8. Stack overflow</h3>
 <pre class="hljs"><code><span class="hljs-type">void</span> <span class="hljs-title function_">recurse</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> { recurse(); }         <span class="hljs-comment">// đệ quy vô hạn</span>
 <span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> { <span class="hljs-type">char</span> big[<span class="hljs-number">100</span> * <span class="hljs-number">1024</span> * <span class="hljs-number">1024</span>]; }   <span class="hljs-comment">// mảng cục bộ 100 MB</span>
 </code></pre>
 <p>Triệu chứng: <code>Segmentation fault</code> hoặc <code>Stack overflow</code>. Sửa: dùng heap cho dữ liệu lớn, thêm điều kiện dừng cho đệ quy.</p>
-<h2>9.4. Công cụ phát hiện lỗi</h2>
-<h3>AddressSanitizer (ASan) — công cụ số một</h3>
+<h2 id="s9-4">9.4. Công cụ phát hiện lỗi</h2>
+<h3 id="h-15">AddressSanitizer (ASan) — công cụ số một</h3>
 <p>Được tích hợp trong gcc và clang; <strong>chỉ cần thêm cờ biên dịch</strong>:</p>
 <pre class="hljs"><code>gcc -std=c11 -g -O1 -fsanitize=address -fno-omit-frame-pointer -o prog prog.c
 ./prog
@@ -233,7 +236,7 @@ previously allocated by thread T0 here:
 <p>Cách đọc: dòng đầu là <strong>loại lỗi</strong> (<code>heap-use-after-free</code>); tiếp theo là <strong>nơi lỗi xảy ra</strong> (dòng 9); rồi <strong>nơi khối bị free</strong> (dòng 8) và <strong>nơi được cấp phát</strong> (dòng 6). Ba thông tin đó thường đủ để tìm ra nguyên nhân. ASan cũng phát hiện rò rỉ khi chương trình kết thúc (LeakSanitizer, có sẵn trên Linux/macOS).</p>
 <p>Kết hợp thêm <code>-fsanitize=undefined</code> để bắt UB (tràn số, dịch bit...). Chạy chậm hơn khoảng 2×, nên dùng khi phát triển/kiểm thử chứ không phải bản phát hành.</p>
 <p>Trên Windows (MinGW) hỗ trợ ASan còn hạn chế; hãy dùng <strong>WSL</strong>, hoặc MSVC (<code>cl /fsanitize=address</code>).</p>
-<h3>Valgrind (Linux, macOS cũ)</h3>
+<h3 id="h-16">Valgrind (Linux, macOS cũ)</h3>
 <pre class="hljs"><code>gcc -std=c11 -g -O0 -o prog prog.c
 valgrind --leak-check=full --show-leak-kinds=all --track-origins=<span class="hljs-built_in">yes</span> ./prog
 </code></pre>
@@ -246,14 +249,14 @@ valgrind --leak-check=full --show-leak-kinds=all --track-origins=<span class="hl
 ==999==    definitely lost: 1,024 bytes in 1 blocks
 </code></pre>
 <p><code>definitely lost</code> là rò rỉ chắc chắn; <code>still reachable</code> là bộ nhớ còn con trỏ tới lúc thoát (thường không nghiêm trọng).</p>
-<h3>Phân tích tĩnh</h3>
+<h3 id="h-17">Phân tích tĩnh</h3>
 <p>Chương trình phân tích mã <strong>không cần chạy</strong>:</p>
 <pre class="hljs"><code>cppcheck --<span class="hljs-built_in">enable</span>=all --std=c11 src/
 clang-tidy src/*.c -- -std=c11
 gcc -Wall -Wextra -fanalyzer src/*.c      <span class="hljs-comment"># gcc 10+ có bộ phân tích tĩnh</span>
 </code></pre>
 <p>Chúng tìm được <code>malloc</code> không kiểm tra, rò rỉ trên đường lỗi, dùng biến chưa khởi tạo... Kết hợp cả <strong>tĩnh</strong> (rẻ, chạy sớm) và <strong>động</strong> (chính xác, phải chạy qua đường mã).</p>
-<h2>9.5. Quyền sở hữu (ownership)</h2>
+<h2 id="s9-5">9.5. Quyền sở hữu (ownership)</h2>
 <p>Hầu hết lỗi bộ nhớ đến từ việc <strong>không rõ ai chịu trách nhiệm <code>free</code></strong>. C không có cơ chế của ngôn ngữ, nên phải thống nhất bằng quy ước và ghi chú tài liệu.</p>
 <p>Quy tắc rõ ràng:</p>
 <ol>
@@ -274,7 +277,7 @@ gcc -Wall -Wextra -fanalyzer src/*.c      <span class="hljs-comment"># gcc 10+ c
 <li><strong>Cặp hàm tạo/hủy:</strong> đặt tên đối xứng: <code>thing_create</code> ↔ <code>thing_destroy</code>, <code>list_new</code> ↔ <code>list_free</code>.</li>
 <li>Cấu trúc chứa con trỏ cấp phát động phải có hàm hủy giải phóng <strong>toàn bộ</strong> thành viên.</li>
 </ol>
-<h3>Mẫu <code>init</code>/<code>destroy</code> (giống RAII của C)</h3>
+<h3 id="h-18">Mẫu <code>init</code>/<code>destroy</code> (giống RAII của C)</h3>
 <pre class="hljs"><code><span class="hljs-comment">// vec.c — mảng động (dynamic array)</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
@@ -322,7 +325,7 @@ gcc -Wall -Wextra -fanalyzer src/*.c      <span class="hljs-comment"># gcc 10+ c
 }
 </code></pre>
 <p>Vì sao tăng <strong>gấp đôi</strong> sức chứa? Nếu tăng thêm hằng số (ví dụ +4 mỗi lần), thêm <code>n</code> phần tử sẽ gọi <code>realloc</code> ~<code>n/4</code> lần và tổng chi phí sao chép là <code>O(n²)</code>. Tăng theo cấp số nhân làm chi phí trung bình mỗi lần <code>push</code> là <code>O(1)</code> (<em>amortized</em>). Đây là cách hoạt động của <code>std::vector</code> (C++) và <code>list</code> (Python).</p>
-<h2>9.6. Mẫu dọn dẹp trên đường lỗi</h2>
+<h2 id="s9-6">9.6. Mẫu dọn dẹp trên đường lỗi</h2>
 <p>Khi hàm cấp phát nhiều tài nguyên, dùng <code>goto cleanup</code> để mọi đường thoát đều dọn dẹp:</p>
 <pre class="hljs"><code><span class="hljs-type">int</span> <span class="hljs-title function_">load_data</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *path, <span class="hljs-type">char</span> **out_buf, <span class="hljs-type">size_t</span> *out_len)</span> {
     <span class="hljs-type">int</span> rc = <span class="hljs-number">-1</span>;
@@ -354,7 +357,7 @@ done:
 }
 </code></pre>
 <p>Điểm khéo: đặt <code>buf = NULL</code> sau khi giao cho người gọi để đoạn dọn dẹp cuối không <code>free</code> nhầm.</p>
-<h2>9.7. Ví dụ hoàn chỉnh: cây nhị phân tìm kiếm</h2>
+<h2 id="s9-7">9.7. Ví dụ hoàn chỉnh: cây nhị phân tìm kiếm</h2>
 <p>Một cấu trúc động điển hình: mỗi nút được cấp phát riêng; việc giải phóng phải duyệt cả cây.</p>
 <pre class="hljs"><code><span class="hljs-comment">// tree.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
@@ -436,7 +439,7 @@ Node *<span class="hljs-title function_">tree_insert</span><span class="hljs-par
 <pre class="hljs"><code>gcc -std=c11 -g -fsanitize=address,undefined -o tree tree.c &amp;&amp; ./tree
 </code></pre>
 <p>Kết quả không có báo cáo lỗi/rò rỉ nghĩa là quản lý bộ nhớ đúng.</p>
-<h2>9.8. Kỹ thuật phòng thủ</h2>
+<h2 id="s9-8">9.8. Kỹ thuật phòng thủ</h2>
 <ol>
 <li><strong>Gán <code>NULL</code> sau <code>free</code></strong> (dùng macro nếu muốn):<pre class="hljs"><code>
 </code></pre>
@@ -495,8 +498,26 @@ Mã nguồn mẫu: [code/chapter-09](https://github.com/phamtuanchip/c_book/tree
 </code></pre>
 
 </article>
-<div class="chapter-nav"><a class="nav-prev" href="chapter-08.html">&larr; Con trỏ chi tiết (Pointers Deep Dive)</a><a class="nav-next" href="chapter-10.html">Struct, union, enum &rarr;</a></div>
+<nav class="chapter-nav" aria-label="Điều hướng chương"><a class="nav-prev" href="chapter-08.html"><small>← Trước</small>Con trỏ chi tiết (Pointers Deep Dive)</a><a class="nav-next" href="chapter-10.html"><small>Tiếp →</small>Struct, union, enum</a></nav>
 </main>
 </div>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,store=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
+  function setTheme(t){if(t==='light')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);store('theme',t);
+    document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.setAttribute('aria-pressed',String((b.dataset.themeBtn===t)||(t==='light'&&b.dataset.themeBtn==='light')))})}
+  var cur=root.getAttribute('data-theme')||'light';setTheme(cur);
+  document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.addEventListener('click',function(){setTheme(b.dataset.themeBtn)})});
+  var fs=parseInt(getComputedStyle(root).getPropertyValue('--fs'))||19;
+  document.querySelectorAll('[data-fs]').forEach(function(b){b.addEventListener('click',function(){fs=Math.min(26,Math.max(14,fs+parseInt(b.dataset.fs)));root.style.setProperty('--fs',fs+'px');store('fs',fs)})});
+  var mb=document.getElementById('menu-btn');if(mb)mb.addEventListener('click',function(){document.body.classList.toggle('nav-open')});
+  document.addEventListener('click',function(e){if(document.body.classList.contains('nav-open')&&!e.target.closest('#sidebar')&&e.target.id!=='menu-btn')document.body.classList.remove('nav-open')});
+  document.querySelectorAll('pre').forEach(function(pre){var b=document.createElement('button');b.className='copy-btn';b.type='button';b.textContent='Sao chép';
+    b.addEventListener('click',function(){var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Đã chép'},function(){b.textContent='Lỗi'});setTimeout(function(){b.textContent='Sao chép'},1500)});pre.appendChild(b)});
+  var a=document.querySelector('.chapter-link.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'center'});
+})();
+</script>
 </body>
 </html>

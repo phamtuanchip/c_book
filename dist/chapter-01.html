@@ -4,15 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Giới thiệu và chương trình C đầu tiên — Lập trình C — Từ cơ bản đến nâng cao</title>
+<script>try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.setAttribute('data-theme',t);var f=localStorage.getItem('fs');if(f)document.documentElement.style.setProperty('--fs',f+'px')}catch(e){}</script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="layout">
-<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link active" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<nav class="sidebar" id="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Phần I — Nhập môn</div><ul class="chapter-list"><li><a class="chapter-link active" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp &amp; cấu trúc chương trình C</a></li></ul></li><li class="part"><div class="part-title">Phần II — Nền tảng ngôn ngữ</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm &amp; phạm vi biến (Functions &amp; Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng &amp; chuỗi (Arrays &amp; Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li></ul></li><li class="part"><div class="part-title">Phần III — Bộ nhớ, dữ liệu, xây dựng</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O &amp; thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi &amp; ngoại lệ trong C</a></li></ul></li><li class="part"><div class="part-title">Phần IV — Kỹ thuật nâng cao</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý &amp; macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng &amp; đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa &amp; profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật &amp; an toàn bộ nhớ</a></li></ul></li><li class="part"><div class="part-title">Phần V — Dự án và phát hành</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing &amp; CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging &amp; deploy</a></li></ul></li><li class="part"><div class="part-title">Phụ lục — Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li><li><a class="chapter-link" href="solutions-02.html">Lời giải chương 2</a></li><li><a class="chapter-link" href="solutions-03.html">Lời giải chương 3</a></li><li><a class="chapter-link" href="solutions-04.html">Lời giải chương 4</a></li><li><a class="chapter-link" href="solutions-05.html">Lời giải chương 5</a></li><li><a class="chapter-link" href="solutions-06.html">Lời giải chương 6</a></li><li><a class="chapter-link" href="solutions-07.html">Lời giải chương 7</a></li><li><a class="chapter-link" href="solutions-08.html">Lời giải chương 8</a></li><li><a class="chapter-link" href="solutions-09.html">Lời giải chương 9</a></li><li><a class="chapter-link" href="solutions-10.html">Lời giải chương 10</a></li><li><a class="chapter-link" href="solutions-11.html">Lời giải chương 11</a></li><li><a class="chapter-link" href="solutions-12.html">Lời giải chương 12</a></li><li><a class="chapter-link" href="solutions-13.html">Lời giải chương 13</a></li><li><a class="chapter-link" href="solutions-14.html">Lời giải chương 14</a></li><li><a class="chapter-link" href="solutions-15.html">Lời giải chương 15</a></li><li><a class="chapter-link" href="solutions-16.html">Lời giải chương 16</a></li><li><a class="chapter-link" href="solutions-17.html">Lời giải chương 17</a></li><li><a class="chapter-link" href="solutions-18.html">Lời giải chương 18</a></li><li><a class="chapter-link" href="solutions-19.html">Lời giải chương 19</a></li><li><a class="chapter-link" href="solutions-20.html">Lời giải chương 20</a></li><li><a class="chapter-link" href="solutions-21.html">Lời giải chương 21</a></li><li><a class="chapter-link" href="solutions-22.html">Lời giải chương 22</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<div class="main-col">
+<header class="topbar"><button class="menu-btn" id="menu-btn" type="button" aria-label="Mục lục">☰</button><span class="crumb">Phần I · Chương 1</span><span class="tools"><button data-fs="-1" type="button" title="Chữ nhỏ hơn">A−</button><button data-fs="1" type="button" title="Chữ lớn hơn">A+</button><button data-theme-btn="light" type="button" title="Nền sáng">Sáng</button><button data-theme-btn="sepia" type="button" title="Nền sepia">Sepia</button><button data-theme-btn="dark" type="button" title="Nền tối">Tối</button></span></header>
 <main class="content">
 <article>
-<h1>Chương 1 — Giới thiệu và chương trình C đầu tiên</h1>
-<h2>Mục tiêu chương</h2>
+<header class="chapter-head"><div class="chapter-num">Chương 1</div><h1>Giới thiệu và chương trình C đầu tiên</h1></header><nav class="chapter-toc" aria-label="Trong chương này"><div class="toc-title">Trong chương này</div><ol><li><a href="#s1-1">1.1. C là gì và vì sao học C?</a></li><li><a href="#s1-2">1.2. Chương trình chạy như thế nào? (bức tranh tổng thể)</a></li><li><a href="#s1-3">1.3. Cài đặt môi trường</a></li><li><a href="#s1-4">1.4. Chương trình đầu tiên: Hello, World</a></li><li><a href="#s1-5">1.5. Từ file .c đến file chạy được — bốn giai đoạn</a></li><li><a href="#s1-6">1.6. Các cờ biên dịch nên dùng từ ngày đầu</a></li><li><a href="#s1-7">1.7. Comment (chú thích)</a></li><li><a href="#s1-8">1.8. Đọc dữ liệu từ bàn phím và in nhiều giá trị</a></li><li><a href="#s1-9">1.9. Một ví dụ hoàn chỉnh: máy tính bốn phép toán</a></li><li><a href="#s1-10">1.10. Lỗi thường gặp của người mới và cách xử lý</a></li><li><a href="#s1-11">1.11. Tổ chức thư mục làm việc</a></li><li><a href="#s1-12">1.12. Tóm tắt</a></li><li><a href="#s1-13">1.13. Bài tập</a></li><li><a href="#s1-14">1.14. Tài nguyên bổ sung</a></li></ol></nav>
+<h2 id="h-1">Mục tiêu chương</h2>
 <p>Sau khi học xong chương này, bạn sẽ:</p>
 <ul>
 <li>Hiểu C là gì, được dùng ở đâu và vì sao vẫn đáng học ở thời điểm hiện tại.</li>
@@ -24,11 +27,11 @@
 <blockquote>
 <p><strong>Cách học chương này:</strong> hãy gõ lại mọi ví dụ bằng tay, đừng copy-paste. Việc tự gõ giúp bạn nhớ cú pháp và làm quen với việc compiler báo lỗi khi bạn gõ sai.</p>
 </blockquote>
-<h2>1.1. C là gì và vì sao học C?</h2>
+<h2 id="s1-1">1.1. C là gì và vì sao học C?</h2>
 <p><strong>C</strong> là ngôn ngữ lập trình được Dennis Ritchie tạo ra tại Bell Labs vào khoảng năm 1972 để viết lại hệ điều hành UNIX. Đến nay, hơn 50 năm sau, C vẫn nằm trong nhóm ngôn ngữ được dùng nhiều nhất.</p>
 <p>C thuộc loại <strong>ngôn ngữ biên dịch (compiled language)</strong>: mã nguồn bạn viết được một chương trình gọi là <em>compiler</em> dịch thành <strong>mã máy</strong> (các lệnh mà CPU hiểu trực tiếp). Kết quả là chương trình chạy nhanh và không cần &quot;máy ảo&quot; hay &quot;trình thông dịch&quot; đi kèm.</p>
-<h3>Nơi C được sử dụng</h3>
-<table>
+<h3 id="h-2">Nơi C được sử dụng</h3>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Lĩnh vực</th>
@@ -61,17 +64,17 @@
 <td>Phần lõi hiệu năng cao</td>
 </tr>
 </tbody>
-</table>
-<h3>Học C mang lại điều gì?</h3>
+</table></div>
+<h3 id="h-3">Học C mang lại điều gì?</h3>
 <ol>
 <li><strong>Hiểu máy tính thật sự hoạt động thế nào.</strong> Khi viết C bạn phải biết biến nằm ở đâu trong bộ nhớ, một chuỗi là gì ở mức byte, gọi hàm tốn gì. Những ngôn ngữ như Python hay Java che giấu các chi tiết này.</li>
 <li><strong>Nền tảng cho ngôn ngữ khác.</strong> C++, Objective-C, C#, Java, Go, Rust đều chịu ảnh hưởng cú pháp và tư duy của C. Biết C thì học các ngôn ngữ đó nhanh hơn.</li>
 <li><strong>Kiểm soát tài nguyên.</strong> C cho bạn quyết định cấp phát bao nhiêu bộ nhớ và giải phóng khi nào.</li>
 <li><strong>Đọc được mã nguồn của những phần mềm nền tảng</strong> khi cần tìm lỗi hoặc tìm hiểu cách chúng hoạt động.</li>
 </ol>
-<h3>Cái giá phải trả</h3>
+<h3 id="h-4">Cái giá phải trả</h3>
 <p>C không có &quot;lưới an toàn&quot;. Nếu bạn ghi ra ngoài mảng, dùng bộ nhớ đã giải phóng hoặc quên khởi tạo biến, chương trình <strong>vẫn có thể biên dịch</strong> và chạy sai theo cách khó đoán. Vì vậy sách này luôn dạy song song hai việc: <em>cách viết</em> và <em>cách viết an toàn</em>.</p>
-<h2>1.2. Chương trình chạy như thế nào? (bức tranh tổng thể)</h2>
+<h2 id="s1-2">1.2. Chương trình chạy như thế nào? (bức tranh tổng thể)</h2>
 <p>Trước khi cài công cụ, hãy hình dung bốn nhân vật:</p>
 <ul>
 <li><strong>Mã nguồn (source code):</strong> file văn bản <code>.c</code> mà bạn viết. Con người đọc được.</li>
@@ -82,14 +85,14 @@
 <pre class="hljs"><code>hello.c  ──►  [ compiler ]  ──►  hello (hoặc hello.exe)  ──►  [ hệ điều hành + CPU ]  ──►  kết quả
 mã nguồn        gcc/clang          mã máy                        chạy chương trình
 </code></pre>
-<h2>1.3. Cài đặt môi trường</h2>
+<h2 id="s1-3">1.3. Cài đặt môi trường</h2>
 <p>Bạn cần ba thứ: <strong>trình soạn thảo</strong>, <strong>terminal</strong> và <strong>compiler</strong>.</p>
 <ul>
 <li>Trình soạn thảo: Visual Studio Code là lựa chọn phổ biến và miễn phí. Notepad++ hay Vim cũng được.</li>
 <li>Terminal: PowerShell/CMD (Windows), Terminal (macOS), bất kỳ terminal nào của Linux.</li>
 <li>Compiler: <code>gcc</code> hoặc <code>clang</code>.</li>
 </ul>
-<h3>Windows — cách 1: MSYS2 + MinGW-w64 (khuyến nghị)</h3>
+<h3 id="h-5">Windows — cách 1: MSYS2 + MinGW-w64 (khuyến nghị)</h3>
 <p>MinGW-w64 là bản <code>gcc</code> chạy trên Windows, dùng cùng lệnh với Linux nên hướng dẫn trong sách áp dụng trực tiếp.</p>
 <ol>
 <li>Tải MSYS2 từ <a href="https://www.msys2.org">https://www.msys2.org</a> và cài đặt (mặc định vào <code>C:\msys64</code>).</li>
@@ -98,34 +101,39 @@ mã nguồn        gcc/clang          mã máy                        chạy ch�
 <pre class="hljs"><code>pacman -Syu
 </code></pre>
 <p>Nếu terminal yêu cầu đóng lại, hãy đóng, mở lại và chạy lại lệnh trên.</p>
-<h2>3. Cài toolchain (gcc, make, gdb):</h2>
+<ol start="3">
+<li>Cài toolchain (gcc, make, gdb):</li>
+</ol>
 <pre class="hljs"><code>pacman -S --needed mingw-w64-ucrt-x86_64-toolchain mingw-w64-ucrt-x86_64-gdb make
 </code></pre>
-<h2>4. Thêm <code>C:\msys64\ucrt64\bin</code> vào biến môi trường <code>PATH</code> của Windows nếu bạn muốn gọi <code>gcc</code> từ PowerShell hoặc VS Code (Settings → <em>Edit the system environment variables</em> → <em>Path</em> → <em>New</em>).</h2>
-<h3>Windows — cách 2: Visual Studio</h3>
+<ol start="4">
+<li>Thêm <code>C:\msys64\ucrt64\bin</code> vào biến môi trường <code>PATH</code> của Windows nếu bạn muốn gọi <code>gcc</code> từ PowerShell hoặc VS Code (Settings → <em>Edit the system environment variables</em> → <em>Path</em> → <em>New</em>).</li>
+</ol>
+<h3 id="h-6">Windows — cách 2: Visual Studio</h3>
 <p>Cài Visual Studio Community, chọn workload <strong>Desktop development with C++</strong>. Mở <strong>Developer Command Prompt for VS</strong> rồi biên dịch bằng <code>cl hello.c</code>. Lưu ý: các cờ (flag) của <code>cl</code> khác <code>gcc</code>; sách này dùng cú pháp <code>gcc</code>.</p>
-<h3>Windows — cách 3: WSL (Windows Subsystem for Linux)</h3>
+<h3 id="h-7">Windows — cách 3: WSL (Windows Subsystem for Linux)</h3>
 <p>Nếu bạn đã dùng WSL, cài Ubuntu rồi làm theo hướng dẫn Linux bên dưới. Đây là cách sát môi trường thực tế nhất, đặc biệt khi học các chương về thread và socket (chương 15–16).</p>
-<h3>Linux (Debian/Ubuntu)</h3>
+<h3 id="h-8">Linux (Debian/Ubuntu)</h3>
 <pre class="hljs"><code><span class="hljs-built_in">sudo</span> apt update
 <span class="hljs-built_in">sudo</span> apt install build-essential gdb valgrind make
 </code></pre>
 <p><code>build-essential</code> gồm <code>gcc</code>, <code>g++</code> và <code>make</code>.</p>
-<h3>macOS</h3>
+<h3 id="h-9">macOS</h3>
 <pre class="hljs"><code>xcode-select --install     <span class="hljs-comment"># cài clang và các công cụ dòng lệnh</span>
 brew install make gdb      <span class="hljs-comment"># tùy chọn; macOS thường dùng lldb thay cho gdb</span>
 </code></pre>
 <p>Trên macOS, lệnh <code>gcc</code> thực ra là <code>clang</code>. Điều này không ảnh hưởng gì đến sách.</p>
-<h3>Kiểm tra cài đặt</h3>
+<h3 id="h-10">Kiểm tra cài đặt</h3>
 <p>Mở terminal và chạy:</p>
 <pre class="hljs"><code>gcc --version
 make --version
 gdb --version
 </code></pre>
 <p>Nếu thấy số phiên bản, bạn đã sẵn sàng. Nếu thấy <code>'gcc' is not recognized...</code> (Windows) hoặc <code>command not found</code> (Linux/macOS), nghĩa là compiler chưa nằm trong <code>PATH</code> — xem mục 1.10.</p>
-<h2>1.4. Chương trình đầu tiên: Hello, World</h2>
+<h2 id="s1-4">1.4. Chương trình đầu tiên: Hello, World</h2>
 <p>Tạo thư mục <code>c_book_practice</code>, tạo file <code>hello.c</code> với nội dung:</p>
-<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<pre class="hljs"><code><span class="hljs-comment">// hello.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 
 <span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
     <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Hello, World!\n&quot;</span>);
@@ -140,7 +148,7 @@ hello.exe        <span class="hljs-comment"># PowerShell/CMD trên Windows (ho�
 <p>Kết quả:</p>
 <pre class="hljs"><code>Hello, World!
 </code></pre>
-<h3>Giải thích từng dòng</h3>
+<h3 id="h-11">Giải thích từng dòng</h3>
 <p><strong>Dòng 1: <code>#include &lt;stdio.h&gt;</code></strong></p>
 <p>Dòng bắt đầu bằng <code>#</code> là chỉ thị cho <em>bộ tiền xử lý (preprocessor)</em>, chạy <strong>trước</strong> khi compiler dịch. <code>#include</code> nghĩa là &quot;chép nội dung file này vào đây&quot;. <code>stdio.h</code> (<em>standard input/output header</em>) chứa <strong>khai báo</strong> của các hàm nhập/xuất như <code>printf</code>, <code>scanf</code>, <code>fgets</code>. Nếu thiếu dòng này, compiler không biết <code>printf</code> là gì và sẽ báo lỗi hoặc cảnh báo.</p>
 <p>Dấu <code>&lt; &gt;</code> nghĩa là tìm file trong thư mục header của hệ thống. Dấu <code>&quot; &quot;</code> (ví dụ <code>#include &quot;myheader.h&quot;</code>) nghĩa là tìm trong thư mục dự án trước; bạn sẽ dùng cách này ở chương 11.</p>
@@ -166,8 +174,8 @@ hello.exe        <span class="hljs-comment"># PowerShell/CMD trên Windows (ho�
 <span class="hljs-built_in">echo</span> <span class="hljs-variable">$LASTEXITCODE</span>   <span class="hljs-comment"># PowerShell: in ra 0</span>
 </code></pre>
 <p>Từ C99, nếu <code>main</code> chạy tới cuối mà không có <code>return</code>, compiler tự hiểu là <code>return 0;</code>. Tuy nhiên, hãy viết rõ ràng để ý định của bạn dễ đọc.</p>
-<h3>Các escape sequence thường dùng</h3>
-<table>
+<h3 id="h-12">Các escape sequence thường dùng</h3>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Chuỗi</th>
@@ -204,17 +212,17 @@ hello.exe        <span class="hljs-comment"># PowerShell/CMD trên Windows (ho�
 <td>Đưa con trỏ về đầu dòng</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Ví dụ:</p>
 <pre class="hljs"><code><span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Ten:\tAn\nTuoi:\t20\n&quot;</span>);
 <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Cô ấy nói: \&quot;Xin chào\&quot;\n&quot;</span>);
 </code></pre>
-<h3>Một lưu ý cho Windows về tiếng Việt</h3>
+<h3 id="h-13">Một lưu ý cho Windows về tiếng Việt</h3>
 <p>Terminal của Windows mặc định không dùng UTF-8, nên chữ có dấu có thể bị hiện thành ký tự lạ. Trước khi chạy chương trình, hãy gõ:</p>
 <pre class="hljs"><code>chcp <span class="hljs-number">65001</span>
 </code></pre>
 <p>Nếu vẫn lỗi, dùng Windows Terminal thay cho CMD cũ. Trong các ví dụ của sách, một số chỗ dùng tiếng Việt không dấu để chương trình chạy đúng trên mọi terminal.</p>
-<h2>1.5. Từ file <code>.c</code> đến file chạy được — bốn giai đoạn</h2>
+<h2 id="s1-5">1.5. Từ file <code>.c</code> đến file chạy được — bốn giai đoạn</h2>
 <p>Lệnh <code>gcc -o hello hello.c</code> thực ra làm bốn việc liên tiếp. Hiểu chúng giúp bạn đọc được lỗi sau này (đặc biệt lỗi <em>linker</em> ở chương 11).</p>
 <pre class="hljs"><code>hello.c ─► [1 Tiền xử lý] ─► hello.i ─► [2 Biên dịch] ─► hello.s ─► [3 Hợp ngữ] ─► hello.o ─► [4 Liên kết] ─► hello
 </code></pre>
@@ -231,7 +239,7 @@ gcc -c hello.c -o hello.o     <span class="hljs-comment"># chỉ đến object f
 gcc hello.o -o hello          <span class="hljs-comment"># liên kết</span>
 </code></pre>
 <p>Việc này quan trọng vì <strong>lỗi ở mỗi giai đoạn có dạng khác nhau</strong>:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Giai đoạn</th>
@@ -261,12 +269,12 @@ gcc hello.o -o hello          <span class="hljs-comment"># liên kết</span>
 <td><code>Segmentation fault</code>, kết quả sai</td>
 </tr>
 </tbody>
-</table>
-<h2>1.6. Các cờ biên dịch nên dùng từ ngày đầu</h2>
+</table></div>
+<h2 id="s1-6">1.6. Các cờ biên dịch nên dùng từ ngày đầu</h2>
 <p>Cách tối thiểu là <code>gcc -o hello hello.c</code>. Tuy nhiên, compiler có thể giúp bạn rất nhiều nếu bạn yêu cầu nó:</p>
 <pre class="hljs"><code>gcc -std=c11 -Wall -Wextra -g -O0 -o hello hello.c
 </code></pre>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Cờ</th>
@@ -303,7 +311,7 @@ gcc hello.o -o hello          <span class="hljs-comment"># liên kết</span>
 <td>Biến cảnh báo thành lỗi. Hữu ích khi làm dự án nghiêm túc.</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <blockquote>
 <p><strong>Quy tắc vàng:</strong> <em>Cảnh báo là lỗi chưa xảy ra.</em> Đừng bao giờ bỏ qua cảnh báo. Nếu bạn thấy cảnh báo, hãy sửa cho đến khi biên dịch sạch.</p>
 </blockquote>
@@ -314,7 +322,7 @@ hello.c:2:5: warning: implicit declaration of function &#x27;printf&#x27; [-Wimp
       |     ^~~~~~
 </code></pre>
 <p>Cách đọc: <code>hello.c:2:5</code> nghĩa là <strong>file hello.c, dòng 2, cột 5</strong>. Sau đó là mức độ (<code>warning</code>/<code>error</code>), nội dung, và tên cờ gây ra cảnh báo trong ngoặc vuông. Hãy tập thói quen đọc dòng đầu tiên của thông báo lỗi trước; nhiều lỗi phía sau chỉ là hệ quả của lỗi đầu.</p>
-<h2>1.7. Comment (chú thích)</h2>
+<h2 id="s1-7">1.7. Comment (chú thích)</h2>
 <p>Comment là phần chú thích cho người đọc, compiler bỏ qua.</p>
 <pre class="hljs"><code><span class="hljs-comment">// Comment một dòng (từ C99)</span>
 
@@ -328,7 +336,7 @@ hello.c:2:5: warning: implicit declaration of function &#x27;printf&#x27; [-Wimp
 </code></pre>
 <p>Lưu ý: comment <strong>không lồng nhau</strong> được với kiểu <code>/* ... */</code>. Nếu bạn muốn &quot;tạm tắt&quot; một đoạn mã đã có comment, hãy dùng <code>#if 0 ... #endif</code>.</p>
 <p>Nguyên tắc viết comment tốt: <strong>giải thích &quot;vì sao&quot;, đừng lặp lại &quot;cái gì&quot;</strong>. Comment <code>// cộng 1 vào i</code> cho câu <code>i++;</code> là vô ích; comment <code>// bỏ qua dòng tiêu đề của file CSV</code> mới có giá trị.</p>
-<h2>1.8. Đọc dữ liệu từ bàn phím và in nhiều giá trị</h2>
+<h2 id="s1-8">1.8. Đọc dữ liệu từ bàn phím và in nhiều giá trị</h2>
 <p>Một chương trình chỉ có đầu ra thì hơi nhàm chán. Ví dụ dưới đây đọc một tên và chào lại:</p>
 <pre class="hljs"><code><span class="hljs-comment">// hello_name.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
@@ -356,8 +364,8 @@ hello.c:2:5: warning: implicit declaration of function &#x27;printf&#x27; [-Wimp
 <li><code>fgets</code> trả về <code>NULL</code> nếu đọc thất bại hoặc gặp hết dữ liệu (EOF). Luôn kiểm tra giá trị trả về của hàm nhập/xuất.</li>
 <li><code>%s</code> trong <code>printf</code> là <strong>định dạng (format specifier)</strong> dành cho chuỗi.</li>
 </ul>
-<h3>Bảng định dạng <code>printf</code> cơ bản</h3>
-<table>
+<h3 id="h-14">Bảng định dạng <code>printf</code> cơ bản</h3>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Định dạng</th>
@@ -422,12 +430,12 @@ hello.c:2:5: warning: implicit declaration of function &#x27;printf&#x27; [-Wimp
 <td></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Bạn có thể chỉ định độ rộng: <code>%5d</code> in số chiếm tối thiểu 5 ký tự (căn phải), <code>%-5d</code> căn trái, <code>%05d</code> đệm số 0.</p>
 <blockquote>
 <p><strong>Vì sao dùng <code>fgets</code> thay vì <code>scanf</code>?</strong> <code>scanf(&quot;%s&quot;, name)</code> dừng ở dấu cách (nên &quot;Nguyen Van A&quot; chỉ đọc được &quot;Nguyen&quot;) và không giới hạn độ dài nếu bạn quên viết <code>%127s</code>. <code>fgets</code> đọc cả dòng và tự bảo vệ bộ nhớ. Chương 4 sẽ nói kỹ hơn về <code>scanf</code>.</p>
 </blockquote>
-<h2>1.9. Một ví dụ hoàn chỉnh: máy tính bốn phép toán</h2>
+<h2 id="s1-9">1.9. Một ví dụ hoàn chỉnh: máy tính bốn phép toán</h2>
 <pre class="hljs"><code><span class="hljs-comment">// arithmetic.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 
@@ -471,8 +479,8 @@ hello.c:2:5: warning: implicit declaration of function &#x27;printf&#x27; [-Wimp
 7 % 2 = 1 (phan du)
 7 / 2 = 3.50 (so thuc)
 </code></pre>
-<h2>1.10. Lỗi thường gặp của người mới và cách xử lý</h2>
-<table>
+<h2 id="s1-10">1.10. Lỗi thường gặp của người mới và cách xử lý</h2>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Triệu chứng</th>
@@ -527,8 +535,8 @@ hello.c:2:5: warning: implicit declaration of function &#x27;printf&#x27; [-Wimp
 <td>In thêm <code>\n</code> hoặc gọi <code>fflush(stdout);</code>.</td>
 </tr>
 </tbody>
-</table>
-<h3>Gỡ lỗi cơ bản với gdb</h3>
+</table></div>
+<h3 id="h-15">Gỡ lỗi cơ bản với gdb</h3>
 <pre class="hljs"><code>gcc -std=c11 -Wall -Wextra -g -O0 -o prog prog.c
 gdb ./prog
 </code></pre>
@@ -542,7 +550,7 @@ gdb ./prog
 (gdb) quit
 </code></pre>
 <p>Đây là kỹ năng quan trọng nhất sau việc viết mã: <strong>đừng đoán, hãy quan sát</strong>.</p>
-<h2>1.11. Tổ chức thư mục làm việc</h2>
+<h2 id="s1-11">1.11. Tổ chức thư mục làm việc</h2>
 <p>Từ đầu, hãy giữ thói quen mỗi chương một thư mục:</p>
 <pre class="hljs"><code>c_book_practice/
 ├── chapter01/
@@ -553,7 +561,7 @@ gdb ./prog
 └── ...
 </code></pre>
 <p>Mã mẫu của sách nằm ở thư mục <code>code/chapter-NN</code> trong repository, mỗi thư mục có README hướng dẫn biên dịch.</p>
-<h2>1.12. Tóm tắt</h2>
+<h2 id="s1-12">1.12. Tóm tắt</h2>
 <ul>
 <li>C là ngôn ngữ biên dịch, gần phần cứng, dùng nhiều trong hệ thống và nhúng.</li>
 <li>Chương trình C luôn bắt đầu tại hàm <code>main</code>; giá trị <code>main</code> trả về là mã thoát cho hệ điều hành (<code>0</code> = thành công).</li>
@@ -562,14 +570,14 @@ gdb ./prog
 <li>Dùng <code>fgets</code> để đọc chuỗi, kiểm tra giá trị trả về của <code>scanf</code>/<code>fgets</code>.</li>
 <li>Phép chia hai số nguyên cho kết quả nguyên.</li>
 </ul>
-<h2>1.13. Bài tập</h2>
+<h2 id="s1-13">1.13. Bài tập</h2>
 <p><strong>Bài 1 (dễ).</strong> Viết chương trình in ra ba dòng: tên bạn, năm sinh, quê quán. Dùng <code>\n</code> và <code>\t</code> để căn cho đẹp.</p>
 <p><strong>Bài 2 (dễ).</strong> Viết chương trình đọc tên bằng <code>fgets</code> và in <code>Hello, &lt;Tên&gt;!</code>.</p>
 <p><strong>Bài 3 (trung bình).</strong> Viết chương trình nhập hai số nguyên, in tổng, hiệu, tích, thương và phần dư. Xử lý trường hợp chia cho 0.</p>
 <p><strong>Bài 4 (trung bình).</strong> Viết chương trình đọc một dòng chữ và in độ dài của nó bằng <code>strlen</code>. Sau đó tự viết lại bằng vòng lặp <code>while</code> đếm đến khi gặp <code>'\0'</code> và so sánh hai kết quả.</p>
 <p><strong>Bài 5 (thử thách).</strong> Cố tình gây ra lần lượt: (a) thiếu dấu <code>;</code>, (b) thiếu <code>#include &lt;stdio.h&gt;</code>, (c) gọi hàm <code>khong_ton_tai();</code>. Với mỗi lỗi, ghi lại thông báo của gcc, cho biết nó xảy ra ở <strong>giai đoạn nào</strong> trong bốn giai đoạn của mục 1.5 và cách sửa.</p>
 <p>Lời giải gợi ý ở <a href="solutions-01.html">Lời giải chương 1</a>.</p>
-<h2>1.14. Tài nguyên bổ sung</h2>
+<h2 id="s1-14">1.14. Tài nguyên bổ sung</h2>
 <ul>
 <li>Brian Kernighan &amp; Dennis Ritchie, <em>The C Programming Language</em> (K&amp;R) — sách kinh điển.</li>
 <li><a href="https://en.cppreference.com/w/c">https://en.cppreference.com/w/c</a> — tài liệu tham khảo chuẩn về ngôn ngữ và thư viện C.</li>
@@ -578,8 +586,26 @@ gdb ./prog
 <p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-01">code/chapter-01</a></p>
 
 </article>
-<div class="chapter-nav"><span></span><a class="nav-next" href="chapter-02.html">Máy tính và lập trình cơ bản &rarr;</a></div>
+<nav class="chapter-nav" aria-label="Điều hướng chương"><span></span><a class="nav-next" href="chapter-02.html"><small>Tiếp →</small>Máy tính và lập trình cơ bản</a></nav>
 </main>
 </div>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,store=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
+  function setTheme(t){if(t==='light')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);store('theme',t);
+    document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.setAttribute('aria-pressed',String((b.dataset.themeBtn===t)||(t==='light'&&b.dataset.themeBtn==='light')))})}
+  var cur=root.getAttribute('data-theme')||'light';setTheme(cur);
+  document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.addEventListener('click',function(){setTheme(b.dataset.themeBtn)})});
+  var fs=parseInt(getComputedStyle(root).getPropertyValue('--fs'))||19;
+  document.querySelectorAll('[data-fs]').forEach(function(b){b.addEventListener('click',function(){fs=Math.min(26,Math.max(14,fs+parseInt(b.dataset.fs)));root.style.setProperty('--fs',fs+'px');store('fs',fs)})});
+  var mb=document.getElementById('menu-btn');if(mb)mb.addEventListener('click',function(){document.body.classList.toggle('nav-open')});
+  document.addEventListener('click',function(e){if(document.body.classList.contains('nav-open')&&!e.target.closest('#sidebar')&&e.target.id!=='menu-btn')document.body.classList.remove('nav-open')});
+  document.querySelectorAll('pre').forEach(function(pre){var b=document.createElement('button');b.className='copy-btn';b.type='button';b.textContent='Sao chép';
+    b.addEventListener('click',function(){var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Đã chép'},function(){b.textContent='Lỗi'});setTimeout(function(){b.textContent='Sao chép'},1500)});pre.appendChild(b)});
+  var a=document.querySelector('.chapter-link.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'center'});
+})();
+</script>
 </body>
 </html>

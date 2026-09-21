@@ -1,9 +1,11 @@
+// ascii_table.c
 #include <stdio.h>
+#include <ctype.h>
 
 int main(void) {
-    printf("ASCII printable characters (decimal, hex, char):\n");
-    for (int c = 32; c <= 126; ++c) {
-        printf("%3d 0x%02X %c\n", c, c, (char)c);
+    printf("Ma  Ky tu\n");
+    for (int c = 32; c < 127; c++) {       // 0..31 là ký tự điều khiển, không in được
+        printf("%3d  %c\n", c, c);
     }
     return 0;
 }

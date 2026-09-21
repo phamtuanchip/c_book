@@ -1,17 +1,27 @@
-Chapter 7 code samples
+# Mã nguồn chương 7
 
-Files:
-- reverse_string.c: reverse input string (uses fgets)
-- dynamic_string.c: builds a dynamic string by reading stdin and reallocating
-- Makefile: build targets
+Chương 7 — Mảng & chuỗi (Arrays & Strings)
 
-Build:
-- make
+Các file dưới đây được **trích tự động từ bản thảo** (`manuscript/chapter-07.md`) bằng `node tools/extract-code.js`, nên luôn khớp với nội dung sách. Đừng sửa trực tiếp ở đây — hãy sửa trong bản thảo rồi chạy lại script.
 
-Or:
-- gcc -Wall -Wextra -std=c11 -o reverse_string reverse_string.c
-- gcc -Wall -Wextra -std=c11 -o dynamic_string dynamic_string.c
+## Các file
 
-Run:
-- ./reverse_string
-- ./dynamic_string  # read until EOF
+| File | Mô tả |
+|---|---|
+| `text_stats.c` | Đếm ký tự, từ, tần suất chữ cái |
+
+## Biên dịch và chạy
+
+```bash
+make            # build tất cả
+make asan       # build với AddressSanitizer + UBSan (Linux/macOS/WSL)
+make clean
+```
+
+Hoặc thủ công, ví dụ:
+
+```bash
+gcc -std=c11 -Wall -Wextra -g -o text_stats text_stats.c -lm
+```
+
+Đọc lại chương: https://github.com/phamtuanchip/c_book/blob/main/manuscript/chapter-07.md

@@ -1,4 +1,0 @@
-﻿MIN_MACRO(x++, y) = 4
-After macro, x = 5
-min_int(x++, y) = 3
-After inline, x = 4

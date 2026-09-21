@@ -650,7 +650,7 @@ Cách dùng `count` đơn giản hơn so với cách dùng hai chỉ số và ph
 Với thư viện, bạn nên giấu cấu trúc bên trong để người dùng không phụ thuộc vào chi tiết. Kỹ thuật **opaque pointer**:
 
 ```c
-// stack.h — giao diện công khai
+// stack_adt.h — giao diện công khai
 typedef struct Stack Stack;               // khai báo kiểu, KHÔNG lộ trường
 
 Stack *stack_create(void);
@@ -660,8 +660,8 @@ int    stack_pop(Stack *s, int *out);
 ```
 
 ```c
-// stack.c — cài đặt riêng tư
-#include "stack.h"
+// stack_adt.c — cài đặt riêng tư
+#include "stack_adt.h"
 #include <stdlib.h>
 
 struct Stack {                            // định nghĩa đầy đủ chỉ nằm trong .c

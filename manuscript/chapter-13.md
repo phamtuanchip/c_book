@@ -105,7 +105,7 @@ int parse_long(const char *s, long *out) {
     char *end;
     errno = 0;                                   // xóa trước khi gọi
     long v = strtol(s, &end, 10);
-    if (end == s) return -1;                     // không có chữ số nào
+    if (end == s || strpbrk(s, "0123456789") == NULL) return -1;   // không có chữ số nào
     if (*end != '\0') return -1;                 // còn ký tự lạ ("12abc")
     if (errno == ERANGE) return -1;              // ngoài phạm vi long
     *out = v;
@@ -449,6 +449,7 @@ void log_write(LogLevel lvl, const char *file, int line, const char *fmt, ...)
 
 ```c
 // log.c
+#define _POSIX_C_SOURCE 200809L        // để có localtime_r
 #include "log.h"
 #include <stdarg.h>
 

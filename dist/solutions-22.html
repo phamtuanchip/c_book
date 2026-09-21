@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lời giải chương 22 — Lập trình C — Từ cơ bản đến nâng cao</title>
+<script>try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.setAttribute('data-theme',t);var f=localStorage.getItem('fs');if(f)document.documentElement.style.setProperty('--fs',f+'px')}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar" id="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Phần I — Nhập môn</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp &amp; cấu trúc chương trình C</a></li></ul></li><li class="part"><div class="part-title">Phần II — Nền tảng ngôn ngữ</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm &amp; phạm vi biến (Functions &amp; Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng &amp; chuỗi (Arrays &amp; Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li></ul></li><li class="part"><div class="part-title">Phần III — Bộ nhớ, dữ liệu, xây dựng</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O &amp; thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi &amp; ngoại lệ trong C</a></li></ul></li><li class="part"><div class="part-title">Phần IV — Kỹ thuật nâng cao</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý &amp; macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng &amp; đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa &amp; profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật &amp; an toàn bộ nhớ</a></li></ul></li><li class="part"><div class="part-title">Phần V — Dự án và phát hành</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing &amp; CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging &amp; deploy</a></li></ul></li><li class="part"><div class="part-title">Phụ lục — Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li><li><a class="chapter-link" href="solutions-02.html">Lời giải chương 2</a></li><li><a class="chapter-link" href="solutions-03.html">Lời giải chương 3</a></li><li><a class="chapter-link" href="solutions-04.html">Lời giải chương 4</a></li><li><a class="chapter-link" href="solutions-05.html">Lời giải chương 5</a></li><li><a class="chapter-link" href="solutions-06.html">Lời giải chương 6</a></li><li><a class="chapter-link" href="solutions-07.html">Lời giải chương 7</a></li><li><a class="chapter-link" href="solutions-08.html">Lời giải chương 8</a></li><li><a class="chapter-link" href="solutions-09.html">Lời giải chương 9</a></li><li><a class="chapter-link" href="solutions-10.html">Lời giải chương 10</a></li><li><a class="chapter-link" href="solutions-11.html">Lời giải chương 11</a></li><li><a class="chapter-link" href="solutions-12.html">Lời giải chương 12</a></li><li><a class="chapter-link" href="solutions-13.html">Lời giải chương 13</a></li><li><a class="chapter-link" href="solutions-14.html">Lời giải chương 14</a></li><li><a class="chapter-link" href="solutions-15.html">Lời giải chương 15</a></li><li><a class="chapter-link" href="solutions-16.html">Lời giải chương 16</a></li><li><a class="chapter-link" href="solutions-17.html">Lời giải chương 17</a></li><li><a class="chapter-link" href="solutions-18.html">Lời giải chương 18</a></li><li><a class="chapter-link" href="solutions-19.html">Lời giải chương 19</a></li><li><a class="chapter-link" href="solutions-20.html">Lời giải chương 20</a></li><li><a class="chapter-link" href="solutions-21.html">Lời giải chương 21</a></li><li><a class="chapter-link active" href="solutions-22.html">Lời giải chương 22</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<div class="main-col">
+<header class="topbar"><button class="menu-btn" id="menu-btn" type="button" aria-label="Mục lục">☰</button><span class="crumb">Lời giải chương 22</span><span class="tools"><button data-fs="-1" type="button" title="Chữ nhỏ hơn">A−</button><button data-fs="1" type="button" title="Chữ lớn hơn">A+</button><button data-theme-btn="light" type="button" title="Nền sáng">Sáng</button><button data-theme-btn="sepia" type="button" title="Nền sepia">Sepia</button><button data-theme-btn="dark" type="button" title="Nền tối">Tối</button></span></header>
+<main class="content">
+<article>
+<header class="chapter-head"><div class="chapter-num">Chương 22</div><h1>Lời giải bài tập</h1></header><nav class="chapter-toc" aria-label="Trong chương này"><div class="toc-title">Trong chương này</div><ol><li><a href="#h-1">Bài 1: install, uninstall, dist, --version</a></li><li><a href="#h-2">Bài 2: gói nguồn bằng git archive, kiểm tra từ tarball sạch</a></li><li><a href="#h-3">Bài 3: động, tĩnh, musl</a></li><li><a href="#h-4">Bài 4: cross-compile Windows</a></li><li><a href="#h-5">Bài 5: toolchain file cho ARM64</a></li><li><a href="#h-6">Bài 6: Docker multi-stage</a></li><li><a href="#h-7">Bài 7: ký SHA256SUMS</a></li><li><a href="#h-8">Bài 8: release.yml</a></li><li><a href="#h-9">Bài 9: build có thể lặp lại</a></li><li><a href="#h-10">Bài 10: make book</a></li></ol></nav>
+<p>Phần lớn bài tập chương này là <strong>quy trình dòng lệnh</strong>; lời giải dưới dạng lệnh và kết quả cần quan sát.</p>
+<h2 id="h-1">Bài 1: <code>install</code>, <code>uninstall</code>, <code>dist</code>, <code>--version</code></h2>
+<p>Dùng khối Makefile ở mục 22.3. Kiểm tra cây thư mục cài đặt:</p>
+<pre class="hljs"><code>make DESTDIR=/tmp/pkgroot PREFIX=/usr install
+find /tmp/pkgroot -<span class="hljs-built_in">type</span> f | <span class="hljs-built_in">sort</span>
+<span class="hljs-comment"># /tmp/pkgroot/usr/bin/myapp</span>
+<span class="hljs-comment"># /tmp/pkgroot/usr/share/doc/myapp/LICENSE</span>
+<span class="hljs-comment"># /tmp/pkgroot/usr/share/doc/myapp/README.md</span>
+<span class="hljs-comment"># /tmp/pkgroot/usr/share/man/man1/myapp.1</span>
+</code></pre>
+<p><code>--version</code> (mục 22.2) in <code>myapp 1.2.0</code>. Đường dẫn cài đặt phải nằm dưới <code>$(DESTDIR)$(PREFIX)</code>, <strong>không</strong> dưới thư mục hiện tại.</p>
+<h2 id="h-2">Bài 2: gói nguồn bằng <code>git archive</code>, kiểm tra từ tarball sạch</h2>
+<pre class="hljs"><code>git archive --format=tar.gz --prefix=myapp-1.2.0/ -o dist/myapp-1.2.0.tar.gz HEAD
+<span class="hljs-built_in">rm</span> -rf /tmp/verify &amp;&amp; <span class="hljs-built_in">mkdir</span> /tmp/verify &amp;&amp; tar xzf dist/myapp-1.2.0.tar.gz -C /tmp/verify
+(<span class="hljs-built_in">cd</span> /tmp/verify/myapp-1.2.0 &amp;&amp; make &amp;&amp; make <span class="hljs-built_in">test</span>)
+</code></pre>
+<p>Nếu bạn <code>git rm</code> một file nguồn (nhưng vẫn giữ nó ở thư mục làm việc rồi <code>git commit</code>), <code>make</code> trong <code>/tmp/verify</code> sẽ lỗi thiếu file — đó là lỗi mà người dùng thật sẽ gặp và bước kiểm tra này chặn được. Lưu ý <code>git archive</code> chỉ lấy file <strong>đã commit</strong>; file chưa <code>git add</code> cũng bị thiếu.</p>
+<h2 id="h-3">Bài 3: động, tĩnh, <code>musl</code></h2>
+<pre class="hljs"><code>gcc -O2 main.c -o app_dyn
+gcc -O2 -static main.c -o app_static
+musl-gcc -O2 -static main.c -o app_musl
+<span class="hljs-built_in">ls</span> -l app_*                    <span class="hljs-comment"># dyn ~16 KB; static (glibc) ~800 KB; musl ~20-100 KB</span>
+ldd app_dyn                    <span class="hljs-comment"># liệt kê libc.so.6...</span>
+ldd app_static                 <span class="hljs-comment"># &quot;not a dynamic executable&quot;</span>
+file app_musl                  <span class="hljs-comment"># &quot;statically linked&quot;</span>
+docker run --<span class="hljs-built_in">rm</span> -v <span class="hljs-string">&quot;<span class="hljs-variable">$PWD</span>&quot;</span>:/a alpine /a/app_musl        <span class="hljs-comment"># chạy trong Alpine: OK (không cần glibc)</span>
+docker run --<span class="hljs-built_in">rm</span> -v <span class="hljs-string">&quot;<span class="hljs-variable">$PWD</span>&quot;</span>:/a debian:stable-slim /a/app_static
+</code></pre>
+<p>Nhị phân tĩnh (b, c) chạy được trong container rỗng; bản động (a) chạy được nếu container có cùng <code>glibc</code> tương thích, và <strong>không</strong> chạy trong Alpine (thiếu <code>glibc</code>).</p>
+<h2 id="h-4">Bài 4: cross-compile Windows</h2>
+<pre class="hljs"><code>x86_64-w64-mingw32-gcc -std=c11 -O2 -static src/*.c -Iinclude -o build/myapp.exe
+file build/myapp.exe                   <span class="hljs-comment"># PE32+ executable (console) x86-64, for MS Windows</span>
+objdump -p build/myapp.exe | grep <span class="hljs-string">&quot;DLL Name&quot;</span>     <span class="hljs-comment"># chỉ KERNEL32.dll, msvcrt.dll... (không cần DLL của MinGW nhờ -static)</span>
+wine build/myapp.exe --version
+</code></pre>
+<p>Những chỗ thường phải sửa để di động: <code>fork</code>/<code>poll</code>/<code>pthread</code> (POSIX) → Winsock/Win32 hoặc lớp tương thích; dấu phân cách đường dẫn; <code>\n</code> ↔ <code>\r\n</code> với file văn bản mở <code>&quot;r&quot;</code>/<code>&quot;w&quot;</code> (dùng <code>&quot;rb&quot;</code>/<code>&quot;wb&quot;</code> cho nhị phân); <code>%zu</code> với runtime cũ của MSVC; <code>long</code> chỉ 32 bit.</p>
+<h2 id="h-5">Bài 5: toolchain file cho ARM64</h2>
+<pre class="hljs"><code><span class="hljs-comment"># aarch64.cmake</span>
+<span class="hljs-keyword">set</span>(CMAKE_SYSTEM_NAME Linux)
+<span class="hljs-keyword">set</span>(CMAKE_SYSTEM_PROCESSOR aarch64)
+<span class="hljs-keyword">set</span>(CMAKE_C_COMPILER aarch64-linux-gnu-gcc)
+<span class="hljs-keyword">set</span>(CMAKE_FIND_ROOT_PATH /usr/aarch64-linux-gnu)
+<span class="hljs-keyword">set</span>(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+<span class="hljs-keyword">set</span>(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+<span class="hljs-keyword">set</span>(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+</code></pre>
+<pre class="hljs"><code>cmake -S . -B build-arm -DCMAKE_TOOLCHAIN_FILE=aarch64.cmake -DCMAKE_BUILD_TYPE=Release
+cmake --build build-arm
+qemu-aarch64 -L /usr/aarch64-linux-gnu build-arm/myapp --version
+</code></pre>
+<h2 id="h-6">Bài 6: Docker multi-stage</h2>
+<p>Dùng <code>Dockerfile</code> ở mục 22.8. So sánh: <code>FROM scratch</code> với nhị phân tĩnh ~1 MB cho ảnh ~1 MB; <code>FROM debian:stable-slim</code> + nhị phân động cho ~80 MB. Ảnh <code>scratch</code> không có shell (<code>docker exec ... sh</code> không chạy được) và không có chứng chỉ TLS/<code>/etc/passwd</code>; nếu ứng dụng cần, dùng <code>gcr.io/distroless/static</code> hoặc <code>alpine</code>.</p>
+<h2 id="h-7">Bài 7: ký <code>SHA256SUMS</code></h2>
+<pre class="hljs"><code>gpg --armor --detach-sign SHA256SUMS                     <span class="hljs-comment"># tạo SHA256SUMS.asc</span>
+<span class="hljs-comment"># hoặc: minisign -Sm SHA256SUMS</span>
+</code></pre>
+<p>Hướng dẫn người dùng (3 dòng):</p>
+<pre class="hljs"><code>gpg --import public-key.asc                              <span class="hljs-comment"># nhập khóa công khai của tác giả (kiểm tra vân tay!)</span>
+gpg --verify SHA256SUMS.asc SHA256SUMS                   <span class="hljs-comment"># chữ ký hợp lệ?</span>
+<span class="hljs-built_in">sha256sum</span> -c SHA256SUMS --ignore-missing                 <span class="hljs-comment"># file tải về khớp checksum?</span>
+</code></pre>
+<h2 id="h-8">Bài 8: <code>release.yml</code></h2>
+<p>Dùng workflow ở mục 22.10. Thử với tag thử: <code>git tag v0.0.1-test &amp;&amp; git push origin v0.0.1-test</code>; kiểm tra tab <strong>Actions</strong> và <strong>Releases</strong>; dọn dẹp: <code>gh release delete v0.0.1-test --yes &amp;&amp; git push --delete origin v0.0.1-test &amp;&amp; git tag -d v0.0.1-test</code>. Nếu workflow không chạy: kiểm tra <code>on.push.tags</code>, quyền <code>contents: write</code>, và tag đã được đẩy lên.</p>
+<h2 id="h-9">Bài 9: build có thể lặp lại</h2>
+<pre class="hljs"><code><span class="hljs-built_in">export</span> SOURCE_DATE_EPOCH=$(git <span class="hljs-built_in">log</span> -1 --format=%ct)
+CFLAGS=<span class="hljs-string">&quot;-O2 -ffile-prefix-map=<span class="hljs-variable">$PWD</span>=.&quot;</span> make -C /tmp/a clean all
+CFLAGS=<span class="hljs-string">&quot;-O2 -ffile-prefix-map=<span class="hljs-variable">$PWD</span>=.&quot;</span> make -C /tmp/b clean all
+<span class="hljs-built_in">sha256sum</span> /tmp/a/build/myapp /tmp/b/build/myapp          <span class="hljs-comment"># hai giá trị PHẢI giống nhau</span>
+</code></pre>
+<p>Nguyên nhân thường gặp khi khác nhau: đường dẫn tuyệt đối nhúng trong thông tin gỡ lỗi (<code>-ffile-prefix-map</code>/<code>-fdebug-prefix-map</code>), <code>__DATE__</code>/<code>__TIME__</code> trong mã (bỏ hoặc thay bằng <code>SOURCE_DATE_EPOCH</code>), thứ tự file từ <code>$(wildcard ...)</code> (dùng <code>$(sort ...)</code>), và bản đồ liên kết chứa đường dẫn. Kiểm tra khác biệt bằng <code>diffoscope a b</code>.</p>
+<h2 id="h-10">Bài 10: <code>make book</code></h2>
+<pre class="hljs"><code>BOOK_DIR := .
+
+<span class="hljs-meta"><span class="hljs-keyword">.PHONY</span>: book check-code html epub pdf</span>
+<span class="hljs-section">book: check-code html epub pdf checksums</span>
+
+<span class="hljs-section">check-code:</span>
+	node tools/extract-code.js
+	node tools/check-code.js               <span class="hljs-comment"># biên dịch mọi ví dụ; thất bại nếu có lỗi</span>
+
+<span class="hljs-section">html:</span>
+	npm run build:html
+
+epub pdf:
+	python scripts/generate_book.py
+
+<span class="hljs-section">checksums:</span>
+	cd formats &amp;&amp; sha256sum book.epub book.pdf &gt; SHA256SUMS
+</code></pre>
+<p>Trong CI: một job chạy <code>make book</code>, chạy <code>epubcheck formats/book.epub</code> (<code>java -jar epubcheck.jar</code>), rồi tải EPUB/PDF lên Release khi gắn tag. Nếu <code>check-code</code> thất bại, sách <strong>không</strong> được phát hành — đảm bảo mọi đoạn mã trong sách biên dịch được.</p>
+
+</article>
+<nav class="chapter-nav" aria-label="Điều hướng chương"><a class="nav-prev" href="solutions-21.html"><small>← Trước</small>Lời giải chương 21</a><span></span></nav>
+</main>
+</div>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,store=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
+  function setTheme(t){if(t==='light')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);store('theme',t);
+    document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.setAttribute('aria-pressed',String((b.dataset.themeBtn===t)||(t==='light'&&b.dataset.themeBtn==='light')))})}
+  var cur=root.getAttribute('data-theme')||'light';setTheme(cur);
+  document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.addEventListener('click',function(){setTheme(b.dataset.themeBtn)})});
+  var fs=parseInt(getComputedStyle(root).getPropertyValue('--fs'))||19;
+  document.querySelectorAll('[data-fs]').forEach(function(b){b.addEventListener('click',function(){fs=Math.min(26,Math.max(14,fs+parseInt(b.dataset.fs)));root.style.setProperty('--fs',fs+'px');store('fs',fs)})});
+  var mb=document.getElementById('menu-btn');if(mb)mb.addEventListener('click',function(){document.body.classList.toggle('nav-open')});
+  document.addEventListener('click',function(e){if(document.body.classList.contains('nav-open')&&!e.target.closest('#sidebar')&&e.target.id!=='menu-btn')document.body.classList.remove('nav-open')});
+  document.querySelectorAll('pre').forEach(function(pre){var b=document.createElement('button');b.className='copy-btn';b.type='button';b.textContent='Sao chép';
+    b.addEventListener('click',function(){var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Đã chép'},function(){b.textContent='Lỗi'});setTimeout(function(){b.textContent='Sao chép'},1500)});pre.appendChild(b)});
+  var a=document.querySelector('.chapter-link.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'center'});
+})();
+</script>
+</body>
+</html>

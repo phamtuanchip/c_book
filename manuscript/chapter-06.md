@@ -271,7 +271,7 @@ Với biến hoặc hàm ở phạm vi file, `static` có nghĩa khác: **giới
 // counter.c
 static int counter = 0;                 // chỉ dùng được trong counter.c
 static void log_msg(const char *m) {    // hàm nội bộ
-    /* ... */
+    (void)m;   /* ... ghi log ... */
 }
 
 int counter_next(void) {                // hàm công khai (external linkage)
@@ -287,7 +287,7 @@ int counter_next(void) {                // hàm công khai (external linkage)
 Biến toàn cục tồn tại suốt chương trình và mọi hàm đều truy cập được. Để dùng nó từ file khác, khai báo bằng `extern` (báo "biến này được định nghĩa ở nơi khác"):
 
 ```c
-// config.c
+// ví dụ: định nghĩa và khai báo biến toàn cục
 int max_connections = 100;      // ĐỊNH NGHĨA (cấp bộ nhớ) - chỉ ở một file
 
 // config.h

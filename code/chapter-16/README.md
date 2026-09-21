@@ -1,17 +1,31 @@
-Chapter 16 code samples - networking (sockets)
+# Mã nguồn chương 16
 
-Files:
-- tcp_server.c: simple blocking TCP echo server (IPv4)
-- tcp_client.c: simple TCP client to send lines and receive echo
+Chương 16 — Mạng cơ bản (sockets)
 
-Build (Linux/macOS):
-- gcc -Wall -Wextra -std=c11 -o tcp_server tcp_server.c
-- gcc -Wall -Wextra -std=c11 -o tcp_client tcp_client.c
+Các file dưới đây được **trích tự động từ bản thảo** (`manuscript/chapter-16.md`) bằng `node tools/extract-code.js`, nên luôn khớp với nội dung sách. Đừng sửa trực tiếp ở đây — hãy sửa trong bản thảo rồi chạy lại script.
 
-Run server:
-- ./tcp_server 8080
+## Các file
 
-Run client:
-- ./tcp_client 127.0.0.1 8080
+| File | Mô tả |
+|---|---|
+| `echo_server.c` | TCP echo server (tuần tự) |
+| `echo_client.c` | TCP client đọc từ bàn phím |
+| `http_get.c` | Gửi HTTP GET thô bằng getaddrinfo |
 
-Notes: sockets are POSIX; on Windows adapt or use Winsock (requires different setup).
+## Biên dịch và chạy
+
+```bash
+make            # build tất cả
+make asan       # build với AddressSanitizer + UBSan (Linux/macOS/WSL)
+make clean
+```
+
+Hoặc thủ công, ví dụ:
+
+```bash
+gcc -std=c11 -Wall -Wextra -g -o echo_server echo_server.c -lm -pthread
+```
+
+> **Lưu ý:** mã dùng POSIX (pthread, socket). Chạy trên Linux, macOS hoặc **WSL**; không biên dịch trực tiếp bằng MinGW/MSVC nếu chưa chuyển sang Winsock (xem chương 16).
+
+Đọc lại chương: https://github.com/phamtuanchip/c_book/blob/main/manuscript/chapter-16.md

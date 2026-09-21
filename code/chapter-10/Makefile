@@ -1,17 +1,17 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -std=c11
-TARGETS = linked_list stack queue
+# Build các ví dụ của chương 10. Dùng: make | make asan | make clean
+CC      ?= gcc
+CFLAGS  ?= -std=c11 -Wall -Wextra -g -O1
+LDLIBS  := -lm
+PROGS   := layout linked_list stack queue
 
-all: $(TARGETS)
+.PHONY: all asan clean
+all: $(PROGS)
 
-linked_list: linked_list.c
-	$(CC) $(CFLAGS) -o linked_list linked_list.c
+%: %.c
+	$(CC) $(CFLAGS) $< -o $@ $(LDLIBS)
 
-stack: stack.c
-	$(CC) $(CFLAGS) -o stack stack.c
-
-queue: queue.c
-	$(CC) $(CFLAGS) -o queue queue.c
+asan: CFLAGS += -fsanitize=address,undefined -fno-omit-frame-pointer
+asan: clean all
 
 clean:
-	rm -f $(TARGETS)
+	rm -f $(PROGS) *.exe

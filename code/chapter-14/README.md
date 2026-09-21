@@ -1,13 +1,28 @@
-Chapter 14 code samples
+# Mã nguồn chương 14
 
-Files:
-- macro_log.c: demonstrates LOG macro using __FILE__ and __LINE__
+Chương 14 — Tiền xử lý & macro nâng cao
 
-Build:
-- gcc -Wall -Wextra -std=c11 -o macro_log macro_log.c
+Các file dưới đây được **trích tự động từ bản thảo** (`manuscript/chapter-14.md`) bằng `node tools/extract-code.js`, nên luôn khớp với nội dung sách. Đừng sửa trực tiếp ở đây — hãy sửa trong bản thảo rồi chạy lại script.
 
-Run:
-- ./macro_log
+## Các file
 
-Notes:
-- LOG implemented as do { ... } while(0) to be statement-safe.
+| File | Mô tả |
+|---|---|
+| `tiny_test.h` | Khung kiểm thử nhỏ dựa trên macro |
+| `test_math.c` | Ví dụ dùng tiny_test.h |
+
+## Biên dịch và chạy
+
+```bash
+make            # build tất cả
+make asan       # build với AddressSanitizer + UBSan (Linux/macOS/WSL)
+make clean
+```
+
+Hoặc thủ công, ví dụ:
+
+```bash
+gcc -std=c11 -Wall -Wextra -g -o test_math test_math.c -lm
+```
+
+Đọc lại chương: https://github.com/phamtuanchip/c_book/blob/main/manuscript/chapter-14.md

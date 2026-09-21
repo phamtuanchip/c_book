@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lời giải chương 21 — Lập trình C — Từ cơ bản đến nâng cao</title>
+<script>try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.setAttribute('data-theme',t);var f=localStorage.getItem('fs');if(f)document.documentElement.style.setProperty('--fs',f+'px')}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar" id="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Phần I — Nhập môn</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp &amp; cấu trúc chương trình C</a></li></ul></li><li class="part"><div class="part-title">Phần II — Nền tảng ngôn ngữ</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm &amp; phạm vi biến (Functions &amp; Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng &amp; chuỗi (Arrays &amp; Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li></ul></li><li class="part"><div class="part-title">Phần III — Bộ nhớ, dữ liệu, xây dựng</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O &amp; thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi &amp; ngoại lệ trong C</a></li></ul></li><li class="part"><div class="part-title">Phần IV — Kỹ thuật nâng cao</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý &amp; macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng &amp; đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa &amp; profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật &amp; an toàn bộ nhớ</a></li></ul></li><li class="part"><div class="part-title">Phần V — Dự án và phát hành</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing &amp; CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging &amp; deploy</a></li></ul></li><li class="part"><div class="part-title">Phụ lục — Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li><li><a class="chapter-link" href="solutions-02.html">Lời giải chương 2</a></li><li><a class="chapter-link" href="solutions-03.html">Lời giải chương 3</a></li><li><a class="chapter-link" href="solutions-04.html">Lời giải chương 4</a></li><li><a class="chapter-link" href="solutions-05.html">Lời giải chương 5</a></li><li><a class="chapter-link" href="solutions-06.html">Lời giải chương 6</a></li><li><a class="chapter-link" href="solutions-07.html">Lời giải chương 7</a></li><li><a class="chapter-link" href="solutions-08.html">Lời giải chương 8</a></li><li><a class="chapter-link" href="solutions-09.html">Lời giải chương 9</a></li><li><a class="chapter-link" href="solutions-10.html">Lời giải chương 10</a></li><li><a class="chapter-link" href="solutions-11.html">Lời giải chương 11</a></li><li><a class="chapter-link" href="solutions-12.html">Lời giải chương 12</a></li><li><a class="chapter-link" href="solutions-13.html">Lời giải chương 13</a></li><li><a class="chapter-link" href="solutions-14.html">Lời giải chương 14</a></li><li><a class="chapter-link" href="solutions-15.html">Lời giải chương 15</a></li><li><a class="chapter-link" href="solutions-16.html">Lời giải chương 16</a></li><li><a class="chapter-link" href="solutions-17.html">Lời giải chương 17</a></li><li><a class="chapter-link" href="solutions-18.html">Lời giải chương 18</a></li><li><a class="chapter-link" href="solutions-19.html">Lời giải chương 19</a></li><li><a class="chapter-link" href="solutions-20.html">Lời giải chương 20</a></li><li><a class="chapter-link active" href="solutions-21.html">Lời giải chương 21</a></li><li><a class="chapter-link" href="solutions-22.html">Lời giải chương 22</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<div class="main-col">
+<header class="topbar"><button class="menu-btn" id="menu-btn" type="button" aria-label="Mục lục">☰</button><span class="crumb">Lời giải chương 21</span><span class="tools"><button data-fs="-1" type="button" title="Chữ nhỏ hơn">A−</button><button data-fs="1" type="button" title="Chữ lớn hơn">A+</button><button data-theme-btn="light" type="button" title="Nền sáng">Sáng</button><button data-theme-btn="sepia" type="button" title="Nền sepia">Sepia</button><button data-theme-btn="dark" type="button" title="Nền tối">Tối</button></span></header>
+<main class="content">
+<article>
+<header class="chapter-head"><div class="chapter-num">Chương 21</div><h1>Lời giải bài tập</h1></header><nav class="chapter-toc" aria-label="Trong chương này"><div class="toc-title">Trong chương này</div><ol><li><a href="#h-1">Bài 1: kiểm thử Vec với --wrap=realloc</a></li><li><a href="#h-2">Bài 2: thử parse_int và test theo thuộc tính</a></li><li><a href="#h-3">Bài 3: CTest nhiều module và golden file</a></li><li><a href="#h-4">Bài 4: coverage</a></li><li><a href="#h-5">Bài 5: ci.yml</a></li><li><a href="#h-6">Bài 6: fuzz trong CI</a></li><li><a href="#h-7">Bài 7: refactor chương trình khó thử</a></li><li><a href="#h-8">Bài 8: đồng hồ giả cho TTL cache</a></li><li><a href="#h-9">Bài 9: kiểm tra hiệu năng trong CI</a></li></ol></nav>
+<h2 id="h-1">Bài 1: kiểm thử <code>Vec</code> với <code>--wrap=realloc</code></h2>
+<pre class="hljs"><code><span class="hljs-comment">// vec_test.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;mini_test.h&quot;</span></span>
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span> <span class="hljs-type">int</span> *data; <span class="hljs-type">size_t</span> size, cap; } Vec;
+
+<span class="hljs-comment">/* --- mã cần thử (thường nằm ở vec.c) --- */</span>
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> g_fail_realloc_at = <span class="hljs-number">-1</span>;
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> *<span class="hljs-title function_">my_realloc</span><span class="hljs-params">(<span class="hljs-type">void</span> *p, <span class="hljs-type">size_t</span> n)</span> {           <span class="hljs-comment">// bản giả: thất bại ở lần thứ k</span>
+    <span class="hljs-keyword">if</span> (g_fail_realloc_at == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+    <span class="hljs-keyword">if</span> (g_fail_realloc_at &gt; <span class="hljs-number">0</span>) g_fail_realloc_at--;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">realloc</span>(p, n);
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">vec_push</span><span class="hljs-params">(Vec *v, <span class="hljs-type">int</span> x)</span> {
+    <span class="hljs-keyword">if</span> (v-&gt;size == v-&gt;cap) {
+        <span class="hljs-type">size_t</span> nc = v-&gt;cap ? v-&gt;cap * <span class="hljs-number">2</span> : <span class="hljs-number">4</span>;
+        <span class="hljs-type">int</span> *t = my_realloc(v-&gt;data, nc * <span class="hljs-keyword">sizeof</span> *t);
+        <span class="hljs-keyword">if</span> (!t) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+        v-&gt;data = t; v-&gt;cap = nc;
+    }
+    v-&gt;data[v-&gt;size++] = x;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">vec_pop</span><span class="hljs-params">(Vec *v, <span class="hljs-type">int</span> *out)</span> { <span class="hljs-keyword">if</span> (!v-&gt;size) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>; *out = v-&gt;data[--v-&gt;size]; <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>; }
+
+<span class="hljs-comment">/* --- test --- */</span>
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">test_push_many</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    Vec v = {<span class="hljs-number">0</span>};
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">1000</span>; i++) ASSERT_EQ_INT(vec_push(&amp;v, i), <span class="hljs-number">0</span>);
+    ASSERT_EQ_INT((<span class="hljs-type">long</span> <span class="hljs-type">long</span>)v.size, <span class="hljs-number">1000</span>);
+    ASSERT_TRUE(v.cap &gt;= <span class="hljs-number">1000</span>);
+    <span class="hljs-built_in">free</span>(v.data);
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">test_pop_empty</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    Vec v = {<span class="hljs-number">0</span>};
+    <span class="hljs-type">int</span> x;
+    ASSERT_EQ_INT(vec_pop(&amp;v, &amp;x), <span class="hljs-number">-1</span>);
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">test_realloc_failure_is_clean</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> k = <span class="hljs-number">0</span>; k &lt; <span class="hljs-number">4</span>; k++) {
+        Vec v = {<span class="hljs-number">0</span>};
+        g_fail_realloc_at = k;
+        <span class="hljs-type">int</span> failed = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">100</span>; i++) <span class="hljs-keyword">if</span> (vec_push(&amp;v, i) != <span class="hljs-number">0</span>) { failed = <span class="hljs-number">1</span>; <span class="hljs-keyword">break</span>; }
+        ASSERT_TRUE(failed);                          <span class="hljs-comment">// đã thất bại đúng như giả lập</span>
+        ASSERT_TRUE(v.size &lt;= v.cap);                 <span class="hljs-comment">// trạng thái vẫn nhất quán</span>
+        <span class="hljs-built_in">free</span>(v.data);                                 <span class="hljs-comment">// ASan: không rò rỉ, không double free</span>
+    }
+    g_fail_realloc_at = <span class="hljs-number">-1</span>;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    RUN_TEST(test_push_many);
+    RUN_TEST(test_pop_empty);
+    RUN_TEST(test_realloc_failure_is_clean);
+    TEST_MAIN_END();
+}
+</code></pre>
+<p>Với <code>-Wl,--wrap=realloc</code> bạn có thể thử <strong>mã thật</strong> mà không cần <code>my_realloc</code>: định nghĩa <code>__wrap_realloc</code> gọi <code>__real_realloc</code> (mục 21.5).</p>
+<h2 id="h-2">Bài 2: thử <code>parse_int</code> và test theo thuộc tính</h2>
+<p>Dùng bộ 15 trường hợp ở lời giải chương 13 (bài 2) chuyển sang <code>ASSERT_*</code>. Thuộc tính vòng tròn:</p>
+<pre class="hljs"><code><span class="hljs-comment">// roundtrip_test.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;limits.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;mini_test.h&quot;</span></span>
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">parse_int</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *s, <span class="hljs-type">int</span> *out)</span> {
+    <span class="hljs-type">char</span> *end;
+    <span class="hljs-type">long</span> v = strtol(s, &amp;end, <span class="hljs-number">10</span>);
+    <span class="hljs-keyword">if</span> (end == s || *end != <span class="hljs-string">&#x27;\0&#x27;</span> || v &lt; INT_MIN || v &gt; INT_MAX) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    *out = (<span class="hljs-type">int</span>)v;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">test_roundtrip</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    srand(<span class="hljs-number">1234</span>);                                                   <span class="hljs-comment">// seed cố định: tái hiện được</span>
+    <span class="hljs-type">int</span> samples[] = { <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">-1</span>, INT_MAX, INT_MIN };
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> iter = <span class="hljs-number">0</span>; iter &lt; <span class="hljs-number">2000</span>; iter++) {
+        <span class="hljs-type">int</span> x = iter &lt; <span class="hljs-number">5</span> ? samples[iter] : (<span class="hljs-type">int</span>)(((<span class="hljs-type">unsigned</span>)rand() &lt;&lt; <span class="hljs-number">16</span>) ^ (<span class="hljs-type">unsigned</span>)rand());
+        <span class="hljs-type">char</span> buf[<span class="hljs-number">32</span>];
+        <span class="hljs-built_in">snprintf</span>(buf, <span class="hljs-keyword">sizeof</span> buf, <span class="hljs-string">&quot;%d&quot;</span>, x);
+        <span class="hljs-type">int</span> y = <span class="hljs-number">0</span>;
+        ASSERT_EQ_INT(parse_int(buf, &amp;y), <span class="hljs-number">0</span>);
+        ASSERT_EQ_INT(y, x);
+    }
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> { RUN_TEST(test_roundtrip); TEST_MAIN_END(); }
+</code></pre>
+<h2 id="h-3">Bài 3: CTest nhiều module và golden file</h2>
+<p>Trong <code>CMakeLists.txt</code>, mỗi module một <code>add_executable</code> + <code>add_test</code>. Test đầu-cuối:</p>
+<pre class="hljs"><code><span class="hljs-keyword">add_test</span>(NAME golden_case1
+  <span class="hljs-keyword">COMMAND</span> <span class="hljs-variable">${CMAKE_COMMAND}</span> -DPROG=$&lt;TARGET_FILE:app&gt; -DIN=<span class="hljs-variable">${CMAKE_SOURCE_DIR}</span>/tests/case1.in
+          -DEXPECTED=<span class="hljs-variable">${CMAKE_SOURCE_DIR}</span>/tests/case1.expected -P <span class="hljs-variable">${CMAKE_SOURCE_DIR}</span>/tests/run_golden.cmake)
+</code></pre>
+<p><code>run_golden.cmake</code> chạy <code>execute_process(COMMAND ${PROG} INPUT_FILE ${IN} OUTPUT_VARIABLE out)</code>, đọc <code>EXPECTED</code>, <code>if(NOT out STREQUAL expected) message(FATAL_ERROR ...)</code>. Hoặc đơn giản hơn: một script shell <code>run_golden.sh</code> chạy <code>diff</code>.</p>
+<h2 id="h-4">Bài 4: coverage</h2>
+<p>Sau <code>gcov</code>, tìm các dòng <code>#####</code> trong hàm xử lý lỗi (ví dụ nhánh <code>malloc</code> trả <code>NULL</code>) và viết test chạy qua chúng (dùng <code>--wrap</code>/fault injection). Coverage tăng nghĩa là <strong>mã đã được chạy</strong>; <strong>không</strong> có nghĩa mã đúng — cần assert kiểm tra kết quả. Một test không có <code>ASSERT</code> vẫn làm coverage tăng.</p>
+<h2 id="h-5">Bài 5: <code>ci.yml</code></h2>
+<p>Kết hợp ba khối ở mục 21.10: ma trận <code>os × cc</code> (loại <code>macos + gcc</code>), một job <code>sanitizers</code> (<code>-DENABLE_SANITIZERS=ON</code>), một job <code>static-analysis</code> (<code>cppcheck --error-exitcode=1</code>). Để thấy CI đỏ: commit tạm một <code>use-after-free</code> (<code>free(p); *p = 1;</code>), quan sát job sanitizer thất bại với <code>heap-use-after-free</code>; sửa và job xanh. Nhớ <code>fail-fast: false</code> để thấy kết quả của mọi tổ hợp.</p>
+<h2 id="h-6">Bài 6: fuzz trong CI</h2>
+<pre class="hljs"><code>  <span class="hljs-attr">fuzz:</span>
+    <span class="hljs-attr">runs-on:</span> <span class="hljs-string">ubuntu-latest</span>
+    <span class="hljs-attr">steps:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/checkout@v4</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">run:</span> <span class="hljs-string">sudo</span> <span class="hljs-string">apt-get</span> <span class="hljs-string">update</span> <span class="hljs-string">&amp;&amp;</span> <span class="hljs-string">sudo</span> <span class="hljs-string">apt-get</span> <span class="hljs-string">install</span> <span class="hljs-string">-y</span> <span class="hljs-string">clang</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">run:</span> <span class="hljs-string">clang</span> <span class="hljs-string">-std=c11</span> <span class="hljs-string">-g</span> <span class="hljs-string">-O1</span> <span class="hljs-string">-fsanitize=fuzzer,address,undefined</span> <span class="hljs-string">fuzz/fuzz_parse.c</span> <span class="hljs-string">src/parser.c</span> <span class="hljs-string">-Iinclude</span> <span class="hljs-string">-o</span> <span class="hljs-string">fuzz_parse</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">run:</span> <span class="hljs-string">mkdir</span> <span class="hljs-string">-p</span> <span class="hljs-string">corpus</span> <span class="hljs-string">&amp;&amp;</span> <span class="hljs-string">./fuzz_parse</span> <span class="hljs-string">corpus</span> <span class="hljs-string">-max_total_time=60</span> <span class="hljs-string">-artifact_prefix=./crash-</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">if:</span> <span class="hljs-string">failure()</span>
+        <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/upload-artifact@v4</span>
+        <span class="hljs-attr">with:</span> { <span class="hljs-attr">name:</span> <span class="hljs-string">fuzz-crashes</span>, <span class="hljs-attr">path:</span> <span class="hljs-string">crash-*</span> }
+</code></pre>
+<p>Chép các đầu vào gây lỗi đã sửa vào <code>tests/regression/</code> để mỗi lần chạy CI chạy lại chúng.</p>
+<h2 id="h-7">Bài 7: refactor chương trình khó thử</h2>
+<p>Ví dụ: hàm <code>report()</code> (đọc <code>scores.txt</code>, in trung bình) thành: <code>stats_compute(const int *, size_t, Stats *)</code> (lõi thuần, test bằng mảng trong bộ nhớ) + <code>read_ints(FILE *, int **, size_t *)</code> (I/O, test bằng <code>fmemopen</code>) + <code>main</code> mỏng. Những gì phải đổi: bỏ <code>printf</code> trong lõi (trả kết quả), bỏ file cố định (nhận <code>FILE *</code>), xử lý <code>n == 0</code> (trước đây chia cho 0), và trả mã lỗi thay vì <code>exit</code>.</p>
+<h2 id="h-8">Bài 8: đồng hồ giả cho TTL cache</h2>
+<pre class="hljs"><code><span class="hljs-comment">// ttl_test.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;time.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;mini_test.h&quot;</span></span>
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span> <span class="hljs-type">time_t</span> (*now)(<span class="hljs-type">void</span>); } Clock;
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span> <span class="hljs-type">int</span> value; <span class="hljs-type">time_t</span> expires; <span class="hljs-type">int</span> valid; } Entry;
+
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">entry_set</span><span class="hljs-params">(Entry *e, <span class="hljs-type">int</span> v, <span class="hljs-type">time_t</span> ttl, <span class="hljs-type">const</span> Clock *c)</span> { e-&gt;value = v; e-&gt;expires = c-&gt;now() + ttl; e-&gt;valid = <span class="hljs-number">1</span>; }
+<span class="hljs-type">static</span> <span class="hljs-type">int</span>  <span class="hljs-title function_">entry_get</span><span class="hljs-params">(<span class="hljs-type">const</span> Entry *e, <span class="hljs-type">const</span> Clock *c, <span class="hljs-type">int</span> *out)</span> {
+    <span class="hljs-keyword">if</span> (!e-&gt;valid || c-&gt;now() &gt;= e-&gt;expires) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;         <span class="hljs-comment">// hết hạn khi now &gt;= expires</span>
+    *out = e-&gt;value;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">time_t</span> g_now;
+<span class="hljs-type">static</span> <span class="hljs-type">time_t</span> <span class="hljs-title function_">fake_now</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> { <span class="hljs-keyword">return</span> g_now; }
+
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">test_ttl</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    Clock c = { fake_now };
+    Entry e = {<span class="hljs-number">0</span>};
+    <span class="hljs-type">int</span> v;
+    g_now = <span class="hljs-number">1000</span>;
+    entry_set(&amp;e, <span class="hljs-number">42</span>, <span class="hljs-number">60</span>, &amp;c);
+    g_now = <span class="hljs-number">1059</span>; ASSERT_EQ_INT(entry_get(&amp;e, &amp;c, &amp;v), <span class="hljs-number">0</span>);      <span class="hljs-comment">// còn hạn</span>
+    g_now = <span class="hljs-number">1060</span>; ASSERT_EQ_INT(entry_get(&amp;e, &amp;c, &amp;v), <span class="hljs-number">-1</span>);     <span class="hljs-comment">// đúng lúc hết hạn</span>
+    g_now = <span class="hljs-number">5000</span>; ASSERT_EQ_INT(entry_get(&amp;e, &amp;c, &amp;v), <span class="hljs-number">-1</span>);
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> { RUN_TEST(test_ttl); TEST_MAIN_END(); }
+</code></pre>
+<p>Không có <code>sleep</code> nên test chạy tức thì và tất định; giờ thật chỉ xuất hiện ở lớp ứng dụng (<code>Clock real = { time_wrapper }</code>).</p>
+<h2 id="h-9">Bài 9: kiểm tra hiệu năng trong CI</h2>
+<p>Runner dùng chung nhiễu 10–30%, nên so thời gian tuyệt đối dễ báo sai. Cách tốt: đo bằng <strong><code>valgrind --tool=callgrind</code></strong> (đếm lệnh, ổn định ±0,1%) rồi so số lệnh với giá trị lưu trong repo: <code>callgrind_annotate callgrind.out | grep PROGRAM TOTALS</code>; thất bại nếu tăng &gt; 20%. Nếu bắt buộc dùng thời gian: chạy nhiều lần, lấy <strong>min</strong>, đặt ngưỡng rộng, và chạy trên runner tự host cố định CPU (<code>taskset</code>, tắt turbo).</p>
+
+</article>
+<nav class="chapter-nav" aria-label="Điều hướng chương"><a class="nav-prev" href="solutions-20.html"><small>← Trước</small>Lời giải chương 20</a><a class="nav-next" href="solutions-22.html"><small>Tiếp →</small>Lời giải chương 22</a></nav>
+</main>
+</div>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,store=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
+  function setTheme(t){if(t==='light')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);store('theme',t);
+    document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.setAttribute('aria-pressed',String((b.dataset.themeBtn===t)||(t==='light'&&b.dataset.themeBtn==='light')))})}
+  var cur=root.getAttribute('data-theme')||'light';setTheme(cur);
+  document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.addEventListener('click',function(){setTheme(b.dataset.themeBtn)})});
+  var fs=parseInt(getComputedStyle(root).getPropertyValue('--fs'))||19;
+  document.querySelectorAll('[data-fs]').forEach(function(b){b.addEventListener('click',function(){fs=Math.min(26,Math.max(14,fs+parseInt(b.dataset.fs)));root.style.setProperty('--fs',fs+'px');store('fs',fs)})});
+  var mb=document.getElementById('menu-btn');if(mb)mb.addEventListener('click',function(){document.body.classList.toggle('nav-open')});
+  document.addEventListener('click',function(e){if(document.body.classList.contains('nav-open')&&!e.target.closest('#sidebar')&&e.target.id!=='menu-btn')document.body.classList.remove('nav-open')});
+  document.querySelectorAll('pre').forEach(function(pre){var b=document.createElement('button');b.className='copy-btn';b.type='button';b.textContent='Sao chép';
+    b.addEventListener('click',function(){var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Đã chép'},function(){b.textContent='Lỗi'});setTimeout(function(){b.textContent='Sao chép'},1500)});pre.appendChild(b)});
+  var a=document.querySelector('.chapter-link.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'center'});
+})();
+</script>
+</body>
+</html>

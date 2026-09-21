@@ -1,14 +1,17 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -std=c11
-LDLIBS = -lm
+# Build các ví dụ của chương 5. Dùng: make | make asan | make clean
+CC      ?= gcc
+CFLAGS  ?= -std=c11 -Wall -Wextra -g -O1
+LDLIBS  := -lm
+PROGS   := classify sum_input prime_check menu
 
-all: prime_check multiplication_table
+.PHONY: all asan clean
+all: $(PROGS)
 
-prime_check: prime_check.c
-	$(CC) $(CFLAGS) -o prime_check prime_check.c $(LDLIBS)
+%: %.c
+	$(CC) $(CFLAGS) $< -o $@ $(LDLIBS)
 
-multiplication_table: multiplication_table.c
-	$(CC) $(CFLAGS) -o multiplication_table multiplication_table.c
+asan: CFLAGS += -fsanitize=address,undefined -fno-omit-frame-pointer
+asan: clean all
 
 clean:
-	rm -f prime_check multiplication_table
+	rm -f $(PROGS) *.exe

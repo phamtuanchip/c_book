@@ -1,28 +1,51 @@
+// queue.c
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
-typedef struct QNode { int v; struct QNode *next; } QNode;
+typedef struct {
+    int    *buf;
+    size_t  cap;
+    size_t  head;      // vị trí phần tử sẽ lấy ra
+    size_t  count;     // số phần tử hiện có (dùng count để phân biệt đầy/rỗng)
+} Queue;
 
-typedef struct Queue { QNode *head, *tail; } Queue;
-
-void q_init(Queue *q) { q->head = q->tail = NULL; }
-void q_push(Queue *q, int v) {
-    QNode *n = malloc(sizeof(QNode)); if (!n) return; n->v = v; n->next = NULL;
-    if (!q->tail) q->head = q->tail = n; else { q->tail->next = n; q->tail = n; }
+bool queue_init(Queue *q, size_t cap) {
+    q->buf = malloc(cap * sizeof *q->buf);
+    if (!q->buf) return false;
+    q->cap = cap; q->head = 0; q->count = 0;
+    return true;
 }
 
-int q_pop(Queue *q, int *out) {
-    if (!q->head) return 0;
-    QNode *n = q->head; *out = n->v; q->head = n->next; if (!q->head) q->tail = NULL; free(n); return 1;
+void queue_destroy(Queue *q) { free(q->buf); q->buf = NULL; }
+
+bool queue_push(Queue *q, int v) {
+    if (q->count == q->cap) return false;                    // đầy
+    size_t tail = (q->head + q->count) % q->cap;
+    q->buf[tail] = v;
+    q->count++;
+    return true;
 }
 
-void q_free(Queue *q) { int tmp; while (q_pop(q,&tmp)); }
+bool queue_pop(Queue *q, int *out) {
+    if (q->count == 0) return false;                          // rỗng
+    *out = q->buf[q->head];
+    q->head = (q->head + 1) % q->cap;
+    q->count--;
+    return true;
+}
 
 int main(void) {
-    Queue q; q_init(&q);
-    q_push(&q, 1); q_push(&q, 2); q_push(&q, 3);
+    Queue q;
+    if (!queue_init(&q, 4)) return 1;
+
+    for (int i = 1; i <= 6; i++) {
+        if (!queue_push(&q, i)) printf("queue day, bo qua %d\n", i);
+    }
     int v;
-    while (q_pop(&q, &v)) printf("pop: %d\n", v);
-    q_free(&q);
+    while (queue_pop(&q, &v)) printf("%d ", v);               // 1 2 3 4
+    printf("\n");
+
+    queue_destroy(&q);
     return 0;
 }

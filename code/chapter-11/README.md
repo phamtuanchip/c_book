@@ -1,17 +1,23 @@
-Chapter 11 sample module and build examples
+# Mã nguồn chương 11
 
-Files:
-- module.h / module.c: simple module API and implementation
-- main.c: uses the module
-- Makefile: build with gcc
-- CMakeLists.txt: build with CMake
+Chương 11 — Header, Makefile, build systems
 
-Build with Make:
-- make
-- ./main
+Các file dưới đây được **trích tự động từ bản thảo** (`manuscript/chapter-11.md`) bằng `node tools/extract-code.js`, nên luôn khớp với nội dung sách. Đừng sửa trực tiếp ở đây — hãy sửa trong bản thảo rồi chạy lại script.
 
-Build with CMake:
-- mkdir build && cd build
-- cmake ..
-- cmake --build .
-- ./ch11_main
+## Các file
+
+| File | Mô tả |
+|---|---|
+| `include/geometry.h` | Header giao diện module hình học |
+| `src/geometry.c` | Cài đặt module hình học |
+| `src/main.c` | Chương trình chính |
+
+## Biên dịch và chạy
+
+```bash
+make            # build tất cả
+make asan       # build với AddressSanitizer + UBSan (Linux/macOS/WSL)
+make clean
+```
+
+Đọc lại chương: https://github.com/phamtuanchip/c_book/blob/main/manuscript/chapter-11.md

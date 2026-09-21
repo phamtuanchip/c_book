@@ -1,20 +1,17 @@
-# Simple Makefile for chapter-01 examples
-CC = gcc
-CFLAGS = -Wall -Wextra -std=c11
+# Build các ví dụ của chương 1. Dùng: make | make asan | make clean
+CC      ?= gcc
+CFLAGS  ?= -std=c11 -Wall -Wextra -g -O1
+LDLIBS  := -lm
+PROGS   := hello hello_name arithmetic
 
-all: hello hello_name arithmetic input_validation
+.PHONY: all asan clean
+all: $(PROGS)
 
-hello: hello.c
-	$(CC) $(CFLAGS) -o hello hello.c
+%: %.c
+	$(CC) $(CFLAGS) $< -o $@ $(LDLIBS)
 
-hello_name: hello_name.c
-	$(CC) $(CFLAGS) -o hello_name hello_name.c
-
-arithmetic: arithmetic.c
-	$(CC) $(CFLAGS) -o arithmetic arithmetic.c
-
-input_validation: input_validation.c
-	$(CC) $(CFLAGS) -o input_validation input_validation.c
+asan: CFLAGS += -fsanitize=address,undefined -fno-omit-frame-pointer
+asan: clean all
 
 clean:
-	rm -f hello hello_name arithmetic input_validation
+	rm -f $(PROGS) *.exe

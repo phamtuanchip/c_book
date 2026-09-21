@@ -4,15 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>File I/O & thao tác hệ thống — Lập trình C — Từ cơ bản đến nâng cao</title>
+<script>try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.setAttribute('data-theme',t);var f=localStorage.getItem('fs');if(f)document.documentElement.style.setProperty('--fs',f+'px')}catch(e){}</script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="layout">
-<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link active" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<nav class="sidebar" id="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Phần I — Nhập môn</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp &amp; cấu trúc chương trình C</a></li></ul></li><li class="part"><div class="part-title">Phần II — Nền tảng ngôn ngữ</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm &amp; phạm vi biến (Functions &amp; Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng &amp; chuỗi (Arrays &amp; Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li></ul></li><li class="part"><div class="part-title">Phần III — Bộ nhớ, dữ liệu, xây dựng</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link active" href="chapter-12.html">12. File I/O &amp; thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi &amp; ngoại lệ trong C</a></li></ul></li><li class="part"><div class="part-title">Phần IV — Kỹ thuật nâng cao</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý &amp; macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng &amp; đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa &amp; profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật &amp; an toàn bộ nhớ</a></li></ul></li><li class="part"><div class="part-title">Phần V — Dự án và phát hành</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing &amp; CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging &amp; deploy</a></li></ul></li><li class="part"><div class="part-title">Phụ lục — Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li><li><a class="chapter-link" href="solutions-02.html">Lời giải chương 2</a></li><li><a class="chapter-link" href="solutions-03.html">Lời giải chương 3</a></li><li><a class="chapter-link" href="solutions-04.html">Lời giải chương 4</a></li><li><a class="chapter-link" href="solutions-05.html">Lời giải chương 5</a></li><li><a class="chapter-link" href="solutions-06.html">Lời giải chương 6</a></li><li><a class="chapter-link" href="solutions-07.html">Lời giải chương 7</a></li><li><a class="chapter-link" href="solutions-08.html">Lời giải chương 8</a></li><li><a class="chapter-link" href="solutions-09.html">Lời giải chương 9</a></li><li><a class="chapter-link" href="solutions-10.html">Lời giải chương 10</a></li><li><a class="chapter-link" href="solutions-11.html">Lời giải chương 11</a></li><li><a class="chapter-link" href="solutions-12.html">Lời giải chương 12</a></li><li><a class="chapter-link" href="solutions-13.html">Lời giải chương 13</a></li><li><a class="chapter-link" href="solutions-14.html">Lời giải chương 14</a></li><li><a class="chapter-link" href="solutions-15.html">Lời giải chương 15</a></li><li><a class="chapter-link" href="solutions-16.html">Lời giải chương 16</a></li><li><a class="chapter-link" href="solutions-17.html">Lời giải chương 17</a></li><li><a class="chapter-link" href="solutions-18.html">Lời giải chương 18</a></li><li><a class="chapter-link" href="solutions-19.html">Lời giải chương 19</a></li><li><a class="chapter-link" href="solutions-20.html">Lời giải chương 20</a></li><li><a class="chapter-link" href="solutions-21.html">Lời giải chương 21</a></li><li><a class="chapter-link" href="solutions-22.html">Lời giải chương 22</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<div class="main-col">
+<header class="topbar"><button class="menu-btn" id="menu-btn" type="button" aria-label="Mục lục">☰</button><span class="crumb">Phần III · Chương 12</span><span class="tools"><button data-fs="-1" type="button" title="Chữ nhỏ hơn">A−</button><button data-fs="1" type="button" title="Chữ lớn hơn">A+</button><button data-theme-btn="light" type="button" title="Nền sáng">Sáng</button><button data-theme-btn="sepia" type="button" title="Nền sepia">Sepia</button><button data-theme-btn="dark" type="button" title="Nền tối">Tối</button></span></header>
 <main class="content">
 <article>
-<h1>Chương 12 — File I/O &amp; thao tác hệ thống</h1>
-<h2>Mục tiêu chương</h2>
+<header class="chapter-head"><div class="chapter-num">Chương 12</div><h1>File I/O &amp; thao tác hệ thống</h1></header><nav class="chapter-toc" aria-label="Trong chương này"><div class="toc-title">Trong chương này</div><ol><li><a href="#s12-1">12.1. Luồng (stream) và FILE *</a></li><li><a href="#s12-2">12.2. Mở và đóng file</a></li><li><a href="#s12-3">12.3. Đọc và ghi file văn bản</a></li><li><a href="#s12-4">12.4. Đọc và ghi nhị phân</a></li><li><a href="#s12-5">12.5. Di chuyển trong file</a></li><li><a href="#s12-6">12.6. Bộ đệm (buffering)</a></li><li><a href="#s12-7">12.7. Xử lý lỗi I/O — tổng hợp</a></li><li><a href="#s12-8">12.8. Ví dụ thực tế</a></li><li><a href="#s12-9">12.9. Thao tác hệ thống cơ bản</a></li><li><a href="#s12-10">12.10. mmap — ánh xạ file vào bộ nhớ (khái niệm)</a></li><li><a href="#s12-11">12.11. Lỗi thường gặp</a></li><li><a href="#s12-12">12.12. Tóm tắt</a></li><li><a href="#s12-13">12.13. Bài tập</a></li></ol></nav>
+<h2 id="h-1">Mục tiêu chương</h2>
 <ul>
 <li>Hiểu khái niệm <strong>luồng (stream)</strong>, <code>FILE *</code>, và ba luồng chuẩn <code>stdin</code>, <code>stdout</code>, <code>stderr</code>.</li>
 <li>Đọc/ghi file <strong>văn bản</strong> (<code>fopen</code>, <code>fgets</code>, <code>fprintf</code>, <code>fscanf</code>) và file <strong>nhị phân</strong> (<code>fread</code>, <code>fwrite</code>).</li>
@@ -22,10 +25,10 @@
 <li>Viết các chương trình thực tế: sao chép file, đọc CSV, đếm từ, tìm chuỗi trong file lớn.</li>
 <li>Biết sơ lược về thao tác hệ thống: thư mục, biến môi trường, <code>mmap</code> và tính di động.</li>
 </ul>
-<h2>12.1. Luồng (stream) và <code>FILE *</code></h2>
+<h2 id="s12-1">12.1. Luồng (stream) và <code>FILE *</code></h2>
 <p>Thư viện chuẩn C trừu tượng hóa mọi thao tác nhập/xuất (file, bàn phím, màn hình, ống dẫn) thành <strong>luồng byte</strong>. Bạn thao tác với luồng qua một con trỏ kiểu <code>FILE *</code> (định nghĩa trong <code>&lt;stdio.h&gt;</code>); bên trong nó lưu vị trí đọc/ghi, bộ đệm, cờ lỗi/EOF.</p>
 <p>Ba luồng có sẵn khi chương trình khởi động:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Luồng</th>
@@ -50,19 +53,19 @@
 <td>màn hình</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Các hàm bạn đã dùng thực ra là dạng rút gọn: <code>printf(...)</code> ≡ <code>fprintf(stdout, ...)</code>, <code>scanf(...)</code> ≡ <code>fscanf(stdin, ...)</code>, <code>getchar()</code> ≡ <code>fgetc(stdin)</code>. Nhờ vậy, mọi hàm làm việc với <code>stdin/stdout</code> cũng làm việc với file.</p>
 <p><strong>Chuyển hướng (redirection)</strong> ở shell nối các luồng này với file mà không cần sửa mã:</p>
 <pre class="hljs"><code>./prog &lt; input.txt &gt; output.txt 2&gt; errors.txt
 </code></pre>
 <p>Vì vậy hãy in thông báo lỗi ra <code>stderr</code> để chúng không lẫn vào <code>output.txt</code>.</p>
-<h2>12.2. Mở và đóng file</h2>
+<h2 id="s12-2">12.2. Mở và đóng file</h2>
 <pre class="hljs"><code>FILE *<span class="hljs-title function_">fopen</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *path, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *mode)</span>;
 <span class="hljs-type">int</span>   <span class="hljs-title function_">fclose</span><span class="hljs-params">(FILE *stream)</span>;
 </code></pre>
 <p><code>fopen</code> trả về <code>FILE *</code> nếu thành công, <strong><code>NULL</code> nếu thất bại</strong> (file không tồn tại, không có quyền, ...). Luôn kiểm tra.</p>
-<h3>Chế độ mở (mode)</h3>
-<table>
+<h3 id="h-2">Chế độ mở (mode)</h3>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Mode</th>
@@ -109,10 +112,10 @@
 <td>ghi luôn vào cuối</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Thêm <strong><code>b</code></strong> cho chế độ <strong>nhị phân</strong> (<code>&quot;rb&quot;</code>, <code>&quot;wb&quot;</code>). Trên <strong>Windows</strong>, chế độ văn bản dịch <code>\n</code> ↔ <code>\r\n</code> và coi byte <code>0x1A</code> là hết file; trên Linux/macOS không có khác biệt. Vì vậy: <strong>luôn dùng <code>&quot;rb&quot;</code>/<code>&quot;wb&quot;</code> cho dữ liệu nhị phân</strong> để mã chạy đúng trên mọi nền tảng.</p>
 <p>C11 thêm chế độ <code>&quot;x&quot;</code> (ví dụ <code>&quot;wx&quot;</code>): tạo file <strong>và báo lỗi nếu đã tồn tại</strong> — tránh ghi đè vô ý.</p>
-<h3>Mẫu chuẩn: mở, dùng, đóng, kiểm tra</h3>
+<h3 id="h-3">Mẫu chuẩn: mở, dùng, đóng, kiểm tra</h3>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;errno.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
@@ -138,8 +141,8 @@
 <li><code>errno</code> (trong <code>&lt;errno.h&gt;</code>) chứa mã lỗi của lần gọi hệ thống gần nhất bị lỗi. <code>strerror(errno)</code> đổi nó thành thông báo đọc được; <code>perror(&quot;tiền tố&quot;)</code> in luôn ra <code>stderr</code> dạng <code>tiền tố: thông báo</code>.</li>
 <li><strong>Phải <code>fclose</code> mọi file đã mở</strong>: giải phóng tài nguyên, và quan trọng hơn, <strong>xả (flush) bộ đệm</strong> để dữ liệu ghi thật sự ra đĩa. Mỗi tiến trình bị giới hạn số file mở đồng thời (thường ~1024), nên quên <code>fclose</code> trong vòng lặp sẽ sớm gặp lỗi <code>Too many open files</code>.</li>
 </ul>
-<h2>12.3. Đọc và ghi file văn bản</h2>
-<h3>Ghi</h3>
+<h2 id="s12-3">12.3. Đọc và ghi file văn bản</h2>
+<h3 id="h-4">Ghi</h3>
 <pre class="hljs"><code><span class="hljs-type">int</span>  <span class="hljs-title function_">fputc</span><span class="hljs-params">(<span class="hljs-type">int</span> c, FILE *f)</span>;                         <span class="hljs-comment">// một ký tự</span>
 <span class="hljs-type">int</span>  <span class="hljs-title function_">fputs</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *s, FILE *f)</span>;                 <span class="hljs-comment">// một chuỗi (KHÔNG thêm &#x27;\n&#x27;)</span>
 <span class="hljs-type">int</span>  <span class="hljs-title function_">fprintf</span><span class="hljs-params">(FILE *f, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *fmt, ...)</span>;        <span class="hljs-comment">// có định dạng</span>
@@ -163,7 +166,7 @@
     <span class="hljs-keyword">return</span> fclose(f) == <span class="hljs-number">0</span> ? <span class="hljs-number">0</span> : <span class="hljs-number">1</span>;
 }
 </code></pre>
-<h3>Đọc theo dòng: <code>fgets</code></h3>
+<h3 id="h-5">Đọc theo dòng: <code>fgets</code></h3>
 <pre class="hljs"><code><span class="hljs-type">char</span> *<span class="hljs-title function_">fgets</span><span class="hljs-params">(<span class="hljs-type">char</span> *buf, <span class="hljs-type">int</span> size, FILE *f)</span>;
 </code></pre>
 <p>Đọc tối đa <code>size - 1</code> ký tự (dừng sau <code>'\n'</code>), thêm <code>'\0'</code>. Trả <code>NULL</code> khi hết file hoặc lỗi. Đây là cách <strong>an toàn và được khuyến nghị</strong> để đọc văn bản.</p>
@@ -211,7 +214,7 @@
     <span class="hljs-keyword">return</span> buf;
 }
 </code></pre>
-<h3>Đọc có định dạng: <code>fscanf</code></h3>
+<h3 id="h-6">Đọc có định dạng: <code>fscanf</code></h3>
 <pre class="hljs"><code><span class="hljs-type">int</span> <span class="hljs-title function_">fscanf</span><span class="hljs-params">(FILE *f, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *fmt, ...)</span>;
 </code></pre>
 <pre class="hljs"><code><span class="hljs-type">int</span> a, b;
@@ -231,7 +234,7 @@
     }
 }
 </code></pre>
-<h3>Đọc từng ký tự: <code>fgetc</code>, <code>getc</code></h3>
+<h3 id="h-7">Đọc từng ký tự: <code>fgetc</code>, <code>getc</code></h3>
 <p>Giá trị trả về là <code>int</code>, không phải <code>char</code>, để phân biệt được <code>EOF</code> (thường là <code>-1</code>) với ký tự có giá trị 255:</p>
 <pre class="hljs"><code><span class="hljs-type">int</span> c;
 <span class="hljs-type">long</span> count = <span class="hljs-number">0</span>;
@@ -240,7 +243,7 @@
 }
 <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%ld dong\n&quot;</span>, count);
 </code></pre>
-<h3>Hết file (EOF) — hiểu đúng</h3>
+<h3 id="h-8">Hết file (EOF) — hiểu đúng</h3>
 <p>Sai lầm phổ biến:</p>
 <pre class="hljs"><code><span class="hljs-keyword">while</span> (!feof(f)) {            <span class="hljs-comment">// SAI!</span>
     fgets(line, <span class="hljs-keyword">sizeof</span> line, f);
@@ -248,12 +251,12 @@
 }
 </code></pre>
 <p><code>feof</code> chỉ trả về đúng <strong>sau khi</strong> một thao tác đọc thất bại vì hết file. Cách đúng là <strong>kiểm tra giá trị trả về của hàm đọc</strong> trong điều kiện vòng lặp (<code>while (fgets(...) != NULL)</code>); dùng <code>feof</code>/<code>ferror</code> <strong>sau</strong> vòng lặp để phân biệt hết file với lỗi.</p>
-<h2>12.4. Đọc và ghi nhị phân</h2>
+<h2 id="s12-4">12.4. Đọc và ghi nhị phân</h2>
 <pre class="hljs"><code><span class="hljs-type">size_t</span> <span class="hljs-title function_">fread</span> <span class="hljs-params">(<span class="hljs-type">void</span> *buf,       <span class="hljs-type">size_t</span> size, <span class="hljs-type">size_t</span> count, FILE *f)</span>;
 <span class="hljs-type">size_t</span> <span class="hljs-title function_">fwrite</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">void</span> *buf, <span class="hljs-type">size_t</span> size, <span class="hljs-type">size_t</span> count, FILE *f)</span>;
 </code></pre>
 <p>Đọc/ghi <code>count</code> phần tử, mỗi phần tử <code>size</code> byte; trả về <strong>số phần tử</strong> thực sự xử lý được (nhỏ hơn <code>count</code> nghĩa là hết file hoặc lỗi).</p>
-<h3>Ví dụ: sao chép file (mọi loại)</h3>
+<h3 id="h-9">Ví dụ: sao chép file (mọi loại)</h3>
 <pre class="hljs"><code><span class="hljs-comment">// copy_file.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 
@@ -286,7 +289,7 @@
 }
 </code></pre>
 <p>Điểm đáng nhớ: dùng <code>size = 1</code> và <code>count = n</code> để biết chính xác <strong>số byte</strong> đã đọc; đọc theo khối (8 KB) hiệu quả hơn nhiều so với từng byte.</p>
-<h3>Ghi/đọc mảng và struct nhị phân</h3>
+<h3 id="h-10">Ghi/đọc mảng và struct nhị phân</h3>
 <pre class="hljs"><code><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span> <span class="hljs-type">int</span> id; <span class="hljs-type">double</span> score; } Record;
 
 Record recs[<span class="hljs-number">3</span>] = { {<span class="hljs-number">1</span>, <span class="hljs-number">9.5</span>}, {<span class="hljs-number">2</span>, <span class="hljs-number">8.0</span>}, {<span class="hljs-number">3</span>, <span class="hljs-number">7.25</span>} };
@@ -319,12 +322,12 @@ fclose(f);
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </code></pre>
-<h2>12.5. Di chuyển trong file</h2>
+<h2 id="s12-5">12.5. Di chuyển trong file</h2>
 <pre class="hljs"><code><span class="hljs-type">int</span>  <span class="hljs-title function_">fseek</span><span class="hljs-params">(FILE *f, <span class="hljs-type">long</span> offset, <span class="hljs-type">int</span> whence)</span>;   <span class="hljs-comment">// whence: SEEK_SET (đầu), SEEK_CUR (hiện tại), SEEK_END (cuối)</span>
 <span class="hljs-type">long</span> <span class="hljs-title function_">ftell</span><span class="hljs-params">(FILE *f)</span>;                            <span class="hljs-comment">// vị trí hiện tại (byte)</span>
 <span class="hljs-type">void</span> <span class="hljs-title function_">rewind</span><span class="hljs-params">(FILE *f)</span>;                           <span class="hljs-comment">// về đầu file và xóa cờ lỗi</span>
 </code></pre>
-<h3>Lấy kích thước file</h3>
+<h3 id="h-11">Lấy kích thước file</h3>
 <pre class="hljs"><code><span class="hljs-type">long</span> <span class="hljs-title function_">file_size</span><span class="hljs-params">(FILE *f)</span> {
     <span class="hljs-type">long</span> cur = ftell(f);
     <span class="hljs-keyword">if</span> (cur &lt; <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
@@ -334,7 +337,7 @@ fclose(f);
     <span class="hljs-keyword">return</span> size;
 }
 </code></pre>
-<h3>Đọc toàn bộ file vào bộ nhớ</h3>
+<h3 id="h-12">Đọc toàn bộ file vào bộ nhớ</h3>
 <pre class="hljs"><code><span class="hljs-comment">// Trả về bộ đệm cấp phát bằng malloc chứa toàn bộ file (kèm &#x27;\0&#x27; cuối); *out_len là số byte.</span>
 <span class="hljs-type">char</span> *<span class="hljs-title function_">read_all</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *path, <span class="hljs-type">size_t</span> *out_len)</span> {
     FILE *f = fopen(path, <span class="hljs-string">&quot;rb&quot;</span>);
@@ -358,7 +361,7 @@ fclose(f);
 }
 </code></pre>
 <p>Với file lớn hơn RAM, <strong>không</strong> đọc hết vào bộ nhớ; hãy xử lý theo dòng/khối (mục 12.8). <code>long</code> trên Windows chỉ 32 bit nên <code>ftell</code> giới hạn 2 GB; với file lớn dùng <code>_fseeki64</code>/<code>fseeko</code>.</p>
-<h3>Truy cập ngẫu nhiên: cập nhật một bản ghi</h3>
+<h3 id="h-13">Truy cập ngẫu nhiên: cập nhật một bản ghi</h3>
 <pre class="hljs"><code><span class="hljs-comment">// Đọc bản ghi thứ i và sửa nó, dùng file &quot;r+b&quot;</span>
 FILE *f = fopen(<span class="hljs-string">&quot;data.bin&quot;</span>, <span class="hljs-string">&quot;r+b&quot;</span>);
 fseek(f, (<span class="hljs-type">long</span>)(i * <span class="hljs-keyword">sizeof</span>(Record)), SEEK_SET);
@@ -369,10 +372,10 @@ fseek(f, (<span class="hljs-type">long</span>)(i * <span class="hljs-keyword">si
 fwrite(&amp;r, <span class="hljs-keyword">sizeof</span> r, <span class="hljs-number">1</span>, f);
 fclose(f);
 </code></pre>
-<h2>12.6. Bộ đệm (buffering)</h2>
+<h2 id="s12-6">12.6. Bộ đệm (buffering)</h2>
 <p>Gọi hệ thống để ghi từng byte rất chậm nên thư viện C dùng <strong>bộ đệm</strong>: dữ liệu ghi được gom vào bộ nhớ và chỉ chuyển cho hệ điều hành khi bộ đệm đầy, khi bạn <code>fflush</code>, hoặc khi <code>fclose</code>.</p>
 <p>Có ba chế độ:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Chế độ</th>
@@ -397,7 +400,7 @@ fclose(f);
 <td><code>stderr</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Hệ quả thực tế:</p>
 <ol>
 <li><strong><code>printf</code> không có <code>\n</code> có thể không hiện ngay</strong> khi <code>stdout</code> là terminal (đệm theo dòng), và <strong>không hiện ngay khi nối vào file/ống</strong> (đệm đầy). Nếu chương trình crash, dòng chưa xả sẽ <strong>mất</strong>. Dùng <code>fflush(stdout)</code> khi cần hoặc in ra <code>stderr</code>.</li>
@@ -413,8 +416,8 @@ setvbuf(<span class="hljs-built_in">stdout</span>, <span class="hljs-literal">NU
 fclose(f);
 rename(<span class="hljs-string">&quot;config.tmp&quot;</span>, <span class="hljs-string">&quot;config.txt&quot;</span>);
 </code></pre>
-<h2>12.7. Xử lý lỗi I/O — tổng hợp</h2>
-<table>
+<h2 id="s12-7">12.7. Xử lý lỗi I/O — tổng hợp</h2>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Hàm</th>
@@ -455,7 +458,7 @@ rename(<span class="hljs-string">&quot;config.tmp&quot;</span>, <span class="hlj
 <td>trả khác 0</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Mẫu hàm bọc để kiểm tra lỗi đồng nhất:</p>
 <pre class="hljs"><code>FILE *<span class="hljs-title function_">xfopen</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *path, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *mode)</span> {
     FILE *f = fopen(path, mode);
@@ -468,8 +471,8 @@ rename(<span class="hljs-string">&quot;config.tmp&quot;</span>, <span class="hlj
 </code></pre>
 <p>Những nguyên nhân thất bại thường gặp: sai đường dẫn (<code>ENOENT</code>), không có quyền (<code>EACCES</code>), thư mục thay vì file (<code>EISDIR</code>), đĩa đầy (<code>ENOSPC</code>), quá nhiều file mở (<code>EMFILE</code>). Chương 13 bàn kỹ hơn về chiến lược xử lý lỗi.</p>
 <p><strong>Đường dẫn trên Windows:</strong> dùng <code>/</code> hoặc <code>\\</code> (trong chuỗi C, dấu <code>\</code> phải viết <code>\\</code>): <code>&quot;C:\\data\\a.txt&quot;</code>. Đường dẫn tương đối tính từ <strong>thư mục làm việc hiện tại</strong> (nơi bạn chạy chương trình), không phải nơi chứa file <code>.exe</code>.</p>
-<h2>12.8. Ví dụ thực tế</h2>
-<h3>CSV đơn giản có trường trong dấu nháy kép</h3>
+<h2 id="s12-8">12.8. Ví dụ thực tế</h2>
+<h3 id="h-14">CSV đơn giản có trường trong dấu nháy kép</h3>
 <p>Định dạng CSV: các trường phân cách bằng dấu phẩy; trường chứa dấu phẩy hoặc xuống dòng được bao trong <code>&quot;...&quot;</code>, và dấu <code>&quot;</code> bên trong viết thành <code>&quot;&quot;</code>.</p>
 <pre class="hljs"><code><span class="hljs-comment">// csv_parser.c — phân tích một dòng CSV vào mảng trường</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
@@ -529,7 +532,7 @@ rename(<span class="hljs-string">&quot;config.tmp&quot;</span>, <span class="hlj
 }
 </code></pre>
 <p>Ví dụ <code>an,&quot;Nguyen, Van B&quot;,&quot;noi &quot;&quot;hay&quot;&quot;&quot;</code> cho ba trường: <code>an</code>, <code>Nguyen, Van B</code>, <code>noi &quot;hay&quot;</code>. Mã này cố ý gọn, đủ dạy nguyên lý; bộ phân tích CSV thực tế cần xử lý cả trường chứa xuống dòng và các trường hợp hỏng.</p>
-<h3>Đếm dòng, từ, byte (giống <code>wc</code>)</h3>
+<h3 id="h-15">Đếm dòng, từ, byte (giống <code>wc</code>)</h3>
 <pre class="hljs"><code><span class="hljs-comment">// wc_lite.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;ctype.h&gt;</span></span>
@@ -551,7 +554,7 @@ rename(<span class="hljs-string">&quot;config.tmp&quot;</span>, <span class="hlj
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </code></pre>
-<h3>Tìm chuỗi trong file lớn (streaming)</h3>
+<h3 id="h-16">Tìm chuỗi trong file lớn (streaming)</h3>
 <p>Đọc từng dòng, giữ bộ nhớ hằng số bất kể file lớn thế nào — giống <code>grep</code> đơn giản:</p>
 <pre class="hljs"><code><span class="hljs-comment">// mini_grep.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
@@ -577,7 +580,7 @@ rename(<span class="hljs-string">&quot;config.tmp&quot;</span>, <span class="hlj
 }
 </code></pre>
 <p>Hạn chế: mẫu bị cắt đôi ở ranh giới hai lần đọc khi một dòng dài hơn 4095 ký tự sẽ bị bỏ sót. Muốn chắc chắn, dùng <code>getline</code> hoặc <code>read_line</code> ở trên.</p>
-<h3>Ghép nhiều file (<code>cat</code>)</h3>
+<h3 id="h-17">Ghép nhiều file (<code>cat</code>)</h3>
 <pre class="hljs"><code><span class="hljs-comment">// merge_files.c — nối các file đầu vào vào một file đầu ra</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 
@@ -602,25 +605,25 @@ rename(<span class="hljs-string">&quot;config.tmp&quot;</span>, <span class="hlj
     <span class="hljs-keyword">return</span> rc;
 }
 </code></pre>
-<h2>12.9. Thao tác hệ thống cơ bản</h2>
+<h2 id="s12-9">12.9. Thao tác hệ thống cơ bản</h2>
 <p>Thư viện chuẩn C có một số hàm thao tác file ở mức tên:</p>
 <pre class="hljs"><code>remove(<span class="hljs-string">&quot;old.txt&quot;</span>);                <span class="hljs-comment">// xóa file (trả 0 nếu thành công)</span>
 rename(<span class="hljs-string">&quot;a.txt&quot;</span>, <span class="hljs-string">&quot;b.txt&quot;</span>);         <span class="hljs-comment">// đổi tên/di chuyển (trong cùng hệ thống file)</span>
 FILE *t = tmpfile();              <span class="hljs-comment">// file tạm tự xóa khi đóng/thoát</span>
 </code></pre>
-<h3>Tham số dòng lệnh và mã thoát</h3>
+<h3 id="h-18">Tham số dòng lệnh và mã thoát</h3>
 <pre class="hljs"><code><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> *argv[])</span>   <span class="hljs-comment">// argc: số đối số, argv[0]: tên chương trình</span>
 </code></pre>
 <p>Dùng <code>return</code>/<code>exit</code> với <code>EXIT_SUCCESS</code> (0) hoặc <code>EXIT_FAILURE</code> (1) hoặc mã riêng. Quy ước của công cụ dòng lệnh: <code>0</code> thành công; <code>1</code> lỗi chung; <code>2</code> dùng sai cú pháp.</p>
-<h3>Biến môi trường</h3>
+<h3 id="h-19">Biến môi trường</h3>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
 <span class="hljs-type">const</span> <span class="hljs-type">char</span> *home = getenv(<span class="hljs-string">&quot;HOME&quot;</span>);         <span class="hljs-comment">// NULL nếu không có (Windows: &quot;USERPROFILE&quot;)</span>
 </code></pre>
-<h3>Chạy lệnh ngoài</h3>
+<h3 id="h-20">Chạy lệnh ngoài</h3>
 <pre class="hljs"><code><span class="hljs-type">int</span> status = system(<span class="hljs-string">&quot;ls -l&quot;</span>);              <span class="hljs-comment">// chạy lệnh qua shell (tiện nhưng nguy hiểm nếu ghép chuỗi từ người dùng)</span>
 </code></pre>
 <p><strong>Không</strong> đưa dữ liệu người dùng vào <code>system()</code> (nguy cơ <strong>command injection</strong>); nếu cần chạy tiến trình con hãy dùng <code>fork</code>/<code>exec</code> hoặc <code>posix_spawn</code> (POSIX), <code>CreateProcess</code> (Windows).</p>
-<h3>Thao tác thư mục và metadata (POSIX; Windows có API tương tự)</h3>
+<h3 id="h-21">Thao tác thư mục và metadata (POSIX; Windows có API tương tự)</h3>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;dirent.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/stat.h&gt;</span></span>
 
@@ -638,7 +641,7 @@ DIR *d = opendir(<span class="hljs-string">&quot;.&quot;</span>);
 }
 </code></pre>
 <p>Các hàm này thuộc <strong>POSIX</strong>, không thuộc chuẩn C. Trên Windows dùng <code>FindFirstFile</code>/<code>FindNextFile</code>, <code>GetFileAttributes</code>, hoặc thư viện đa nền tảng; MinGW cung cấp <code>dirent.h</code> và <code>stat</code> tương thích.</p>
-<h3>Truy cập mức thấp: file descriptor (POSIX)</h3>
+<h3 id="h-22">Truy cập mức thấp: file descriptor (POSIX)</h3>
 <p><code>open</code>/<code>read</code>/<code>write</code>/<code>close</code> làm việc với <strong>số nguyên</strong> (file descriptor), <strong>không đệm</strong> ở mức thư viện — nền tảng của socket (chương 16):</p>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;fcntl.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span>
@@ -650,7 +653,7 @@ DIR *d = opendir(<span class="hljs-string">&quot;.&quot;</span>);
     close(fd);
 }
 </code></pre>
-<h2>12.10. <code>mmap</code> — ánh xạ file vào bộ nhớ (khái niệm)</h2>
+<h2 id="s12-10">12.10. <code>mmap</code> — ánh xạ file vào bộ nhớ (khái niệm)</h2>
 <p>Thay vì <code>read</code>/<code>fread</code>, có thể <strong>ánh xạ</strong> file vào không gian địa chỉ và truy cập nó như một mảng byte; hệ điều hành nạp trang từ đĩa khi cần:</p>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/mman.h&gt;</span>     <span class="hljs-comment">// POSIX</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/stat.h&gt;</span></span>
@@ -668,8 +671,8 @@ fstat(fd, &amp;st);
 close(fd);
 </code></pre>
 <p>Ưu điểm: nhanh cho truy cập ngẫu nhiên trên file lớn, không sao chép qua bộ đệm. Nhược điểm: <strong>không thuộc chuẩn C</strong>, khó xử lý lỗi I/O (lỗi xuất hiện như tín hiệu <code>SIGBUS</code> khi đọc), và <strong>khác biệt giữa nền tảng</strong> (Windows dùng <code>CreateFileMapping</code> + <code>MapViewOfFile</code>). Khuyến nghị: dùng <code>fread</code>/<code>fwrite</code> trừ khi cần hiệu năng đặc biệt.</p>
-<h2>12.11. Lỗi thường gặp</h2>
-<table>
+<h2 id="s12-11">12.11. Lỗi thường gặp</h2>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Lỗi</th>
@@ -729,8 +732,8 @@ close(fd);
 <td>Tránh, hoặc kiểm tra/loại bỏ nghiêm ngặt</td>
 </tr>
 </tbody>
-</table>
-<h2>12.12. Tóm tắt</h2>
+</table></div>
+<h2 id="s12-12">12.12. Tóm tắt</h2>
 <ul>
 <li>I/O trong C dựa trên <strong>luồng</strong> <code>FILE *</code>; <code>stdin</code>/<code>stdout</code>/<code>stderr</code> là ba luồng có sẵn.</li>
 <li>Văn bản: <code>fgets</code> + <code>sscanf</code>/<code>strtol</code> an toàn hơn <code>fscanf</code>; nhị phân: <code>fread</code>/<code>fwrite</code> với <code>&quot;rb&quot;</code>/<code>&quot;wb&quot;</code>.</li>
@@ -739,7 +742,7 @@ close(fd);
 <li>Ghi struct thô không di động; tuần tự hóa từng trường với kiểu cố định.</li>
 <li><code>mmap</code>, thư mục, <code>stat</code> thuộc POSIX chứ không thuộc chuẩn C.</li>
 </ul>
-<h2>12.13. Bài tập</h2>
+<h2 id="s12-13">12.13. Bài tập</h2>
 <ol>
 <li>Viết chương trình ghi 10 dòng vào file và sau đó đọc lại, in số thứ tự dòng. Thử mở với <code>&quot;w&quot;</code> hai lần và quan sát.</li>
 <li>Viết <code>mycat</code> (in nội dung file ra stdout) và <code>mywc</code> (đếm dòng/từ/byte) hỗ trợ nhiều file và đọc từ stdin khi không có đối số.</li>
@@ -754,8 +757,26 @@ close(fd);
 <p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-12">code/chapter-12</a></p>
 
 </article>
-<div class="chapter-nav"><a class="nav-prev" href="chapter-11.html">&larr; Header, Makefile, build systems</a><a class="nav-next" href="chapter-13.html">Xử lý lỗi & ngoại lệ trong C &rarr;</a></div>
+<nav class="chapter-nav" aria-label="Điều hướng chương"><a class="nav-prev" href="chapter-11.html"><small>← Trước</small>Header, Makefile, build systems</a><a class="nav-next" href="chapter-13.html"><small>Tiếp →</small>Xử lý lỗi &amp; ngoại lệ trong C</a></nav>
 </main>
 </div>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,store=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
+  function setTheme(t){if(t==='light')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);store('theme',t);
+    document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.setAttribute('aria-pressed',String((b.dataset.themeBtn===t)||(t==='light'&&b.dataset.themeBtn==='light')))})}
+  var cur=root.getAttribute('data-theme')||'light';setTheme(cur);
+  document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.addEventListener('click',function(){setTheme(b.dataset.themeBtn)})});
+  var fs=parseInt(getComputedStyle(root).getPropertyValue('--fs'))||19;
+  document.querySelectorAll('[data-fs]').forEach(function(b){b.addEventListener('click',function(){fs=Math.min(26,Math.max(14,fs+parseInt(b.dataset.fs)));root.style.setProperty('--fs',fs+'px');store('fs',fs)})});
+  var mb=document.getElementById('menu-btn');if(mb)mb.addEventListener('click',function(){document.body.classList.toggle('nav-open')});
+  document.addEventListener('click',function(e){if(document.body.classList.contains('nav-open')&&!e.target.closest('#sidebar')&&e.target.id!=='menu-btn')document.body.classList.remove('nav-open')});
+  document.querySelectorAll('pre').forEach(function(pre){var b=document.createElement('button');b.className='copy-btn';b.type='button';b.textContent='Sao chép';
+    b.addEventListener('click',function(){var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Đã chép'},function(){b.textContent='Lỗi'});setTimeout(function(){b.textContent='Sao chép'},1500)});pre.appendChild(b)});
+  var a=document.querySelector('.chapter-link.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'center'});
+})();
+</script>
 </body>
 </html>

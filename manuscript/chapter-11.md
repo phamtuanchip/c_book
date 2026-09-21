@@ -104,7 +104,7 @@ Trong `geometry.c`:
 Nếu `a.h` include `b.h` và `b.h` include `a.h`, bạn gặp **include vòng**. Khi một header chỉ dùng **con trỏ** tới kiểu khác, có thể chỉ cần khai báo chuyển tiếp thay vì include:
 
 ```c
-// parser.h
+/* parser.h (ví dụ khai báo chuyển tiếp) */
 struct Lexer;                          // forward declaration: "có struct Lexer, chi tiết ở nơi khác"
 
 typedef struct Parser {

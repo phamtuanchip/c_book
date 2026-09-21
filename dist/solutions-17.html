@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lời giải chương 17 — Lập trình C — Từ cơ bản đến nâng cao</title>
+<script>try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.setAttribute('data-theme',t);var f=localStorage.getItem('fs');if(f)document.documentElement.style.setProperty('--fs',f+'px')}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar" id="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Phần I — Nhập môn</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp &amp; cấu trúc chương trình C</a></li></ul></li><li class="part"><div class="part-title">Phần II — Nền tảng ngôn ngữ</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm &amp; phạm vi biến (Functions &amp; Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng &amp; chuỗi (Arrays &amp; Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li></ul></li><li class="part"><div class="part-title">Phần III — Bộ nhớ, dữ liệu, xây dựng</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O &amp; thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi &amp; ngoại lệ trong C</a></li></ul></li><li class="part"><div class="part-title">Phần IV — Kỹ thuật nâng cao</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý &amp; macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng &amp; đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa &amp; profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật &amp; an toàn bộ nhớ</a></li></ul></li><li class="part"><div class="part-title">Phần V — Dự án và phát hành</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing &amp; CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging &amp; deploy</a></li></ul></li><li class="part"><div class="part-title">Phụ lục — Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li><li><a class="chapter-link" href="solutions-02.html">Lời giải chương 2</a></li><li><a class="chapter-link" href="solutions-03.html">Lời giải chương 3</a></li><li><a class="chapter-link" href="solutions-04.html">Lời giải chương 4</a></li><li><a class="chapter-link" href="solutions-05.html">Lời giải chương 5</a></li><li><a class="chapter-link" href="solutions-06.html">Lời giải chương 6</a></li><li><a class="chapter-link" href="solutions-07.html">Lời giải chương 7</a></li><li><a class="chapter-link" href="solutions-08.html">Lời giải chương 8</a></li><li><a class="chapter-link" href="solutions-09.html">Lời giải chương 9</a></li><li><a class="chapter-link" href="solutions-10.html">Lời giải chương 10</a></li><li><a class="chapter-link" href="solutions-11.html">Lời giải chương 11</a></li><li><a class="chapter-link" href="solutions-12.html">Lời giải chương 12</a></li><li><a class="chapter-link" href="solutions-13.html">Lời giải chương 13</a></li><li><a class="chapter-link" href="solutions-14.html">Lời giải chương 14</a></li><li><a class="chapter-link" href="solutions-15.html">Lời giải chương 15</a></li><li><a class="chapter-link" href="solutions-16.html">Lời giải chương 16</a></li><li><a class="chapter-link active" href="solutions-17.html">Lời giải chương 17</a></li><li><a class="chapter-link" href="solutions-18.html">Lời giải chương 18</a></li><li><a class="chapter-link" href="solutions-19.html">Lời giải chương 19</a></li><li><a class="chapter-link" href="solutions-20.html">Lời giải chương 20</a></li><li><a class="chapter-link" href="solutions-21.html">Lời giải chương 21</a></li><li><a class="chapter-link" href="solutions-22.html">Lời giải chương 22</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<div class="main-col">
+<header class="topbar"><button class="menu-btn" id="menu-btn" type="button" aria-label="Mục lục">☰</button><span class="crumb">Lời giải chương 17</span><span class="tools"><button data-fs="-1" type="button" title="Chữ nhỏ hơn">A−</button><button data-fs="1" type="button" title="Chữ lớn hơn">A+</button><button data-theme-btn="light" type="button" title="Nền sáng">Sáng</button><button data-theme-btn="sepia" type="button" title="Nền sepia">Sepia</button><button data-theme-btn="dark" type="button" title="Nền tối">Tối</button></span></header>
+<main class="content">
+<article>
+<header class="chapter-head"><div class="chapter-num">Chương 17</div><h1>Lời giải bài tập</h1></header><nav class="chapter-toc" aria-label="Trong chương này"><div class="toc-title">Trong chương này</div><ol><li><a href="#h-1">Bài 1: count_duplicates bằng ba cách</a></li><li><a href="#h-2">Bài 2: theo hàng và theo cột</a></li><li><a href="#h-3">Bài 3: AoS và SoA</a></li><li><a href="#h-4">Bài 4: dự đoán nhánh</a></li><li><a href="#h-5">Bài 5: mức tối ưu và cờ</a></li><li><a href="#h-6">Bài 6: danh sách liên kết và mảng</a></li><li><a href="#h-7">Bài 7: benchmark tổng quát</a></li><li><a href="#h-8">Bài 8: restrict và vector hóa</a></li><li><a href="#h-9">Bài 9: tối ưu bộ đếm từ 1 GB</a></li></ol></nav>
+<blockquote>
+<p>Kết quả thời gian phụ thuộc máy của bạn; hãy đo và so sánh <strong>tỷ lệ</strong>, không so số tuyệt đối. Luôn biên dịch với <code>-O2</code>.</p>
+</blockquote>
+<h2 id="h-1">Bài 1: <code>count_duplicates</code> bằng ba cách</h2>
+<pre class="hljs"><code><span class="hljs-comment">// dup_count.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> _POSIX_C_SOURCE 200809L</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;time.h&gt;</span></span>
+
+<span class="hljs-type">static</span> <span class="hljs-type">double</span> <span class="hljs-title function_">now</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> { <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">timespec</span> <span class="hljs-title">t</span>;</span> clock_gettime(CLOCK_MONOTONIC, &amp;t); <span class="hljs-keyword">return</span> (<span class="hljs-type">double</span>)t.tv_sec + (<span class="hljs-type">double</span>)t.tv_nsec * <span class="hljs-number">1e-9</span>; }
+
+<span class="hljs-comment">/* Gốc: O(n^2). Đếm số cặp (i&lt;j) có a[i]==a[j]. */</span>
+<span class="hljs-type">static</span> <span class="hljs-type">long</span> <span class="hljs-title function_">dup_naive</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">int</span> *a, <span class="hljs-type">int</span> n)</span> {
+    <span class="hljs-type">long</span> c = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = i + <span class="hljs-number">1</span>; j &lt; n; j++) <span class="hljs-keyword">if</span> (a[i] == a[j]) c++;
+    <span class="hljs-keyword">return</span> c;
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">cmp_int</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">void</span> *x, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *y)</span> { <span class="hljs-type">int</span> a = *(<span class="hljs-type">const</span> <span class="hljs-type">int</span> *)x, b = *(<span class="hljs-type">const</span> <span class="hljs-type">int</span> *)y; <span class="hljs-keyword">return</span> (a &gt; b) - (a &lt; b); }
+
+<span class="hljs-comment">/* Sắp xếp + quét: O(n log n). Nhóm k phần tử bằng nhau cho k(k-1)/2 cặp. */</span>
+<span class="hljs-type">static</span> <span class="hljs-type">long</span> <span class="hljs-title function_">dup_sort</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">int</span> *src, <span class="hljs-type">int</span> n)</span> {
+    <span class="hljs-type">int</span> *a = <span class="hljs-built_in">malloc</span>((<span class="hljs-type">size_t</span>)n * <span class="hljs-keyword">sizeof</span> *a);
+    <span class="hljs-keyword">if</span> (!a) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    <span class="hljs-built_in">memcpy</span>(a, src, (<span class="hljs-type">size_t</span>)n * <span class="hljs-keyword">sizeof</span> *a);
+    qsort(a, (<span class="hljs-type">size_t</span>)n, <span class="hljs-keyword">sizeof</span> *a, cmp_int);
+    <span class="hljs-type">long</span> pairs = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ) {
+        <span class="hljs-type">int</span> j = i;
+        <span class="hljs-keyword">while</span> (j &lt; n &amp;&amp; a[j] == a[i]) j++;
+        <span class="hljs-type">long</span> k = j - i;
+        pairs += k * (k - <span class="hljs-number">1</span>) / <span class="hljs-number">2</span>;
+        i = j;
+    }
+    <span class="hljs-built_in">free</span>(a);
+    <span class="hljs-keyword">return</span> pairs;
+}
+
+<span class="hljs-comment">/* Mảng đếm: O(n + K) khi giá trị nằm trong [0, K). */</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> K 100000</span>
+<span class="hljs-type">static</span> <span class="hljs-type">long</span> <span class="hljs-title function_">dup_count</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">int</span> *a, <span class="hljs-type">int</span> n)</span> {
+    <span class="hljs-type">int</span> *cnt = <span class="hljs-built_in">calloc</span>(K, <span class="hljs-keyword">sizeof</span> *cnt);
+    <span class="hljs-keyword">if</span> (!cnt) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    <span class="hljs-type">long</span> pairs = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) pairs += cnt[a[i]]++;       <span class="hljs-comment">// cnt hiện có = số phần tử bằng a[i] đã gặp</span>
+    <span class="hljs-built_in">free</span>(cnt);
+    <span class="hljs-keyword">return</span> pairs;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> n = <span class="hljs-number">10000</span>; n &lt;= <span class="hljs-number">1000000</span>; n *= <span class="hljs-number">10</span>) {
+        <span class="hljs-type">int</span> *a = <span class="hljs-built_in">malloc</span>((<span class="hljs-type">size_t</span>)n * <span class="hljs-keyword">sizeof</span> *a);
+        srand(<span class="hljs-number">42</span>);
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) a[i] = rand() % K;
+
+        <span class="hljs-type">double</span> t0 = now();
+        <span class="hljs-type">long</span> r1 = n &lt;= <span class="hljs-number">100000</span> ? dup_naive(a, n) : <span class="hljs-number">-1</span>;        <span class="hljs-comment">// O(n^2) quá chậm với 10^6</span>
+        <span class="hljs-type">double</span> t1 = now();
+        <span class="hljs-type">long</span> r2 = dup_sort(a, n);
+        <span class="hljs-type">double</span> t2 = now();
+        <span class="hljs-type">long</span> r3 = dup_count(a, n);
+        <span class="hljs-type">double</span> t3 = now();
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;n=%7d naive %8.3fs sort %.4fs count %.4fs  %s\n&quot;</span>, n, t1 - t0, t2 - t1, t3 - t2,
+               (r1 &lt; <span class="hljs-number">0</span> || r1 == r2) &amp;&amp; r2 == r3 ? <span class="hljs-string">&quot;ket qua khop&quot;</span> : <span class="hljs-string">&quot;KHAC NHAU!&quot;</span>);
+        <span class="hljs-built_in">free</span>(a);
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Xu hướng: <code>naive</code> tăng ×100 mỗi khi <code>n</code> tăng ×10; <code>sort</code> tăng ~×12; <code>count</code> tăng ×10. Luôn <strong>so kết quả</strong> giữa các phiên bản trước khi so tốc độ.</p>
+<h2 id="h-2">Bài 2: theo hàng và theo cột</h2>
+<p>Với <code>-O0</code>, <code>-O2</code>, <code>-O3</code> tỷ lệ cột/hàng thường ~5–15× khi <code>N = 4096</code> (ma trận 64 MB không vừa cache). Với <code>N = 256</code> (256 KB, vừa L2) chênh lệch gần như biến mất vì mọi dữ liệu nằm sẵn trong cache. Với <code>-O3</code> compiler đôi khi tự đổi thứ tự vòng lặp (<em>loop interchange</em>) — nếu thấy hai kết quả bằng nhau, hãy làm phép tính phụ thuộc giữa các vòng (ví dụ <code>sum = sum * 31 + m[...]</code>) để chặn tối ưu đó.</p>
+<h2 id="h-3">Bài 3: AoS và SoA</h2>
+<p>Đo cập nhật một trường (<code>x += vx * dt</code>) trên 10 triệu hạt: SoA thường nhanh hơn 2–4× vì mỗi dòng cache 64 byte chứa 16 giá trị <code>float</code> hữu ích, so với AoS chỉ dùng 4/60 byte của mỗi struct. <code>perf stat -e cache-misses,cache-references ./prog</code> cho thấy số cache-miss của AoS lớn hơn nhiều. Nếu vòng lặp dùng <strong>mọi</strong> trường của mỗi hạt, chênh lệch nhỏ đi hoặc AoS thắng.</p>
+<h2 id="h-4">Bài 4: dự đoán nhánh</h2>
+<p>Với mảng byte ngẫu nhiên 32 triệu phần tử: <strong>ngẫu nhiên</strong> chậm nhất (nhánh ~50% sai), <strong>đã sắp xếp</strong> nhanh 3–6×, <strong>không nhánh</strong> (<code>sum += ~t &amp; data[i]</code> hoặc <code>sum += (data[i] &gt;= 128) * data[i]</code>) có tốc độ ổn định, gần bằng bản đã sắp xếp. Xem assembly bằng <code>gcc -O2 -S</code>: với <code>-O2</code> mới, GCC thường tự chuyển bản có <code>if</code> thành lệnh <code>cmov</code> (không nhánh), làm chênh lệch biến mất — hãy so sánh cả <code>-O1</code>.</p>
+<h2 id="h-5">Bài 5: mức tối ưu và cờ</h2>
+<p>Thường thấy: <code>-O0</code> chậm nhất (gấp 3–5 lần <code>-O2</code>); <code>-O2</code> và <code>-O3</code> gần bằng nhau; <code>-O2 -march=native</code> nhanh hơn với vòng lặp vector hóa được; <code>-flto</code> đáng kể khi nhiều file <code>.c</code> gọi nhau. <code>-O3</code> có thể <strong>chậm hơn</strong> <code>-O2</code> do phình mã (nhiều inlining/unrolling làm hỏng cache lệnh). Ghi lại kết quả thành bảng.</p>
+<h2 id="h-6">Bài 6: danh sách liên kết và mảng</h2>
+<p>Duyệt tổng 10 triệu số: mảng nhanh hơn 3–10× (truy cập tuần tự, prefetch tốt; mỗi nút danh sách thêm 8 byte con trỏ và nằm rải rác trong heap nên mỗi bước có thể là một cache-miss). Chèn 1000 phần tử ở giữa: mảng phải <code>memmove</code> phần đuôi (O(n) mỗi lần) nhưng <code>memmove</code> cực nhanh trên bộ nhớ liền kề; danh sách O(1) khi <strong>đã có con trỏ</strong> tới vị trí nhưng để <strong>tìm</strong> vị trí đó phải duyệt O(n) qua các cache-miss. Kết quả nhiều khi bất ngờ: mảng vẫn thắng ở kích thước vài chục nghìn phần tử.</p>
+<h2 id="h-7">Bài 7: <code>benchmark</code> tổng quát</h2>
+<p>Dùng <code>bench()</code> ở mục 17.3 với các hàm <code>memcpy</code>, vòng lặp <code>for</code>, <code>memmove</code> trên bộ đệm 64 MB. <code>memcpy</code> và <code>memmove</code> thường ngang nhau (thư viện dùng lệnh vector/<code>rep movsb</code>); vòng lặp tay với <code>-O2</code> được compiler nhận diện và đổi thành <code>memcpy</code> (kiểm tra bằng <code>objdump -d</code>), còn với <code>-O0</code> chậm hơn nhiều.</p>
+<h2 id="h-8">Bài 8: <code>restrict</code> và vector hóa</h2>
+<pre class="hljs"><code><span class="hljs-comment">// restrict_demo.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stddef.h&gt;</span></span>
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">add_norestrict</span><span class="hljs-params">(<span class="hljs-type">float</span> *out, <span class="hljs-type">const</span> <span class="hljs-type">float</span> *a, <span class="hljs-type">const</span> <span class="hljs-type">float</span> *b, <span class="hljs-type">size_t</span> n)</span> {
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) out[i] = a[i] + b[i];
+}
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">add_restrict</span><span class="hljs-params">(<span class="hljs-type">float</span> *<span class="hljs-keyword">restrict</span> out, <span class="hljs-type">const</span> <span class="hljs-type">float</span> *<span class="hljs-keyword">restrict</span> a, <span class="hljs-type">const</span> <span class="hljs-type">float</span> *<span class="hljs-keyword">restrict</span> b, <span class="hljs-type">size_t</span> n)</span> {
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) out[i] = a[i] + b[i];
+}
+</code></pre>
+<p><code>gcc -O3 -fopt-info-vec restrict_demo.c -c</code>: bản <code>restrict</code> được báo <code>loop vectorized</code>; bản không có <code>restrict</code> compiler thường thêm <strong>kiểm tra chồng lấn lúc chạy</strong> (versioning) hoặc từ chối vector hóa vì <code>out</code> có thể trùng <code>a</code>/<code>b</code>. Lưu ý: nếu bạn gọi hàm <code>restrict</code> với vùng nhớ <strong>chồng lấn</strong> thì đó là UB.</p>
+<h2 id="h-9">Bài 9: tối ưu bộ đếm từ 1 GB</h2>
+<p>Quy trình gợi ý (đo sau <strong>mỗi</strong> bước): (1) <code>perf record</code> để xác định hotspot — thường là <code>fgets</code>/<code>strtok</code> và băm; (2) đọc theo khối 1 MB bằng <code>fread</code> và tự tách từ; (3) bảng băm với hàm băm nhanh (FNV-1a) và <code>realloc</code> gộp; (4) tránh cấp phát từng từ (dùng arena); (5) song song: chia file theo khoảng byte (cắt ở ranh giới từ), mỗi luồng một bảng riêng rồi gộp. Kỳ vọng: từ vài chục giây xuống vài giây; trình bày bảng thời gian + <code>perf stat</code> từng bước.</p>
+
+</article>
+<nav class="chapter-nav" aria-label="Điều hướng chương"><a class="nav-prev" href="solutions-16.html"><small>← Trước</small>Lời giải chương 16</a><a class="nav-next" href="solutions-18.html"><small>Tiếp →</small>Lời giải chương 18</a></nav>
+</main>
+</div>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,store=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
+  function setTheme(t){if(t==='light')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);store('theme',t);
+    document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.setAttribute('aria-pressed',String((b.dataset.themeBtn===t)||(t==='light'&&b.dataset.themeBtn==='light')))})}
+  var cur=root.getAttribute('data-theme')||'light';setTheme(cur);
+  document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.addEventListener('click',function(){setTheme(b.dataset.themeBtn)})});
+  var fs=parseInt(getComputedStyle(root).getPropertyValue('--fs'))||19;
+  document.querySelectorAll('[data-fs]').forEach(function(b){b.addEventListener('click',function(){fs=Math.min(26,Math.max(14,fs+parseInt(b.dataset.fs)));root.style.setProperty('--fs',fs+'px');store('fs',fs)})});
+  var mb=document.getElementById('menu-btn');if(mb)mb.addEventListener('click',function(){document.body.classList.toggle('nav-open')});
+  document.addEventListener('click',function(e){if(document.body.classList.contains('nav-open')&&!e.target.closest('#sidebar')&&e.target.id!=='menu-btn')document.body.classList.remove('nav-open')});
+  document.querySelectorAll('pre').forEach(function(pre){var b=document.createElement('button');b.className='copy-btn';b.type='button';b.textContent='Sao chép';
+    b.addEventListener('click',function(){var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Đã chép'},function(){b.textContent='Lỗi'});setTimeout(function(){b.textContent='Sao chép'},1500)});pre.appendChild(b)});
+  var a=document.querySelector('.chapter-link.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'center'});
+})();
+</script>
+</body>
+</html>

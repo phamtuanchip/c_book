@@ -1,17 +1,30 @@
+// copy_file.c
 #include <stdio.h>
-#include <stdlib.h>
 
-int main(int argc, char **argv) {
-    if (argc != 3) { fprintf(stderr, "Usage: %s SOURCE DEST\n", argv[0]); return 1; }
-    FILE *in = fopen(argv[1], "rb");
-    if (!in) { perror("fopen source"); return 1; }
-    FILE *out = fopen(argv[2], "wb");
-    if (!out) { perror("fopen dest"); fclose(in); return 1; }
-    char buf[8192]; size_t n;
-    while ((n = fread(buf, 1, sizeof(buf), in)) > 0) {
-        if (fwrite(buf, 1, n, out) != n) { perror("fwrite"); fclose(in); fclose(out); return 1; }
+int main(int argc, char *argv[]) {
+    if (argc != 3) {
+        fprintf(stderr, "Cach dung: %s <nguon> <dich>\n", argv[0]);
+        return 2;
     }
-    if (ferror(in)) { perror("fread"); }
-    fclose(in); fclose(out);
-    return 0;
+
+    FILE *in  = fopen(argv[1], "rb");
+    if (!in) { perror(argv[1]); return 1; }
+    FILE *out = fopen(argv[2], "wb");
+    if (!out) { perror(argv[2]); fclose(in); return 1; }
+
+    unsigned char buf[8192];             // bộ đệm 8 KB
+    size_t n;
+    int rc = 0;
+    while ((n = fread(buf, 1, sizeof buf, in)) > 0) {
+        if (fwrite(buf, 1, n, out) != n) {          // ghi thiếu -> lỗi (đĩa đầy...)
+            perror("fwrite");
+            rc = 1;
+            break;
+        }
+    }
+    if (ferror(in)) { perror("fread"); rc = 1; }
+
+    if (fclose(out) != 0) { perror("fclose"); rc = 1; }
+    fclose(in);
+    return rc;
 }

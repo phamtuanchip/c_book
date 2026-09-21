@@ -1,14 +1,17 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -std=c11
-TARGETS = reverse_string dynamic_string
+# Build các ví dụ của chương 7. Dùng: make | make asan | make clean
+CC      ?= gcc
+CFLAGS  ?= -std=c11 -Wall -Wextra -g -O1
+LDLIBS  := -lm
+PROGS   := text_stats
 
-all: $(TARGETS)
+.PHONY: all asan clean
+all: $(PROGS)
 
-reverse_string: reverse_string.c
-	$(CC) $(CFLAGS) -o reverse_string reverse_string.c
+%: %.c
+	$(CC) $(CFLAGS) $< -o $@ $(LDLIBS)
 
-dynamic_string: dynamic_string.c
-	$(CC) $(CFLAGS) -o dynamic_string dynamic_string.c
+asan: CFLAGS += -fsanitize=address,undefined -fno-omit-frame-pointer
+asan: clean all
 
 clean:
-	rm -f $(TARGETS)
+	rm -f $(PROGS) *.exe

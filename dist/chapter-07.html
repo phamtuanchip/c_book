@@ -4,15 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mảng & chuỗi (Arrays & Strings) — Lập trình C — Từ cơ bản đến nâng cao</title>
+<script>try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.setAttribute('data-theme',t);var f=localStorage.getItem('fs');if(f)document.documentElement.style.setProperty('--fs',f+'px')}catch(e){}</script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="layout">
-<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link active" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<nav class="sidebar" id="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Phần I — Nhập môn</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp &amp; cấu trúc chương trình C</a></li></ul></li><li class="part"><div class="part-title">Phần II — Nền tảng ngôn ngữ</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm &amp; phạm vi biến (Functions &amp; Scope)</a></li><li><a class="chapter-link active" href="chapter-07.html">7. Mảng &amp; chuỗi (Arrays &amp; Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li></ul></li><li class="part"><div class="part-title">Phần III — Bộ nhớ, dữ liệu, xây dựng</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O &amp; thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi &amp; ngoại lệ trong C</a></li></ul></li><li class="part"><div class="part-title">Phần IV — Kỹ thuật nâng cao</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý &amp; macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng &amp; đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa &amp; profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật &amp; an toàn bộ nhớ</a></li></ul></li><li class="part"><div class="part-title">Phần V — Dự án và phát hành</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing &amp; CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging &amp; deploy</a></li></ul></li><li class="part"><div class="part-title">Phụ lục — Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li><li><a class="chapter-link" href="solutions-02.html">Lời giải chương 2</a></li><li><a class="chapter-link" href="solutions-03.html">Lời giải chương 3</a></li><li><a class="chapter-link" href="solutions-04.html">Lời giải chương 4</a></li><li><a class="chapter-link" href="solutions-05.html">Lời giải chương 5</a></li><li><a class="chapter-link" href="solutions-06.html">Lời giải chương 6</a></li><li><a class="chapter-link" href="solutions-07.html">Lời giải chương 7</a></li><li><a class="chapter-link" href="solutions-08.html">Lời giải chương 8</a></li><li><a class="chapter-link" href="solutions-09.html">Lời giải chương 9</a></li><li><a class="chapter-link" href="solutions-10.html">Lời giải chương 10</a></li><li><a class="chapter-link" href="solutions-11.html">Lời giải chương 11</a></li><li><a class="chapter-link" href="solutions-12.html">Lời giải chương 12</a></li><li><a class="chapter-link" href="solutions-13.html">Lời giải chương 13</a></li><li><a class="chapter-link" href="solutions-14.html">Lời giải chương 14</a></li><li><a class="chapter-link" href="solutions-15.html">Lời giải chương 15</a></li><li><a class="chapter-link" href="solutions-16.html">Lời giải chương 16</a></li><li><a class="chapter-link" href="solutions-17.html">Lời giải chương 17</a></li><li><a class="chapter-link" href="solutions-18.html">Lời giải chương 18</a></li><li><a class="chapter-link" href="solutions-19.html">Lời giải chương 19</a></li><li><a class="chapter-link" href="solutions-20.html">Lời giải chương 20</a></li><li><a class="chapter-link" href="solutions-21.html">Lời giải chương 21</a></li><li><a class="chapter-link" href="solutions-22.html">Lời giải chương 22</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<div class="main-col">
+<header class="topbar"><button class="menu-btn" id="menu-btn" type="button" aria-label="Mục lục">☰</button><span class="crumb">Phần II · Chương 7</span><span class="tools"><button data-fs="-1" type="button" title="Chữ nhỏ hơn">A−</button><button data-fs="1" type="button" title="Chữ lớn hơn">A+</button><button data-theme-btn="light" type="button" title="Nền sáng">Sáng</button><button data-theme-btn="sepia" type="button" title="Nền sepia">Sepia</button><button data-theme-btn="dark" type="button" title="Nền tối">Tối</button></span></header>
 <main class="content">
 <article>
-<h1>Chương 7 — Mảng &amp; chuỗi (Arrays &amp; Strings)</h1>
-<h2>Mục tiêu chương</h2>
+<header class="chapter-head"><div class="chapter-num">Chương 7</div><h1>Mảng &amp; chuỗi (Arrays &amp; Strings)</h1></header><nav class="chapter-toc" aria-label="Trong chương này"><div class="toc-title">Trong chương này</div><ol><li><a href="#s7-1">7.1. Mảng là gì?</a></li><li><a href="#s7-2">7.2. Mảng nhiều chiều</a></li><li><a href="#s7-3">7.3. Mảng và tham số hàm</a></li><li><a href="#s7-4">7.4. Chuỗi trong C</a></li><li><a href="#s7-5">7.5. Thư viện &lt;string.h&gt;</a></li><li><a href="#s7-6">7.6. Tràn bộ đệm — chi tiết</a></li><li><a href="#s7-7">7.7. Chuỗi và Unicode (UTF-8)</a></li><li><a href="#s7-8">7.8. Ví dụ hoàn chỉnh: đếm từ và tần suất chữ cái</a></li><li><a href="#s7-9">7.9. Tóm tắt</a></li><li><a href="#s7-10">7.10. Bài tập</a></li></ol></nav>
+<h2 id="h-1">Mục tiêu chương</h2>
 <ul>
 <li>Hiểu mảng là <strong>dãy phần tử liền kề trong bộ nhớ</strong> và hệ quả của việc đó.</li>
 <li>Khai báo, khởi tạo, duyệt mảng một chiều và nhiều chiều; truyền mảng cho hàm.</li>
@@ -21,7 +24,7 @@
 <li>Nhận diện <strong>tràn bộ đệm (buffer overflow)</strong> và cách tránh.</li>
 <li>Biết giới hạn của chuỗi C với UTF-8 (tiếng Việt).</li>
 </ul>
-<h2>7.1. Mảng là gì?</h2>
+<h2 id="s7-1">7.1. Mảng là gì?</h2>
 <p><strong>Mảng</strong> là một dãy các phần tử <strong>cùng kiểu</strong>, nằm <strong>liên tiếp nhau</strong> trong bộ nhớ, truy cập bằng <strong>chỉ số</strong> bắt đầu từ <strong>0</strong>.</p>
 <pre class="hljs"><code><span class="hljs-type">int</span> scores[<span class="hljs-number">5</span>];          <span class="hljs-comment">// mảng 5 số nguyên, chưa khởi tạo (giá trị rác nếu là biến cục bộ)</span>
 </code></pre>
@@ -32,7 +35,7 @@ scores:  │  [0] │  [1] │  [2] │  [3] │  [4] │
          └──────┴──────┴──────┴──────┴──────┘
 </code></pre>
 <p>Phần tử <code>scores[i]</code> nằm ở địa chỉ <code>1000 + i × sizeof(int)</code>. Vì tính địa chỉ chỉ là một phép nhân và cộng, truy cập bất kỳ phần tử nào đều nhanh như nhau (<strong>truy cập ngẫu nhiên O(1)</strong>).</p>
-<h3>Khai báo và khởi tạo</h3>
+<h3 id="h-2">Khai báo và khởi tạo</h3>
 <pre class="hljs"><code><span class="hljs-type">int</span> a[<span class="hljs-number">5</span>];                       <span class="hljs-comment">// không khởi tạo</span>
 <span class="hljs-type">int</span> b[<span class="hljs-number">5</span>] = {<span class="hljs-number">10</span>, <span class="hljs-number">20</span>, <span class="hljs-number">30</span>, <span class="hljs-number">40</span>, <span class="hljs-number">50</span>};
 <span class="hljs-type">int</span> c[<span class="hljs-number">5</span>] = {<span class="hljs-number">1</span>, <span class="hljs-number">2</span>};              <span class="hljs-comment">// phần còn lại được đặt 0: {1, 2, 0, 0, 0}</span>
@@ -44,7 +47,7 @@ scores:  │  [0] │  [1] │  [2] │  [3] │  [4] │
 <pre class="hljs"><code><span class="hljs-type">size_t</span> n = <span class="hljs-keyword">sizeof</span>(e) / <span class="hljs-keyword">sizeof</span>(e[<span class="hljs-number">0</span>]);   <span class="hljs-comment">// = 5</span>
 </code></pre>
 <p>Phép chia này chỉ đúng với <strong>mảng thật sự</strong>, không đúng với con trỏ hay tham số hàm (xem 7.3).</p>
-<h3>Truy cập và duyệt mảng</h3>
+<h3 id="h-3">Truy cập và duyệt mảng</h3>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 
 <span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
@@ -61,7 +64,7 @@ scores:  │  [0] │  [1] │  [2] │  [3] │  [4] │
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </code></pre>
-<h3>C không kiểm tra giới hạn mảng</h3>
+<h3 id="h-4">C không kiểm tra giới hạn mảng</h3>
 <p>Đây là điều quan trọng nhất của chương. Với <code>int a[5]</code>, chỉ số hợp lệ là <code>0..4</code>. Truy cập <code>a[5]</code>, <code>a[-1]</code> hay <code>a[100]</code> <strong>biên dịch bình thường</strong> nhưng là <strong>hành vi không xác định</strong>:</p>
 <pre class="hljs"><code><span class="hljs-type">int</span> a[<span class="hljs-number">5</span>] = {<span class="hljs-number">0</span>};
 a[<span class="hljs-number">5</span>] = <span class="hljs-number">1</span>;       <span class="hljs-comment">// ghi vào ô ngay SAU mảng: có thể phá biến khác, hoặc crash, hoặc &quot;không sao&quot; (tạm thời)</span>
@@ -73,7 +76,7 @@ a[<span class="hljs-number">5</span>] = <span class="hljs-number">1</span>;     
 ./prog
 <span class="hljs-comment"># ==...== ERROR: AddressSanitizer: stack-buffer-overflow on address ...</span>
 </code></pre>
-<h3>Các thuật toán cơ bản trên mảng</h3>
+<h3 id="h-5">Các thuật toán cơ bản trên mảng</h3>
 <pre class="hljs"><code><span class="hljs-comment">// Tìm phần tử lớn nhất</span>
 <span class="hljs-type">int</span> <span class="hljs-title function_">max_of</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">int</span> a[], <span class="hljs-type">size_t</span> n)</span> {
     <span class="hljs-type">int</span> m = a[<span class="hljs-number">0</span>];                    <span class="hljs-comment">// tiền điều kiện: n &gt;= 1</span>
@@ -127,7 +130,7 @@ a[<span class="hljs-number">5</span>] = <span class="hljs-number">1</span>;     
 }
 </code></pre>
 <p>Trong thực tế, hãy dùng <code>qsort</code> (chương 6).</p>
-<h2>7.2. Mảng nhiều chiều</h2>
+<h2 id="s7-2">7.2. Mảng nhiều chiều</h2>
 <p>Mảng hai chiều là &quot;mảng của các mảng&quot;. C lưu <strong>theo hàng (row-major)</strong>: hết hàng 0 rồi đến hàng 1...</p>
 <pre class="hljs"><code><span class="hljs-type">int</span> m[<span class="hljs-number">3</span>][<span class="hljs-number">4</span>] = {
     { <span class="hljs-number">1</span>,  <span class="hljs-number">2</span>,  <span class="hljs-number">3</span>,  <span class="hljs-number">4</span>},
@@ -146,7 +149,7 @@ a[<span class="hljs-number">5</span>] = <span class="hljs-number">1</span>;     
     <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n&quot;</span>);
 }
 </code></pre>
-<h3>Truyền mảng hai chiều cho hàm</h3>
+<h3 id="h-6">Truyền mảng hai chiều cho hàm</h3>
 <p>Phải cho biết <strong>số cột</strong> (các chiều sau chiều đầu tiên), vì compiler cần nó để tính địa chỉ:</p>
 <pre class="hljs"><code><span class="hljs-type">void</span> <span class="hljs-title function_">print_matrix</span><span class="hljs-params">(<span class="hljs-type">int</span> rows, <span class="hljs-type">int</span> cols, <span class="hljs-type">int</span> m[rows][cols])</span> {   <span class="hljs-comment">// C99: kích thước là tham số đứng trước</span>
     <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; rows; i++) {
@@ -170,9 +173,9 @@ a[<span class="hljs-number">5</span>] = <span class="hljs-number">1</span>;     
     }
 }
 </code></pre>
-<h3>Mảng độ dài biến đổi (VLA)</h3>
+<h3 id="h-7">Mảng độ dài biến đổi (VLA)</h3>
 <p>C99 cho phép kích thước mảng cục bộ là biến: <code>int a[n];</code>. Tiện, nhưng: nằm trên <strong>stack</strong> nên <code>n</code> lớn gây tràn stack, không kiểm tra được lỗi cấp phát, và bị đánh dấu <em>tùy chọn</em> từ C11. <strong>Khuyến nghị:</strong> dùng <code>malloc</code> (chương 9) cho kích thước không biết trước.</p>
-<h2>7.3. Mảng và tham số hàm</h2>
+<h2 id="s7-3">7.3. Mảng và tham số hàm</h2>
 <p>Khi truyền mảng cho hàm, mảng <strong>phân rã (decay)</strong> thành <strong>con trỏ tới phần tử đầu tiên</strong>. Hàm không biết độ dài mảng.</p>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 
@@ -199,7 +202,7 @@ a[<span class="hljs-number">5</span>] = <span class="hljs-number">1</span>;     
 <span class="hljs-built_in">memcpy</span>(dst, src, <span class="hljs-keyword">sizeof</span> src);           <span class="hljs-comment">// sao chép 12 byte</span>
 <span class="hljs-keyword">if</span> (<span class="hljs-built_in">memcmp</span>(dst, src, <span class="hljs-keyword">sizeof</span> src) == <span class="hljs-number">0</span>) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;giong nhau\n&quot;</span>);
 </code></pre>
-<h2>7.4. Chuỗi trong C</h2>
+<h2 id="s7-4">7.4. Chuỗi trong C</h2>
 <p>C <strong>không có kiểu chuỗi</strong>. <strong>Chuỗi</strong> là <strong>mảng <code>char</code> kết thúc bằng ký tự null <code>'\0'</code></strong> (giá trị 0). Ký tự <code>'\0'</code> đánh dấu nơi chuỗi kết thúc.</p>
 <pre class="hljs"><code><span class="hljs-type">char</span> s[<span class="hljs-number">6</span>] = <span class="hljs-string">&quot;hello&quot;</span>;     <span class="hljs-comment">// 6 byte: &#x27;h&#x27; &#x27;e&#x27; &#x27;l&#x27; &#x27;l&#x27; &#x27;o&#x27; &#x27;\0&#x27;</span>
 </code></pre>
@@ -210,7 +213,7 @@ a[<span class="hljs-number">5</span>] = <span class="hljs-number">1</span>;     
         ←────── độ dài 5 ──────→ ↑ ký tự kết thúc
 </code></pre>
 <p><strong>Độ dài chuỗi</strong> (<code>strlen</code>) là số ký tự <strong>không tính</strong> <code>'\0'</code>, nhưng mảng phải có chỗ cho nó: chuỗi dài 5 cần mảng ít nhất <strong>6</strong> phần tử. Quên chỗ cho <code>'\0'</code> là lỗi cực kỳ phổ biến.</p>
-<h3>Các cách khai báo chuỗi</h3>
+<h3 id="h-8">Các cách khai báo chuỗi</h3>
 <pre class="hljs"><code><span class="hljs-type">char</span> a[] = <span class="hljs-string">&quot;hello&quot;</span>;        <span class="hljs-comment">// mảng 6 byte, được sao chép từ literal; SỬA ĐƯỢC</span>
 <span class="hljs-type">char</span> b[<span class="hljs-number">10</span>] = <span class="hljs-string">&quot;hello&quot;</span>;      <span class="hljs-comment">// mảng 10 byte, phần còn lại là &#x27;\0&#x27;</span>
 <span class="hljs-type">char</span> c[<span class="hljs-number">5</span>] = <span class="hljs-string">&quot;hello&quot;</span>;       <span class="hljs-comment">// LỖI/UB: không có chỗ cho &#x27;\0&#x27; (compiler cảnh báo)</span>
@@ -218,7 +221,7 @@ a[<span class="hljs-number">5</span>] = <span class="hljs-number">1</span>;     
 <span class="hljs-type">char</span> *q = <span class="hljs-string">&quot;hello&quot;</span>;         <span class="hljs-comment">// hợp lệ nhưng nguy hiểm: q[0] = &#x27;H&#x27;; là UB (thường crash)</span>
 </code></pre>
 <p><strong>Khác biệt quan trọng:</strong> <code>char a[] = &quot;hello&quot;</code> tạo <strong>bản sao</strong> trong mảng của bạn; còn <code>const char *p = &quot;hello&quot;</code> chỉ trỏ tới hằng chuỗi có sẵn trong chương trình. Luôn dùng <code>const char *</code> khi trỏ tới literal.</p>
-<h3>Duyệt chuỗi</h3>
+<h3 id="h-9">Duyệt chuỗi</h3>
 <pre class="hljs"><code><span class="hljs-comment">// Tự cài đặt strlen</span>
 <span class="hljs-type">size_t</span> <span class="hljs-title function_">my_strlen</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *s)</span> {
     <span class="hljs-type">size_t</span> n = <span class="hljs-number">0</span>;
@@ -235,7 +238,7 @@ a[<span class="hljs-number">5</span>] = <span class="hljs-number">1</span>;     
     <span class="hljs-keyword">return</span> c;
 }
 </code></pre>
-<h3>Nhập chuỗi an toàn</h3>
+<h3 id="h-10">Nhập chuỗi an toàn</h3>
 <pre class="hljs"><code><span class="hljs-type">char</span> line[<span class="hljs-number">100</span>];
 <span class="hljs-keyword">if</span> (fgets(line, <span class="hljs-keyword">sizeof</span> line, <span class="hljs-built_in">stdin</span>) != <span class="hljs-literal">NULL</span>) {
     line[<span class="hljs-built_in">strcspn</span>(line, <span class="hljs-string">&quot;\n&quot;</span>)] = <span class="hljs-string">&#x27;\0&#x27;</span>;    <span class="hljs-comment">// xóa &#x27;\n&#x27; (nếu có): strcspn trả về vị trí của &#x27;\n&#x27; hoặc chiều dài chuỗi</span>
@@ -243,8 +246,8 @@ a[<span class="hljs-number">5</span>] = <span class="hljs-number">1</span>;     
 </code></pre>
 <p><code>fgets</code> đọc tối đa <code>sizeof line - 1</code> ký tự và luôn thêm <code>'\0'</code>. Nếu dòng nhập dài hơn bộ đệm, phần còn lại <strong>ở lại</strong> trong stdin cho lần đọc sau — hãy kiểm tra xem ký tự <code>\n</code> có trong <code>line</code> không để biết dòng có bị cắt.</p>
 <p><strong>Tuyệt đối không dùng <code>gets</code></strong> (đã bị xóa khỏi C11 vì không thể dùng an toàn). Với <code>scanf(&quot;%s&quot;, ...)</code> phải luôn có giới hạn độ rộng (<code>%99s</code>).</p>
-<h2>7.5. Thư viện <code>&lt;string.h&gt;</code></h2>
-<h3>Độ dài và so sánh</h3>
+<h2 id="s7-5">7.5. Thư viện <code>&lt;string.h&gt;</code></h2>
+<h3 id="h-11">Độ dài và so sánh</h3>
 <pre class="hljs"><code><span class="hljs-type">size_t</span> <span class="hljs-title function_">strlen</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *s)</span>;                       <span class="hljs-comment">// độ dài (không tính &#x27;\0&#x27;)</span>
 <span class="hljs-type">int</span>    <span class="hljs-title function_">strcmp</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *a, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *b)</span>;        <span class="hljs-comment">// &lt;0, 0, &gt;0 theo thứ tự từ điển</span>
 <span class="hljs-type">int</span>    <span class="hljs-title function_">strncmp</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *a, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *b, <span class="hljs-type">size_t</span> n)</span>;   <span class="hljs-comment">// so sánh tối đa n ký tự</span>
@@ -254,7 +257,7 @@ a[<span class="hljs-number">5</span>] = <span class="hljs-number">1</span>;     
 <span class="hljs-keyword">if</span> (a == b)            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;cung dia chi\n&quot;</span>);      <span class="hljs-comment">// FALSE: hai mảng khác nhau</span>
 <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strcmp</span>(a, b) == <span class="hljs-number">0</span>) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;noi dung giong nhau\n&quot;</span>); <span class="hljs-comment">// TRUE</span>
 </code></pre>
-<h3>Sao chép và nối: nguy hiểm</h3>
+<h3 id="h-12">Sao chép và nối: nguy hiểm</h3>
 <pre class="hljs"><code><span class="hljs-type">char</span> *<span class="hljs-title function_">strcpy</span><span class="hljs-params">(<span class="hljs-type">char</span> *dst, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *src)</span>;          <span class="hljs-comment">// KHÔNG kiểm tra kích thước dst</span>
 <span class="hljs-type">char</span> *<span class="hljs-title function_">strcat</span><span class="hljs-params">(<span class="hljs-type">char</span> *dst, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *src)</span>;          <span class="hljs-comment">// KHÔNG kiểm tra kích thước dst</span>
 </code></pre>
@@ -281,7 +284,7 @@ a[<span class="hljs-number">5</span>] = <span class="hljs-number">1</span>;     
 }
 </code></pre>
 <p>Một số hệ thống (BSD, macOS, glibc ≥ 2.38) có <code>strlcpy</code>/<code>strlcat</code> an toàn hơn, nhưng chưa thuộc chuẩn C11.</p>
-<h3>Tìm kiếm</h3>
+<h3 id="h-13">Tìm kiếm</h3>
 <pre class="hljs"><code><span class="hljs-type">char</span> *<span class="hljs-title function_">strchr</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *s, <span class="hljs-type">int</span> c)</span>;       <span class="hljs-comment">// vị trí đầu tiên của ký tự c, hoặc NULL</span>
 <span class="hljs-type">char</span> *<span class="hljs-title function_">strrchr</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *s, <span class="hljs-type">int</span> c)</span>;      <span class="hljs-comment">// vị trí cuối cùng</span>
 <span class="hljs-type">char</span> *<span class="hljs-title function_">strstr</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *hay, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *needle)</span>;  <span class="hljs-comment">// vị trí chuỗi con đầu tiên, hoặc NULL</span>
@@ -295,27 +298,27 @@ a[<span class="hljs-number">5</span>] = <span class="hljs-number">1</span>;     
     <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;mien: %s\n&quot;</span>, at + <span class="hljs-number">1</span>);              <span class="hljs-comment">// &quot;example.com&quot;</span>
 }
 </code></pre>
-<h3>Tách chuỗi: <code>strtok</code></h3>
+<h3 id="h-14">Tách chuỗi: <code>strtok</code></h3>
 <pre class="hljs"><code><span class="hljs-type">char</span> line[] = <span class="hljs-string">&quot;an,binh,cuong&quot;</span>;        <span class="hljs-comment">// phải là mảng sửa được (strtok GHI &#x27;\0&#x27; vào chuỗi)</span>
 <span class="hljs-keyword">for</span> (<span class="hljs-type">char</span> *tok = strtok(line, <span class="hljs-string">&quot;,&quot;</span>); tok != <span class="hljs-literal">NULL</span>; tok = strtok(<span class="hljs-literal">NULL</span>, <span class="hljs-string">&quot;,&quot;</span>)) {
     <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;[%s]\n&quot;</span>, tok);
 }
 </code></pre>
 <p>Cảnh báo về <code>strtok</code>: nó <strong>sửa chuỗi gốc</strong>, dùng <strong>trạng thái tĩnh nội bộ</strong> (không an toàn với đa luồng, không lồng nhau được), và coi nhiều dấu phân cách liên tiếp như một. Phiên bản an toàn luồng: <code>strtok_r</code> (POSIX) / <code>strtok_s</code> (Windows).</p>
-<h3>Chuyển chuỗi ↔ số</h3>
+<h3 id="h-15">Chuyển chuỗi ↔ số</h3>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
 <span class="hljs-type">long</span>   <span class="hljs-title function_">strtol</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *s, <span class="hljs-type">char</span> **end, <span class="hljs-type">int</span> base)</span>;
 <span class="hljs-type">double</span> <span class="hljs-title function_">strtod</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *s, <span class="hljs-type">char</span> **end)</span>;
 </code></pre>
 <p>Dùng chúng thay cho <code>atoi</code>/<code>atof</code> (không báo lỗi). Xem <code>read_int</code> ở chương 4. Đổi số sang chuỗi: <code>snprintf(buf, sizeof buf, &quot;%d&quot;, n)</code>.</p>
-<h3>Bộ nhớ thô: <code>&lt;string.h&gt;</code> cũng có</h3>
+<h3 id="h-16">Bộ nhớ thô: <code>&lt;string.h&gt;</code> cũng có</h3>
 <pre class="hljs"><code><span class="hljs-type">void</span> *<span class="hljs-title function_">memcpy</span><span class="hljs-params">(<span class="hljs-type">void</span> *dst, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *src, <span class="hljs-type">size_t</span> n)</span>;    <span class="hljs-comment">// sao chép n byte, KHÔNG được chồng lấn</span>
 <span class="hljs-type">void</span> *<span class="hljs-title function_">memmove</span><span class="hljs-params">(<span class="hljs-type">void</span> *dst, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *src, <span class="hljs-type">size_t</span> n)</span>;   <span class="hljs-comment">// như memcpy nhưng cho phép chồng lấn</span>
 <span class="hljs-type">void</span> *<span class="hljs-title function_">memset</span><span class="hljs-params">(<span class="hljs-type">void</span> *p, <span class="hljs-type">int</span> byte, <span class="hljs-type">size_t</span> n)</span>;             <span class="hljs-comment">// gán n byte bằng giá trị byte</span>
 <span class="hljs-type">int</span>   <span class="hljs-title function_">memcmp</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">void</span> *a, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *b, <span class="hljs-type">size_t</span> n)</span>;
 </code></pre>
 <p><code>memset(arr, 0, sizeof arr)</code> xóa mảng; nhưng đừng dùng <code>memset</code> cho giá trị khác 0 với mảng <code>int</code> (nó gán theo từng byte).</p>
-<h2>7.6. Tràn bộ đệm — chi tiết</h2>
+<h2 id="s7-6">7.6. Tràn bộ đệm — chi tiết</h2>
 <p><strong>Tràn bộ đệm (buffer overflow)</strong> xảy ra khi ghi nhiều dữ liệu hơn kích thước vùng nhớ đã cấp. Đây là nguyên nhân của một phần rất lớn các lỗ hổng bảo mật lịch sử (ví dụ sâu Morris 1988 dùng <code>gets</code>).</p>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
@@ -331,7 +334,7 @@ a[<span class="hljs-number">5</span>] = <span class="hljs-number">1</span>;     
 }
 </code></pre>
 <p>Nếu người dùng nhập chuỗi dài, các byte thừa có thể ghi đè <code>is_admin</code> (tùy cách compiler sắp xếp biến) hoặc đè lên địa chỉ trở về của hàm để chiếm quyền điều khiển chương trình.</p>
-<h3>Phòng tránh — danh sách kiểm tra</h3>
+<h3 id="h-17">Phòng tránh — danh sách kiểm tra</h3>
 <ol>
 <li>Luôn biết <strong>kích thước đích</strong> và truyền nó (<code>sizeof buf</code>).</li>
 <li>Dùng <code>fgets</code>, <code>snprintf</code>, <code>strncmp</code>, <code>memcpy</code> với độ dài đã kiểm tra; tránh <code>gets</code>, <code>strcpy</code>, <code>strcat</code>, <code>sprintf</code>.</li>
@@ -339,7 +342,7 @@ a[<span class="hljs-number">5</span>] = <span class="hljs-number">1</span>;     
 <li>Bật cảnh báo: <code>-Wall -Wextra -Wformat-security -D_FORTIFY_SOURCE=2 -O2</code> và bảo vệ stack <code>-fstack-protector-strong</code>.</li>
 <li>Dùng sanitizer khi phát triển và kiểm thử: <code>-fsanitize=address</code>.</li>
 </ol>
-<h2>7.7. Chuỗi và Unicode (UTF-8)</h2>
+<h2 id="s7-7">7.7. Chuỗi và Unicode (UTF-8)</h2>
 <p>Nếu chương trình đọc tiếng Việt (UTF-8):</p>
 <ul>
 <li>Mỗi ký tự ASCII chiếm 1 byte; chữ có dấu chiếm 2–3 byte; emoji 4 byte.</li>
@@ -358,7 +361,7 @@ a[<span class="hljs-number">5</span>] = <span class="hljs-number">1</span>;     
 <span class="hljs-comment">// utf8_length(&quot;Việt&quot;) = 4</span>
 </code></pre>
 <p>Với xử lý văn bản Unicode nghiêm túc (chuẩn hóa, so sánh, hiển thị độ rộng), hãy dùng thư viện như ICU hoặc utf8proc.</p>
-<h2>7.8. Ví dụ hoàn chỉnh: đếm từ và tần suất chữ cái</h2>
+<h2 id="s7-8">7.8. Ví dụ hoàn chỉnh: đếm từ và tần suất chữ cái</h2>
 <pre class="hljs"><code><span class="hljs-comment">// text_stats.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;ctype.h&gt;</span></span>
@@ -395,7 +398,7 @@ a[<span class="hljs-number">5</span>] = <span class="hljs-number">1</span>;     
 </code></pre>
 <p>Chạy: <code>echo &quot;hello world hello&quot; | ./text_stats</code>.</p>
 <p>Kỹ thuật <code>freq[tolower(c) - 'a']</code> dùng ký tự làm <strong>chỉ số mảng</strong> (nhờ mã ký tự là số) là mẹo đếm tần suất rất phổ biến. Vì <code>isalpha</code> chỉ nhận ký tự ASCII trong locale &quot;C&quot;, chỉ số luôn nằm trong <code>0..25</code>.</p>
-<h2>7.9. Tóm tắt</h2>
+<h2 id="s7-9">7.9. Tóm tắt</h2>
 <ul>
 <li>Mảng là dãy phần tử cùng kiểu, liền kề, chỉ số từ 0; <strong>C không kiểm tra giới hạn</strong>.</li>
 <li>Truyền mảng cho hàm thực chất truyền con trỏ; luôn truyền thêm kích thước; <code>sizeof</code> của tham số mảng là kích thước con trỏ.</li>
@@ -404,7 +407,7 @@ a[<span class="hljs-number">5</span>] = <span class="hljs-number">1</span>;     
 <li>Không dùng <code>gets</code>; hạn chế <code>strcpy</code>, <code>strcat</code>, <code>sprintf</code>; dùng sanitizer để bắt tràn bộ đệm.</li>
 <li><code>strlen</code> đếm byte, không đếm ký tự Unicode.</li>
 </ul>
-<h2>7.10. Bài tập</h2>
+<h2 id="s7-10">7.10. Bài tập</h2>
 <ol>
 <li>Viết hàm tính trung bình, tìm max/min và đếm số phần tử lớn hơn trung bình của một mảng số thực.</li>
 <li>Viết hàm xoay mảng sang trái <code>k</code> vị trí (gợi ý: đảo ba lần).</li>
@@ -420,8 +423,26 @@ a[<span class="hljs-number">5</span>] = <span class="hljs-number">1</span>;     
 <p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-07">code/chapter-07</a></p>
 
 </article>
-<div class="chapter-nav"><a class="nav-prev" href="chapter-06.html">&larr; Hàm & phạm vi biến (Functions & Scope)</a><a class="nav-next" href="chapter-08.html">Con trỏ chi tiết (Pointers Deep Dive) &rarr;</a></div>
+<nav class="chapter-nav" aria-label="Điều hướng chương"><a class="nav-prev" href="chapter-06.html"><small>← Trước</small>Hàm &amp; phạm vi biến (Functions &amp; Scope)</a><a class="nav-next" href="chapter-08.html"><small>Tiếp →</small>Con trỏ chi tiết (Pointers Deep Dive)</a></nav>
 </main>
 </div>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,store=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
+  function setTheme(t){if(t==='light')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);store('theme',t);
+    document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.setAttribute('aria-pressed',String((b.dataset.themeBtn===t)||(t==='light'&&b.dataset.themeBtn==='light')))})}
+  var cur=root.getAttribute('data-theme')||'light';setTheme(cur);
+  document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.addEventListener('click',function(){setTheme(b.dataset.themeBtn)})});
+  var fs=parseInt(getComputedStyle(root).getPropertyValue('--fs'))||19;
+  document.querySelectorAll('[data-fs]').forEach(function(b){b.addEventListener('click',function(){fs=Math.min(26,Math.max(14,fs+parseInt(b.dataset.fs)));root.style.setProperty('--fs',fs+'px');store('fs',fs)})});
+  var mb=document.getElementById('menu-btn');if(mb)mb.addEventListener('click',function(){document.body.classList.toggle('nav-open')});
+  document.addEventListener('click',function(e){if(document.body.classList.contains('nav-open')&&!e.target.closest('#sidebar')&&e.target.id!=='menu-btn')document.body.classList.remove('nav-open')});
+  document.querySelectorAll('pre').forEach(function(pre){var b=document.createElement('button');b.className='copy-btn';b.type='button';b.textContent='Sao chép';
+    b.addEventListener('click',function(){var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Đã chép'},function(){b.textContent='Lỗi'});setTimeout(function(){b.textContent='Sao chép'},1500)});pre.appendChild(b)});
+  var a=document.querySelector('.chapter-link.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'center'});
+})();
+</script>
 </body>
 </html>

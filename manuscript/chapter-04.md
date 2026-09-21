@@ -367,6 +367,7 @@ while ((c = getchar()) != '\n' && c != EOF) { }   // bỏ qua đến hết dòng
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <string.h>
 #include <limits.h>
 
 // Đọc một số nguyên từ stdin. Trả về 0 nếu thành công, -1 nếu lỗi.
@@ -378,7 +379,7 @@ int read_int(const char *prompt, int *out) {
     char *end;
     errno = 0;
     long v = strtol(buf, &end, 10);          // đổi chuỗi thành số, cơ số 10
-    if (end == buf) return -1;               // không có chữ số nào
+    if (end == buf || strpbrk(buf, "0123456789") == NULL) return -1;   // không có chữ số nào
     if (*end != '\n' && *end != '\0') return -1;   // còn ký tự lạ phía sau
     if (errno == ERANGE || v < INT_MIN || v > INT_MAX) return -1;   // ngoài phạm vi int
 
@@ -397,7 +398,7 @@ int main(void) {
 }
 ```
 
-`strtol(s, &end, base)` đổi chuỗi thành `long`, và đặt `end` tại ký tự đầu tiên không chuyển được — nhờ đó bạn phát hiện được đầu vào sai như `"12abc"`. Sẽ dùng lại `read_int` ở nhiều chương sau.
+`strtol(s, &end, base)` đổi chuỗi thành `long`, và đặt `end` tại ký tự đầu tiên không chuyển được — nhờ đó bạn phát hiện được đầu vào sai như `"12abc"`. Ở dòng kiểm tra `end == buf` ta thêm `strpbrk(buf, "0123456789") == NULL` vì hành vi khi **không có chữ số nào** khác nhau giữa các thư viện C: glibc đặt `end` bằng đầu chuỗi, còn musl (Alpine Linux) đặt `end` sau phần khoảng trắng đã bỏ qua, nên một dòng chỉ có dấu cách sẽ lọt qua kiểm tra nếu chỉ dựa vào `end == buf`. Sẽ dùng lại `read_int` ở nhiều chương sau.
 
 ## 4.8. Hàm — cái nhìn đầu tiên
 
@@ -454,7 +455,7 @@ Bộ tiền xử lý chạy trước compiler và làm việc trên **văn bản
 Nếu một header bị `#include` hai lần trong cùng một file `.c` (trực tiếp hoặc gián tiếp), các định nghĩa bị lặp và gây lỗi. **Include guard** ngăn điều đó:
 
 ```c
-// math_utils.h
+/* ví dụ include guard */
 #ifndef MATH_UTILS_H
 #define MATH_UTILS_H
 
@@ -516,6 +517,7 @@ project/
 `include/math_utils.h`:
 
 ```c
+// include/math_utils.h
 #ifndef MATH_UTILS_H
 #define MATH_UTILS_H
 
@@ -528,6 +530,7 @@ int square(int x);
 `src/math_utils.c`:
 
 ```c
+// src/math_utils.c
 #include "math_utils.h"
 
 int add(int a, int b)   { return a + b; }
@@ -537,6 +540,7 @@ int square(int x)       { return x * x; }
 `src/main.c`:
 
 ```c
+// src/main.c
 #include <stdio.h>
 #include "math_utils.h"
 

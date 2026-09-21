@@ -369,7 +369,7 @@ Cách đọc báo cáo ASan (chương 9): loại lỗi, dòng gây lỗi, dòng 
 **libFuzzer** (clang) — bạn viết một hàm nhận mảng byte:
 
 ```c
-// fuzz_parse.c
+/* fuzz_parse.c (mẫu cho libFuzzer; cần parser.h của bạn) */
 #include <stddef.h>
 #include <stdint.h>
 #include "parser.h"          // hàm cần thử: parse_config(const char *data, size_t len)

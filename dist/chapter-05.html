@@ -4,15 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Điều khiển luồng (Control Flow) — Lập trình C — Từ cơ bản đến nâng cao</title>
+<script>try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.setAttribute('data-theme',t);var f=localStorage.getItem('fs');if(f)document.documentElement.style.setProperty('--fs',f+'px')}catch(e){}</script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="layout">
-<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link active" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<nav class="sidebar" id="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Phần I — Nhập môn</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp &amp; cấu trúc chương trình C</a></li></ul></li><li class="part"><div class="part-title">Phần II — Nền tảng ngôn ngữ</div><ul class="chapter-list"><li><a class="chapter-link active" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm &amp; phạm vi biến (Functions &amp; Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng &amp; chuỗi (Arrays &amp; Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li></ul></li><li class="part"><div class="part-title">Phần III — Bộ nhớ, dữ liệu, xây dựng</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O &amp; thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi &amp; ngoại lệ trong C</a></li></ul></li><li class="part"><div class="part-title">Phần IV — Kỹ thuật nâng cao</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý &amp; macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng &amp; đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa &amp; profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật &amp; an toàn bộ nhớ</a></li></ul></li><li class="part"><div class="part-title">Phần V — Dự án và phát hành</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing &amp; CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging &amp; deploy</a></li></ul></li><li class="part"><div class="part-title">Phụ lục — Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li><li><a class="chapter-link" href="solutions-02.html">Lời giải chương 2</a></li><li><a class="chapter-link" href="solutions-03.html">Lời giải chương 3</a></li><li><a class="chapter-link" href="solutions-04.html">Lời giải chương 4</a></li><li><a class="chapter-link" href="solutions-05.html">Lời giải chương 5</a></li><li><a class="chapter-link" href="solutions-06.html">Lời giải chương 6</a></li><li><a class="chapter-link" href="solutions-07.html">Lời giải chương 7</a></li><li><a class="chapter-link" href="solutions-08.html">Lời giải chương 8</a></li><li><a class="chapter-link" href="solutions-09.html">Lời giải chương 9</a></li><li><a class="chapter-link" href="solutions-10.html">Lời giải chương 10</a></li><li><a class="chapter-link" href="solutions-11.html">Lời giải chương 11</a></li><li><a class="chapter-link" href="solutions-12.html">Lời giải chương 12</a></li><li><a class="chapter-link" href="solutions-13.html">Lời giải chương 13</a></li><li><a class="chapter-link" href="solutions-14.html">Lời giải chương 14</a></li><li><a class="chapter-link" href="solutions-15.html">Lời giải chương 15</a></li><li><a class="chapter-link" href="solutions-16.html">Lời giải chương 16</a></li><li><a class="chapter-link" href="solutions-17.html">Lời giải chương 17</a></li><li><a class="chapter-link" href="solutions-18.html">Lời giải chương 18</a></li><li><a class="chapter-link" href="solutions-19.html">Lời giải chương 19</a></li><li><a class="chapter-link" href="solutions-20.html">Lời giải chương 20</a></li><li><a class="chapter-link" href="solutions-21.html">Lời giải chương 21</a></li><li><a class="chapter-link" href="solutions-22.html">Lời giải chương 22</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<div class="main-col">
+<header class="topbar"><button class="menu-btn" id="menu-btn" type="button" aria-label="Mục lục">☰</button><span class="crumb">Phần II · Chương 5</span><span class="tools"><button data-fs="-1" type="button" title="Chữ nhỏ hơn">A−</button><button data-fs="1" type="button" title="Chữ lớn hơn">A+</button><button data-theme-btn="light" type="button" title="Nền sáng">Sáng</button><button data-theme-btn="sepia" type="button" title="Nền sepia">Sepia</button><button data-theme-btn="dark" type="button" title="Nền tối">Tối</button></span></header>
 <main class="content">
 <article>
-<h1>Chương 5 — Điều khiển luồng (Control Flow)</h1>
-<h2>Mục tiêu chương</h2>
+<header class="chapter-head"><div class="chapter-num">Chương 5</div><h1>Điều khiển luồng (Control Flow)</h1></header><nav class="chapter-toc" aria-label="Trong chương này"><div class="toc-title">Trong chương này</div><ol><li><a href="#s5-1">5.1. Luồng thực thi là gì?</a></li><li><a href="#s5-2">5.2. Câu lệnh if / else</a></li><li><a href="#s5-3">5.3. Câu lệnh switch</a></li><li><a href="#s5-4">5.4. Vòng lặp while</a></li><li><a href="#s5-5">5.5. Vòng lặp do-while</a></li><li><a href="#s5-6">5.6. Vòng lặp for</a></li><li><a href="#s5-7">5.7. break, continue và goto</a></li><li><a href="#s5-8">5.8. Vòng lặp vô hạn và cách tránh</a></li><li><a href="#s5-9">5.9. Đọc đến hết đầu vào</a></li><li><a href="#s5-10">5.10. Ví dụ thực hành đầy đủ</a></li><li><a href="#s5-11">5.11. Tóm tắt</a></li><li><a href="#s5-12">5.12. Bài tập</a></li></ol></nav>
+<h2 id="h-1">Mục tiêu chương</h2>
 <ul>
 <li>Hiểu <strong>luồng thực thi</strong> của chương trình và vì sao cần cấu trúc điều khiển.</li>
 <li>Dùng thành thạo <code>if / else if / else</code>, <code>switch</code>, <code>for</code>, <code>while</code>, <code>do-while</code>.</li>
@@ -20,7 +23,7 @@
 <li>Nhận diện và tránh lỗi kinh điển: vòng lặp vô hạn, lỗi lệch một (<em>off-by-one</em>), <code>switch</code> thiếu <code>break</code>, <code>unsigned</code> trong điều kiện lặp.</li>
 <li>Áp dụng vào bài toán thực tế: kiểm tra số nguyên tố, bảng cửu chương, menu tương tác, đọc đến hết đầu vào.</li>
 </ul>
-<h2>5.1. Luồng thực thi là gì?</h2>
+<h2 id="s5-1">5.1. Luồng thực thi là gì?</h2>
 <p>Mặc định, chương trình chạy <strong>tuần tự</strong> từ trên xuống dưới. Cấu trúc điều khiển cho phép:</p>
 <ul>
 <li><strong>Rẽ nhánh (selection):</strong> làm việc này <em>hoặc</em> việc kia tùy điều kiện — <code>if</code>, <code>switch</code>.</li>
@@ -33,7 +36,7 @@
                │sai                        ▼
                └──────────► [làm B] ──► tiếp tục
 </code></pre>
-<h3>&quot;Đúng&quot; và &quot;sai&quot; trong C</h3>
+<h3 id="h-2">&quot;Đúng&quot; và &quot;sai&quot; trong C</h3>
 <p>C (trước C23) không có kiểu boolean nguyên thủy trong điều kiện: <strong>giá trị <code>0</code> là sai, mọi giá trị khác 0 là đúng.</strong> Các toán tử so sánh và logic trả về <code>1</code> hoặc <code>0</code>.</p>
 <pre class="hljs"><code><span class="hljs-keyword">if</span> (<span class="hljs-number">5</span>)       { <span class="hljs-comment">/* luôn chạy */</span> }
 <span class="hljs-keyword">if</span> (<span class="hljs-number">0</span>)       { <span class="hljs-comment">/* không bao giờ chạy */</span> }
@@ -42,8 +45,8 @@
 <span class="hljs-keyword">if</span> (p)       { <span class="hljs-comment">/* không chạy: NULL bằng 0 */</span> }
 <span class="hljs-keyword">if</span> (!p)      { <span class="hljs-comment">/* chạy: p là NULL */</span> }
 </code></pre>
-<h2>5.2. Câu lệnh <code>if</code> / <code>else</code></h2>
-<h3>Cú pháp</h3>
+<h2 id="s5-2">5.2. Câu lệnh <code>if</code> / <code>else</code></h2>
+<h3 id="h-3">Cú pháp</h3>
 <pre class="hljs"><code><span class="hljs-keyword">if</span> (điều_kiện) {
     <span class="hljs-comment">// chạy khi điều kiện đúng</span>
 } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (điều_kiện_khác) {
@@ -53,7 +56,7 @@
 }
 </code></pre>
 <p>Các điều kiện được xét <strong>từ trên xuống</strong>, nhánh đầu tiên đúng sẽ chạy và những nhánh còn lại bị bỏ qua.</p>
-<h3>Ví dụ: phân loại số</h3>
+<h3 id="h-4">Ví dụ: phân loại số</h3>
 <pre class="hljs"><code><span class="hljs-comment">// classify.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 
@@ -77,7 +80,7 @@
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </code></pre>
-<h3>Luôn dùng dấu ngoặc nhọn</h3>
+<h3 id="h-5">Luôn dùng dấu ngoặc nhọn</h3>
 <p>C cho phép bỏ <code>{ }</code> khi chỉ có một câu lệnh, nhưng điều này rất dễ gây lỗi khi sửa mã:</p>
 <pre class="hljs"><code><span class="hljs-keyword">if</span> (x &gt; <span class="hljs-number">0</span>)
     <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;duong\n&quot;</span>);
@@ -91,7 +94,7 @@
     <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;a khong duong\n&quot;</span>);
 </code></pre>
 <p>Nếu luôn dùng <code>{ }</code>, cả hai vấn đề này không xảy ra. Đó là quy tắc bắt buộc trong nhiều chuẩn mã hóa (MISRA, CERT C).</p>
-<h3>Điều kiện phức hợp và đánh giá tắt</h3>
+<h3 id="h-6">Điều kiện phức hợp và đánh giá tắt</h3>
 <pre class="hljs"><code><span class="hljs-keyword">if</span> (age &gt;= <span class="hljs-number">18</span> &amp;&amp; age &lt;= <span class="hljs-number">65</span>) { ... }            <span class="hljs-comment">// trong khoảng 18..65</span>
 <span class="hljs-keyword">if</span> (c == <span class="hljs-string">&#x27;y&#x27;</span> || c == <span class="hljs-string">&#x27;Y&#x27;</span>) { ... }               <span class="hljs-comment">// một trong hai</span>
 <span class="hljs-keyword">if</span> (!(x &gt; <span class="hljs-number">0</span>)) { ... }                           <span class="hljs-comment">// tương đương x &lt;= 0</span>
@@ -100,14 +103,14 @@
 <pre class="hljs"><code><span class="hljs-keyword">if</span> (i &lt; n &amp;&amp; arr[i] == target) { ... }   <span class="hljs-comment">// đúng: chỉ đọc arr[i] khi i hợp lệ</span>
 <span class="hljs-keyword">if</span> (arr[i] == target &amp;&amp; i &lt; n) { ... }   <span class="hljs-comment">// SAI: có thể đọc ngoài mảng trước khi kiểm tra i</span>
 </code></pre>
-<h3>Các lỗi thường gặp với <code>if</code></h3>
+<h3 id="h-7">Các lỗi thường gặp với <code>if</code></h3>
 <pre class="hljs"><code><span class="hljs-keyword">if</span> (x = <span class="hljs-number">5</span>)          <span class="hljs-comment">// gán thay vì so sánh; luôn đúng vì 5 khác 0</span>
 <span class="hljs-keyword">if</span> (x == <span class="hljs-number">5</span>);        <span class="hljs-comment">// dấu ; thừa: thân if rỗng</span>
 { <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;...&quot;</span>); }  <span class="hljs-comment">// khối này luôn chạy</span>
 <span class="hljs-keyword">if</span> (<span class="hljs-number">0</span> &lt; x &lt; <span class="hljs-number">10</span>)     <span class="hljs-comment">// KHÔNG như toán học: (0 &lt; x) cho 0 hoặc 1, rồi so sánh với 10 -&gt; luôn đúng</span>
 <span class="hljs-keyword">if</span> (<span class="hljs-number">0</span> &lt; x &amp;&amp; x &lt; <span class="hljs-number">10</span>) <span class="hljs-comment">// đúng</span>
 </code></pre>
-<h3>Cách viết <code>if</code> lồng nhau gọn hơn</h3>
+<h3 id="h-8">Cách viết <code>if</code> lồng nhau gọn hơn</h3>
 <p>Thay vì lồng sâu, dùng <strong>thoát sớm (early return / guard clause)</strong>:</p>
 <pre class="hljs"><code><span class="hljs-comment">// Lồng sâu: khó đọc</span>
 <span class="hljs-type">int</span> <span class="hljs-title function_">process</span><span class="hljs-params">(FILE *f, <span class="hljs-type">char</span> *buf)</span> {
@@ -131,7 +134,7 @@
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </code></pre>
-<h2>5.3. Câu lệnh <code>switch</code></h2>
+<h2 id="s5-3">5.3. Câu lệnh <code>switch</code></h2>
 <p><code>switch</code> chọn một trong nhiều nhánh dựa trên giá trị <strong>nguyên</strong> (kể cả <code>char</code>, <code>enum</code>) của một biểu thức.</p>
 <pre class="hljs"><code><span class="hljs-keyword">switch</span> (biểu_thức) {
     <span class="hljs-keyword">case</span> giá_trị_1:
@@ -152,7 +155,7 @@
 <li>Không có hai <code>case</code> trùng giá trị.</li>
 <li><code>default</code> là tùy chọn, nhưng nên có để xử lý giá trị bất ngờ.</li>
 </ul>
-<h3>Fall-through (rơi xuyên)</h3>
+<h3 id="h-9">Fall-through (rơi xuyên)</h3>
 <p>Khi chương trình vào một <code>case</code>, nó chạy <strong>tiếp qua các case bên dưới</strong> cho đến khi gặp <code>break</code> (hoặc <code>return</code>, hoặc hết <code>switch</code>). Đây là hành vi <em>mặc định</em> của C.</p>
 <pre class="hljs"><code><span class="hljs-type">int</span> n = <span class="hljs-number">2</span>;
 <span class="hljs-keyword">switch</span> (n) {
@@ -182,7 +185,7 @@
 }
 </code></pre>
 <p>Ghi chú: nếu cần khai báo biến bên trong một <code>case</code>, hãy bọc nhánh đó trong <code>{ }</code> như <code>case 2</code> ở trên (nhãn <code>case</code> không thể đứng ngay trước một khai báo và biến sẽ &quot;tràn&quot; sang các case sau).</p>
-<h3><code>switch</code> với <code>enum</code></h3>
+<h3 id="h-10"><code>switch</code> với <code>enum</code></h3>
 <pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">Color</span> {</span> RED, GREEN, BLUE };
 
 <span class="hljs-type">const</span> <span class="hljs-type">char</span> *<span class="hljs-title function_">color_name</span><span class="hljs-params">(<span class="hljs-keyword">enum</span> Color c)</span> {
@@ -195,12 +198,12 @@
 }
 </code></pre>
 <p>Nếu bạn liệt kê <strong>không đủ</strong> các giá trị <code>enum</code> và <strong>không</strong> có <code>default</code>, gcc với <code>-Wall</code> cảnh báo <code>-Wswitch</code> — rất hữu ích khi sau này bạn thêm một giá trị <code>enum</code> mới.</p>
-<h3>Khi nào dùng <code>switch</code>, khi nào dùng <code>if-else</code>?</h3>
+<h3 id="h-11">Khi nào dùng <code>switch</code>, khi nào dùng <code>if-else</code>?</h3>
 <ul>
 <li>Dùng <code>switch</code> khi so sánh <strong>một biểu thức nguyên</strong> với <strong>nhiều hằng cụ thể</strong> (menu, mã lệnh, trạng thái).</li>
 <li>Dùng <code>if-else</code> khi điều kiện là khoảng (<code>x &gt; 10</code>), so sánh chuỗi, hoặc điều kiện phức hợp.</li>
 </ul>
-<h2>5.4. Vòng lặp <code>while</code></h2>
+<h2 id="s5-4">5.4. Vòng lặp <code>while</code></h2>
 <pre class="hljs"><code><span class="hljs-keyword">while</span> (điều_kiện) {
     <span class="hljs-comment">// thân vòng lặp</span>
 }
@@ -218,7 +221,7 @@
 <span class="hljs-comment">// digit_sum(1234) = 4 + 3 + 2 + 1 = 10</span>
 </code></pre>
 <p>Theo dõi từng bước với <code>n = 1234</code>:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Lần lặp</th>
@@ -258,9 +261,9 @@
 <td>0</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><code>n</code> bằng 0 nên điều kiện <code>n &gt; 0</code> sai và vòng lặp dừng. <strong>Kỹ thuật &quot;chạy tay&quot; (trace)</strong> như bảng trên là cách tốt nhất để hiểu và kiểm tra vòng lặp — hãy làm nó mỗi khi bạn viết một vòng lặp mới.</p>
-<h3>Vòng lặp theo điều kiện chưa biết trước số lần</h3>
+<h3 id="h-12">Vòng lặp theo điều kiện chưa biết trước số lần</h3>
 <pre class="hljs"><code><span class="hljs-comment">// Thuật toán Euclid: ước chung lớn nhất</span>
 <span class="hljs-type">int</span> <span class="hljs-title function_">gcd</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span> {
     <span class="hljs-keyword">while</span> (b != <span class="hljs-number">0</span>) {
@@ -271,7 +274,7 @@
     <span class="hljs-keyword">return</span> a;
 }
 </code></pre>
-<h2>5.5. Vòng lặp <code>do-while</code></h2>
+<h2 id="s5-5">5.5. Vòng lặp <code>do-while</code></h2>
 <pre class="hljs"><code><span class="hljs-keyword">do</span> {
     <span class="hljs-comment">// thân vòng lặp</span>
 } <span class="hljs-keyword">while</span> (điều_kiện);      <span class="hljs-comment">// chú ý dấu ; ở cuối</span>
@@ -292,7 +295,7 @@
 <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Ban da nhap %d\n&quot;</span>, n);
 </code></pre>
 <p>Đoạn xóa đầu vào ở trên <strong>rất quan trọng</strong>: nếu người dùng gõ chữ <code>abc</code>, <code>scanf</code> không đọc được và để lại <code>abc</code> trong bộ đệm; nếu không xóa, lần lặp sau <code>scanf</code> lại thất bại ngay và chương trình lặp vô hạn.</p>
-<h2>5.6. Vòng lặp <code>for</code></h2>
+<h2 id="s5-6">5.6. Vòng lặp <code>for</code></h2>
 <pre class="hljs"><code><span class="hljs-keyword">for</span> (khở<span class="hljs-type">i_t</span>ạo; điều_kiện; cập_nhật) {
     <span class="hljs-comment">// thân vòng lặp</span>
 }
@@ -311,7 +314,7 @@
 <span class="hljs-comment">// In: 0 1 2 3 4</span>
 </code></pre>
 <p><code>for</code> phù hợp khi <strong>biết trước số lần lặp</strong> (đi qua mảng, đếm). Từ C99 có thể khai báo biến trong phần khởi tạo (<code>int i = 0</code>), biến đó chỉ tồn tại trong vòng lặp.</p>
-<h3>Quy ước &quot;nửa mở&quot; và lỗi lệch một</h3>
+<h3 id="h-13">Quy ước &quot;nửa mở&quot; và lỗi lệch một</h3>
 <p>Với mảng <code>n</code> phần tử, chỉ số hợp lệ là <code>0 .. n-1</code>. Cách viết chuẩn: <code>for (i = 0; i &lt; n; i++)</code>.</p>
 <pre class="hljs"><code><span class="hljs-type">int</span> a[<span class="hljs-number">5</span>];
 <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt;= <span class="hljs-number">5</span>; i++) {   <span class="hljs-comment">// SAI: i = 5 ghi ngoài mảng (off-by-one) -&gt; UB</span>
@@ -319,7 +322,7 @@
 }
 </code></pre>
 <p>Lỗi <em>off-by-one</em> (lệch một) là một trong các lỗi phổ biến nhất. Hãy luôn tự hỏi ở lần lặp đầu và cuối, <code>i</code> bằng bao nhiêu và có truy cập ngoài giới hạn không.</p>
-<h3>Biến thể của <code>for</code></h3>
+<h3 id="h-14">Biến thể của <code>for</code></h3>
 <pre class="hljs"><code><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">10</span>; i &gt; <span class="hljs-number">0</span>; i--)         <span class="hljs-comment">// đếm ngược</span>
 <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i += <span class="hljs-number">2</span>)       <span class="hljs-comment">// bước nhảy 2</span>
 <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>, j = n - <span class="hljs-number">1</span>; i &lt; j; i++, j--) {  <span class="hljs-comment">// hai biến chạy từ hai đầu</span>
@@ -327,7 +330,7 @@
 }
 <span class="hljs-keyword">for</span> (;;) { ... }                     <span class="hljs-comment">// vòng lặp vô hạn (mọi phần đều được bỏ trống)</span>
 </code></pre>
-<h3>Vòng lặp lồng nhau</h3>
+<h3 id="h-15">Vòng lặp lồng nhau</h3>
 <pre class="hljs"><code><span class="hljs-comment">// Bảng cửu chương</span>
 <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= <span class="hljs-number">9</span>; i++) {
     <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">1</span>; j &lt;= <span class="hljs-number">10</span>; j++) {
@@ -351,8 +354,8 @@
  *******
 *********
 </code></pre>
-<h2>5.7. <code>break</code>, <code>continue</code> và <code>goto</code></h2>
-<h3><code>break</code></h3>
+<h2 id="s5-7">5.7. <code>break</code>, <code>continue</code> và <code>goto</code></h2>
+<h3 id="h-16"><code>break</code></h3>
 <p>Thoát <strong>ngay</strong> khỏi vòng lặp (hoặc <code>switch</code>) gần nhất bên trong.</p>
 <pre class="hljs"><code><span class="hljs-comment">// Tìm phần tử đầu tiên bằng target</span>
 <span class="hljs-type">int</span> index = <span class="hljs-number">-1</span>;
@@ -376,7 +379,7 @@
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </code></pre>
-<h3><code>continue</code></h3>
+<h3 id="h-17"><code>continue</code></h3>
 <p>Bỏ qua phần còn lại của lần lặp hiện tại và chuyển sang lần lặp tiếp theo (với <code>for</code>, bước <code>cập_nhật</code> vẫn chạy).</p>
 <pre class="hljs"><code><span class="hljs-comment">// In các số lẻ từ 1 đến 10</span>
 <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= <span class="hljs-number">10</span>; i++) {
@@ -391,7 +394,7 @@
     i++;
 }
 </code></pre>
-<h3><code>goto</code></h3>
+<h3 id="h-18"><code>goto</code></h3>
 <p><code>goto nhãn;</code> nhảy đến <code>nhãn:</code> trong cùng hàm. Nói chung nên <strong>tránh</strong> vì làm luồng khó theo dõi. Tuy nhiên có một trường hợp được chấp nhận rộng rãi trong C: <strong>dọn dẹp tài nguyên khi có lỗi</strong> (vì C không có ngoại lệ).</p>
 <pre class="hljs"><code><span class="hljs-type">int</span> <span class="hljs-title function_">do_work</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
     <span class="hljs-type">int</span> rc = <span class="hljs-number">-1</span>;
@@ -414,7 +417,7 @@ cleanup:
 }
 </code></pre>
 <p>Mẫu này (một điểm dọn dẹp duy nhất) sẽ xuất hiện lại ở chương 13.</p>
-<h2>5.8. Vòng lặp vô hạn và cách tránh</h2>
+<h2 id="s5-8">5.8. Vòng lặp vô hạn và cách tránh</h2>
 <p>Một vòng lặp vô hạn xảy ra khi điều kiện không bao giờ trở thành sai. Một số <strong>cố ý</strong> (server chờ kết nối, vòng lặp game):</p>
 <pre class="hljs"><code><span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>) {
     <span class="hljs-comment">// xử lý sự kiện...</span>
@@ -439,7 +442,7 @@ for (unsigned int i = 5; i &gt;= 0; i--) { ... }   // i &gt;= 0 luôn đúng: 0 
 4. <strong>So sánh số thực với <code>==</code>:</strong> <code>for (double x = 0.0; x != 1.0; x += 0.1)</code> — vì 0.1 không biểu diễn chính xác nên <code>x</code> không bao giờ đúng bằng <code>1.0</code>. Dùng biến đếm nguyên: <code>for (int k = 0; k &lt;= 10; k++) { double x = k / 10.0; ... }</code>.
 5. <strong>Đầu vào lỗi không được xử lý</strong> (xem 5.5).</p>
 <p>Để dừng chương trình đang chạy vô hạn trong terminal: nhấn <strong>Ctrl+C</strong>.</p>
-<h2>5.9. Đọc đến hết đầu vào</h2>
+<h2 id="s5-9">5.9. Đọc đến hết đầu vào</h2>
 <p>Mẫu rất thường gặp: đọc dữ liệu cho tới khi hết (EOF). Trên terminal, nhấn Ctrl+D (Linux/macOS) hoặc Ctrl+Z rồi Enter (Windows) để phát tín hiệu EOF; khi chuyển hướng file (<code>./prog &lt; data.txt</code>), EOF tự đến cuối file.</p>
 <pre class="hljs"><code><span class="hljs-comment">// sum_input.c — cộng tất cả số nguyên được nhập</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
@@ -469,8 +472,8 @@ for (unsigned int i = 5; i &gt;= 0; i--) { ... }   // i &gt;= 0 luôn đúng: 0 
     <span class="hljs-keyword">if</span> (c == <span class="hljs-string">&#x27;\n&#x27;</span>) lines++;
 }
 </code></pre>
-<h2>5.10. Ví dụ thực hành đầy đủ</h2>
-<h3>Kiểm tra số nguyên tố</h3>
+<h2 id="s5-10">5.10. Ví dụ thực hành đầy đủ</h2>
+<h3 id="h-19">Kiểm tra số nguyên tố</h3>
 <p>Ý tưởng: một số <code>n &gt; 1</code> là nguyên tố nếu không có ước nào trong khoảng <code>2 .. √n</code>. Nếu <code>n = a × b</code> với <code>a ≤ b</code> thì <code>a ≤ √n</code>, nên chỉ cần thử đến <code>√n</code>.</p>
 <pre class="hljs"><code><span class="hljs-comment">// prime_check.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
@@ -500,7 +503,7 @@ for (unsigned int i = 5; i &gt;= 0; i--) { ... }   // i &gt;= 0 luôn đúng: 0 
 }
 </code></pre>
 <p>Điều kiện <code>i * i &lt;= n</code> tránh dùng <code>sqrt</code> (tránh sai số số thực và không cần <code>-lm</code>). Với <code>n</code> rất lớn, <code>i * i</code> có thể tràn; ở mức bài tập này chấp nhận được.</p>
-<h3>Menu tương tác</h3>
+<h3 id="h-20">Menu tương tác</h3>
 <pre class="hljs"><code><span class="hljs-comment">// menu.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdbool.h&gt;</span></span>
@@ -559,7 +562,7 @@ for (unsigned int i = 5; i &gt;= 0; i--) { ... }   // i &gt;= 0 luôn đúng: 0 
 }
 </code></pre>
 <p>Lưu ý: trong <code>do-while</code>, <code>continue</code> nhảy đến phần <strong>kiểm tra điều kiện</strong> (<code>choice != 0</code>), chứ không phải đầu thân vòng lặp. Vì đặt <code>choice = -1</code> trước <code>continue</code> nên vòng lặp tiếp tục.</p>
-<h2>5.11. Tóm tắt</h2>
+<h2 id="s5-11">5.11. Tóm tắt</h2>
 <ul>
 <li><code>0</code> là sai, khác 0 là đúng. Luôn dùng <code>{ }</code> cho thân <code>if</code>/vòng lặp.</li>
 <li><code>switch</code> chỉ cho giá trị nguyên và hằng lúc biên dịch; nhớ <code>break</code>, ghi chú fall-through cố ý.</li>
@@ -568,7 +571,7 @@ for (unsigned int i = 5; i &gt;= 0; i--) { ... }   // i &gt;= 0 luôn đúng: 0 
 <li>Chạy tay (trace) vòng lặp để kiểm tra; dùng thoát sớm để tránh lồng <code>if</code> sâu.</li>
 <li><code>goto cleanup</code> là mẫu dọn dẹp được chấp nhận trong C.</li>
 </ul>
-<h2>5.12. Bài tập</h2>
+<h2 id="s5-12">5.12. Bài tập</h2>
 <ol>
 <li>Viết chương trình in bảng cửu chương 1–9 (mỗi bảng 10 dòng) bằng vòng <code>for</code> lồng nhau, căn cột bằng <code>%2d</code>, <code>%3d</code>.</li>
 <li>Viết <code>bool is_prime(int n)</code> và in tất cả số nguyên tố trong 2..100. Sau đó tìm số nguyên tố lớn nhất nhỏ hơn 1.000.000.</li>
@@ -586,13 +589,33 @@ for (unsigned int i = 5; i &gt;= 0; i--) { ... }   // i &gt;= 0 luôn đúng: 0 
     i++;
 }
 </code></pre>
-<h2>9. (Thử thách) Viết chương trình chuyển số nguyên thập phân sang nhị phân bằng vòng lặp chia 2, in kết quả đúng thứ tự.</h2>
+<ol start="9">
+<li>(Thử thách) Viết chương trình chuyển số nguyên thập phân sang nhị phân bằng vòng lặp chia 2, in kết quả đúng thứ tự.</li>
+</ol>
 <p>Lời giải gợi ý: xem thư mục code và Lời giải ở cuối sách.</p>
 <p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-05">code/chapter-05</a></p>
 
 </article>
-<div class="chapter-nav"><a class="nav-prev" href="chapter-04.html">&larr; Cú pháp & cấu trúc chương trình C</a><a class="nav-next" href="chapter-06.html">Hàm & phạm vi biến (Functions & Scope) &rarr;</a></div>
+<nav class="chapter-nav" aria-label="Điều hướng chương"><a class="nav-prev" href="chapter-04.html"><small>← Trước</small>Cú pháp &amp; cấu trúc chương trình C</a><a class="nav-next" href="chapter-06.html"><small>Tiếp →</small>Hàm &amp; phạm vi biến (Functions &amp; Scope)</a></nav>
 </main>
 </div>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,store=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
+  function setTheme(t){if(t==='light')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);store('theme',t);
+    document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.setAttribute('aria-pressed',String((b.dataset.themeBtn===t)||(t==='light'&&b.dataset.themeBtn==='light')))})}
+  var cur=root.getAttribute('data-theme')||'light';setTheme(cur);
+  document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.addEventListener('click',function(){setTheme(b.dataset.themeBtn)})});
+  var fs=parseInt(getComputedStyle(root).getPropertyValue('--fs'))||19;
+  document.querySelectorAll('[data-fs]').forEach(function(b){b.addEventListener('click',function(){fs=Math.min(26,Math.max(14,fs+parseInt(b.dataset.fs)));root.style.setProperty('--fs',fs+'px');store('fs',fs)})});
+  var mb=document.getElementById('menu-btn');if(mb)mb.addEventListener('click',function(){document.body.classList.toggle('nav-open')});
+  document.addEventListener('click',function(e){if(document.body.classList.contains('nav-open')&&!e.target.closest('#sidebar')&&e.target.id!=='menu-btn')document.body.classList.remove('nav-open')});
+  document.querySelectorAll('pre').forEach(function(pre){var b=document.createElement('button');b.className='copy-btn';b.type='button';b.textContent='Sao chép';
+    b.addEventListener('click',function(){var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Đã chép'},function(){b.textContent='Lỗi'});setTimeout(function(){b.textContent='Sao chép'},1500)});pre.appendChild(b)});
+  var a=document.querySelector('.chapter-link.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'center'});
+})();
+</script>
 </body>
 </html>

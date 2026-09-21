@@ -4,15 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Testing & CI cho C — Lập trình C — Từ cơ bản đến nâng cao</title>
+<script>try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.setAttribute('data-theme',t);var f=localStorage.getItem('fs');if(f)document.documentElement.style.setProperty('--fs',f+'px')}catch(e){}</script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="layout">
-<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link active" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<nav class="sidebar" id="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Phần I — Nhập môn</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp &amp; cấu trúc chương trình C</a></li></ul></li><li class="part"><div class="part-title">Phần II — Nền tảng ngôn ngữ</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm &amp; phạm vi biến (Functions &amp; Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng &amp; chuỗi (Arrays &amp; Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li></ul></li><li class="part"><div class="part-title">Phần III — Bộ nhớ, dữ liệu, xây dựng</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O &amp; thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi &amp; ngoại lệ trong C</a></li></ul></li><li class="part"><div class="part-title">Phần IV — Kỹ thuật nâng cao</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý &amp; macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng &amp; đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa &amp; profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật &amp; an toàn bộ nhớ</a></li></ul></li><li class="part"><div class="part-title">Phần V — Dự án và phát hành</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link active" href="chapter-21.html">21. Testing &amp; CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging &amp; deploy</a></li></ul></li><li class="part"><div class="part-title">Phụ lục — Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li><li><a class="chapter-link" href="solutions-02.html">Lời giải chương 2</a></li><li><a class="chapter-link" href="solutions-03.html">Lời giải chương 3</a></li><li><a class="chapter-link" href="solutions-04.html">Lời giải chương 4</a></li><li><a class="chapter-link" href="solutions-05.html">Lời giải chương 5</a></li><li><a class="chapter-link" href="solutions-06.html">Lời giải chương 6</a></li><li><a class="chapter-link" href="solutions-07.html">Lời giải chương 7</a></li><li><a class="chapter-link" href="solutions-08.html">Lời giải chương 8</a></li><li><a class="chapter-link" href="solutions-09.html">Lời giải chương 9</a></li><li><a class="chapter-link" href="solutions-10.html">Lời giải chương 10</a></li><li><a class="chapter-link" href="solutions-11.html">Lời giải chương 11</a></li><li><a class="chapter-link" href="solutions-12.html">Lời giải chương 12</a></li><li><a class="chapter-link" href="solutions-13.html">Lời giải chương 13</a></li><li><a class="chapter-link" href="solutions-14.html">Lời giải chương 14</a></li><li><a class="chapter-link" href="solutions-15.html">Lời giải chương 15</a></li><li><a class="chapter-link" href="solutions-16.html">Lời giải chương 16</a></li><li><a class="chapter-link" href="solutions-17.html">Lời giải chương 17</a></li><li><a class="chapter-link" href="solutions-18.html">Lời giải chương 18</a></li><li><a class="chapter-link" href="solutions-19.html">Lời giải chương 19</a></li><li><a class="chapter-link" href="solutions-20.html">Lời giải chương 20</a></li><li><a class="chapter-link" href="solutions-21.html">Lời giải chương 21</a></li><li><a class="chapter-link" href="solutions-22.html">Lời giải chương 22</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<div class="main-col">
+<header class="topbar"><button class="menu-btn" id="menu-btn" type="button" aria-label="Mục lục">☰</button><span class="crumb">Phần V · Chương 21</span><span class="tools"><button data-fs="-1" type="button" title="Chữ nhỏ hơn">A−</button><button data-fs="1" type="button" title="Chữ lớn hơn">A+</button><button data-theme-btn="light" type="button" title="Nền sáng">Sáng</button><button data-theme-btn="sepia" type="button" title="Nền sepia">Sepia</button><button data-theme-btn="dark" type="button" title="Nền tối">Tối</button></span></header>
 <main class="content">
 <article>
-<h1>Chương 21 — Testing &amp; CI cho C</h1>
-<h2>Mục tiêu chương</h2>
+<header class="chapter-head"><div class="chapter-num">Chương 21</div><h1>Testing &amp; CI cho C</h1></header><nav class="chapter-toc" aria-label="Trong chương này"><div class="toc-title">Trong chương này</div><ol><li><a href="#s21-1">21.1. Vì sao phải kiểm thử tự động?</a></li><li><a href="#s21-2">21.2. Viết mã dễ kiểm thử</a></li><li><a href="#s21-3">21.3. Khung kiểm thử tối giản tự làm</a></li><li><a href="#s21-4">21.4. Các framework kiểm thử cho C</a></li><li><a href="#s21-5">21.5. Mock, stub và fake — cô lập phụ thuộc</a></li><li><a href="#s21-6">21.6. Các loại test cần có</a></li><li><a href="#s21-7">21.7. Tích hợp vào build: make test và CTest</a></li><li><a href="#s21-8">21.8. Độ phủ mã (coverage)</a></li><li><a href="#s21-9">21.9. Sanitizer, phân tích tĩnh và fuzz trong kiểm thử</a></li><li><a href="#s21-10">21.10. Tích hợp liên tục (CI) với GitHub Actions</a></li><li><a href="#s21-11">21.11. Quy trình làm việc đề xuất</a></li><li><a href="#s21-12">21.12. Lỗi thường gặp khi kiểm thử</a></li><li><a href="#s21-13">21.13. Tóm tắt</a></li><li><a href="#s21-14">21.14. Bài tập</a></li></ol></nav>
+<h2 id="h-1">Mục tiêu chương</h2>
 <ul>
 <li>Hiểu vì sao kiểm thử tự động đặc biệt quan trọng với C và <strong>kim tự tháp kiểm thử</strong>.</li>
 <li>Viết mã <strong>dễ kiểm thử</strong> (testable): tách logic khỏi I/O, dùng phụ thuộc có thể thay thế.</li>
@@ -23,7 +26,7 @@
 <li>Chạy <strong>sanitizer</strong>, <strong>fuzz</strong>, và phân tích tĩnh trong kiểm thử.</li>
 <li>Thiết lập <strong>CI</strong> với <strong>GitHub Actions</strong>: build ma trận (Linux/macOS/Windows, gcc/clang), chạy test, sanitizer, coverage, lưu artifact.</li>
 </ul>
-<h2>21.1. Vì sao phải kiểm thử tự động?</h2>
+<h2 id="s21-1">21.1. Vì sao phải kiểm thử tự động?</h2>
 <p>Trong C, một thay đổi nhỏ có thể phá hỏng chỗ rất xa (con trỏ, bộ nhớ, macro). Không có kiểm thử, bạn chỉ phát hiện lỗi khi người dùng gặp. Kiểm thử tự động mang lại:</p>
 <ol>
 <li><strong>Phát hiện hồi quy (regression):</strong> mỗi lần sửa mã, chạy lại toàn bộ bài thử trong vài giây.</li>
@@ -32,7 +35,7 @@
 <li><strong>Thiết kế tốt hơn:</strong> mã khó kiểm thử thường là mã ghép nối chặt, khó tái sử dụng.</li>
 <li><strong>Bắt lỗi bộ nhớ</strong> khi kết hợp sanitizer (chương 9, 18).</li>
 </ol>
-<h3>Kim tự tháp kiểm thử</h3>
+<h3 id="h-2">Kim tự tháp kiểm thử</h3>
 <pre class="hljs"><code>                /\
                /  \      Kiểm thử đầu-cuối (E2E): chạy cả chương trình
               /----\     ít, chậm, mong manh
@@ -42,16 +45,16 @@
           /____________\ nhiều, nhanh (mili-giây), ổn định
 </code></pre>
 <p>Nguyên tắc: <strong>nhiều unit test nhanh ở đáy, ít test chậm ở đỉnh.</strong> Một bộ unit test tốt chạy toàn bộ trong vài giây.</p>
-<h3>Một unit test tốt</h3>
+<h3 id="h-3">Một unit test tốt</h3>
 <ul>
 <li><strong>Nhanh</strong> (mili-giây), <strong>độc lập</strong> (không phụ thuộc thứ tự chạy, không phụ thuộc test khác), <strong>lặp lại được</strong> (cùng kết quả mỗi lần, không phụ thuộc giờ/mạng/ngẫu nhiên).</li>
 <li><strong>Tự kiểm tra:</strong> đạt/không đạt do máy quyết định, không cần con người đọc đầu ra.</li>
 <li><strong>Một ý một test</strong>, tên nói rõ <strong>cái gì, trong điều kiện nào, kết quả mong đợi</strong>: <code>test_parse_int_rejects_trailing_garbage</code>.</li>
 <li>Mẫu <strong>Arrange – Act – Assert</strong>: chuẩn bị dữ liệu → gọi hàm → so sánh kết quả.</li>
 </ul>
-<h2>21.2. Viết mã dễ kiểm thử</h2>
+<h2 id="s21-2">21.2. Viết mã dễ kiểm thử</h2>
 <p>Kiểm thử khó khi hàm <strong>làm quá nhiều việc cùng lúc</strong>: đọc file, tính toán, in ra, đọc giờ hệ thống.</p>
-<h3>Ví dụ khó kiểm thử</h3>
+<h3 id="h-4">Ví dụ khó kiểm thử</h3>
 <pre class="hljs"><code><span class="hljs-comment">// KHÓ THỬ: trộn I/O, tính toán và trạng thái toàn cục</span>
 <span class="hljs-type">void</span> <span class="hljs-title function_">report</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
     FILE *f = fopen(<span class="hljs-string">&quot;scores.txt&quot;</span>, <span class="hljs-string">&quot;r&quot;</span>);          <span class="hljs-comment">// phụ thuộc file thật</span>
@@ -61,7 +64,7 @@
     <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Trung binh: %.2f\n&quot;</span>, (<span class="hljs-type">double</span>)sum / n);   <span class="hljs-comment">// kết quả đi thẳng ra màn hình, và chia cho 0 nếu n = 0</span>
 }
 </code></pre>
-<h3>Tách phần lõi thuần khiết</h3>
+<h3 id="h-5">Tách phần lõi thuần khiết</h3>
 <pre class="hljs"><code><span class="hljs-comment">// stats.h — logic THUẦN: nhận dữ liệu, trả kết quả, không I/O, không toàn cục</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stddef.h&gt;</span></span>
 <span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span> <span class="hljs-type">size_t</span> count; <span class="hljs-type">double</span> mean, min, max; } Stats;
@@ -88,7 +91,7 @@
 }
 </code></pre>
 <p><code>main</code> (mỏng) lo I/O và gọi lõi. Lõi được test dễ dàng bằng mảng nhỏ trong bộ nhớ.</p>
-<h3>Nguyên tắc thiết kế cho khả năng kiểm thử</h3>
+<h3 id="h-6">Nguyên tắc thiết kế cho khả năng kiểm thử</h3>
 <ol>
 <li><strong>Tách logic khỏi I/O:</strong> hàm thuần dễ thử nhất. Đưa I/O ra rìa (imperative shell, functional core).</li>
 <li><strong>Tránh trạng thái toàn cục</strong> (hoặc cho phép reset). Truyền ngữ cảnh qua tham số/struct.</li>
@@ -98,7 +101,7 @@
 <li><strong>Header rõ ràng, hàm nhỏ</strong>, dùng <code>static</code> cho nội bộ nhưng <strong>test qua giao diện công khai</strong>; nếu cần thử hàm <code>static</code>, cân nhắc <code>#include &quot;file.c&quot;</code> trong file test, hoặc nâng nó lên thành công khai có tiền tố nội bộ.</li>
 <li><strong>Tất định (deterministic):</strong> thời gian, số ngẫu nhiên, ID đều nhận từ bên ngoài (ví dụ truyền <code>seed</code>, truyền hàm <code>now()</code>).</li>
 </ol>
-<h2>21.3. Khung kiểm thử tối giản tự làm</h2>
+<h2 id="s21-3">21.3. Khung kiểm thử tối giản tự làm</h2>
 <p>Bạn đã thấy <code>tiny_test.h</code> ở chương 14. Bản mở rộng có <strong>tên test, đếm, và tự đăng ký</strong>:</p>
 <pre class="hljs"><code><span class="hljs-comment">// mini_test.h</span>
 <span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> MINI_TEST_H</span>
@@ -214,8 +217,8 @@
 11 kiem tra, 0 that bai
 </code></pre>
 <p>Một khung tự làm rất gọn cho dự án nhỏ, nhưng thiếu: <code>setUp</code>/<code>tearDown</code>, chạy độc lập từng test, báo cáo XML cho CI, cô lập crash (một test <code>segfault</code> làm sập cả chương trình). Framework thật giải quyết những thứ đó.</p>
-<h2>21.4. Các framework kiểm thử cho C</h2>
-<table>
+<h2 id="s21-4">21.4. Các framework kiểm thử cho C</h2>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Framework</th>
@@ -255,8 +258,8 @@
 <td>Dự án hỗn hợp C/C++</td>
 </tr>
 </tbody>
-</table>
-<h3>Ví dụ với Unity</h3>
+</table></div>
+<h3 id="h-7">Ví dụ với Unity</h3>
 <pre class="hljs"><code><span class="hljs-comment">// test_stats_unity.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;unity.h&quot;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stats.h&quot;</span></span>
@@ -286,7 +289,7 @@
 </code></pre>
 <p>Unity in kết quả kiểu <code>test_stats_unity.c:12:test_mean_of_five:PASS</code> và tóm tắt <code>2 Tests 0 Failures 0 Ignored</code>. Có các assert: <code>TEST_ASSERT_EQUAL_STRING</code>, <code>TEST_ASSERT_EQUAL_MEMORY</code>, <code>TEST_ASSERT_NULL</code>, <code>TEST_ASSERT_FLOAT_WITHIN(delta, expected, actual)</code>, <code>TEST_ASSERT_EQUAL_INT_ARRAY</code>...</p>
 <p>Lấy Unity: sao chép <code>unity.c</code>, <code>unity.h</code>, <code>unity_internals.h</code> vào <code>third_party/unity/</code>, hoặc dùng CMake <code>FetchContent</code>.</p>
-<h3>Ví dụ với Check</h3>
+<h3 id="h-8">Ví dụ với Check</h3>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;check.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stats.h&quot;</span></span>
 
@@ -315,7 +318,7 @@ END_TEST
 }
 </code></pre>
 <p>Biên dịch: <code>gcc test.c stats.c $(pkg-config --cflags --libs check) -o test</code>.</p>
-<h3>Ví dụ với Criterion</h3>
+<h3 id="h-9">Ví dụ với Criterion</h3>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;criterion/criterion.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stats.h&quot;</span></span>
 
@@ -327,7 +330,7 @@ Test(stats, mean_of_three) {
 }
 </code></pre>
 <p>Không cần <code>main</code> — Criterion tự sinh và tự phát hiện test. Liên kết: <code>-lcriterion</code>.</p>
-<h3>Chọn cái nào?</h3>
+<h3 id="h-10">Chọn cái nào?</h3>
 <ul>
 <li><strong>Dự án nhỏ/học tập:</strong> khung tự làm hoặc Unity (ít phụ thuộc).</li>
 <li><strong>Cần cô lập crash và fixture:</strong> Check hoặc Criterion (Linux/macOS).</li>
@@ -335,9 +338,9 @@ Test(stats, mean_of_three) {
 <li><strong>Ưu tiên tiện lợi và đầu ra đẹp:</strong> Criterion.</li>
 </ul>
 <p>Điều quan trọng hơn framework: <strong>có bộ test chạy tự động trong CI</strong>.</p>
-<h2>21.5. Mock, stub và fake — cô lập phụ thuộc</h2>
+<h2 id="s21-5">21.5. Mock, stub và fake — cô lập phụ thuộc</h2>
 <p>Khi hàm cần thử phụ thuộc vào thứ <strong>chậm, không tất định, hoặc khó tạo lỗi</strong> (đĩa, mạng, giờ hệ thống, <code>malloc</code> lỗi), ta thay nó bằng một bản giả trong lúc thử.</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Thuật ngữ</th>
@@ -358,21 +361,21 @@ Test(stats, mean_of_three) {
 <td>Stub có thể <strong>kiểm tra xem nó đã được gọi thế nào</strong> (đúng đối số, số lần)</td>
 </tr>
 </tbody>
-</table>
-<h3>Kỹ thuật 1: Nhận phụ thuộc qua con trỏ hàm</h3>
-<pre class="hljs"><code><span class="hljs-comment">// cache.h</span>
+</table></div>
+<h3 id="h-11">Kỹ thuật 1: Nhận phụ thuộc qua con trỏ hàm</h3>
+<pre class="hljs"><code><span class="hljs-comment">/* ví dụ: tiêm phụ thuộc (cache.h) */</span>
 <span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span>
     <span class="hljs-type">time_t</span> (*now)(<span class="hljs-type">void</span>);                       <span class="hljs-comment">// nguồn thời gian có thể thay</span>
 } Clock;
 
 <span class="hljs-type">int</span> <span class="hljs-title function_">session_is_expired</span><span class="hljs-params">(<span class="hljs-type">const</span> Session *s, <span class="hljs-type">const</span> Clock *clk)</span>;
 </code></pre>
-<pre class="hljs"><code><span class="hljs-comment">// session.c</span>
+<pre class="hljs"><code><span class="hljs-comment">/* ví dụ: session.c */</span>
 <span class="hljs-type">int</span> <span class="hljs-title function_">session_is_expired</span><span class="hljs-params">(<span class="hljs-type">const</span> Session *s, <span class="hljs-type">const</span> Clock *clk)</span> {
     <span class="hljs-keyword">return</span> clk-&gt;now() &gt; s-&gt;expires_at;         <span class="hljs-comment">// dùng &quot;đồng hồ&quot; được tiêm vào</span>
 }
 </code></pre>
-<pre class="hljs"><code><span class="hljs-comment">// test_session.c</span>
+<pre class="hljs"><code><span class="hljs-comment">/* ví dụ: test_session.c */</span>
 <span class="hljs-type">static</span> <span class="hljs-type">time_t</span> fake_now_value;
 <span class="hljs-type">static</span> <span class="hljs-type">time_t</span> <span class="hljs-title function_">fake_now</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> { <span class="hljs-keyword">return</span> fake_now_value; }
 
@@ -385,7 +388,7 @@ Test(stats, mean_of_three) {
 }
 </code></pre>
 <p>Trong sản phẩm, truyền <code>Clock real = { .now = time_wrapper };</code>. Bài thử không phải chờ hay phụ thuộc giờ thật.</p>
-<h3>Kỹ thuật 2: Đường nối liên kết (link seam) — thay hàm lúc liên kết</h3>
+<h3 id="h-12">Kỹ thuật 2: Đường nối liên kết (link seam) — thay hàm lúc liên kết</h3>
 <p>Với thư viện bạn không sửa được, hoặc hàm gọi trực tiếp (không qua con trỏ), có thể <strong>định nghĩa lại hàm trong file test</strong> và liên kết file test thay vì bản thật:</p>
 <pre class="hljs"><code><span class="hljs-comment">// production: net.c gọi send_data(...) — cài đặt thật trong net_real.c</span>
 <span class="hljs-comment">// test: định nghĩa bản giả</span>
@@ -408,7 +411,7 @@ Test(stats, mean_of_three) {
 <pre class="hljs"><code>gcc test_vec.c vec.c -Wl,--wrap=malloc -o test_vec
 </code></pre>
 <p>Nhờ đó <strong>kiểm thử đường lỗi</strong> (<code>malloc</code> trả NULL) một cách tất định — bổ sung cho fault injection ở chương 13.</p>
-<h3>Kỹ thuật 3: Fake trong bộ nhớ</h3>
+<h3 id="h-13">Kỹ thuật 3: Fake trong bộ nhớ</h3>
 <p>Thay vì thử với file thật, cung cấp <code>FILE *</code> từ bộ nhớ: <code>fmemopen(buf, size, &quot;r&quot;)</code> (POSIX) hoặc <code>tmpfile()</code>; hoặc thiết kế hàm nhận <code>const char *</code> thay vì <code>FILE *</code> để không cần file:</p>
 <pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">test_parse_csv_line_from_string</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
     FILE *f = fmemopen((<span class="hljs-type">void</span> *)<span class="hljs-string">&quot;an,9\nbinh,8\n&quot;</span>, <span class="hljs-number">12</span>, <span class="hljs-string">&quot;r&quot;</span>);
@@ -416,8 +419,8 @@ Test(stats, mean_of_three) {
     fclose(f);
 }
 </code></pre>
-<h2>21.6. Các loại test cần có</h2>
-<h3>1. Trường hợp thường, biên và lỗi</h3>
+<h2 id="s21-6">21.6. Các loại test cần có</h2>
+<h3 id="h-14">1. Trường hợp thường, biên và lỗi</h3>
 <p>Với mỗi hàm, hãy nghĩ tới:</p>
 <ul>
 <li><strong>Đầu vào điển hình.</strong></li>
@@ -425,9 +428,9 @@ Test(stats, mean_of_three) {
 <li><strong>Đầu vào không hợp lệ:</strong> <code>NULL</code>, số âm, ký tự lạ.</li>
 <li><strong>Trạng thái lỗi:</strong> hết bộ nhớ, file không có, đầu vào bị cắt cụt.</li>
 </ul>
-<h3>2. Test hồi quy</h3>
+<h3 id="h-15">2. Test hồi quy</h3>
 <p>Mỗi khi gặp bug: <strong>viết test làm bug tái hiện (fail)</strong> trước, sửa mã, test chuyển thành pass, giữ test mãi mãi.</p>
-<h3>3. Test dựa trên thuộc tính (property-based) — thủ công</h3>
+<h3 id="h-16">3. Test dựa trên thuộc tính (property-based) — thủ công</h3>
 <p>Thay vì chọn ví dụ, kiểm tra <strong>tính chất luôn đúng</strong> trên nhiều đầu vào ngẫu nhiên có seed cố định:</p>
 <pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">test_sort_property</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
     srand(<span class="hljs-number">12345</span>);                                       <span class="hljs-comment">// seed cố định -&gt; lặp lại được</span>
@@ -443,13 +446,13 @@ Test(stats, mean_of_three) {
 }
 </code></pre>
 <p>So với một <strong>bản tham chiếu đúng</strong> (oracle) hoặc kiểm tra tính chất (đầu ra đã sắp xếp, là hoán vị của đầu vào). In <code>seed</code> và <code>iter</code> khi lỗi để tái hiện.</p>
-<h3>3b. Test vi sai (differential)</h3>
+<h3 id="h-17">3b. Test vi sai (differential)</h3>
 <p>So kết quả của hai cài đặt (bản đơn giản và bản tối ưu, chương 17; evaluator và VM, chương 19) trên cùng đầu vào — rất hiệu quả bắt lỗi.</p>
-<h3>4. Test dữ liệu mẫu (&quot;golden file&quot;)</h3>
+<h3 id="h-18">4. Test dữ liệu mẫu (&quot;golden file&quot;)</h3>
 <p>Chạy chương trình với input cố định và so đầu ra với file mẫu đã duyệt (<code>expected.txt</code>): tiện cho trình biên dịch, bộ định dạng.</p>
 <pre class="hljs"><code>./calc &lt; tests/case1.<span class="hljs-keyword">in</span> &gt; /tmp/out.txt &amp;&amp; diff -u tests/case1.expected /tmp/out.txt
 </code></pre>
-<h3>5. Test tích hợp/đầu-cuối</h3>
+<h3 id="h-19">5. Test tích hợp/đầu-cuối</h3>
 <p>Chạy chương trình thật, kiểm tra mã thoát và đầu ra; với server: khởi chạy, gửi yêu cầu bằng <code>curl</code>, so phản hồi:</p>
 <pre class="hljs"><code><span class="hljs-meta">#!/usr/bin/env bash</span>
 <span class="hljs-built_in">set</span> -euo pipefail
@@ -462,8 +465,8 @@ code=$(curl -s -o /dev/null -w <span class="hljs-string">&#x27;%{http_code}&#x27
 [ <span class="hljs-string">&quot;<span class="hljs-variable">$code</span>&quot;</span> = <span class="hljs-string">&quot;403&quot;</span> ] || { <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;traversal -&gt; <span class="hljs-variable">$code</span> (mong doi 403)&quot;</span>; <span class="hljs-built_in">exit</span> 1; }
 <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;OK&quot;</span>
 </code></pre>
-<h2>21.7. Tích hợp vào build: <code>make test</code> và CTest</h2>
-<h3>Makefile</h3>
+<h2 id="s21-7">21.7. Tích hợp vào build: <code>make test</code> và CTest</h2>
+<h3 id="h-20">Makefile</h3>
 <pre class="hljs"><code>CC      := gcc
 CFLAGS  := -std=c11 -Wall -Wextra -Wpedantic -g -O1 -Iinclude
 SAN     ?= -fsanitize=address,undefined -fno-omit-frame-pointer
@@ -489,7 +492,7 @@ LIB_SRCS  := <span class="hljs-variable">$(<span class="hljs-built_in">filter</s
 	rm -rf build
 </code></pre>
 <p><code>make test</code> biên dịch từng <code>tests/test_*.c</code> cùng thư viện (không kèm <code>main.c</code>), bật sanitizer, chạy tất cả và <strong>trả mã khác 0 nếu bất kỳ test nào lỗi</strong>.</p>
-<h3>CMake + CTest</h3>
+<h3 id="h-21">CMake + CTest</h3>
 <pre class="hljs"><code><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.16</span>)
 <span class="hljs-keyword">project</span>(myproj C)
 <span class="hljs-keyword">set</span>(CMAKE_C_STANDARD <span class="hljs-number">11</span>)
@@ -530,7 +533,7 @@ ctest --test-dir build --output-on-failure        <span class="hljs-comment"># c
 ctest --test-dir build -R stats -V                <span class="hljs-comment"># chạy test tên khớp &quot;stats&quot;, chi tiết</span>
 </code></pre>
 <p>CTest thu thập kết quả, hỗ trợ chạy song song (<code>-j4</code>), thời gian chờ (<code>set_tests_properties(... TIMEOUT 10)</code>), và xuất báo cáo JUnit cho CI.</p>
-<h2>21.8. Độ phủ mã (coverage)</h2>
+<h2 id="s21-8">21.8. Độ phủ mã (coverage)</h2>
 <p><strong>Coverage</strong> cho biết <strong>dòng/nhánh mã nào đã được test chạy tới</strong>. Công cụ của gcc: <code>gcov</code>; báo cáo HTML: <code>lcov</code> + <code>genhtml</code>, hoặc <code>gcovr</code>.</p>
 <pre class="hljs"><code>gcc -std=c11 --coverage -O0 -g test_stats.c stats.c -o test_stats -lm
 ./test_stats                                       <span class="hljs-comment"># sinh file .gcda</span>
@@ -549,8 +552,8 @@ genhtml coverage.info --output-directory coverage_html
 <span class="hljs-comment"># hoặc gọn hơn:</span>
 gcovr -r . --html-details -o coverage.html --exclude <span class="hljs-string">&#x27;tests/&#x27;</span>
 </code></pre>
-<h3>Các loại coverage</h3>
-<table>
+<h3 id="h-22">Các loại coverage</h3>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Loại</th>
@@ -580,17 +583,17 @@ gcovr -r . --html-details -o coverage.html --exclude <span class="hljs-string">&
 <td>Yêu cầu trong hàng không/ô tô</td>
 </tr>
 </tbody>
-</table>
-<h3>Coverage nói được gì — và không nói được gì</h3>
+</table></div>
+<h3 id="h-23">Coverage nói được gì — và không nói được gì</h3>
 <ul>
 <li>Mã <strong>chưa được chạy</strong> chắc chắn <strong>chưa được kiểm thử</strong> → phát hiện chỗ thiếu test. Đây là công dụng chính.</li>
 <li>Nhưng <strong>coverage cao ≠ test tốt.</strong> Test có thể chạy qua mã mà không kiểm tra gì (không assert). 100% coverage vẫn có thể bỏ sót lỗi.</li>
 <li>Đừng biến nó thành mục tiêu tự thân (ép 100%). Mục tiêu hợp lý: <strong>80–90% dòng cho mã lõi</strong>, kèm test biên và test lỗi; quan tâm <strong>nhánh chưa phủ</strong> ở đường xử lý lỗi.</li>
 <li>Biên dịch bản coverage với <code>-O0</code> để số liệu tương ứng mã nguồn.</li>
 </ul>
-<h2>21.9. Sanitizer, phân tích tĩnh và fuzz trong kiểm thử</h2>
+<h2 id="s21-9">21.9. Sanitizer, phân tích tĩnh và fuzz trong kiểm thử</h2>
 <p>Kết hợp để bộ test <strong>đồng thời bắt lỗi bộ nhớ</strong> (chương 9 và 18):</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Công cụ</th>
@@ -640,13 +643,13 @@ gcovr -r . --html-details -o coverage.html --exclude <span class="hljs-string">&
 <td>biến cảnh báo thành lỗi</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Đặt <strong><code>-Werror</code></strong> trong CI (nhưng không nhất thiết trên máy nhà phát triển) để không cho cảnh báo tích tụ.</p>
 <p>Mã thoát đặc biệt: ASan mặc định thoát mã khác 0 khi phát hiện lỗi, nên CI tự thấy đỏ. Với Valgrind dùng <code>--error-exitcode=1</code>.</p>
-<h2>21.10. Tích hợp liên tục (CI) với GitHub Actions</h2>
+<h2 id="s21-10">21.10. Tích hợp liên tục (CI) với GitHub Actions</h2>
 <p><strong>CI (Continuous Integration):</strong> mỗi lần đẩy mã (<code>push</code>) hoặc mở pull request, một máy chủ <strong>tự động</strong> build và chạy kiểm thử. Lỗi được phát hiện ngay, trước khi hòa nhập vào nhánh chính.</p>
 <p><strong>GitHub Actions</strong> định nghĩa CI bằng file YAML trong <code>.github/workflows/</code>.</p>
-<h3>Khái niệm</h3>
+<h3 id="h-24">Khái niệm</h3>
 <ul>
 <li><strong>Workflow:</strong> một file YAML mô tả quy trình.</li>
 <li><strong>Event (<code>on</code>):</strong> điều gì kích hoạt (<code>push</code>, <code>pull_request</code>, <code>schedule</code>, <code>workflow_dispatch</code>).</li>
@@ -655,7 +658,7 @@ gcovr -r . --html-details -o coverage.html --exclude <span class="hljs-string">&
 <li><strong>Runner:</strong> máy ảo (<code>ubuntu-latest</code>, <code>macos-latest</code>, <code>windows-latest</code>).</li>
 <li><strong>Matrix:</strong> chạy cùng job với nhiều tổ hợp tham số (hệ điều hành × compiler).</li>
 </ul>
-<h3>Workflow cơ bản: build + test</h3>
+<h3 id="h-25">Workflow cơ bản: build + test</h3>
 <pre class="hljs"><code><span class="hljs-comment"># .github/workflows/ci.yml</span>
 <span class="hljs-attr">name:</span> <span class="hljs-string">CI</span>
 
@@ -683,7 +686,7 @@ gcovr -r . --html-details -o coverage.html --exclude <span class="hljs-string">&
         <span class="hljs-attr">run:</span> <span class="hljs-string">ctest</span> <span class="hljs-string">--test-dir</span> <span class="hljs-string">build</span> <span class="hljs-string">--output-on-failure</span>
 </code></pre>
 <p>Đẩy file này lên nhánh <code>main</code> rồi xem tab <strong>Actions</strong> trên trang GitHub của kho mã. Dấu ✓ xanh hoặc ✗ đỏ hiện cạnh mỗi commit và pull request.</p>
-<h3>Ma trận nhiều nền tảng và compiler</h3>
+<h3 id="h-26">Ma trận nhiều nền tảng và compiler</h3>
 <pre class="hljs"><code><span class="hljs-attr">jobs:</span>
   <span class="hljs-attr">build-test:</span>
     <span class="hljs-attr">name:</span> <span class="hljs-string">${{</span> <span class="hljs-string">matrix.os</span> <span class="hljs-string">}}</span> <span class="hljs-string">/</span> <span class="hljs-string">${{</span> <span class="hljs-string">matrix.cc</span> <span class="hljs-string">}}</span>
@@ -705,7 +708,7 @@ gcovr -r . --html-details -o coverage.html --exclude <span class="hljs-string">&
       <span class="hljs-bullet">-</span> <span class="hljs-attr">run:</span> <span class="hljs-string">ctest</span> <span class="hljs-string">--test-dir</span> <span class="hljs-string">build</span> <span class="hljs-string">--output-on-failure</span>
 </code></pre>
 <p>Thêm Windows: <code>windows-latest</code> (dùng MSVC mặc định; hoặc cài MinGW/MSYS2 qua <code>msys2/setup-msys2</code>). Chạy nhiều tổ hợp giúp phát hiện mã <strong>không di động</strong> (kích thước kiểu, <code>long</code> trên Windows, hàm POSIX không có trên MSVC...).</p>
-<h3>Job sanitizer, phân tích tĩnh, coverage</h3>
+<h3 id="h-27">Job sanitizer, phân tích tĩnh, coverage</h3>
 <pre class="hljs"><code>  <span class="hljs-attr">sanitizers:</span>
     <span class="hljs-attr">runs-on:</span> <span class="hljs-string">ubuntu-latest</span>
     <span class="hljs-attr">steps:</span>
@@ -743,7 +746,7 @@ gcovr -r . --html-details -o coverage.html --exclude <span class="hljs-string">&
           <span class="hljs-attr">name:</span> <span class="hljs-string">coverage-report</span>
           <span class="hljs-attr">path:</span> <span class="hljs-string">coverage.info</span>
 </code></pre>
-<h3>Lưu artifact và nhật ký khi lỗi</h3>
+<h3 id="h-28">Lưu artifact và nhật ký khi lỗi</h3>
 <pre class="hljs"><code>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Tai</span> <span class="hljs-string">len</span> <span class="hljs-string">ket</span> <span class="hljs-string">qua</span> <span class="hljs-string">khi</span> <span class="hljs-string">that</span> <span class="hljs-string">bai</span>
         <span class="hljs-attr">if:</span> <span class="hljs-string">failure()</span>
         <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/upload-artifact@v4</span>
@@ -751,7 +754,7 @@ gcovr -r . --html-details -o coverage.html --exclude <span class="hljs-string">&
           <span class="hljs-attr">name:</span> <span class="hljs-string">test-logs</span>
           <span class="hljs-attr">path:</span> <span class="hljs-string">build/Testing/Temporary/LastTest.log</span>
 </code></pre>
-<h3>Bộ nhớ đệm để build nhanh hơn</h3>
+<h3 id="h-29">Bộ nhớ đệm để build nhanh hơn</h3>
 <pre class="hljs"><code>      <span class="hljs-bullet">-</span> <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/cache@v4</span>
         <span class="hljs-attr">with:</span>
           <span class="hljs-attr">path:</span> <span class="hljs-string">~/.cache/ccache</span>
@@ -759,19 +762,19 @@ gcovr -r . --html-details -o coverage.html --exclude <span class="hljs-string">&
           <span class="hljs-attr">restore-keys:</span> <span class="hljs-string">ccache-${{</span> <span class="hljs-string">runner.os</span> <span class="hljs-string">}}-</span>
 </code></pre>
 <p>(Kết hợp với <code>ccache</code> để không biên dịch lại file không đổi.)</p>
-<h3>Bảo vệ nhánh chính</h3>
+<h3 id="h-30">Bảo vệ nhánh chính</h3>
 <p>Trong <strong>Settings → Branches → Branch protection rules</strong> của kho mã: yêu cầu các job CI phải <strong>xanh</strong> trước khi merge pull request. Khi đó không thể đưa mã làm hỏng test vào <code>main</code>.</p>
-<h3>Huy hiệu (badge) trạng thái</h3>
+<h3 id="h-31">Huy hiệu (badge) trạng thái</h3>
 <p>Thêm vào <code>README.md</code> để hiện trạng thái build:</p>
 <pre class="hljs"><code>![<span class="hljs-string">CI</span>](<span class="hljs-link">https://github.com/&lt;user&gt;/&lt;repo&gt;/actions/workflows/ci.yml/badge.svg</span>)
 </code></pre>
-<h3>Bảo mật của CI</h3>
+<h3 id="h-32">Bảo mật của CI</h3>
 <ul>
 <li>Dùng <code>permissions: contents: read</code> ở mức workflow để <strong>hạn chế quyền</strong> của token.</li>
 <li><strong>Ghim phiên bản action</strong> (<code>@v4</code>, tốt hơn là SHA commit) và cẩn trọng với action bên thứ ba.</li>
 <li><strong>Không in bí mật</strong> ra log; lưu bí mật trong <strong>Settings → Secrets</strong>, không đặt trong mã. Không chạy mã từ pull request của người lạ với quyền truy cập bí mật (<code>pull_request_target</code> cần rất cẩn thận).</li>
 </ul>
-<h2>21.11. Quy trình làm việc đề xuất</h2>
+<h2 id="s21-11">21.11. Quy trình làm việc đề xuất</h2>
 <ol>
 <li><strong>Viết test cho hành vi mong muốn</strong> (hoặc cho bug) → thấy nó lỗi.</li>
 <li><strong>Viết/sửa mã</strong> cho test qua.</li>
@@ -781,8 +784,8 @@ gcovr -r . --html-details -o coverage.html --exclude <span class="hljs-string">&
 <li><strong>Bổ sung test hồi quy</strong> cho mọi lỗi tìm thấy sau đó.</li>
 </ol>
 <p>Đây là <strong>TDD (Test-Driven Development)</strong> khi bạn viết test trước; không bắt buộc, nhưng thói quen &quot;mỗi bug một test&quot; thì nên có.</p>
-<h2>21.12. Lỗi thường gặp khi kiểm thử</h2>
-<table>
+<h2 id="s21-12">21.12. Lỗi thường gặp khi kiểm thử</h2>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Sai lầm</th>
@@ -842,8 +845,8 @@ gcovr -r . --html-details -o coverage.html --exclude <span class="hljs-string">&
 <td>Cache, song song hóa, tách job nhanh/chậm</td>
 </tr>
 </tbody>
-</table>
-<h2>21.13. Tóm tắt</h2>
+</table></div>
+<h2 id="s21-13">21.13. Tóm tắt</h2>
 <ul>
 <li>Kiểm thử tự động giúp phát hiện hồi quy, cho phép refactor an toàn; xây kim tự tháp: nhiều unit test nhanh, ít test tích hợp/đầu-cuối.</li>
 <li>Viết mã dễ kiểm thử: tách logic khỏi I/O, tránh toàn cục, tiêm phụ thuộc, tất định.</li>
@@ -852,7 +855,7 @@ gcovr -r . --html-details -o coverage.html --exclude <span class="hljs-string">&
 <li>Coverage (<code>gcov</code>/<code>lcov</code>) chỉ ra mã chưa được thử, không chứng minh test tốt.</li>
 <li>CI bằng GitHub Actions: build ma trận, ASan/UBSan, phân tích tĩnh, coverage; bảo vệ nhánh <code>main</code>.</li>
 </ul>
-<h2>21.14. Bài tập</h2>
+<h2 id="s21-14">21.14. Bài tập</h2>
 <ol>
 <li>Thêm bộ test cho module <code>Vec</code> (chương 9): kiểm tra <code>push</code> nhiều phần tử, tăng sức chứa, <code>pop</code> trên rỗng, và (dùng <code>--wrap=realloc</code>) hết bộ nhớ ở lần <code>push</code> thứ <code>k</code>. Chạy dưới ASan.</li>
 <li>Viết bộ test cho <code>parse_int</code> (chương 13) gồm ít nhất 15 trường hợp biên; sau đó tạo test theo thuộc tính: với mọi <code>int</code> ngẫu nhiên, <code>parse_int(to_string(x)) == x</code>.</li>
@@ -867,8 +870,26 @@ gcovr -r . --html-details -o coverage.html --exclude <span class="hljs-string">&
 <p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-21">code/chapter-21</a></p>
 
 </article>
-<div class="chapter-nav"><a class="nav-prev" href="chapter-20.html">&larr; Project: Web server đơn giản</a><a class="nav-next" href="chapter-22.html">Packaging & deploy &rarr;</a></div>
+<nav class="chapter-nav" aria-label="Điều hướng chương"><a class="nav-prev" href="chapter-20.html"><small>← Trước</small>Project: Web server đơn giản</a><a class="nav-next" href="chapter-22.html"><small>Tiếp →</small>Packaging &amp; deploy</a></nav>
 </main>
 </div>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,store=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
+  function setTheme(t){if(t==='light')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);store('theme',t);
+    document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.setAttribute('aria-pressed',String((b.dataset.themeBtn===t)||(t==='light'&&b.dataset.themeBtn==='light')))})}
+  var cur=root.getAttribute('data-theme')||'light';setTheme(cur);
+  document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.addEventListener('click',function(){setTheme(b.dataset.themeBtn)})});
+  var fs=parseInt(getComputedStyle(root).getPropertyValue('--fs'))||19;
+  document.querySelectorAll('[data-fs]').forEach(function(b){b.addEventListener('click',function(){fs=Math.min(26,Math.max(14,fs+parseInt(b.dataset.fs)));root.style.setProperty('--fs',fs+'px');store('fs',fs)})});
+  var mb=document.getElementById('menu-btn');if(mb)mb.addEventListener('click',function(){document.body.classList.toggle('nav-open')});
+  document.addEventListener('click',function(e){if(document.body.classList.contains('nav-open')&&!e.target.closest('#sidebar')&&e.target.id!=='menu-btn')document.body.classList.remove('nav-open')});
+  document.querySelectorAll('pre').forEach(function(pre){var b=document.createElement('button');b.className='copy-btn';b.type='button';b.textContent='Sao chép';
+    b.addEventListener('click',function(){var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Đã chép'},function(){b.textContent='Lỗi'});setTimeout(function(){b.textContent='Sao chép'},1500)});pre.appendChild(b)});
+  var a=document.querySelector('.chapter-link.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'center'});
+})();
+</script>
 </body>
 </html>

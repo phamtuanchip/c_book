@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lời giải chương 2 — Lập trình C — Từ cơ bản đến nâng cao</title>
+<script>try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.setAttribute('data-theme',t);var f=localStorage.getItem('fs');if(f)document.documentElement.style.setProperty('--fs',f+'px')}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar" id="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Phần I — Nhập môn</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp &amp; cấu trúc chương trình C</a></li></ul></li><li class="part"><div class="part-title">Phần II — Nền tảng ngôn ngữ</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm &amp; phạm vi biến (Functions &amp; Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng &amp; chuỗi (Arrays &amp; Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li></ul></li><li class="part"><div class="part-title">Phần III — Bộ nhớ, dữ liệu, xây dựng</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O &amp; thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi &amp; ngoại lệ trong C</a></li></ul></li><li class="part"><div class="part-title">Phần IV — Kỹ thuật nâng cao</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý &amp; macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng &amp; đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa &amp; profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật &amp; an toàn bộ nhớ</a></li></ul></li><li class="part"><div class="part-title">Phần V — Dự án và phát hành</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing &amp; CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging &amp; deploy</a></li></ul></li><li class="part"><div class="part-title">Phụ lục — Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li><li><a class="chapter-link active" href="solutions-02.html">Lời giải chương 2</a></li><li><a class="chapter-link" href="solutions-03.html">Lời giải chương 3</a></li><li><a class="chapter-link" href="solutions-04.html">Lời giải chương 4</a></li><li><a class="chapter-link" href="solutions-05.html">Lời giải chương 5</a></li><li><a class="chapter-link" href="solutions-06.html">Lời giải chương 6</a></li><li><a class="chapter-link" href="solutions-07.html">Lời giải chương 7</a></li><li><a class="chapter-link" href="solutions-08.html">Lời giải chương 8</a></li><li><a class="chapter-link" href="solutions-09.html">Lời giải chương 9</a></li><li><a class="chapter-link" href="solutions-10.html">Lời giải chương 10</a></li><li><a class="chapter-link" href="solutions-11.html">Lời giải chương 11</a></li><li><a class="chapter-link" href="solutions-12.html">Lời giải chương 12</a></li><li><a class="chapter-link" href="solutions-13.html">Lời giải chương 13</a></li><li><a class="chapter-link" href="solutions-14.html">Lời giải chương 14</a></li><li><a class="chapter-link" href="solutions-15.html">Lời giải chương 15</a></li><li><a class="chapter-link" href="solutions-16.html">Lời giải chương 16</a></li><li><a class="chapter-link" href="solutions-17.html">Lời giải chương 17</a></li><li><a class="chapter-link" href="solutions-18.html">Lời giải chương 18</a></li><li><a class="chapter-link" href="solutions-19.html">Lời giải chương 19</a></li><li><a class="chapter-link" href="solutions-20.html">Lời giải chương 20</a></li><li><a class="chapter-link" href="solutions-21.html">Lời giải chương 21</a></li><li><a class="chapter-link" href="solutions-22.html">Lời giải chương 22</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<div class="main-col">
+<header class="topbar"><button class="menu-btn" id="menu-btn" type="button" aria-label="Mục lục">☰</button><span class="crumb">Lời giải chương 2</span><span class="tools"><button data-fs="-1" type="button" title="Chữ nhỏ hơn">A−</button><button data-fs="1" type="button" title="Chữ lớn hơn">A+</button><button data-theme-btn="light" type="button" title="Nền sáng">Sáng</button><button data-theme-btn="sepia" type="button" title="Nền sepia">Sepia</button><button data-theme-btn="dark" type="button" title="Nền tối">Tối</button></span></header>
+<main class="content">
+<article>
+<header class="chapter-head"><div class="chapter-num">Chương 2</div><h1>Lời giải bài tập</h1></header><nav class="chapter-toc" aria-label="Trong chương này"><div class="toc-title">Trong chương này</div><ol><li><a href="#h-1">Bài 1: đổi sang nhị phân và hex</a></li><li><a href="#h-2">Bài 2: bù hai 8 bit</a></li><li><a href="#h-3">Bài 3: đếm số bit 1</a></li><li><a href="#h-4">Bài 4: phân loại ký tự và đổi hoa → thường</a></li><li><a href="#h-5">Bài 5: bảng kích thước</a></li><li><a href="#h-6">Bài 6: byte của một double</a></li><li><a href="#h-7">Bài 7: 0.1f + 0.2f và epsilon</a></li></ol></nav>
+<blockquote>
+<p>Hãy tự làm trước khi xem lời giải. Biên dịch: <code>gcc -std=c11 -Wall -Wextra -g -o prog prog.c -lm</code>.</p>
+</blockquote>
+<h2 id="h-1">Bài 1: đổi sang nhị phân và hex</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Thập phân</th>
+<th>Nhị phân</th>
+<th>Hex</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10</td>
+<td><code>1010</code></td>
+<td><code>0xA</code></td>
+</tr>
+<tr>
+<td>100</td>
+<td><code>1100100</code></td>
+<td><code>0x64</code></td>
+</tr>
+<tr>
+<td>255</td>
+<td><code>11111111</code></td>
+<td><code>0xFF</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Cách làm: chia liên tiếp cho 2 lấy phần dư rồi đọc từ dưới lên. Với hex, nhóm nhị phân theo từng 4 bit từ phải sang trái: <code>1100100</code> = <code>0110 0100</code> = <code>6</code> <code>4</code>. Chạy <code>bases.c</code> với các số này để kiểm tra.</p>
+<h2 id="h-2">Bài 2: bù hai 8 bit</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Số</th>
+<th>Cách tính</th>
+<th>Bù hai 8 bit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>−1</td>
+<td>đảo <code>00000001</code> → <code>11111110</code>, +1</td>
+<td><code>11111111</code></td>
+</tr>
+<tr>
+<td>−10</td>
+<td>đảo <code>00001010</code> → <code>11110101</code>, +1</td>
+<td><code>11110110</code></td>
+</tr>
+<tr>
+<td>−128</td>
+<td>bit dấu 1, các bit còn lại 0</td>
+<td><code>10000000</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Kiểm chứng: <code>print_binary((uint32_t)(int8_t)-10)</code> in <code>...11110110</code> ở byte thấp nhất.</p>
+<h2 id="h-3">Bài 3: đếm số bit 1</h2>
+<pre class="hljs"><code><span class="hljs-comment">// popcount.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdint.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-comment">// Cách 1: kiểm tra từng bit</span>
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">popcount_loop</span><span class="hljs-params">(<span class="hljs-type">uint32_t</span> x)</span> {
+    <span class="hljs-type">int</span> c = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">while</span> (x) {
+        c += (<span class="hljs-type">int</span>)(x &amp; <span class="hljs-number">1u</span>);
+        x &gt;&gt;= <span class="hljs-number">1</span>;
+    }
+    <span class="hljs-keyword">return</span> c;
+}
+
+<span class="hljs-comment">// Cách 2 (Kernighan): mỗi lần x &amp; (x - 1) xóa đúng một bit 1 thấp nhất</span>
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">popcount_kernighan</span><span class="hljs-params">(<span class="hljs-type">uint32_t</span> x)</span> {
+    <span class="hljs-type">int</span> c = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">while</span> (x) {
+        x &amp;= x - <span class="hljs-number">1</span>;
+        c++;
+    }
+    <span class="hljs-keyword">return</span> c;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">uint32_t</span> tests[] = {<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">13</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0xFFFFFFFFu</span>, <span class="hljs-number">0x80000000u</span>};
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">sizeof</span> tests / <span class="hljs-keyword">sizeof</span> tests[<span class="hljs-number">0</span>]; i++) {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%10u: %d %d\n&quot;</span>, tests[i], popcount_loop(tests[i]), popcount_kernighan(tests[i]));
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Cách Kernighan chạy đúng số lần bằng số bit 1 (nhanh hơn với số thưa bit). GCC/Clang còn có <code>__builtin_popcount</code>.</p>
+<h2 id="h-4">Bài 4: phân loại ký tự và đổi hoa → thường</h2>
+<pre class="hljs"><code><span class="hljs-comment">// classify_char.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;ctype.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-comment">// Đổi chữ hoa thành chữ thường không dùng tolower: &#x27;A&#x27; (65) và &#x27;a&#x27; (97) chênh 32</span>
+<span class="hljs-type">static</span> <span class="hljs-type">char</span> <span class="hljs-title function_">to_lower_ascii</span><span class="hljs-params">(<span class="hljs-type">char</span> c)</span> {
+    <span class="hljs-keyword">if</span> (c &gt;= <span class="hljs-string">&#x27;A&#x27;</span> &amp;&amp; c &lt;= <span class="hljs-string">&#x27;Z&#x27;</span>) <span class="hljs-keyword">return</span> (<span class="hljs-type">char</span>)(c + (<span class="hljs-string">&#x27;a&#x27;</span> - <span class="hljs-string">&#x27;A&#x27;</span>));
+    <span class="hljs-keyword">return</span> c;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> c = getchar();
+    <span class="hljs-keyword">if</span> (c == EOF) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> ch = (<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>)c;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isupper</span>(ch))      <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;&#x27;%c&#x27; la chu hoa\n&quot;</span>, ch);
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">islower</span>(ch)) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;&#x27;%c&#x27; la chu thuong\n&quot;</span>, ch);
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isdigit</span>(ch)) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;&#x27;%c&#x27; la chu so\n&quot;</span>, ch);
+    <span class="hljs-keyword">else</span>                  <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;ky tu khac (ma %d)\n&quot;</span>, ch);
+
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;chu thuong: %c\n&quot;</span>, to_lower_ascii((<span class="hljs-type">char</span>)ch));
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<h2 id="h-5">Bài 5: bảng kích thước</h2>
+<p>Trên Linux/macOS 64-bit thường là: <code>char</code> 1, <code>short</code> 2, <code>int</code> 4, <code>long</code> <strong>8</strong>, <code>long long</code> 8, <code>float</code> 4, <code>double</code> 8, con trỏ 8. Trên Windows 64-bit <code>long</code> chỉ <strong>4</strong> (mô hình LLP64), còn lại giống. Chênh lệch ở <code>long</code> là lý do phải dùng <code>&lt;stdint.h&gt;</code> khi cần độ rộng cố định.</p>
+<h2 id="h-6">Bài 6: byte của một <code>double</code></h2>
+<pre class="hljs"><code><span class="hljs-comment">// double_bytes.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">double</span> d = <span class="hljs-number">1.0</span>;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> *p = (<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> *)&amp;d;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">sizeof</span> d; i++) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%02x &quot;</span>, p[i]);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n&quot;</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Trên máy little-endian in <code>00 00 00 00 00 00 f0 3f</code>, tức số 64 bit <code>0x3FF0000000000000</code>. Theo IEEE 754 (1 bit dấu, 11 bit mũ, 52 bit định trị): dấu = 0; mũ <code>0x3FF</code> = 1023 nghĩa là số mũ thực = 1023 − 1023 = 0; định trị toàn 0 (phần ẩn là <code>1.</code>) nên giá trị là <code>1.0 × 2⁰ = 1.0</code>.</p>
+<h2 id="h-7">Bài 7: <code>0.1f + 0.2f</code> và epsilon</h2>
+<pre class="hljs"><code><span class="hljs-comment">// float_eps.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;math.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">float</span> a = <span class="hljs-number">0.1f</span>, b = <span class="hljs-number">0.2f</span>, c = <span class="hljs-number">0.3f</span>;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;a + b = %.9f, c = %.9f\n&quot;</span>, a + b, c);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;a + b == c ? %s\n&quot;</span>, (a + b == c) ? <span class="hljs-string">&quot;dung&quot;</span> : <span class="hljs-string">&quot;sai&quot;</span>);
+
+    <span class="hljs-comment">// Tìm epsilon nhỏ nhất (theo lũy thừa của 2) khiến so sánh gần đúng thành công</span>
+    <span class="hljs-type">float</span> diff = fabsf((a + b) - c);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;|(a+b) - c| = %.10g\n&quot;</span>, diff);
+    <span class="hljs-keyword">if</span> (diff == <span class="hljs-number">0.0f</span>) {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;hai gia tri bang nhau chinh xac\n&quot;</span>);
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">float</span> eps = <span class="hljs-number">1.0f</span>; eps &gt; <span class="hljs-number">0.0f</span>; eps /= <span class="hljs-number">2.0f</span>) {
+            <span class="hljs-keyword">if</span> (diff &gt; eps) {
+                <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;epsilon nho nhat (luy thua 2) de a+b ~= c: %.10g\n&quot;</span>, eps * <span class="hljs-number">2.0f</span>);
+                <span class="hljs-keyword">break</span>;
+            }
+        }
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Với <code>float</code> phép cộng có thể tình cờ cho đúng <code>0.3f</code> (do làm tròn), trong khi với <code>double</code> (<code>0.1 + 0.2 == 0.3</code>) thì luôn sai. Bài học không đổi: <strong>so sánh với sai số</strong>, và chọn sai số theo độ lớn của giá trị (sai số tương đối, <code>fabs(x - y) &lt;= eps * fmax(fabs(x), fabs(y))</code>) chứ không dùng một hằng cố định cho mọi trường hợp.</p>
+
+</article>
+<nav class="chapter-nav" aria-label="Điều hướng chương"><a class="nav-prev" href="solutions-01.html"><small>← Trước</small>Lời giải chương 1</a><a class="nav-next" href="solutions-03.html"><small>Tiếp →</small>Lời giải chương 3</a></nav>
+</main>
+</div>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,store=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
+  function setTheme(t){if(t==='light')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);store('theme',t);
+    document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.setAttribute('aria-pressed',String((b.dataset.themeBtn===t)||(t==='light'&&b.dataset.themeBtn==='light')))})}
+  var cur=root.getAttribute('data-theme')||'light';setTheme(cur);
+  document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.addEventListener('click',function(){setTheme(b.dataset.themeBtn)})});
+  var fs=parseInt(getComputedStyle(root).getPropertyValue('--fs'))||19;
+  document.querySelectorAll('[data-fs]').forEach(function(b){b.addEventListener('click',function(){fs=Math.min(26,Math.max(14,fs+parseInt(b.dataset.fs)));root.style.setProperty('--fs',fs+'px');store('fs',fs)})});
+  var mb=document.getElementById('menu-btn');if(mb)mb.addEventListener('click',function(){document.body.classList.toggle('nav-open')});
+  document.addEventListener('click',function(e){if(document.body.classList.contains('nav-open')&&!e.target.closest('#sidebar')&&e.target.id!=='menu-btn')document.body.classList.remove('nav-open')});
+  document.querySelectorAll('pre').forEach(function(pre){var b=document.createElement('button');b.className='copy-btn';b.type='button';b.textContent='Sao chép';
+    b.addEventListener('click',function(){var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Đã chép'},function(){b.textContent='Lỗi'});setTimeout(function(){b.textContent='Sao chép'},1500)});pre.appendChild(b)});
+  var a=document.querySelector('.chapter-link.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'center'});
+})();
+</script>
+</body>
+</html>

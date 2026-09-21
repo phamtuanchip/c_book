@@ -126,6 +126,7 @@ Nếu thấy số phiên bản, bạn đã sẵn sàng. Nếu thấy `'gcc' is n
 Tạo thư mục `c_book_practice`, tạo file `hello.c` với nội dung:
 
 ```c
+// hello.c
 #include <stdio.h>
 
 int main(void) {

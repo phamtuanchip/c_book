@@ -1,17 +1,17 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -std=c11
-TARGETS = leak_demo use_after_free double_free
+# Build các ví dụ của chương 9. Dùng: make | make asan | make clean
+CC      ?= gcc
+CFLAGS  ?= -std=c11 -Wall -Wextra -g -O1
+LDLIBS  := -lm
+PROGS   := leak_demo use_after_free vec tree
 
-all: $(TARGETS)
+.PHONY: all asan clean
+all: $(PROGS)
 
-leak_demo: leak_demo.c
-	$(CC) $(CFLAGS) -o leak_demo leak_demo.c
+%: %.c
+	$(CC) $(CFLAGS) $< -o $@ $(LDLIBS)
 
-use_after_free: use_after_free.c
-	$(CC) $(CFLAGS) -o use_after_free use_after_free.c
-
-double_free: double_free.c
-	$(CC) $(CFLAGS) -o double_free double_free.c
+asan: CFLAGS += -fsanitize=address,undefined -fno-omit-frame-pointer
+asan: clean all
 
 clean:
-	rm -f $(TARGETS)
+	rm -f $(PROGS) *.exe

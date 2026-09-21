@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lời giải chương 10 — Lập trình C — Từ cơ bản đến nâng cao</title>
+<script>try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.setAttribute('data-theme',t);var f=localStorage.getItem('fs');if(f)document.documentElement.style.setProperty('--fs',f+'px')}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar" id="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Phần I — Nhập môn</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp &amp; cấu trúc chương trình C</a></li></ul></li><li class="part"><div class="part-title">Phần II — Nền tảng ngôn ngữ</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm &amp; phạm vi biến (Functions &amp; Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng &amp; chuỗi (Arrays &amp; Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li></ul></li><li class="part"><div class="part-title">Phần III — Bộ nhớ, dữ liệu, xây dựng</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O &amp; thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi &amp; ngoại lệ trong C</a></li></ul></li><li class="part"><div class="part-title">Phần IV — Kỹ thuật nâng cao</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý &amp; macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng &amp; đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa &amp; profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật &amp; an toàn bộ nhớ</a></li></ul></li><li class="part"><div class="part-title">Phần V — Dự án và phát hành</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing &amp; CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging &amp; deploy</a></li></ul></li><li class="part"><div class="part-title">Phụ lục — Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li><li><a class="chapter-link" href="solutions-02.html">Lời giải chương 2</a></li><li><a class="chapter-link" href="solutions-03.html">Lời giải chương 3</a></li><li><a class="chapter-link" href="solutions-04.html">Lời giải chương 4</a></li><li><a class="chapter-link" href="solutions-05.html">Lời giải chương 5</a></li><li><a class="chapter-link" href="solutions-06.html">Lời giải chương 6</a></li><li><a class="chapter-link" href="solutions-07.html">Lời giải chương 7</a></li><li><a class="chapter-link" href="solutions-08.html">Lời giải chương 8</a></li><li><a class="chapter-link" href="solutions-09.html">Lời giải chương 9</a></li><li><a class="chapter-link active" href="solutions-10.html">Lời giải chương 10</a></li><li><a class="chapter-link" href="solutions-11.html">Lời giải chương 11</a></li><li><a class="chapter-link" href="solutions-12.html">Lời giải chương 12</a></li><li><a class="chapter-link" href="solutions-13.html">Lời giải chương 13</a></li><li><a class="chapter-link" href="solutions-14.html">Lời giải chương 14</a></li><li><a class="chapter-link" href="solutions-15.html">Lời giải chương 15</a></li><li><a class="chapter-link" href="solutions-16.html">Lời giải chương 16</a></li><li><a class="chapter-link" href="solutions-17.html">Lời giải chương 17</a></li><li><a class="chapter-link" href="solutions-18.html">Lời giải chương 18</a></li><li><a class="chapter-link" href="solutions-19.html">Lời giải chương 19</a></li><li><a class="chapter-link" href="solutions-20.html">Lời giải chương 20</a></li><li><a class="chapter-link" href="solutions-21.html">Lời giải chương 21</a></li><li><a class="chapter-link" href="solutions-22.html">Lời giải chương 22</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<div class="main-col">
+<header class="topbar"><button class="menu-btn" id="menu-btn" type="button" aria-label="Mục lục">☰</button><span class="crumb">Lời giải chương 10</span><span class="tools"><button data-fs="-1" type="button" title="Chữ nhỏ hơn">A−</button><button data-fs="1" type="button" title="Chữ lớn hơn">A+</button><button data-theme-btn="light" type="button" title="Nền sáng">Sáng</button><button data-theme-btn="sepia" type="button" title="Nền sepia">Sepia</button><button data-theme-btn="dark" type="button" title="Nền tối">Tối</button></span></header>
+<main class="content">
+<article>
+<header class="chapter-head"><div class="chapter-num">Chương 10</div><h1>Lời giải bài tập</h1></header><nav class="chapter-toc" aria-label="Trong chương này"><div class="toc-title">Trong chương này</div><ol><li><a href="#h-1">Bài 1: danh sách sinh viên, sắp xếp theo gpa giảm dần</a></li><li><a href="#h-2">Bài 2: sắp xếp lại trường để giảm kích thước</a></li><li><a href="#h-3">Bài 3: tagged union Value</a></li><li><a href="#h-4">Bài 4: mở rộng danh sách liên kết</a></li><li><a href="#h-5">Bài 5: danh sách liên kết đôi có splice</a></li><li><a href="#h-6">Bài 6: kiểm tra ngoặc cân bằng bằng stack</a></li><li><a href="#h-7">Bài 7: mô phỏng phục vụ khách bằng hàng đợi</a></li><li><a href="#h-8">Bài 8: đọc header nhị phân từng trường</a></li><li><a href="#h-9">Bài 9: bảng băm (chaining)</a></li></ol></nav>
+<h2 id="h-1">Bài 1: danh sách sinh viên, sắp xếp theo <code>gpa</code> giảm dần</h2>
+<pre class="hljs"><code><span class="hljs-comment">// students.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Student</span> {</span>
+    <span class="hljs-type">char</span>   name[<span class="hljs-number">50</span>];
+    <span class="hljs-type">int</span>    age;
+    <span class="hljs-type">double</span> gpa;
+};
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">cmp_gpa_desc</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">void</span> *a, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *b)</span> {
+    <span class="hljs-type">const</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Student</span> *<span class="hljs-title">x</span> =</span> a, *y = b;
+    <span class="hljs-keyword">return</span> (x-&gt;gpa &lt; y-&gt;gpa) - (x-&gt;gpa &gt; y-&gt;gpa);
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> n;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;So sinh vien: &quot;</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;n) != <span class="hljs-number">1</span> || n &lt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Student</span> *<span class="hljs-title">s</span> =</span> <span class="hljs-built_in">calloc</span>((<span class="hljs-type">size_t</span>)n, <span class="hljs-keyword">sizeof</span> *s);
+    <span class="hljs-keyword">if</span> (!s) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Ten tuoi gpa #%d: &quot;</span>, i + <span class="hljs-number">1</span>);
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%49s %d %lf&quot;</span>, s[i].name, &amp;s[i].age, &amp;s[i].gpa) != <span class="hljs-number">3</span>) { <span class="hljs-built_in">free</span>(s); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+    }
+    qsort(s, (<span class="hljs-type">size_t</span>)n, <span class="hljs-keyword">sizeof</span> *s, cmp_gpa_desc);
+
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n%-20s %4s %5s\n&quot;</span>, <span class="hljs-string">&quot;Ten&quot;</span>, <span class="hljs-string">&quot;Tuoi&quot;</span>, <span class="hljs-string">&quot;GPA&quot;</span>);
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%-20s %4d %5.2f\n&quot;</span>, s[i].name, s[i].age, s[i].gpa);
+    <span class="hljs-built_in">free</span>(s);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Chú ý: <code>%49s</code> giới hạn độ dài (mảng 50), và hàm so sánh trả <code>(a&lt;b) - (a&gt;b)</code> thay vì <code>a - b</code> để tránh sai số/tràn.</p>
+<h2 id="h-2">Bài 2: sắp xếp lại trường để giảm kích thước</h2>
+<pre class="hljs"><code><span class="hljs-comment">// reorder.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stddef.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Bad</span>  {</span> <span class="hljs-type">char</span> a; <span class="hljs-type">double</span> b; <span class="hljs-type">char</span> c; <span class="hljs-type">int</span> d; <span class="hljs-type">short</span> e; };    <span class="hljs-comment">// đệm nhiều</span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Good</span> {</span> <span class="hljs-type">double</span> b; <span class="hljs-type">int</span> d; <span class="hljs-type">short</span> e; <span class="hljs-type">char</span> a; <span class="hljs-type">char</span> c; };    <span class="hljs-comment">// giảm dần theo kích thước</span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Bad  = %zu byte\n&quot;</span>, <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">struct</span> Bad));           <span class="hljs-comment">// 32</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Good = %zu byte\n&quot;</span>, <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">struct</span> Good));          <span class="hljs-comment">// 16</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Giải thích (x86-64): <code>Bad</code>: <code>a</code> (offset 0) + 7 byte đệm để <code>b</code> căn hàng 8 (offset 8); <code>c</code> ở 16 + 3 đệm; <code>d</code> ở 20; <code>e</code> ở 24 + 6 đệm cuối để tổng chia hết cho 8 → <strong>32 byte</strong>. <code>Good</code>: <code>b</code> 0–7, <code>d</code> 8–11, <code>e</code> 12–13, <code>a</code> 14, <code>c</code> 15 → vừa đúng <strong>16 byte</strong>, không đệm.</p>
+<h2 id="h-3">Bài 3: tagged union <code>Value</code></h2>
+<pre class="hljs"><code><span class="hljs-comment">// value.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">enum</span> {</span> VAL_INT, VAL_DOUBLE, VAL_STRING } ValueType;
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span>
+    ValueType type;
+    <span class="hljs-class"><span class="hljs-keyword">union</span> {</span> <span class="hljs-type">long</span> i; <span class="hljs-type">double</span> d; <span class="hljs-type">const</span> <span class="hljs-type">char</span> *s; } as;
+} Value;
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">value_equals</span><span class="hljs-params">(<span class="hljs-type">const</span> Value *a, <span class="hljs-type">const</span> Value *b)</span> {
+    <span class="hljs-keyword">if</span> (a-&gt;type != b-&gt;type) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">switch</span> (a-&gt;type) {
+        <span class="hljs-keyword">case</span> VAL_INT:    <span class="hljs-keyword">return</span> a-&gt;as.i == b-&gt;as.i;
+        <span class="hljs-keyword">case</span> VAL_DOUBLE: <span class="hljs-keyword">return</span> a-&gt;as.d == b-&gt;as.d;
+        <span class="hljs-keyword">case</span> VAL_STRING: <span class="hljs-keyword">return</span> <span class="hljs-built_in">strcmp</span>(a-&gt;as.s, b-&gt;as.s) == <span class="hljs-number">0</span>;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">value_print</span><span class="hljs-params">(<span class="hljs-type">const</span> Value *v)</span> {
+    <span class="hljs-keyword">switch</span> (v-&gt;type) {
+        <span class="hljs-keyword">case</span> VAL_INT:    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;int(%ld)&quot;</span>, v-&gt;as.i); <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> VAL_DOUBLE: <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;double(%g)&quot;</span>, v-&gt;as.d); <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> VAL_STRING: <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;string(\&quot;%s\&quot;)&quot;</span>, v-&gt;as.s); <span class="hljs-keyword">break</span>;
+    }
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    Value a = { .type = VAL_INT, .as.i = <span class="hljs-number">42</span> }, b = { .type = VAL_INT, .as.i = <span class="hljs-number">42</span> };
+    Value c = { .type = VAL_STRING, .as.s = <span class="hljs-string">&quot;xin chao&quot;</span> };
+    value_print(&amp;a); <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot; == &quot;</span>); value_print(&amp;b); <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot; ? %d\n&quot;</span>, value_equals(&amp;a, &amp;b));   <span class="hljs-comment">// 1</span>
+    value_print(&amp;a); <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot; == &quot;</span>); value_print(&amp;c); <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot; ? %d\n&quot;</span>, value_equals(&amp;a, &amp;c));   <span class="hljs-comment">// 0</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Luôn kiểm tra <strong>tag</strong> trước khi đọc trường union — đó là điều biến union thành kiểu an toàn.</p>
+<h2 id="h-4">Bài 4: mở rộng danh sách liên kết</h2>
+<pre class="hljs"><code><span class="hljs-comment">// list_ext.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Node</span> {</span> <span class="hljs-type">int</span> value; <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Node</span> *<span class="hljs-title">next</span>;</span> } Node;
+
+<span class="hljs-type">static</span> Node *<span class="hljs-title function_">node_new</span><span class="hljs-params">(<span class="hljs-type">int</span> v)</span> { Node *n = <span class="hljs-built_in">malloc</span>(<span class="hljs-keyword">sizeof</span> *n); <span class="hljs-keyword">if</span> (n) { n-&gt;value = v; n-&gt;next = <span class="hljs-literal">NULL</span>; } <span class="hljs-keyword">return</span> n; }
+
+<span class="hljs-comment">/* Chèn vào danh sách đã sắp xếp tăng dần, giữ thứ tự. */</span>
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">list_insert_sorted</span><span class="hljs-params">(Node **head, <span class="hljs-type">int</span> v)</span> {
+    Node *n = node_new(v);
+    <span class="hljs-keyword">if</span> (!n) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    Node **pp = head;
+    <span class="hljs-keyword">while</span> (*pp &amp;&amp; (*pp)-&gt;value &lt; v) pp = &amp;(*pp)-&gt;next;     <span class="hljs-comment">// dừng ở chỗ nút đầu tiên &gt;= v</span>
+    n-&gt;next = *pp;
+    *pp = n;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">size_t</span> <span class="hljs-title function_">list_length</span><span class="hljs-params">(<span class="hljs-type">const</span> Node *h)</span> { <span class="hljs-type">size_t</span> c = <span class="hljs-number">0</span>; <span class="hljs-keyword">for</span> (; h; h = h-&gt;next) c++; <span class="hljs-keyword">return</span> c; }
+
+<span class="hljs-comment">/* Trả nút thứ i (0-based) hoặc NULL */</span>
+<span class="hljs-type">static</span> Node *<span class="hljs-title function_">list_nth</span><span class="hljs-params">(Node *h, <span class="hljs-type">size_t</span> i)</span> { <span class="hljs-keyword">while</span> (h &amp;&amp; i--) h = h-&gt;next; <span class="hljs-keyword">return</span> h; }
+
+<span class="hljs-comment">/* Nối b vào cuối a; trả về đầu danh sách kết quả (b thuộc về danh sách mới, đừng free hai lần) */</span>
+<span class="hljs-type">static</span> Node *<span class="hljs-title function_">list_concat</span><span class="hljs-params">(Node *a, Node *b)</span> {
+    <span class="hljs-keyword">if</span> (!a) <span class="hljs-keyword">return</span> b;
+    Node *t = a;
+    <span class="hljs-keyword">while</span> (t-&gt;next) t = t-&gt;next;
+    t-&gt;next = b;
+    <span class="hljs-keyword">return</span> a;
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">list_free</span><span class="hljs-params">(Node *h)</span> { <span class="hljs-keyword">while</span> (h) { Node *n = h-&gt;next; <span class="hljs-built_in">free</span>(h); h = n; } }
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    Node *a = <span class="hljs-literal">NULL</span>, *b = <span class="hljs-literal">NULL</span>;
+    <span class="hljs-type">int</span> va[] = {<span class="hljs-number">30</span>, <span class="hljs-number">10</span>, <span class="hljs-number">20</span>}, vb[] = {<span class="hljs-number">5</span>, <span class="hljs-number">25</span>};
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">3</span>; i++) list_insert_sorted(&amp;a, va[i]);      <span class="hljs-comment">// 10 20 30</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">2</span>; i++) list_insert_sorted(&amp;b, vb[i]);      <span class="hljs-comment">// 5 25</span>
+    a = list_concat(a, b);                                          <span class="hljs-comment">// 10 20 30 5 25</span>
+    <span class="hljs-keyword">for</span> (Node *p = a; p; p = p-&gt;next) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d &quot;</span>, p-&gt;value);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\nlen = %zu, nth(3) = %d\n&quot;</span>, list_length(a), list_nth(a, <span class="hljs-number">3</span>)-&gt;value);   <span class="hljs-comment">// 5, 5</span>
+    list_free(a);                                                   <span class="hljs-comment">// giải phóng cả hai (b đã nằm trong a)</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<h2 id="h-5">Bài 5: danh sách liên kết đôi có <code>splice</code></h2>
+<pre class="hljs"><code><span class="hljs-comment">// dlist.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">DNode</span> {</span> <span class="hljs-type">int</span> v; <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">DNode</span> *<span class="hljs-title">prev</span>, *<span class="hljs-title">next</span>;</span> } DNode;
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span> DNode *head, *tail; } DList;
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">push_back</span><span class="hljs-params">(DList *l, <span class="hljs-type">int</span> v)</span> {
+    DNode *n = <span class="hljs-built_in">malloc</span>(<span class="hljs-keyword">sizeof</span> *n);
+    <span class="hljs-keyword">if</span> (!n) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    n-&gt;v = v; n-&gt;next = <span class="hljs-literal">NULL</span>; n-&gt;prev = l-&gt;tail;
+    <span class="hljs-keyword">if</span> (l-&gt;tail) l-&gt;tail-&gt;next = n; <span class="hljs-keyword">else</span> l-&gt;head = n;
+    l-&gt;tail = n;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-comment">/* Cắt đoạn [first..last] (cùng thuộc `from`) và chèn vào `to` ngay sau nút `pos` (NULL = chèn ở đầu). O(1). */</span>
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">splice</span><span class="hljs-params">(DList *from, DNode *first, DNode *last, DList *to, DNode *pos)</span> {
+    <span class="hljs-comment">/* 1) gỡ đoạn khỏi from */</span>
+    <span class="hljs-keyword">if</span> (first-&gt;prev) first-&gt;prev-&gt;next = last-&gt;next; <span class="hljs-keyword">else</span> from-&gt;head = last-&gt;next;
+    <span class="hljs-keyword">if</span> (last-&gt;next)  last-&gt;next-&gt;prev = first-&gt;prev; <span class="hljs-keyword">else</span> from-&gt;tail = first-&gt;prev;
+
+    <span class="hljs-comment">/* 2) gắn vào to sau pos */</span>
+    DNode *after = pos ? pos-&gt;next : to-&gt;head;
+    first-&gt;prev = pos;
+    last-&gt;next = after;
+    <span class="hljs-keyword">if</span> (pos) pos-&gt;next = first; <span class="hljs-keyword">else</span> to-&gt;head = first;
+    <span class="hljs-keyword">if</span> (after) after-&gt;prev = last; <span class="hljs-keyword">else</span> to-&gt;tail = last;
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">print</span><span class="hljs-params">(<span class="hljs-type">const</span> DList *l)</span> { <span class="hljs-keyword">for</span> (DNode *p = l-&gt;head; p; p = p-&gt;next) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d &quot;</span>, p-&gt;v); <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n&quot;</span>); }
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">free_list</span><span class="hljs-params">(DList *l)</span> { <span class="hljs-keyword">for</span> (DNode *p = l-&gt;head, *n; p; p = n) { n = p-&gt;next; <span class="hljs-built_in">free</span>(p); } l-&gt;head = l-&gt;tail = <span class="hljs-literal">NULL</span>; }
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    DList a = {<span class="hljs-number">0</span>}, b = {<span class="hljs-number">0</span>};
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= <span class="hljs-number">5</span>; i++) push_back(&amp;a, i);           <span class="hljs-comment">// 1 2 3 4 5</span>
+    push_back(&amp;b, <span class="hljs-number">100</span>); push_back(&amp;b, <span class="hljs-number">200</span>);                  <span class="hljs-comment">// 100 200</span>
+    splice(&amp;a, a.head-&gt;next, a.head-&gt;next-&gt;next, &amp;b, b.head);   <span class="hljs-comment">// chuyển [2,3] vào b sau 100</span>
+    print(&amp;a);                                               <span class="hljs-comment">// 1 4 5</span>
+    print(&amp;b);                                               <span class="hljs-comment">// 100 2 3 200</span>
+    free_list(&amp;a); free_list(&amp;b);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Ưu điểm của danh sách đôi: xóa/chèn một nút đã biết địa chỉ là <strong>O(1)</strong> và <code>splice</code> chuyển cả đoạn không cần sao chép.</p>
+<h2 id="h-6">Bài 6: kiểm tra ngoặc cân bằng bằng stack</h2>
+<pre class="hljs"><code><span class="hljs-comment">// brackets.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">balanced</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *s)</span> {
+    <span class="hljs-type">char</span> <span class="hljs-built_in">stack</span>[<span class="hljs-number">256</span>];
+    <span class="hljs-type">size_t</span> top = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (; *s; s++) {
+        <span class="hljs-type">char</span> c = *s;
+        <span class="hljs-keyword">if</span> (c == <span class="hljs-string">&#x27;(&#x27;</span> || c == <span class="hljs-string">&#x27;[&#x27;</span> || c == <span class="hljs-string">&#x27;{&#x27;</span>) {
+            <span class="hljs-keyword">if</span> (top == <span class="hljs-keyword">sizeof</span> <span class="hljs-built_in">stack</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;                 <span class="hljs-comment">// quá sâu</span>
+            <span class="hljs-built_in">stack</span>[top++] = c;
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (c == <span class="hljs-string">&#x27;)&#x27;</span> || c == <span class="hljs-string">&#x27;]&#x27;</span> || c == <span class="hljs-string">&#x27;}&#x27;</span>) {
+            <span class="hljs-keyword">if</span> (top == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;                            <span class="hljs-comment">// đóng khi chưa mở</span>
+            <span class="hljs-type">char</span> o = <span class="hljs-built_in">stack</span>[--top];
+            <span class="hljs-keyword">if</span> ((c == <span class="hljs-string">&#x27;)&#x27;</span> &amp;&amp; o != <span class="hljs-string">&#x27;(&#x27;</span>) || (c == <span class="hljs-string">&#x27;]&#x27;</span> &amp;&amp; o != <span class="hljs-string">&#x27;[&#x27;</span>) || (c == <span class="hljs-string">&#x27;}&#x27;</span> &amp;&amp; o != <span class="hljs-string">&#x27;{&#x27;</span>)) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+        }
+    }
+    <span class="hljs-keyword">return</span> top == <span class="hljs-number">0</span>;                                           <span class="hljs-comment">// không còn ngoặc mở dở</span>
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">const</span> <span class="hljs-type">char</span> *tests[] = {<span class="hljs-string">&quot;([]{})&quot;</span>, <span class="hljs-string">&quot;([)]&quot;</span>, <span class="hljs-string">&quot;((&quot;</span>, <span class="hljs-string">&quot;&quot;</span>, <span class="hljs-string">&quot;a(b)c&quot;</span>};
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">sizeof</span> tests / <span class="hljs-keyword">sizeof</span> tests[<span class="hljs-number">0</span>]; i++)
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%-8s -&gt; %s\n&quot;</span>, tests[i], balanced(tests[i]) ? <span class="hljs-string">&quot;can bang&quot;</span> : <span class="hljs-string">&quot;sai&quot;</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<h2 id="h-7">Bài 7: mô phỏng phục vụ khách bằng hàng đợi</h2>
+<pre class="hljs"><code><span class="hljs-comment">// bank.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span> <span class="hljs-type">int</span> id, service; } Customer;
+
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> CAP 16</span>
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span> Customer buf[CAP]; <span class="hljs-type">int</span> head, count; } Queue;
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">push</span><span class="hljs-params">(Queue *q, Customer c)</span> {
+    <span class="hljs-keyword">if</span> (q-&gt;count == CAP) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    q-&gt;buf[(q-&gt;head + q-&gt;count++) % CAP] = c;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">pop</span><span class="hljs-params">(Queue *q, Customer *c)</span> {
+    <span class="hljs-keyword">if</span> (!q-&gt;count) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    *c = q-&gt;buf[q-&gt;head];
+    q-&gt;head = (q-&gt;head + <span class="hljs-number">1</span>) % CAP;
+    q-&gt;count--;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    Queue q = {<span class="hljs-number">0</span>};
+    <span class="hljs-type">int</span> service[] = {<span class="hljs-number">3</span>, <span class="hljs-number">1</span>, <span class="hljs-number">4</span>, <span class="hljs-number">2</span>};
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">4</span>; i++) push(&amp;q, (Customer){ i + <span class="hljs-number">1</span>, service[i] });
+
+    <span class="hljs-type">int</span> clock = <span class="hljs-number">0</span>;
+    Customer c;
+    <span class="hljs-keyword">while</span> (pop(&amp;q, &amp;c) == <span class="hljs-number">0</span>) {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;t=%2d: bat dau phuc vu khach %d (%d phut)\n&quot;</span>, clock, c.id, c.service);
+        clock += c.service;
+    }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;t=%2d: xong\n&quot;</span>, clock);                            <span class="hljs-comment">// 10</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<h2 id="h-8">Bài 8: đọc header nhị phân từng trường</h2>
+<p>Không nên <code>fread(&amp;hdr, sizeof hdr, 1, f)</code> vì: (1) <strong>padding</strong> giữa các trường (<code>uint16_t</code> sau 4 byte magic, rồi <code>uint32_t</code> cần căn hàng 4 → 2 byte đệm không có trong file); (2) <strong>endianness</strong> của file có thể khác của máy; (3) <code>sizeof</code> struct do compiler quyết định. Đọc từng trường với thứ tự byte cố định:</p>
+<pre class="hljs"><code><span class="hljs-comment">// read_header.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdint.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">read_u16_le</span><span class="hljs-params">(FILE *f, <span class="hljs-type">uint16_t</span> *v)</span> {
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> b[<span class="hljs-number">2</span>];
+    <span class="hljs-keyword">if</span> (fread(b, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, f) != <span class="hljs-number">2</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    *v = (<span class="hljs-type">uint16_t</span>)(b[<span class="hljs-number">0</span>] | (b[<span class="hljs-number">1</span>] &lt;&lt; <span class="hljs-number">8</span>));
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">read_u32_le</span><span class="hljs-params">(FILE *f, <span class="hljs-type">uint32_t</span> *v)</span> {
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> b[<span class="hljs-number">4</span>];
+    <span class="hljs-keyword">if</span> (fread(b, <span class="hljs-number">1</span>, <span class="hljs-number">4</span>, f) != <span class="hljs-number">4</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    *v = (<span class="hljs-type">uint32_t</span>)b[<span class="hljs-number">0</span>] | ((<span class="hljs-type">uint32_t</span>)b[<span class="hljs-number">1</span>] &lt;&lt; <span class="hljs-number">8</span>) | ((<span class="hljs-type">uint32_t</span>)b[<span class="hljs-number">2</span>] &lt;&lt; <span class="hljs-number">16</span>) | ((<span class="hljs-type">uint32_t</span>)b[<span class="hljs-number">3</span>] &lt;&lt; <span class="hljs-number">24</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> **argv)</span> {
+    <span class="hljs-keyword">if</span> (argc != <span class="hljs-number">2</span>) { <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;cach dung: %s file\n&quot;</span>, argv[<span class="hljs-number">0</span>]); <span class="hljs-keyword">return</span> <span class="hljs-number">2</span>; }
+    FILE *f = fopen(argv[<span class="hljs-number">1</span>], <span class="hljs-string">&quot;rb&quot;</span>);
+    <span class="hljs-keyword">if</span> (!f) { perror(argv[<span class="hljs-number">1</span>]); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+
+    <span class="hljs-type">char</span> magic[<span class="hljs-number">4</span>];
+    <span class="hljs-type">uint16_t</span> version;
+    <span class="hljs-type">uint32_t</span> count;
+    <span class="hljs-keyword">if</span> (fread(magic, <span class="hljs-number">1</span>, <span class="hljs-number">4</span>, f) != <span class="hljs-number">4</span> || <span class="hljs-built_in">memcmp</span>(magic, <span class="hljs-string">&quot;CBK1&quot;</span>, <span class="hljs-number">4</span>) != <span class="hljs-number">0</span> ||
+        read_u16_le(f, &amp;version) != <span class="hljs-number">0</span> || read_u32_le(f, &amp;count) != <span class="hljs-number">0</span>) {
+        <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;header khong hop le\n&quot;</span>);
+        fclose(f);
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;phien ban %u, %u ban ghi\n&quot;</span>, (<span class="hljs-type">unsigned</span>)version, (<span class="hljs-type">unsigned</span>)count);
+    fclose(f);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>(Định dạng giả định: magic <code>CBK1</code>, phiên bản và số bản ghi theo little-endian.) Nhớ kiểm tra <code>count</code> không vượt quá kích thước file trước khi cấp phát theo nó.</p>
+<h2 id="h-9">Bài 9: bảng băm (chaining)</h2>
+<pre class="hljs"><code><span class="hljs-comment">// hashtable.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Entry</span> {</span> <span class="hljs-type">char</span> *key; <span class="hljs-type">int</span> value; <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Entry</span> *<span class="hljs-title">next</span>;</span> } Entry;
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span> Entry **buckets; <span class="hljs-type">size_t</span> nbuckets; } HashTable;
+
+<span class="hljs-type">static</span> <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> <span class="hljs-title function_">hash_str</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *s)</span> {                 <span class="hljs-comment">// djb2</span>
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> h = <span class="hljs-number">5381</span>;
+    <span class="hljs-keyword">for</span> (; *s; s++) h = h * <span class="hljs-number">33</span> + (<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>)*s;
+    <span class="hljs-keyword">return</span> h;
+}
+
+<span class="hljs-type">static</span> HashTable *<span class="hljs-title function_">ht_new</span><span class="hljs-params">(<span class="hljs-type">size_t</span> n)</span> {
+    HashTable *t = <span class="hljs-built_in">malloc</span>(<span class="hljs-keyword">sizeof</span> *t);
+    <span class="hljs-keyword">if</span> (!t) <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+    t-&gt;buckets = <span class="hljs-built_in">calloc</span>(n, <span class="hljs-keyword">sizeof</span> *t-&gt;buckets);
+    <span class="hljs-keyword">if</span> (!t-&gt;buckets) { <span class="hljs-built_in">free</span>(t); <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>; }
+    t-&gt;nbuckets = n;
+    <span class="hljs-keyword">return</span> t;
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">ht_put</span><span class="hljs-params">(HashTable *t, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *key, <span class="hljs-type">int</span> value)</span> {
+    <span class="hljs-type">size_t</span> i = hash_str(key) % t-&gt;nbuckets;
+    <span class="hljs-keyword">for</span> (Entry *e = t-&gt;buckets[i]; e; e = e-&gt;next)
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strcmp</span>(e-&gt;key, key) == <span class="hljs-number">0</span>) { e-&gt;value = value; <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>; }   <span class="hljs-comment">// cập nhật nếu đã có</span>
+    Entry *e = <span class="hljs-built_in">malloc</span>(<span class="hljs-keyword">sizeof</span> *e);
+    <span class="hljs-keyword">if</span> (!e) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    <span class="hljs-type">size_t</span> len = <span class="hljs-built_in">strlen</span>(key) + <span class="hljs-number">1</span>;
+    e-&gt;key = <span class="hljs-built_in">malloc</span>(len);
+    <span class="hljs-keyword">if</span> (!e-&gt;key) { <span class="hljs-built_in">free</span>(e); <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>; }
+    <span class="hljs-built_in">memcpy</span>(e-&gt;key, key, len);
+    e-&gt;value = value;
+    e-&gt;next = t-&gt;buckets[i];
+    t-&gt;buckets[i] = e;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">ht_get</span><span class="hljs-params">(<span class="hljs-type">const</span> HashTable *t, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *key, <span class="hljs-type">int</span> *out)</span> {
+    <span class="hljs-keyword">for</span> (Entry *e = t-&gt;buckets[hash_str(key) % t-&gt;nbuckets]; e; e = e-&gt;next)
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strcmp</span>(e-&gt;key, key) == <span class="hljs-number">0</span>) { *out = e-&gt;value; <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>; }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">ht_remove</span><span class="hljs-params">(HashTable *t, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *key)</span> {
+    <span class="hljs-keyword">for</span> (Entry **pp = &amp;t-&gt;buckets[hash_str(key) % t-&gt;nbuckets]; *pp; pp = &amp;(*pp)-&gt;next) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strcmp</span>((*pp)-&gt;key, key) == <span class="hljs-number">0</span>) {
+            Entry *dead = *pp;
+            *pp = dead-&gt;next;
+            <span class="hljs-built_in">free</span>(dead-&gt;key);
+            <span class="hljs-built_in">free</span>(dead);
+            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+        }
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">ht_free</span><span class="hljs-params">(HashTable *t)</span> {
+    <span class="hljs-keyword">if</span> (!t) <span class="hljs-keyword">return</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; t-&gt;nbuckets; i++)
+        <span class="hljs-keyword">for</span> (Entry *e = t-&gt;buckets[i], *n; e; e = n) { n = e-&gt;next; <span class="hljs-built_in">free</span>(e-&gt;key); <span class="hljs-built_in">free</span>(e); }
+    <span class="hljs-built_in">free</span>(t-&gt;buckets);
+    <span class="hljs-built_in">free</span>(t);
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    HashTable *t = ht_new(<span class="hljs-number">16</span>);
+    <span class="hljs-keyword">if</span> (!t) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    ht_put(t, <span class="hljs-string">&quot;an&quot;</span>, <span class="hljs-number">10</span>); ht_put(t, <span class="hljs-string">&quot;binh&quot;</span>, <span class="hljs-number">20</span>); ht_put(t, <span class="hljs-string">&quot;an&quot;</span>, <span class="hljs-number">11</span>);   <span class="hljs-comment">// cập nhật &quot;an&quot;</span>
+    <span class="hljs-type">int</span> v;
+    <span class="hljs-keyword">if</span> (ht_get(t, <span class="hljs-string">&quot;an&quot;</span>, &amp;v) == <span class="hljs-number">0</span>) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;an = %d\n&quot;</span>, v);              <span class="hljs-comment">// 11</span>
+    ht_remove(t, <span class="hljs-string">&quot;binh&quot;</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;binh %s\n&quot;</span>, ht_get(t, <span class="hljs-string">&quot;binh&quot;</span>, &amp;v) == <span class="hljs-number">0</span> ? <span class="hljs-string">&quot;con&quot;</span> : <span class="hljs-string">&quot;da xoa&quot;</span>);
+    ht_free(t);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Độ phức tạp trung bình <code>O(1)</code> nếu hàm băm phân bố tốt và hệ số tải (<code>số phần tử / nbuckets</code>) được giữ thấp — bài mở rộng: tự động tăng số bucket khi hệ số tải &gt; 0,75 (rehash).</p>
+
+</article>
+<nav class="chapter-nav" aria-label="Điều hướng chương"><a class="nav-prev" href="solutions-09.html"><small>← Trước</small>Lời giải chương 9</a><a class="nav-next" href="solutions-11.html"><small>Tiếp →</small>Lời giải chương 11</a></nav>
+</main>
+</div>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,store=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
+  function setTheme(t){if(t==='light')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);store('theme',t);
+    document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.setAttribute('aria-pressed',String((b.dataset.themeBtn===t)||(t==='light'&&b.dataset.themeBtn==='light')))})}
+  var cur=root.getAttribute('data-theme')||'light';setTheme(cur);
+  document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.addEventListener('click',function(){setTheme(b.dataset.themeBtn)})});
+  var fs=parseInt(getComputedStyle(root).getPropertyValue('--fs'))||19;
+  document.querySelectorAll('[data-fs]').forEach(function(b){b.addEventListener('click',function(){fs=Math.min(26,Math.max(14,fs+parseInt(b.dataset.fs)));root.style.setProperty('--fs',fs+'px');store('fs',fs)})});
+  var mb=document.getElementById('menu-btn');if(mb)mb.addEventListener('click',function(){document.body.classList.toggle('nav-open')});
+  document.addEventListener('click',function(e){if(document.body.classList.contains('nav-open')&&!e.target.closest('#sidebar')&&e.target.id!=='menu-btn')document.body.classList.remove('nav-open')});
+  document.querySelectorAll('pre').forEach(function(pre){var b=document.createElement('button');b.className='copy-btn';b.type='button';b.textContent='Sao chép';
+    b.addEventListener('click',function(){var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Đã chép'},function(){b.textContent='Lỗi'});setTimeout(function(){b.textContent='Sao chép'},1500)});pre.appendChild(b)});
+  var a=document.querySelector('.chapter-link.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'center'});
+})();
+</script>
+</body>
+</html>

@@ -1,27 +1,19 @@
+// bin_convert.c
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdint.h>
 
-void print_binary(unsigned int v) {
-    if (v == 0) { printf("0\n"); return; }
-    unsigned int bits = sizeof(v) * 8;
-    int started = 0;
-    for (int i = bits - 1; i >= 0; --i) {
-        unsigned int mask = 1u << i;
-        int bit = (v & mask) ? 1 : 0;
-        if (bit) started = 1;
-        if (started) putchar(bit ? '1' : '0');
+// In n dưới dạng 32 bit nhị phân, nhóm mỗi 8 bit cho dễ đọc
+void print_binary(uint32_t n) {
+    for (int i = 31; i >= 0; i--) {
+        putchar((n >> i) & 1 ? '1' : '0');   // dịch phải i bit, lấy bit thấp nhất
+        if (i % 8 == 0 && i != 0) putchar(' ');
     }
     putchar('\n');
 }
 
 int main(void) {
-    unsigned int x;
-    printf("Nhap mot so nguyen duong (unsigned): ");
-    if (scanf("%u", &x) != 1) {
-        fprintf(stderr, "Gia tri khong hop le.\n");
-        return 1;
-    }
-    printf("Binary: ");
-    print_binary(x);
+    print_binary(13);          // 00000000 00000000 00000000 00001101
+    print_binary(255);
+    print_binary((uint32_t)-5);   // thấy biểu diễn bù hai của -5
     return 0;
 }

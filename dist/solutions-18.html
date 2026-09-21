@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lời giải chương 18 — Lập trình C — Từ cơ bản đến nâng cao</title>
+<script>try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.setAttribute('data-theme',t);var f=localStorage.getItem('fs');if(f)document.documentElement.style.setProperty('--fs',f+'px')}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar" id="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Phần I — Nhập môn</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp &amp; cấu trúc chương trình C</a></li></ul></li><li class="part"><div class="part-title">Phần II — Nền tảng ngôn ngữ</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm &amp; phạm vi biến (Functions &amp; Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng &amp; chuỗi (Arrays &amp; Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li></ul></li><li class="part"><div class="part-title">Phần III — Bộ nhớ, dữ liệu, xây dựng</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O &amp; thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi &amp; ngoại lệ trong C</a></li></ul></li><li class="part"><div class="part-title">Phần IV — Kỹ thuật nâng cao</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý &amp; macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng &amp; đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa &amp; profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật &amp; an toàn bộ nhớ</a></li></ul></li><li class="part"><div class="part-title">Phần V — Dự án và phát hành</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing &amp; CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging &amp; deploy</a></li></ul></li><li class="part"><div class="part-title">Phụ lục — Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li><li><a class="chapter-link" href="solutions-02.html">Lời giải chương 2</a></li><li><a class="chapter-link" href="solutions-03.html">Lời giải chương 3</a></li><li><a class="chapter-link" href="solutions-04.html">Lời giải chương 4</a></li><li><a class="chapter-link" href="solutions-05.html">Lời giải chương 5</a></li><li><a class="chapter-link" href="solutions-06.html">Lời giải chương 6</a></li><li><a class="chapter-link" href="solutions-07.html">Lời giải chương 7</a></li><li><a class="chapter-link" href="solutions-08.html">Lời giải chương 8</a></li><li><a class="chapter-link" href="solutions-09.html">Lời giải chương 9</a></li><li><a class="chapter-link" href="solutions-10.html">Lời giải chương 10</a></li><li><a class="chapter-link" href="solutions-11.html">Lời giải chương 11</a></li><li><a class="chapter-link" href="solutions-12.html">Lời giải chương 12</a></li><li><a class="chapter-link" href="solutions-13.html">Lời giải chương 13</a></li><li><a class="chapter-link" href="solutions-14.html">Lời giải chương 14</a></li><li><a class="chapter-link" href="solutions-15.html">Lời giải chương 15</a></li><li><a class="chapter-link" href="solutions-16.html">Lời giải chương 16</a></li><li><a class="chapter-link" href="solutions-17.html">Lời giải chương 17</a></li><li><a class="chapter-link active" href="solutions-18.html">Lời giải chương 18</a></li><li><a class="chapter-link" href="solutions-19.html">Lời giải chương 19</a></li><li><a class="chapter-link" href="solutions-20.html">Lời giải chương 20</a></li><li><a class="chapter-link" href="solutions-21.html">Lời giải chương 21</a></li><li><a class="chapter-link" href="solutions-22.html">Lời giải chương 22</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<div class="main-col">
+<header class="topbar"><button class="menu-btn" id="menu-btn" type="button" aria-label="Mục lục">☰</button><span class="crumb">Lời giải chương 18</span><span class="tools"><button data-fs="-1" type="button" title="Chữ nhỏ hơn">A−</button><button data-fs="1" type="button" title="Chữ lớn hơn">A+</button><button data-theme-btn="light" type="button" title="Nền sáng">Sáng</button><button data-theme-btn="sepia" type="button" title="Nền sepia">Sepia</button><button data-theme-btn="dark" type="button" title="Nền tối">Tối</button></span></header>
+<main class="content">
+<article>
+<header class="chapter-head"><div class="chapter-num">Chương 18</div><h1>Lời giải bài tập</h1></header><nav class="chapter-toc" aria-label="Trong chương này"><div class="toc-title">Trong chương này</div><ol><li><a href="#h-1">Bài 1: vuln.c với ASan và bảo vệ stack</a></li><li><a href="#h-2">Bài 2: format string</a></li><li><a href="#h-3">Bài 3: cấp phát an toàn tràn số</a></li><li><a href="#h-4">Bài 4: safe_add, safe_mul không UB</a></li><li><a href="#h-5">Bài 5: chống path traversal</a></li><li><a href="#h-6">Bài 6: fuzz target và vòng lặp fuzz</a></li><li><a href="#h-7">Bài 7: consteq so với memcmp</a></li><li><a href="#h-8">Bài 8: xóa bí mật khỏi bộ nhớ</a></li><li><a href="#h-9">Bài 9: kiểm toán một dự án nhỏ</a></li></ol></nav>
+<blockquote>
+<p>Chỉ thử các chương trình lỗi trên máy của bạn, trong môi trường thử nghiệm.</p>
+</blockquote>
+<h2 id="h-1">Bài 1: <code>vuln.c</code> với ASan và bảo vệ stack</h2>
+<p><code>gcc -std=c11 -g -fsanitize=address vuln.c -o vuln &amp;&amp; ./vuln AAAAAAAAAAAAAAAAAAAAAAAA</code> cho <code>stack-buffer-overflow</code> ở <code>strcpy</code>, chỉ ra biến <code>buf</code> và độ lệch tràn. Bản vá dùng <code>snprintf(buf, sizeof buf, &quot;%s&quot;, name)</code> cho báo cáo sạch.</p>
+<p>Không dùng ASan, so sánh bảo vệ của compiler: <code>-fno-stack-protector</code> → chương trình có thể crash <code>Segmentation fault</code> (địa chỉ trở về bị ghi đè); <code>-fstack-protector-strong</code> → <code>*** stack smashing detected ***: terminated</code> rồi <code>Aborted</code> (canary bị phá phát hiện trước khi <code>ret</code>).</p>
+<h2 id="h-2">Bài 2: format string</h2>
+<pre class="hljs"><code><span class="hljs-comment">// fmt_demo.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> **argv)</span> {
+    <span class="hljs-keyword">if</span> (argc &lt; <span class="hljs-number">2</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    <span class="hljs-built_in">printf</span>(argv[<span class="hljs-number">1</span>]);                 <span class="hljs-comment">// SAI: người dùng điều khiển chuỗi định dạng</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n&quot;</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%s\n&quot;</span>, argv[<span class="hljs-number">1</span>]);         <span class="hljs-comment">// ĐÚNG</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p><code>./fmt_demo &quot;%x %x %x %x&quot;</code> in ra các giá trị đọc từ stack (rò rỉ). Với <code>gcc -Wall -Wformat-security</code> bạn nhận <code>warning: format not a string literal and no format arguments</code>; thêm <code>-Werror=format-security</code> biến nó thành lỗi. Bản đúng là dòng thứ hai (hoặc <code>puts</code>).</p>
+<h2 id="h-3">Bài 3: cấp phát an toàn tràn số</h2>
+<pre class="hljs"><code><span class="hljs-comment">// xmalloc_array.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdint.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-comment">/* NULL nếu n * size tràn hoặc hết bộ nhớ */</span>
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> *<span class="hljs-title function_">xmalloc_array</span><span class="hljs-params">(<span class="hljs-type">size_t</span> n, <span class="hljs-type">size_t</span> size)</span> {
+    <span class="hljs-keyword">if</span> (size != <span class="hljs-number">0</span> &amp;&amp; n &gt; SIZE_MAX / size) <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">malloc</span>(n * size);
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> *<span class="hljs-title function_">xmalloc_array_builtin</span><span class="hljs-params">(<span class="hljs-type">size_t</span> n, <span class="hljs-type">size_t</span> size)</span> {       <span class="hljs-comment">// gcc/clang</span>
+    <span class="hljs-type">size_t</span> total;
+    <span class="hljs-keyword">if</span> (__builtin_mul_overflow(n, size, &amp;total)) <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">malloc</span>(total);
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%p\n&quot;</span>, xmalloc_array(SIZE_MAX / <span class="hljs-number">2</span> + <span class="hljs-number">1</span>, <span class="hljs-number">2</span>));           <span class="hljs-comment">// (nil)</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%p\n&quot;</span>, xmalloc_array_builtin(SIZE_MAX / <span class="hljs-number">2</span> + <span class="hljs-number">1</span>, <span class="hljs-number">2</span>));   <span class="hljs-comment">// (nil)</span>
+    <span class="hljs-type">void</span> *p = xmalloc_array(<span class="hljs-number">1000</span>, <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">int</span>));
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%s\n&quot;</span>, p ? <span class="hljs-string">&quot;ok&quot;</span> : <span class="hljs-string">&quot;loi&quot;</span>);
+    <span class="hljs-built_in">free</span>(p);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<h2 id="h-4">Bài 4: <code>safe_add</code>, <code>safe_mul</code> không UB</h2>
+<pre class="hljs"><code><span class="hljs-comment">// safe_arith.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;limits.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">safe_add</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b, <span class="hljs-type">int</span> *out)</span> {
+    <span class="hljs-keyword">if</span> ((b &gt; <span class="hljs-number">0</span> &amp;&amp; a &gt; INT_MAX - b) || (b &lt; <span class="hljs-number">0</span> &amp;&amp; a &lt; INT_MIN - b)) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    *out = a + b;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">safe_mul</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b, <span class="hljs-type">int</span> *out)</span> {
+    <span class="hljs-keyword">if</span> (a == <span class="hljs-number">0</span> || b == <span class="hljs-number">0</span>) { *out = <span class="hljs-number">0</span>; <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>; }
+    <span class="hljs-keyword">if</span> ((a == <span class="hljs-number">-1</span> &amp;&amp; b == INT_MIN) || (b == <span class="hljs-number">-1</span> &amp;&amp; a == INT_MIN)) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    <span class="hljs-keyword">if</span> (a &gt; <span class="hljs-number">0</span> ? (b &gt; <span class="hljs-number">0</span> ? a &gt; INT_MAX / b : b &lt; INT_MIN / a)
+              : (b &gt; <span class="hljs-number">0</span> ? a &lt; INT_MIN / b : b &lt; INT_MAX / a)) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    *out = a * b;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> r;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d %d\n&quot;</span>, safe_add(INT_MAX, <span class="hljs-number">1</span>, &amp;r), safe_add(INT_MAX - <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, &amp;r));       <span class="hljs-comment">// -1 0</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d %d\n&quot;</span>, safe_add(INT_MIN, <span class="hljs-number">-1</span>, &amp;r), safe_mul(INT_MIN, <span class="hljs-number">-1</span>, &amp;r));         <span class="hljs-comment">// -1 -1</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d %d\n&quot;</span>, safe_mul(<span class="hljs-number">46341</span>, <span class="hljs-number">46341</span>, &amp;r), safe_mul(<span class="hljs-number">46340</span>, <span class="hljs-number">46340</span>, &amp;r));       <span class="hljs-comment">// -1 0</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Kiểm tra bằng <code>-fsanitize=undefined</code>: không có báo cáo tràn số vì mọi phép tính nguy hiểm đã bị chặn <strong>trước</strong> khi thực hiện.</p>
+<h2 id="h-5">Bài 5: chống path traversal</h2>
+<pre class="hljs"><code><span class="hljs-comment">// safe_path.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> _XOPEN_SOURCE 700              <span class="hljs-comment">// để có realpath</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;limits.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-comment">/* Ghép root + name, phân giải và bảo đảm kết quả vẫn nằm TRONG root. Trả 0 nếu an toàn. */</span>
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">resolve_in_root</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *root, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *name, <span class="hljs-type">char</span> *out, <span class="hljs-type">size_t</span> cap)</span> {
+    <span class="hljs-type">char</span> joined[<span class="hljs-number">4096</span>], real_root[<span class="hljs-number">4096</span>], real_path[<span class="hljs-number">4096</span>];
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">snprintf</span>(joined, <span class="hljs-keyword">sizeof</span> joined, <span class="hljs-string">&quot;%s/%s&quot;</span>, root, name) &gt;= (<span class="hljs-type">int</span>)<span class="hljs-keyword">sizeof</span> joined) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    <span class="hljs-keyword">if</span> (!realpath(root, real_root) || !realpath(joined, real_path)) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;   <span class="hljs-comment">// cũng loại file không tồn tại</span>
+    <span class="hljs-type">size_t</span> n = <span class="hljs-built_in">strlen</span>(real_root);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strncmp</span>(real_path, real_root, n) != <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    <span class="hljs-keyword">if</span> (real_path[n] != <span class="hljs-string">&#x27;/&#x27;</span> &amp;&amp; real_path[n] != <span class="hljs-string">&#x27;\0&#x27;</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;                 <span class="hljs-comment">// /srv/www-x không khớp /srv/www</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strlen</span>(real_path) &gt;= cap) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    <span class="hljs-built_in">strcpy</span>(out, real_path);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> **argv)</span> {
+    <span class="hljs-type">char</span> out[<span class="hljs-number">4096</span>];
+    <span class="hljs-keyword">if</span> (argc &lt; <span class="hljs-number">3</span>) { <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;cach dung: %s goc ten\n&quot;</span>, argv[<span class="hljs-number">0</span>]); <span class="hljs-keyword">return</span> <span class="hljs-number">2</span>; }
+    <span class="hljs-keyword">if</span> (resolve_in_root(argv[<span class="hljs-number">1</span>], argv[<span class="hljs-number">2</span>], out, <span class="hljs-keyword">sizeof</span> out) != <span class="hljs-number">0</span>) { <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;TU CHOI&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;OK: %s\n&quot;</span>, out);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Thử <code>./safe_path ./www index.html</code> (OK), <code>../etc/passwd</code>, <code>../../etc/passwd</code>, và một symlink trong <code>www</code> trỏ ra ngoài (<code>ln -s /etc/passwd www/link</code>) — đều bị <code>TU CHOI</code>. (<code>realpath</code> cần <code>_XOPEN_SOURCE</code>/<code>_DEFAULT_SOURCE</code>.)</p>
+<h2 id="h-6">Bài 6: fuzz target và vòng lặp fuzz</h2>
+<p>Với libFuzzer (clang):</p>
+<pre class="hljs"><code>clang -std=c11 -g -O1 -fsanitize=fuzzer,address,undefined fuzz_parse.c parser.c -o fuzz_parse
+<span class="hljs-built_in">mkdir</span> -p corpus &amp;&amp; ./fuzz_parse corpus -max_total_time=300
+</code></pre>
+<p>Khi tìm thấy lỗi, fuzzer ghi <code>crash-&lt;hash&gt;</code>; tái hiện bằng <code>./fuzz_parse crash-&lt;hash&gt;</code>, đọc báo cáo sanitizer, sửa, rồi <strong>chép file đó vào <code>tests/regression/</code></strong> và thêm một test chạy nó mỗi lần CI. Hạt giống tốt (<code>corpus/</code> chứa vài đầu vào hợp lệ) giúp fuzzer nhanh vào sâu logic.</p>
+<h2 id="h-7">Bài 7: <code>consteq</code> so với <code>memcmp</code></h2>
+<pre class="hljs"><code><span class="hljs-comment">// consteq.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> _POSIX_C_SOURCE 200809L</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;time.h&gt;</span></span>
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">consteq</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">void</span> *a, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *b, <span class="hljs-type">size_t</span> n)</span> {
+    <span class="hljs-type">const</span> <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> *x = a, *y = b;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> diff = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) diff |= x[i] ^ y[i];
+    <span class="hljs-keyword">return</span> diff == <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">double</span> <span class="hljs-title function_">bench</span><span class="hljs-params">(<span class="hljs-type">int</span> (*cmp)(<span class="hljs-type">const</span> <span class="hljs-type">void</span> *, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *, <span class="hljs-type">size_t</span>), <span class="hljs-type">const</span> <span class="hljs-type">char</span> *x, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *y, <span class="hljs-type">size_t</span> n)</span> {
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">timespec</span> <span class="hljs-title">a</span>, <span class="hljs-title">b</span>;</span>
+    <span class="hljs-keyword">volatile</span> <span class="hljs-type">int</span> sink = <span class="hljs-number">0</span>;
+    clock_gettime(CLOCK_MONOTONIC, &amp;a);
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">20000000</span>; i++) sink += cmp(x, y, n);
+    clock_gettime(CLOCK_MONOTONIC, &amp;b);
+    (<span class="hljs-type">void</span>)sink;
+    <span class="hljs-keyword">return</span> (<span class="hljs-type">double</span>)(b.tv_sec - a.tv_sec) + (<span class="hljs-type">double</span>)(b.tv_nsec - a.tv_nsec) * <span class="hljs-number">1e-9</span>;
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">memcmp_wrap</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">void</span> *a, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *b, <span class="hljs-type">size_t</span> n)</span> { <span class="hljs-keyword">return</span> <span class="hljs-built_in">memcmp</span>(a, b, n) == <span class="hljs-number">0</span>; }
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">char</span> a[<span class="hljs-number">64</span>], b_first[<span class="hljs-number">64</span>], b_last[<span class="hljs-number">64</span>];
+    <span class="hljs-built_in">memset</span>(a, <span class="hljs-string">&#x27;x&#x27;</span>, <span class="hljs-keyword">sizeof</span> a); <span class="hljs-built_in">memcpy</span>(b_first, a, <span class="hljs-keyword">sizeof</span> a); <span class="hljs-built_in">memcpy</span>(b_last, a, <span class="hljs-keyword">sizeof</span> a);
+    b_first[<span class="hljs-number">0</span>] = <span class="hljs-string">&#x27;y&#x27;</span>;                      <span class="hljs-comment">// khác ở byte ĐẦU</span>
+    b_last[<span class="hljs-number">63</span>] = <span class="hljs-string">&#x27;y&#x27;</span>;                      <span class="hljs-comment">// khác ở byte CUỐI</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;memcmp  đầu %.3f  cuối %.3f\n&quot;</span>, bench(memcmp_wrap, a, b_first, <span class="hljs-number">64</span>), bench(memcmp_wrap, a, b_last, <span class="hljs-number">64</span>));
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;consteq đầu %.3f  cuối %.3f\n&quot;</span>, bench(consteq, a, b_first, <span class="hljs-number">64</span>), bench(consteq, a, b_last, <span class="hljs-number">64</span>));
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p><code>memcmp</code> khác biệt rõ giữa hai trường hợp (thoát sớm khi khác ở đầu), <code>consteq</code> gần như bằng nhau — đó chính là thuộc tính an toàn cần có. (Cẩn thận: compiler có thể tối ưu vòng lặp; với sản phẩm dùng <code>CRYPTO_memcmp</code>/<code>sodium_memcmp</code>.)</p>
+<h2 id="h-8">Bài 8: xóa bí mật khỏi bộ nhớ</h2>
+<p><code>gcc -O2 -S</code> cho thấy <code>memset(password, 0, sizeof password)</code> ở cuối hàm (khi <code>password</code> không được đọc nữa) thường <strong>biến mất</strong> khỏi assembly (dead store elimination), còn <code>secure_zero</code> (ghi qua con trỏ <code>volatile</code>) hoặc <code>explicit_bzero</code> thì được giữ. Tắt echo terminal bằng <code>termios</code>: <code>tcgetattr</code>, bỏ cờ <code>ECHO</code>, <code>tcsetattr(TCSANOW)</code>, đọc bằng <code>fgets</code>, rồi <strong>khôi phục</strong> thiết lập cũ (kể cả khi lỗi).</p>
+<h2 id="h-9">Bài 9: kiểm toán một dự án nhỏ</h2>
+<p>Mẫu báo cáo: bảng <code>| Công cụ | Phát hiện | Thật/Dương tính giả | Bản vá |</code>. Ưu tiên theo mức độ: (1) lỗi bộ nhớ do ASan/fuzzer tái hiện được (chắc chắn thật); (2) <code>-fanalyzer</code>/<code>clang-tidy</code> báo NULL deref, rò rỉ trên đường lỗi (xác minh bằng cách đọc mã); (3) cảnh báo <code>cppcheck</code> về phong cách (thường dương tính giả hoặc ưu tiên thấp). Với mỗi bản vá: thêm một test hồi quy.</p>
+
+</article>
+<nav class="chapter-nav" aria-label="Điều hướng chương"><a class="nav-prev" href="solutions-17.html"><small>← Trước</small>Lời giải chương 17</a><a class="nav-next" href="solutions-19.html"><small>Tiếp →</small>Lời giải chương 19</a></nav>
+</main>
+</div>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,store=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
+  function setTheme(t){if(t==='light')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);store('theme',t);
+    document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.setAttribute('aria-pressed',String((b.dataset.themeBtn===t)||(t==='light'&&b.dataset.themeBtn==='light')))})}
+  var cur=root.getAttribute('data-theme')||'light';setTheme(cur);
+  document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.addEventListener('click',function(){setTheme(b.dataset.themeBtn)})});
+  var fs=parseInt(getComputedStyle(root).getPropertyValue('--fs'))||19;
+  document.querySelectorAll('[data-fs]').forEach(function(b){b.addEventListener('click',function(){fs=Math.min(26,Math.max(14,fs+parseInt(b.dataset.fs)));root.style.setProperty('--fs',fs+'px');store('fs',fs)})});
+  var mb=document.getElementById('menu-btn');if(mb)mb.addEventListener('click',function(){document.body.classList.toggle('nav-open')});
+  document.addEventListener('click',function(e){if(document.body.classList.contains('nav-open')&&!e.target.closest('#sidebar')&&e.target.id!=='menu-btn')document.body.classList.remove('nav-open')});
+  document.querySelectorAll('pre').forEach(function(pre){var b=document.createElement('button');b.className='copy-btn';b.type='button';b.textContent='Sao chép';
+    b.addEventListener('click',function(){var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Đã chép'},function(){b.textContent='Lỗi'});setTimeout(function(){b.textContent='Sao chép'},1500)});pre.appendChild(b)});
+  var a=document.querySelector('.chapter-link.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'center'});
+})();
+</script>
+</body>
+</html>

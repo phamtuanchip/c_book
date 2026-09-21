@@ -348,7 +348,7 @@ Khi hàm cần thử phụ thuộc vào thứ **chậm, không tất định, ho
 ### Kỹ thuật 1: Nhận phụ thuộc qua con trỏ hàm
 
 ```c
-// cache.h
+/* ví dụ: tiêm phụ thuộc (cache.h) */
 typedef struct {
     time_t (*now)(void);                       // nguồn thời gian có thể thay
 } Clock;
@@ -357,14 +357,14 @@ int session_is_expired(const Session *s, const Clock *clk);
 ```
 
 ```c
-// session.c
+/* ví dụ: session.c */
 int session_is_expired(const Session *s, const Clock *clk) {
     return clk->now() > s->expires_at;         // dùng "đồng hồ" được tiêm vào
 }
 ```
 
 ```c
-// test_session.c
+/* ví dụ: test_session.c */
 static time_t fake_now_value;
 static time_t fake_now(void) { return fake_now_value; }
 

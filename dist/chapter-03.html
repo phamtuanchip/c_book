@@ -4,15 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lịch sử và triết lý của ngôn ngữ C — Lập trình C — Từ cơ bản đến nâng cao</title>
+<script>try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.setAttribute('data-theme',t);var f=localStorage.getItem('fs');if(f)document.documentElement.style.setProperty('--fs',f+'px')}catch(e){}</script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="layout">
-<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link active" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<nav class="sidebar" id="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Phần I — Nhập môn</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link active" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp &amp; cấu trúc chương trình C</a></li></ul></li><li class="part"><div class="part-title">Phần II — Nền tảng ngôn ngữ</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm &amp; phạm vi biến (Functions &amp; Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng &amp; chuỗi (Arrays &amp; Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li></ul></li><li class="part"><div class="part-title">Phần III — Bộ nhớ, dữ liệu, xây dựng</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O &amp; thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi &amp; ngoại lệ trong C</a></li></ul></li><li class="part"><div class="part-title">Phần IV — Kỹ thuật nâng cao</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý &amp; macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng &amp; đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa &amp; profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật &amp; an toàn bộ nhớ</a></li></ul></li><li class="part"><div class="part-title">Phần V — Dự án và phát hành</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing &amp; CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging &amp; deploy</a></li></ul></li><li class="part"><div class="part-title">Phụ lục — Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li><li><a class="chapter-link" href="solutions-02.html">Lời giải chương 2</a></li><li><a class="chapter-link" href="solutions-03.html">Lời giải chương 3</a></li><li><a class="chapter-link" href="solutions-04.html">Lời giải chương 4</a></li><li><a class="chapter-link" href="solutions-05.html">Lời giải chương 5</a></li><li><a class="chapter-link" href="solutions-06.html">Lời giải chương 6</a></li><li><a class="chapter-link" href="solutions-07.html">Lời giải chương 7</a></li><li><a class="chapter-link" href="solutions-08.html">Lời giải chương 8</a></li><li><a class="chapter-link" href="solutions-09.html">Lời giải chương 9</a></li><li><a class="chapter-link" href="solutions-10.html">Lời giải chương 10</a></li><li><a class="chapter-link" href="solutions-11.html">Lời giải chương 11</a></li><li><a class="chapter-link" href="solutions-12.html">Lời giải chương 12</a></li><li><a class="chapter-link" href="solutions-13.html">Lời giải chương 13</a></li><li><a class="chapter-link" href="solutions-14.html">Lời giải chương 14</a></li><li><a class="chapter-link" href="solutions-15.html">Lời giải chương 15</a></li><li><a class="chapter-link" href="solutions-16.html">Lời giải chương 16</a></li><li><a class="chapter-link" href="solutions-17.html">Lời giải chương 17</a></li><li><a class="chapter-link" href="solutions-18.html">Lời giải chương 18</a></li><li><a class="chapter-link" href="solutions-19.html">Lời giải chương 19</a></li><li><a class="chapter-link" href="solutions-20.html">Lời giải chương 20</a></li><li><a class="chapter-link" href="solutions-21.html">Lời giải chương 21</a></li><li><a class="chapter-link" href="solutions-22.html">Lời giải chương 22</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<div class="main-col">
+<header class="topbar"><button class="menu-btn" id="menu-btn" type="button" aria-label="Mục lục">☰</button><span class="crumb">Phần I · Chương 3</span><span class="tools"><button data-fs="-1" type="button" title="Chữ nhỏ hơn">A−</button><button data-fs="1" type="button" title="Chữ lớn hơn">A+</button><button data-theme-btn="light" type="button" title="Nền sáng">Sáng</button><button data-theme-btn="sepia" type="button" title="Nền sepia">Sepia</button><button data-theme-btn="dark" type="button" title="Nền tối">Tối</button></span></header>
 <main class="content">
 <article>
-<h1>Chương 3 — Lịch sử và triết lý của ngôn ngữ C</h1>
-<h2>Mục tiêu chương</h2>
+<header class="chapter-head"><div class="chapter-num">Chương 3</div><h1>Lịch sử và triết lý của ngôn ngữ C</h1></header><nav class="chapter-toc" aria-label="Trong chương này"><div class="toc-title">Trong chương này</div><ol><li><a href="#s3-1">3.1. Lịch sử ngắn gọn</a></li><li><a href="#s3-2">3.2. Các phiên bản chuẩn của C</a></li><li><a href="#s3-3">3.3. Triết lý thiết kế của C</a></li><li><a href="#s3-4">3.4. Ba loại &quot;hành vi không chắc chắn&quot;</a></li><li><a href="#s3-5">3.5. Viết mã di động</a></li><li><a href="#s3-6">3.6. Lời khuyên cho người mới</a></li><li><a href="#s3-7">3.7. Tóm tắt</a></li><li><a href="#s3-8">3.8. Bài tập</a></li><li><a href="#s3-9">3.9. Tài nguyên</a></li></ol></nav>
+<h2 id="h-1">Mục tiêu chương</h2>
 <ul>
 <li>Biết C ra đời trong bối cảnh nào và vì sao nó được thiết kế như vậy.</li>
 <li>Phân biệt các chuẩn C: K&amp;R, C89/C90, C99, C11, C17, C23 và biết mỗi chuẩn thêm gì.</li>
@@ -21,8 +24,8 @@
 <li>Nắm triết lý &quot;tin tưởng lập trình viên&quot; và hệ quả thực tế của nó.</li>
 </ul>
 <p>Chương này ít mã hơn các chương khác, nhưng những khái niệm về hành vi không xác định sẽ giải thích <strong>vì sao</strong> những lỗi kỳ lạ trong C xảy ra.</p>
-<h2>3.1. Lịch sử ngắn gọn</h2>
-<h3>Bối cảnh: từ assembly đến ngôn ngữ cấp cao</h3>
+<h2 id="s3-1">3.1. Lịch sử ngắn gọn</h2>
+<h3 id="h-2">Bối cảnh: từ assembly đến ngôn ngữ cấp cao</h3>
 <p>Cuối thập niên 1960, hệ điều hành thường được viết bằng <strong>assembly</strong> — nhanh nhưng gắn chặt với một loại CPU, mỗi lần đổi máy phải viết lại. Ken Thompson và Dennis Ritchie tại Bell Labs muốn viết UNIX theo cách <strong>có thể chuyển sang máy khác</strong>.</p>
 <pre class="hljs"><code>1966  BCPL   (Martin Richards)   — ngôn ngữ không có kiểu dữ liệu
 1969  B      (Ken Thompson)      — rút gọn từ BCPL, dùng cho UNIX đầu tiên trên PDP-7
@@ -36,15 +39,15 @@
 2024  C23
 </code></pre>
 <p>Điểm mấu chốt: C ra đời từ nhu cầu thực tế — viết một hệ điều hành — chứ không phải từ lý thuyết. Đó là lý do nó gọn, thực dụng và &quot;gần máy&quot;.</p>
-<h3>Vì sao C tồn tại lâu đến vậy?</h3>
+<h3 id="h-3">Vì sao C tồn tại lâu đến vậy?</h3>
 <ul>
 <li><strong>Di động:</strong> chỉ cần có compiler C cho một CPU mới là chạy được phần lớn phần mềm.</li>
 <li><strong>Hiệu năng:</strong> ít chi phí ẩn; những gì bạn viết gần như tương ứng trực tiếp với lệnh máy.</li>
 <li><strong>Nhỏ gọn:</strong> ngôn ngữ có ít từ khóa; có thể nắm toàn bộ trong vài tuần.</li>
 <li><strong>Hệ sinh thái:</strong> hệ điều hành, thư viện, driver hiện có đều viết bằng C nên mọi ngôn ngữ khác đều cần &quot;nói chuyện&quot; được với C (qua <em>C ABI</em> / <em>FFI</em>).</li>
 </ul>
-<h2>3.2. Các phiên bản chuẩn của C</h2>
-<table>
+<h2 id="s3-2">3.2. Các phiên bản chuẩn của C</h2>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Chuẩn</th>
@@ -84,8 +87,8 @@
 <td><code>nullptr</code>, <code>bool</code>/<code>true</code>/<code>false</code> là từ khóa, <code>constexpr</code>, <code>#embed</code>, <code>typeof</code>, số nhị phân <code>0b...</code>, dấu nháy tách số <code>1'000'000</code></td>
 </tr>
 </tbody>
-</table>
-<h3>Ví dụ: cùng một ý, khác chuẩn</h3>
+</table></div>
+<h3 id="h-4">Ví dụ: cùng một ý, khác chuẩn</h3>
 <pre class="hljs"><code><span class="hljs-comment">/* Kiểu C89: khai báo biến phải ở đầu khối, không có // */</span>
 <span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
     <span class="hljs-type">int</span> i;
@@ -111,7 +114,7 @@
 }
 </code></pre>
 <p><strong>Khuyến nghị của sách:</strong> dùng <strong>C11</strong> (<code>-std=c11</code>). Nó đủ hiện đại, được mọi compiler chính hỗ trợ. Đoạn mã C89 phía trên vẫn biên dịch được với <code>-std=c11</code> (C là gần như tương thích ngược), nhưng phong cách C99 rõ ràng hơn.</p>
-<h3>Thử nghiệm với các chuẩn khác nhau</h3>
+<h3 id="h-5">Thử nghiệm với các chuẩn khác nhau</h3>
 <pre class="hljs"><code><span class="hljs-comment">// compat_test.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 
@@ -136,9 +139,9 @@ gcc -std=c11 -Wall compat_test.c -o t11              <span class="hljs-comment">
 gcc -std=c17 -Wall compat_test.c -o t17              <span class="hljs-comment"># __STDC_VERSION__ = 201710</span>
 </code></pre>
 <p>Cờ <code>-pedantic</code> yêu cầu compiler cảnh báo mọi thứ <strong>không đúng chuẩn</strong> đã chọn; nếu không có nó, gcc dùng nhiều &quot;mở rộng GNU&quot; nên lẫn lộn giữa chuẩn và mở rộng. Cờ <code>-pedantic-errors</code> biến các cảnh báo đó thành lỗi.</p>
-<h3>Mở rộng của compiler</h3>
+<h3 id="h-6">Mở rộng của compiler</h3>
 <p>GCC/Clang có thêm nhiều tính năng ngoài chuẩn (<code>__attribute__</code>, <code>typeof</code>, statement expressions...). Chúng tiện nhưng <strong>làm mã không di động</strong> sang MSVC. Nếu cần chạy trên nhiều compiler, hãy giữ trong chuẩn và dùng <code>-std=c11 -pedantic</code>. (Ghi chú: <code>-std=gnu11</code> là chuẩn C11 kèm mở rộng GNU, và là mặc định của gcc.)</p>
-<h2>3.3. Triết lý thiết kế của C</h2>
+<h2 id="s3-3">3.3. Triết lý thiết kế của C</h2>
 <p>Dennis Ritchie và cộng sự thiết kế C với vài nguyên tắc thường được tóm tắt là &quot;<em>spirit of C</em>&quot;:</p>
 <ol>
 <li><strong>Tin tưởng lập trình viên (trust the programmer).</strong> C giả định bạn biết mình làm gì. Nó không chặn bạn ghi ra ngoài mảng hay ép kiểu tùy ý.</li>
@@ -147,8 +150,8 @@ gcc -std=c17 -Wall compat_test.c -o t17              <span class="hljs-comment">
 <li><strong>Chỉ có một cách để làm một việc.</strong> (Mục tiêu, dù không phải lúc nào cũng đạt.)</li>
 <li><strong>Làm cho nó nhanh, ngay cả khi không được dễ chuyển sang máy khác.</strong> Nói cách khác: <em>không trả chi phí cho thứ bạn không dùng</em> (no hidden cost).</li>
 </ol>
-<h3>Hệ quả thực tế</h3>
-<table>
+<h3 id="h-7">Hệ quả thực tế</h3>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Ngôn ngữ an toàn (Python, Java)</th>
@@ -173,14 +176,14 @@ gcc -std=c17 -Wall compat_test.c -o t17              <span class="hljs-comment">
 <td>Chương trình sai → có thể <em>có vẻ</em> chạy bình thường, sau đó hỏng ở nơi khác</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Đổi lại, C cho hiệu năng cao và khả năng kiểm soát tuyệt đối. Kỹ năng cần rèn: <strong>tự đóng vai người kiểm tra</strong> — mỗi dòng bạn viết, hãy hỏi &quot;nếu đầu vào sai/quá lớn/NULL thì sao?&quot;.</p>
-<h2>3.4. Ba loại &quot;hành vi không chắc chắn&quot;</h2>
+<h2 id="s3-4">3.4. Ba loại &quot;hành vi không chắc chắn&quot;</h2>
 <p>Chuẩn C phân biệt ba khái niệm dễ nhầm. Chúng cực kỳ quan trọng nên cần hiểu kỹ.</p>
-<h3>1. Implementation-defined behavior (do triển khai quy định)</h3>
+<h3 id="h-8">1. Implementation-defined behavior (do triển khai quy định)</h3>
 <p>Chuẩn cho phép nhiều lựa chọn, nhưng <strong>mỗi compiler phải chọn một và ghi tài liệu</strong>. Chương trình vẫn hợp lệ, nhưng kết quả có thể khác nhau giữa các compiler/nền tảng.</p>
 <p>Ví dụ: <code>sizeof(int)</code>, <code>char</code> có dấu hay không, kết quả dịch phải số nguyên âm (<code>-8 &gt;&gt; 1</code>), kích thước <code>long</code>.</p>
-<h3>2. Unspecified behavior (chưa chỉ định)</h3>
+<h3 id="h-9">2. Unspecified behavior (chưa chỉ định)</h3>
 <p>Chuẩn cho vài khả năng hợp lệ nhưng <strong>không bắt compiler ghi lại lựa chọn</strong>, thậm chí nó có thể đổi giữa các lần biên dịch.</p>
 <p>Ví dụ kinh điển: <strong>thứ tự đánh giá các tham số của hàm</strong>.</p>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
@@ -194,10 +197,10 @@ gcc -std=c17 -Wall compat_test.c -o t17              <span class="hljs-comment">
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </code></pre>
-<h3>3. Undefined behavior (UB — hành vi không xác định)</h3>
+<h3 id="h-10">3. Undefined behavior (UB — hành vi không xác định)</h3>
 <p>Chuẩn <strong>không đặt bất kỳ yêu cầu nào</strong> khi UB xảy ra. Chương trình có thể: chạy đúng, in kết quả sai, crash, treo, hoặc — nguy hiểm nhất — <em>có vẻ đúng hôm nay và sai khi đổi compiler hoặc bật tối ưu hóa</em>.</p>
 <p>Các nguồn UB phổ biến:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Nguồn UB</th>
@@ -250,8 +253,8 @@ gcc -std=c17 -Wall compat_test.c -o t17              <span class="hljs-comment">
 <td><code>printf(&quot;%d&quot;, 3.14);</code></td>
 </tr>
 </tbody>
-</table>
-<h3>Vì sao UB nguy hiểm? Ví dụ về tối ưu hóa</h3>
+</table></div>
+<h3 id="h-11">Vì sao UB nguy hiểm? Ví dụ về tối ưu hóa</h3>
 <p>Compiler giả định rằng <strong>UB không bao giờ xảy ra</strong>, và dùng giả định đó để tối ưu.</p>
 <pre class="hljs"><code><span class="hljs-comment">// ub_demo.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
@@ -271,7 +274,7 @@ gcc -std=c17 -Wall compat_test.c -o t17              <span class="hljs-comment">
 <li>Biên dịch <code>gcc -O2</code>: thường in <code>1</code>, vì compiler lập luận &quot;<code>x + 1</code> luôn lớn hơn <code>x</code> vì tràn số không xảy ra&quot; và thay cả biểu thức bằng hằng <code>1</code>.</li>
 </ul>
 <p>Cùng một mã nguồn, hai kết quả khác nhau. Đây là lý do UB được coi là lỗi nghiêm trọng ngay cả khi &quot;chạy thử thấy đúng&quot;.</p>
-<h3>Cách chống UB</h3>
+<h3 id="h-12">Cách chống UB</h3>
 <ol>
 <li><strong>Bật cảnh báo:</strong> <code>-Wall -Wextra</code>.</li>
 <li><strong>Dùng sanitizer</strong> (rất hiệu quả, sẽ học ở chương 9 và 18):</li>
@@ -284,7 +287,7 @@ gcc -std=c17 -Wall compat_test.c -o t17              <span class="hljs-comment">
 <li><strong>Kiểm tra trước khi thao tác:</strong> chỉ số mảng, con trỏ NULL, tràn số.</li>
 <li><strong>Viết code đơn giản, dễ kiểm chứng.</strong></li>
 </ol>
-<h2>3.5. Viết mã di động</h2>
+<h2 id="s3-5">3.5. Viết mã di động</h2>
 <p>Để mã chạy được trên nhiều nền tảng:</p>
 <ol>
 <li><strong>Đừng giả định kích thước kiểu.</strong> Dùng <code>int32_t</code>, <code>uint64_t</code>, <code>size_t</code>.</li>
@@ -305,7 +308,9 @@ gcc -std=c17 -Wall compat_test.c -o t17              <span class="hljs-comment">
     <span class="hljs-meta">#<span class="hljs-keyword">define</span> PLATFORM <span class="hljs-string">&quot;khong ro&quot;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
 </code></pre>
-<h2>6. <strong>Biên dịch bằng nhiều compiler</strong> (gcc, clang) và nhiều mức cảnh báo — mỗi compiler phát hiện được các lỗi khác nhau.</h2>
+<ol start="6">
+<li><strong>Biên dịch bằng nhiều compiler</strong> (gcc, clang) và nhiều mức cảnh báo — mỗi compiler phát hiện được các lỗi khác nhau.</li>
+</ol>
 <p>Ví dụ in số 64 bit di động:</p>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;inttypes.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
@@ -316,7 +321,7 @@ gcc -std=c17 -Wall compat_test.c -o t17              <span class="hljs-comment">
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </code></pre>
-<h2>3.6. Lời khuyên cho người mới</h2>
+<h2 id="s3-6">3.6. Lời khuyên cho người mới</h2>
 <ul>
 <li><strong>Luôn đọc cảnh báo</strong> và sửa hết. Cảnh báo thường chỉ ra UB tiềm ẩn.</li>
 <li><strong>Chọn một chuẩn và ghi rõ</strong> trong Makefile (<code>-std=c11</code>). Đừng để mặc định.</li>
@@ -324,7 +329,7 @@ gcc -std=c17 -Wall compat_test.c -o t17              <span class="hljs-comment">
 <li><strong>Đọc chuẩn hoặc cppreference</strong> khi nghi ngờ. <code>https://en.cppreference.com/w/c/language/behavior</code> là nơi bắt đầu tốt cho UB.</li>
 <li><strong>Học sanitizer sớm.</strong> Nó biến những lỗi bộ nhớ &quot;khó thấy&quot; thành thông báo rõ ràng.</li>
 </ul>
-<h2>3.7. Tóm tắt</h2>
+<h2 id="s3-7">3.7. Tóm tắt</h2>
 <ul>
 <li>C ra đời từ nhu cầu viết UNIX di động; triết lý là hiệu năng, đơn giản, và tin tưởng lập trình viên.</li>
 <li>Các chuẩn: C89 → C99 → C11 → C17 → C23. Sách dùng <code>-std=c11</code>.</li>
@@ -332,7 +337,7 @@ gcc -std=c17 -Wall compat_test.c -o t17              <span class="hljs-comment">
 <li>Viết mã di động bằng kiểu có kích thước cố định, tránh giả định nền tảng.</li>
 <li>Dùng cảnh báo và sanitizer để phát hiện UB sớm.</li>
 </ul>
-<h2>3.8. Bài tập</h2>
+<h2 id="s3-8">3.8. Bài tập</h2>
 <ol>
 <li>Biên dịch <code>compat_test.c</code> với <code>-std=c89 -pedantic</code>, <code>-std=c99</code>, <code>-std=c11</code>. Ghi lại từng thông báo và giải thích tại sao có khác biệt.</li>
 <li>Chạy <code>ub_demo.c</code> với <code>-O0</code> và <code>-O2</code>. Ghi kết quả. Sau đó thêm <code>-fsanitize=undefined</code> và đọc thông báo lỗi.</li>
@@ -341,7 +346,7 @@ gcc -std=c17 -Wall compat_test.c -o t17              <span class="hljs-comment">
 <li>Viết chương trình in tên hệ điều hành đang chạy dựa trên macro <code>_WIN32</code>, <code>__linux__</code>, <code>__APPLE__</code>.</li>
 <li>Viết chương trình in <code>INT_MAX</code>, <code>INT_MIN</code>, <code>LONG_MAX</code>, <code>SIZE_MAX</code> và giải thích vì sao <code>LONG_MAX</code> khác nhau giữa Windows và Linux.</li>
 </ol>
-<h2>3.9. Tài nguyên</h2>
+<h2 id="s3-9">3.9. Tài nguyên</h2>
 <ul>
 <li>Kernighan &amp; Ritchie, <em>The C Programming Language</em>, 2nd ed.</li>
 <li>Dennis Ritchie, <em>The Development of the C Language</em> (bài viết lịch sử, tìm trên mạng).</li>
@@ -352,8 +357,26 @@ gcc -std=c17 -Wall compat_test.c -o t17              <span class="hljs-comment">
 <p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-03">code/chapter-03</a></p>
 
 </article>
-<div class="chapter-nav"><a class="nav-prev" href="chapter-02.html">&larr; Máy tính và lập trình cơ bản</a><a class="nav-next" href="chapter-04.html">Cú pháp & cấu trúc chương trình C &rarr;</a></div>
+<nav class="chapter-nav" aria-label="Điều hướng chương"><a class="nav-prev" href="chapter-02.html"><small>← Trước</small>Máy tính và lập trình cơ bản</a><a class="nav-next" href="chapter-04.html"><small>Tiếp →</small>Cú pháp &amp; cấu trúc chương trình C</a></nav>
 </main>
 </div>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,store=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
+  function setTheme(t){if(t==='light')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);store('theme',t);
+    document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.setAttribute('aria-pressed',String((b.dataset.themeBtn===t)||(t==='light'&&b.dataset.themeBtn==='light')))})}
+  var cur=root.getAttribute('data-theme')||'light';setTheme(cur);
+  document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.addEventListener('click',function(){setTheme(b.dataset.themeBtn)})});
+  var fs=parseInt(getComputedStyle(root).getPropertyValue('--fs'))||19;
+  document.querySelectorAll('[data-fs]').forEach(function(b){b.addEventListener('click',function(){fs=Math.min(26,Math.max(14,fs+parseInt(b.dataset.fs)));root.style.setProperty('--fs',fs+'px');store('fs',fs)})});
+  var mb=document.getElementById('menu-btn');if(mb)mb.addEventListener('click',function(){document.body.classList.toggle('nav-open')});
+  document.addEventListener('click',function(e){if(document.body.classList.contains('nav-open')&&!e.target.closest('#sidebar')&&e.target.id!=='menu-btn')document.body.classList.remove('nav-open')});
+  document.querySelectorAll('pre').forEach(function(pre){var b=document.createElement('button');b.className='copy-btn';b.type='button';b.textContent='Sao chép';
+    b.addEventListener('click',function(){var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Đã chép'},function(){b.textContent='Lỗi'});setTimeout(function(){b.textContent='Sao chép'},1500)});pre.appendChild(b)});
+  var a=document.querySelector('.chapter-link.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'center'});
+})();
+</script>
 </body>
 </html>

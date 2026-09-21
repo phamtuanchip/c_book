@@ -1,7 +1,0 @@
-﻿cmd.exe : Nhap khong hop le.
-At line:28 char:13
-+             & cmd /c $cmdline > $runOutFile 2> $runErrFile
-+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : NotSpecified: (Nhap khong hop le.:String) [], RemoteException
-    + FullyQualifiedErrorId : NativeCommandError
- 

@@ -4,15 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mạng cơ bản (sockets) — Lập trình C — Từ cơ bản đến nâng cao</title>
+<script>try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.setAttribute('data-theme',t);var f=localStorage.getItem('fs');if(f)document.documentElement.style.setProperty('--fs',f+'px')}catch(e){}</script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="layout">
-<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link active" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<nav class="sidebar" id="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Phần I — Nhập môn</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp &amp; cấu trúc chương trình C</a></li></ul></li><li class="part"><div class="part-title">Phần II — Nền tảng ngôn ngữ</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm &amp; phạm vi biến (Functions &amp; Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng &amp; chuỗi (Arrays &amp; Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li></ul></li><li class="part"><div class="part-title">Phần III — Bộ nhớ, dữ liệu, xây dựng</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O &amp; thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi &amp; ngoại lệ trong C</a></li></ul></li><li class="part"><div class="part-title">Phần IV — Kỹ thuật nâng cao</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý &amp; macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng &amp; đồng bộ (POSIX threads)</a></li><li><a class="chapter-link active" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa &amp; profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật &amp; an toàn bộ nhớ</a></li></ul></li><li class="part"><div class="part-title">Phần V — Dự án và phát hành</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing &amp; CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging &amp; deploy</a></li></ul></li><li class="part"><div class="part-title">Phụ lục — Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li><li><a class="chapter-link" href="solutions-02.html">Lời giải chương 2</a></li><li><a class="chapter-link" href="solutions-03.html">Lời giải chương 3</a></li><li><a class="chapter-link" href="solutions-04.html">Lời giải chương 4</a></li><li><a class="chapter-link" href="solutions-05.html">Lời giải chương 5</a></li><li><a class="chapter-link" href="solutions-06.html">Lời giải chương 6</a></li><li><a class="chapter-link" href="solutions-07.html">Lời giải chương 7</a></li><li><a class="chapter-link" href="solutions-08.html">Lời giải chương 8</a></li><li><a class="chapter-link" href="solutions-09.html">Lời giải chương 9</a></li><li><a class="chapter-link" href="solutions-10.html">Lời giải chương 10</a></li><li><a class="chapter-link" href="solutions-11.html">Lời giải chương 11</a></li><li><a class="chapter-link" href="solutions-12.html">Lời giải chương 12</a></li><li><a class="chapter-link" href="solutions-13.html">Lời giải chương 13</a></li><li><a class="chapter-link" href="solutions-14.html">Lời giải chương 14</a></li><li><a class="chapter-link" href="solutions-15.html">Lời giải chương 15</a></li><li><a class="chapter-link" href="solutions-16.html">Lời giải chương 16</a></li><li><a class="chapter-link" href="solutions-17.html">Lời giải chương 17</a></li><li><a class="chapter-link" href="solutions-18.html">Lời giải chương 18</a></li><li><a class="chapter-link" href="solutions-19.html">Lời giải chương 19</a></li><li><a class="chapter-link" href="solutions-20.html">Lời giải chương 20</a></li><li><a class="chapter-link" href="solutions-21.html">Lời giải chương 21</a></li><li><a class="chapter-link" href="solutions-22.html">Lời giải chương 22</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<div class="main-col">
+<header class="topbar"><button class="menu-btn" id="menu-btn" type="button" aria-label="Mục lục">☰</button><span class="crumb">Phần IV · Chương 16</span><span class="tools"><button data-fs="-1" type="button" title="Chữ nhỏ hơn">A−</button><button data-fs="1" type="button" title="Chữ lớn hơn">A+</button><button data-theme-btn="light" type="button" title="Nền sáng">Sáng</button><button data-theme-btn="sepia" type="button" title="Nền sepia">Sepia</button><button data-theme-btn="dark" type="button" title="Nền tối">Tối</button></span></header>
 <main class="content">
 <article>
-<h1>Chương 16 — Mạng cơ bản (sockets)</h1>
-<h2>Mục tiêu chương</h2>
+<header class="chapter-head"><div class="chapter-num">Chương 16</div><h1>Mạng cơ bản (sockets)</h1></header><nav class="chapter-toc" aria-label="Trong chương này"><div class="toc-title">Trong chương này</div><ol><li><a href="#s16-1">16.1. Kiến thức nền về mạng</a></li><li><a href="#s16-2">16.2. Socket API cơ bản</a></li><li><a href="#s16-3">16.3. TCP server</a></li><li><a href="#s16-4">16.4. TCP client</a></li><li><a href="#s16-5">16.5. TCP là luồng byte — hiểu đúng để tránh lỗi</a></li><li><a href="#s16-6">16.6. Phục vụ nhiều client: thread-per-connection</a></li><li><a href="#s16-7">16.7. Multiplexing: select, poll, epoll</a></li><li><a href="#s16-8">16.8. UDP</a></li><li><a href="#s16-9">16.9. Ví dụ: gửi HTTP GET thô</a></li><li><a href="#s16-10">16.10. Xử lý lỗi, giới hạn thời gian và bảo mật</a></li><li><a href="#s16-11">16.11. Windows: Winsock</a></li><li><a href="#s16-12">16.12. Công cụ hỗ trợ</a></li><li><a href="#s16-13">16.13. Lỗi thường gặp</a></li><li><a href="#s16-14">16.14. Tóm tắt</a></li><li><a href="#s16-15">16.15. Bài tập</a></li></ol></nav>
+<h2 id="h-1">Mục tiêu chương</h2>
 <ul>
 <li>Hiểu mô hình mạng: <strong>địa chỉ IP, cổng, TCP/UDP</strong>, mô hình client–server.</li>
 <li>Viết <strong>TCP client và server</strong> bằng Berkeley sockets API: <code>socket</code>, <code>bind</code>, <code>listen</code>, <code>accept</code>, <code>connect</code>, <code>send</code>, <code>recv</code>, <code>close</code>.</li>
@@ -25,15 +28,15 @@
 <blockquote>
 <p><strong>Môi trường:</strong> ví dụ dùng POSIX sockets (Linux, macOS, WSL). Phần 16.11 chỉ ra thay đổi cho Windows/Winsock. Bạn có thể thử các chương trình trên cùng máy qua địa chỉ <code>127.0.0.1</code> (loopback).</p>
 </blockquote>
-<h2>16.1. Kiến thức nền về mạng</h2>
-<h3>Địa chỉ IP và cổng</h3>
+<h2 id="s16-1">16.1. Kiến thức nền về mạng</h2>
+<h3 id="h-2">Địa chỉ IP và cổng</h3>
 <ul>
 <li><strong>Địa chỉ IP</strong> xác định một máy: IPv4 dạng <code>192.168.1.10</code> (32 bit), IPv6 dạng <code>2001:db8::1</code> (128 bit). <code>127.0.0.1</code> (IPv4) và <code>::1</code> (IPv6) là <strong>loopback</strong> — chính máy bạn.</li>
 <li><strong>Cổng (port)</strong> (16 bit, 0–65535) xác định <strong>ứng dụng</strong> trên máy đó. Cổng &lt; 1024 thường dành cho dịch vụ hệ thống (cần quyền quản trị); HTTP là 80, HTTPS 443, SSH 22.</li>
 <li>Một kết nối TCP được xác định bởi bộ bốn: <strong>(IP nguồn, cổng nguồn, IP đích, cổng đích)</strong>.</li>
 </ul>
-<h3>TCP và UDP</h3>
-<table>
+<h3 id="h-3">TCP và UDP</h3>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th></th>
@@ -68,8 +71,8 @@
 <td>DNS, streaming, game, đo đạc</td>
 </tr>
 </tbody>
-</table>
-<h3>Mô hình client–server</h3>
+</table></div>
+<h3 id="h-4">Mô hình client–server</h3>
 <pre class="hljs"><code>   SERVER                                  CLIENT
 socket()                                socket()
 bind()    (gắn vào IP:cổng)
@@ -81,7 +84,7 @@ recv()/send()  ◄────── dữ liệu ──────►  send()/r
 close()                                 close()
 </code></pre>
 <p>Server <strong>lắng nghe</strong> ở một cổng đã biết; client <strong>chủ động kết nối</strong>. Mỗi kết nối chấp nhận được trả về một <strong>socket mới</strong> để nói chuyện với client đó, còn socket lắng nghe vẫn tiếp tục nhận kết nối khác.</p>
-<h2>16.2. Socket API cơ bản</h2>
+<h2 id="s16-2">16.2. Socket API cơ bản</h2>
 <p><strong>Socket</strong> là một điểm cuối giao tiếp; trên POSIX nó là một <strong>file descriptor</strong> (số nguyên) — bạn có thể <code>read</code>/<code>write</code>/<code>close</code> như file.</p>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/types.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/socket.h&gt;</span></span>
@@ -101,7 +104,7 @@ close()                                 close()
 <pre class="hljs"><code><span class="hljs-type">int</span> fd = socket(AF_INET, SOCK_STREAM, <span class="hljs-number">0</span>);
 <span class="hljs-keyword">if</span> (fd &lt; <span class="hljs-number">0</span>) { perror(<span class="hljs-string">&quot;socket&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
 </code></pre>
-<h3>Địa chỉ socket: <code>sockaddr_in</code></h3>
+<h3 id="h-5">Địa chỉ socket: <code>sockaddr_in</code></h3>
 <pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">sockaddr_in</span> {</span>
     <span class="hljs-type">sa_family_t</span>    sin_family;   <span class="hljs-comment">// AF_INET</span>
     <span class="hljs-type">in_port_t</span>      sin_port;     <span class="hljs-comment">// cổng, THỨ TỰ BYTE MẠNG</span>
@@ -116,9 +119,9 @@ addr.sin_family = AF_INET;
 addr.sin_port   = htons(<span class="hljs-number">8080</span>);              <span class="hljs-comment">// đổi sang thứ tự byte mạng</span>
 inet_pton(AF_INET, <span class="hljs-string">&quot;127.0.0.1&quot;</span>, &amp;addr.sin_addr);   <span class="hljs-comment">// chuỗi -&gt; nhị phân</span>
 </code></pre>
-<h3>Thứ tự byte mạng</h3>
+<h3 id="h-6">Thứ tự byte mạng</h3>
 <p>Mạng dùng <strong>big-endian</strong> (chương 2), còn máy bạn thường little-endian. Luôn chuyển đổi số nhiều byte đặt trong gói tin:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Hàm</th>
@@ -143,15 +146,15 @@ inet_pton(AF_INET, <span class="hljs-string">&quot;127.0.0.1&quot;</span>, &amp;
 <td>network → host, 32 bit</td>
 </tr>
 </tbody>
-</table>
-<h3>Chuyển đổi địa chỉ</h3>
+</table></div>
+<h3 id="h-7">Chuyển đổi địa chỉ</h3>
 <pre class="hljs"><code>inet_pton(AF_INET, <span class="hljs-string">&quot;192.168.1.10&quot;</span>, &amp;addr.sin_addr);     <span class="hljs-comment">// text -&gt; nhị phân (trả 1 nếu thành công)</span>
 
 <span class="hljs-type">char</span> text[INET_ADDRSTRLEN];
 inet_ntop(AF_INET, &amp;addr.sin_addr, text, <span class="hljs-keyword">sizeof</span> text);  <span class="hljs-comment">// nhị phân -&gt; text</span>
 </code></pre>
 <p>Dùng <code>inet_pton</code>/<code>inet_ntop</code> (hỗ trợ IPv6) thay cho <code>inet_addr</code>/<code>inet_ntoa</code> cũ.</p>
-<h3>Phân giải tên miền: <code>getaddrinfo</code></h3>
+<h3 id="h-8">Phân giải tên miền: <code>getaddrinfo</code></h3>
 <p>Để kết nối tới <code>example.com</code>, cần tra DNS. <code>getaddrinfo</code> là cách hiện đại, <strong>hỗ trợ cả IPv4 và IPv6</strong>, và nên dùng thay cho lắp <code>sockaddr_in</code> thủ công:</p>
 <pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">addrinfo</span> <span class="hljs-title">hints</span>, *<span class="hljs-title">res</span>, *<span class="hljs-title">p</span>;</span>
 <span class="hljs-built_in">memset</span>(&amp;hints, <span class="hljs-number">0</span>, <span class="hljs-keyword">sizeof</span> hints);
@@ -171,13 +174,13 @@ hints.ai_socktype = SOCK_STREAM;
 }
 freeaddrinfo(res);                                   <span class="hljs-comment">// nhớ giải phóng</span>
 </code></pre>
-<h2>16.3. TCP server</h2>
+<h2 id="s16-3">16.3. TCP server</h2>
 <p>Các bước: <code>socket</code> → <code>bind</code> → <code>listen</code> → vòng lặp <code>accept</code> → <code>recv</code>/<code>send</code> → <code>close</code>.</p>
 <pre class="hljs"><code><span class="hljs-type">int</span> <span class="hljs-title function_">bind</span><span class="hljs-params">(<span class="hljs-type">int</span> fd, <span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> sockaddr *addr, <span class="hljs-type">socklen_t</span> len)</span>;   <span class="hljs-comment">// gắn socket vào IP:cổng</span>
 <span class="hljs-type">int</span> <span class="hljs-title function_">listen</span><span class="hljs-params">(<span class="hljs-type">int</span> fd, <span class="hljs-type">int</span> backlog)</span>;                                <span class="hljs-comment">// backlog: độ dài hàng đợi kết nối chờ</span>
 <span class="hljs-type">int</span> <span class="hljs-title function_">accept</span><span class="hljs-params">(<span class="hljs-type">int</span> fd, <span class="hljs-keyword">struct</span> sockaddr *client, <span class="hljs-type">socklen_t</span> *len)</span>;    <span class="hljs-comment">// chặn tới khi có client; trả socket mới</span>
 </code></pre>
-<h3>Server echo tuần tự (một client tại một thời điểm)</h3>
+<h3 id="h-9">Server echo tuần tự (một client tại một thời điểm)</h3>
 <pre class="hljs"><code><span class="hljs-comment">// echo_server.c — server phản hồi lại mọi byte nhận được</span>
 <span class="hljs-meta">#<span class="hljs-keyword">define</span> _POSIX_C_SOURCE 200809L</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;arpa/inet.h&gt;</span></span>
@@ -255,7 +258,7 @@ freeaddrinfo(res);                                   <span class="hljs-comment">
 <li><strong><code>recv</code> trả về:</strong> <code>&gt; 0</code> số byte nhận được; <strong><code>0</code></strong> = phía bên kia <strong>đã đóng kết nối</strong> (kết thúc bình thường); <strong><code>&lt; 0</code></strong> = lỗi.</li>
 <li>Server này chỉ phục vụ <strong>một client mỗi lần</strong> (client thứ hai phải đợi). Các mục 16.6–16.7 giải quyết vấn đề đó.</li>
 </ul>
-<h2>16.4. TCP client</h2>
+<h2 id="s16-4">16.4. TCP client</h2>
 <p>Các bước: <code>socket</code> → <code>connect</code> → <code>send</code>/<code>recv</code> → <code>close</code>.</p>
 <pre class="hljs"><code><span class="hljs-comment">// echo_client.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">define</span> _POSIX_C_SOURCE 200809L</span>
@@ -304,7 +307,7 @@ freeaddrinfo(res);                                   <span class="hljs-comment">
 }
 </code></pre>
 <p>Thử: mở hai terminal — chạy <code>./echo_server 8080</code> ở terminal 1 và <code>./echo_client 127.0.0.1 8080</code> ở terminal 2, gõ chữ và nhấn Enter. Không có client, bạn cũng có thể dùng <code>nc 127.0.0.1 8080</code> (netcat) để thử server.</p>
-<h2>16.5. TCP là luồng byte — hiểu đúng để tránh lỗi</h2>
+<h2 id="s16-5">16.5. TCP là luồng byte — hiểu đúng để tránh lỗi</h2>
 <p>Đây là hiểu lầm số một của người mới học socket: <strong>TCP không bảo tồn ranh giới các lần <code>send</code>.</strong></p>
 <p>Nếu client gọi <code>send(&quot;abc&quot;)</code> rồi <code>send(&quot;def&quot;)</code>, phía nhận có thể:</p>
 <ul>
@@ -318,7 +321,7 @@ freeaddrinfo(res);                                   <span class="hljs-comment">
 <li><strong><code>recv</code> có thể trả ít hơn mong đợi:</strong> phải lặp cho tới khi đủ số byte cần (<code>recv_all</code>), hoặc cho tới khi gặp dấu kết thúc thông điệp.</li>
 <li>Giao thức của bạn phải tự <strong>đóng khung (framing)</strong> để biết một thông điệp bắt đầu/kết thúc ở đâu.</li>
 </ol>
-<h3>Ba cách đóng khung phổ biến</h3>
+<h3 id="h-10">Ba cách đóng khung phổ biến</h3>
 <p><strong>(a) Ký tự phân cách</strong> (như dòng <code>\n</code> trong HTTP header, SMTP, Redis đơn giản):</p>
 <pre class="hljs"><code><span class="hljs-comment">// Đọc tới khi gặp &#x27;\n&#x27;. Trả số byte đã đọc (kể cả &#x27;\n&#x27;), 0 nếu đối phương đóng, -1 nếu lỗi.</span>
 <span class="hljs-type">ssize_t</span> <span class="hljs-title function_">recv_line</span><span class="hljs-params">(<span class="hljs-type">int</span> fd, <span class="hljs-type">char</span> *buf, <span class="hljs-type">size_t</span> cap)</span> {
@@ -370,10 +373,10 @@ freeaddrinfo(res);                                   <span class="hljs-comment">
 </code></pre>
 <p><strong>(c) Độ dài cố định</strong> (đơn giản, ít linh hoạt).</p>
 <p>Luôn <strong>giới hạn kích thước tối đa</strong> của thông điệp khi đọc độ dài do phía kia gửi — nếu không, kẻ tấn công gửi độ dài 4 GB khiến bạn <code>malloc</code> hết bộ nhớ.</p>
-<h3>Đóng kết nối và <code>shutdown</code></h3>
+<h3 id="h-11">Đóng kết nối và <code>shutdown</code></h3>
 <p><code>close(fd)</code> đóng cả hai chiều. <code>shutdown(fd, SHUT_WR)</code> chỉ đóng <strong>chiều gửi</strong> (báo cho phía kia &quot;hết dữ liệu&quot;, <code>recv</code> của họ trả 0), nhưng bạn vẫn còn nhận được. Hữu ích khi client gửi hết yêu cầu rồi đợi phản hồi.</p>
 <p>Ghi dữ liệu vào socket mà đối phương đã đóng có thể phát tín hiệu <strong><code>SIGPIPE</code></strong> làm chương trình bị giết. Server nên bỏ qua nó: <code>signal(SIGPIPE, SIG_IGN);</code> hoặc dùng cờ <code>MSG_NOSIGNAL</code> trong <code>send</code>.</p>
-<h2>16.6. Phục vụ nhiều client: thread-per-connection</h2>
+<h2 id="s16-6">16.6. Phục vụ nhiều client: thread-per-connection</h2>
 <p>Mỗi kết nối <code>accept</code> được giao cho một luồng riêng (chương 15). Server luôn quay lại <code>accept</code> ngay.</p>
 <pre class="hljs"><code><span class="hljs-comment">// echo_server_mt.c (phần chính; dùng lại send_all ở trên)</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;pthread.h&gt;</span></span>
@@ -415,9 +418,9 @@ freeaddrinfo(res);                                   <span class="hljs-comment">
 <li><strong>Giới hạn số kết nối/luồng</strong> (semaphore hoặc bộ đếm): kẻ tấn công mở hàng nghìn kết nối có thể làm cạn tài nguyên.</li>
 </ul>
 <p>Ưu điểm: mã dễ viết và đọc như đơn luồng (mỗi kết nối một dòng suy nghĩ tuần tự). Nhược điểm: mỗi luồng tốn bộ nhớ stack (~MB) và chi phí chuyển ngữ cảnh — <strong>không mở rộng</strong> tới hàng chục nghìn kết nối (bài toán C10K).</p>
-<h2>16.7. Multiplexing: <code>select</code>, <code>poll</code>, <code>epoll</code></h2>
+<h2 id="s16-7">16.7. Multiplexing: <code>select</code>, <code>poll</code>, <code>epoll</code></h2>
 <p>Thay vì một luồng cho mỗi client, một luồng <strong>theo dõi nhiều socket</strong> và chỉ xử lý socket <strong>đã sẵn sàng</strong>.</p>
-<h3>Blocking và non-blocking</h3>
+<h3 id="h-12">Blocking và non-blocking</h3>
 <ul>
 <li><strong>Blocking (mặc định):</strong> <code>recv</code> chặn tới khi có dữ liệu; <code>accept</code> chặn tới khi có kết nối.</li>
 <li><strong>Non-blocking:</strong> đặt cờ <code>O_NONBLOCK</code>; <code>recv</code>/<code>accept</code>/<code>send</code> <strong>trả về ngay</strong>, với <code>-1</code> và <code>errno == EAGAIN</code> (hoặc <code>EWOULDBLOCK</code>) nếu chưa sẵn sàng.</li>
@@ -429,7 +432,7 @@ freeaddrinfo(res);                                   <span class="hljs-comment">
     <span class="hljs-keyword">return</span> fcntl(fd, F_SETFL, flags | O_NONBLOCK);
 }
 </code></pre>
-<h3><code>poll</code> — đơn giản và không giới hạn 1024 như <code>select</code></h3>
+<h3 id="h-13"><code>poll</code> — đơn giản và không giới hạn 1024 như <code>select</code></h3>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;poll.h&gt;</span></span>
 
 <span class="hljs-type">int</span> <span class="hljs-title function_">poll</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> pollfd fds[], <span class="hljs-type">nfds_t</span> nfds, <span class="hljs-type">int</span> timeout_ms)</span>;
@@ -484,7 +487,7 @@ fds[<span class="hljs-number">0</span>].events = POLLIN;
 }
 </code></pre>
 <p>Điều quan trọng: <strong>một luồng đơn</strong> phục vụ được hàng nghìn kết nối vì không có luồng nào bị chặn để chờ một client chậm. Cái giá là mã theo kiểu <strong>máy trạng thái</strong> (mỗi client có trạng thái riêng, bộ đệm riêng), phức tạp hơn khi cần đọc dở dang/ghi dở dang.</p>
-<h3><code>select</code> và <code>epoll</code></h3>
+<h3 id="h-14"><code>select</code> và <code>epoll</code></h3>
 <ul>
 <li><strong><code>select</code>:</strong> cổ điển, di động (cả Windows), nhưng giới hạn <code>FD_SETSIZE</code> (thường 1024) và phải dựng lại tập mỗi lần.</li>
 <li><strong><code>poll</code>:</strong> như trên, không giới hạn cứng nhưng vẫn duyệt toàn bộ mảng mỗi lần: <code>O(n)</code>.</li>
@@ -506,8 +509,8 @@ epoll_ctl(ep, EPOLL_CTL_ADD, srv, &amp;ev);
 }
 </code></pre>
 <p>Với client non-blocking phải xử lý <code>EAGAIN</code>: <strong>đọc cho tới khi hết</strong> (edge-triggered) hoặc đọc một phần rồi để vòng sau (level-triggered, mặc định).</p>
-<h3>Chọn mô hình nào?</h3>
-<table>
+<h3 id="h-15">Chọn mô hình nào?</h3>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Mô hình</th>
@@ -542,8 +545,8 @@ epoll_ctl(ep, EPOLL_CTL_ADD, srv, &amp;ev);
 <td>Hiệu năng cao, thường kèm thread pool</td>
 </tr>
 </tbody>
-</table>
-<h2>16.8. UDP</h2>
+</table></div>
+<h2 id="s16-8">16.8. UDP</h2>
 <p>UDP không có kết nối: mỗi lần gửi/nhận là <strong>một gói độc lập</strong> kèm địa chỉ.</p>
 <pre class="hljs"><code><span class="hljs-type">ssize_t</span> <span class="hljs-title function_">sendto</span><span class="hljs-params">(<span class="hljs-type">int</span> fd, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *buf, <span class="hljs-type">size_t</span> len, <span class="hljs-type">int</span> flags,
                <span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> sockaddr *dest, <span class="hljs-type">socklen_t</span> dlen)</span>;
@@ -574,7 +577,7 @@ bind(fd, (<span class="hljs-keyword">struct</span> sockaddr *)&amp;addr, <span c
 <li><strong>Không tin cậy:</strong> gói có thể mất/trùng/đảo. Ứng dụng phải tự đánh số, xác nhận, gửi lại nếu cần.</li>
 <li>Kích thước hợp lý ≤ ~1400 byte để tránh phân mảnh IP.</li>
 </ul>
-<h2>16.9. Ví dụ: gửi HTTP GET thô</h2>
+<h2 id="s16-9">16.9. Ví dụ: gửi HTTP GET thô</h2>
 <p>HTTP/1.1 là giao thức <strong>văn bản</strong> chạy trên TCP. Yêu cầu tối thiểu:</p>
 <pre class="hljs"><code>GET / HTTP/1.1\r\n
 Host: example.com\r\n
@@ -626,9 +629,9 @@ Connection: close\r\n
 }
 </code></pre>
 <p>Server đáp lại một dòng trạng thái (<code>HTTP/1.1 200 OK</code>), các header, dòng trống, rồi body. Vì có <code>Connection: close</code>, server đóng kết nối khi xong, và <code>recv</code> trả 0 báo hiệu hết dữ liệu. Chương 20 xây dựng phía server. HTTPS cần thêm TLS (OpenSSL/mbedTLS), không được trình bày ở đây.</p>
-<h2>16.10. Xử lý lỗi, giới hạn thời gian và bảo mật</h2>
-<h3>Lỗi thường gặp và ý nghĩa</h3>
-<table>
+<h2 id="s16-10">16.10. Xử lý lỗi, giới hạn thời gian và bảo mật</h2>
+<h3 id="h-16">Lỗi thường gặp và ý nghĩa</h3>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Lỗi</th>
@@ -665,15 +668,15 @@ Connection: close\r\n
 <td>Bị tín hiệu ngắt: thử lại</td>
 </tr>
 </tbody>
-</table>
-<h3>Thời gian chờ (timeout)</h3>
+</table></div>
+<h3 id="h-17">Thời gian chờ (timeout)</h3>
 <p>Mặc định <code>recv</code>/<code>connect</code> có thể chặn <strong>rất lâu</strong>. Đặt giới hạn:</p>
 <pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">timeval</span> <span class="hljs-title">tv</span> =</span> { .tv_sec = <span class="hljs-number">5</span>, .tv_usec = <span class="hljs-number">0</span> };
 setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &amp;tv, <span class="hljs-keyword">sizeof</span> tv);     <span class="hljs-comment">// recv chờ tối đa 5 giây (trả -1, EAGAIN)</span>
 setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &amp;tv, <span class="hljs-keyword">sizeof</span> tv);
 </code></pre>
 <p>Hoặc dùng <code>poll</code> với <code>timeout_ms</code>.</p>
-<h3>Bảo mật khi viết server</h3>
+<h3 id="h-18">Bảo mật khi viết server</h3>
 <ul>
 <li><strong>Không tin bất cứ điều gì từ mạng.</strong> Mọi độ dài, chỉ số, chuỗi đều phải kiểm tra; giới hạn kích thước thông điệp/dòng/header.</li>
 <li><strong>Chống tràn bộ đệm:</strong> dùng độ dài đã kiểm tra khi chép; đảm bảo chuỗi nhận được có <code>'\0'</code> trước khi dùng như chuỗi C.</li>
@@ -683,9 +686,9 @@ setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &amp;tv, <span class="hljs-keyword">size
 <li>Nếu cần bảo mật đường truyền: dùng <strong>TLS</strong> (OpenSSL, mbedTLS). Đừng tự &quot;mã hóa&quot; bằng cách nghĩ ra.</li>
 <li>Kiểm tra bằng sanitizer và fuzzer (chương 18, 21).</li>
 </ul>
-<h2>16.11. Windows: Winsock</h2>
+<h2 id="s16-11">16.11. Windows: Winsock</h2>
 <p>Winsock rất giống Berkeley sockets, khác vài điểm:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>POSIX</th>
@@ -726,7 +729,7 @@ setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &amp;tv, <span class="hljs-keyword">size
 <td><code>-lws2_32</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">ifdef</span> _WIN32</span>
   <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;winsock2.h&gt;</span></span>
   <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;ws2tcpip.h&gt;</span></span>
@@ -747,8 +750,8 @@ setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &amp;tv, <span class="hljs-keyword">size
 <span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
 </code></pre>
 <p>Biên dịch với MinGW: <code>gcc -std=c11 -Wall client.c -o client.exe -lws2_32</code>. Bọc các khác biệt trong một file nhỏ (như trên) là cách tốt để giữ phần còn lại của mã đa nền tảng. Nếu bạn dùng WSL, mọi ví dụ POSIX chạy nguyên xi.</p>
-<h2>16.12. Công cụ hỗ trợ</h2>
-<table>
+<h2 id="s16-12">16.12. Công cụ hỗ trợ</h2>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Công cụ</th>
@@ -777,9 +780,9 @@ setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &amp;tv, <span class="hljs-keyword">size
 <td>Xem các lời gọi socket của chương trình</td>
 </tr>
 </tbody>
-</table>
-<h2>16.13. Lỗi thường gặp</h2>
-<table>
+</table></div>
+<h2 id="s16-13">16.13. Lỗi thường gặp</h2>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Lỗi</th>
@@ -844,8 +847,8 @@ setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &amp;tv, <span class="hljs-keyword">size
 <td><code>SO_RCVTIMEO</code>/<code>poll</code></td>
 </tr>
 </tbody>
-</table>
-<h2>16.14. Tóm tắt</h2>
+</table></div>
+<h2 id="s16-14">16.14. Tóm tắt</h2>
 <ul>
 <li>Socket là file descriptor; server: <code>socket → bind → listen → accept</code>; client: <code>socket → connect</code>.</li>
 <li>TCP là <strong>luồng byte</strong>: xử lý gửi/nhận một phần, tự đóng khung thông điệp; luôn kiểm tra <code>recv</code> trả <code>0</code>/<code>-1</code>.</li>
@@ -855,7 +858,7 @@ setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &amp;tv, <span class="hljs-keyword">size
 <li>Server phải coi mọi dữ liệu mạng là không tin cậy và giới hạn tài nguyên.</li>
 <li>Windows dùng Winsock: <code>WSAStartup</code>, <code>closesocket</code>, <code>-lws2_32</code>.</li>
 </ul>
-<h2>16.15. Bài tập</h2>
+<h2 id="s16-15">16.15. Bài tập</h2>
 <ol>
 <li>Chạy <code>echo_server</code> và dùng <code>nc</code> để thử; sau đó mở hai <code>nc</code> cùng lúc để thấy client thứ hai bị chờ. Giải thích.</li>
 <li>Viết <strong>client echo</strong> đọc từng dòng từ bàn phím và in phản hồi. Đo thời gian khứ hồi (<code>clock_gettime</code>).</li>
@@ -870,8 +873,26 @@ setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &amp;tv, <span class="hljs-keyword">size
 <p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-16">code/chapter-16</a></p>
 
 </article>
-<div class="chapter-nav"><a class="nav-prev" href="chapter-15.html">&larr; Đa luồng & đồng bộ (POSIX threads)</a><a class="nav-next" href="chapter-17.html">Tối ưu hóa & profiling &rarr;</a></div>
+<nav class="chapter-nav" aria-label="Điều hướng chương"><a class="nav-prev" href="chapter-15.html"><small>← Trước</small>Đa luồng &amp; đồng bộ (POSIX threads)</a><a class="nav-next" href="chapter-17.html"><small>Tiếp →</small>Tối ưu hóa &amp; profiling</a></nav>
 </main>
 </div>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,store=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
+  function setTheme(t){if(t==='light')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);store('theme',t);
+    document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.setAttribute('aria-pressed',String((b.dataset.themeBtn===t)||(t==='light'&&b.dataset.themeBtn==='light')))})}
+  var cur=root.getAttribute('data-theme')||'light';setTheme(cur);
+  document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.addEventListener('click',function(){setTheme(b.dataset.themeBtn)})});
+  var fs=parseInt(getComputedStyle(root).getPropertyValue('--fs'))||19;
+  document.querySelectorAll('[data-fs]').forEach(function(b){b.addEventListener('click',function(){fs=Math.min(26,Math.max(14,fs+parseInt(b.dataset.fs)));root.style.setProperty('--fs',fs+'px');store('fs',fs)})});
+  var mb=document.getElementById('menu-btn');if(mb)mb.addEventListener('click',function(){document.body.classList.toggle('nav-open')});
+  document.addEventListener('click',function(e){if(document.body.classList.contains('nav-open')&&!e.target.closest('#sidebar')&&e.target.id!=='menu-btn')document.body.classList.remove('nav-open')});
+  document.querySelectorAll('pre').forEach(function(pre){var b=document.createElement('button');b.className='copy-btn';b.type='button';b.textContent='Sao chép';
+    b.addEventListener('click',function(){var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Đã chép'},function(){b.textContent='Lỗi'});setTimeout(function(){b.textContent='Sao chép'},1500)});pre.appendChild(b)});
+  var a=document.querySelector('.chapter-link.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'center'});
+})();
+</script>
 </body>
 </html>

@@ -1,15 +1,17 @@
+// leak_demo.c
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-void leak_example(void) {
-    int *p = malloc(10 * sizeof(int));
-    if (!p) return;
-    p[0] = 42;
-    /* forgot to free(p) -> memory leak */
+void process(void) {
+    char *buf = malloc(1024);
+    if (!buf) return;
+    strcpy(buf, "hello");
+    printf("%s\n", buf);
+    // quên free(buf)  -> rò rỉ 1024 byte mỗi lần gọi
 }
 
 int main(void) {
-    for (int i = 0; i < 1000; ++i) leak_example();
-    printf("Leak demo finished (non-freed allocations).\n");
+    for (int i = 0; i < 1000; i++) process();    // rò rỉ ~1 MB
     return 0;
 }

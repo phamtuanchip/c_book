@@ -4,15 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Project: Web server đơn giản — Lập trình C — Từ cơ bản đến nâng cao</title>
+<script>try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.setAttribute('data-theme',t);var f=localStorage.getItem('fs');if(f)document.documentElement.style.setProperty('--fs',f+'px')}catch(e){}</script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="layout">
-<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link active" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<nav class="sidebar" id="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Phần I — Nhập môn</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp &amp; cấu trúc chương trình C</a></li></ul></li><li class="part"><div class="part-title">Phần II — Nền tảng ngôn ngữ</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm &amp; phạm vi biến (Functions &amp; Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng &amp; chuỗi (Arrays &amp; Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li></ul></li><li class="part"><div class="part-title">Phần III — Bộ nhớ, dữ liệu, xây dựng</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O &amp; thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi &amp; ngoại lệ trong C</a></li></ul></li><li class="part"><div class="part-title">Phần IV — Kỹ thuật nâng cao</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý &amp; macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng &amp; đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa &amp; profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật &amp; an toàn bộ nhớ</a></li></ul></li><li class="part"><div class="part-title">Phần V — Dự án và phát hành</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link active" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing &amp; CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging &amp; deploy</a></li></ul></li><li class="part"><div class="part-title">Phụ lục — Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li><li><a class="chapter-link" href="solutions-02.html">Lời giải chương 2</a></li><li><a class="chapter-link" href="solutions-03.html">Lời giải chương 3</a></li><li><a class="chapter-link" href="solutions-04.html">Lời giải chương 4</a></li><li><a class="chapter-link" href="solutions-05.html">Lời giải chương 5</a></li><li><a class="chapter-link" href="solutions-06.html">Lời giải chương 6</a></li><li><a class="chapter-link" href="solutions-07.html">Lời giải chương 7</a></li><li><a class="chapter-link" href="solutions-08.html">Lời giải chương 8</a></li><li><a class="chapter-link" href="solutions-09.html">Lời giải chương 9</a></li><li><a class="chapter-link" href="solutions-10.html">Lời giải chương 10</a></li><li><a class="chapter-link" href="solutions-11.html">Lời giải chương 11</a></li><li><a class="chapter-link" href="solutions-12.html">Lời giải chương 12</a></li><li><a class="chapter-link" href="solutions-13.html">Lời giải chương 13</a></li><li><a class="chapter-link" href="solutions-14.html">Lời giải chương 14</a></li><li><a class="chapter-link" href="solutions-15.html">Lời giải chương 15</a></li><li><a class="chapter-link" href="solutions-16.html">Lời giải chương 16</a></li><li><a class="chapter-link" href="solutions-17.html">Lời giải chương 17</a></li><li><a class="chapter-link" href="solutions-18.html">Lời giải chương 18</a></li><li><a class="chapter-link" href="solutions-19.html">Lời giải chương 19</a></li><li><a class="chapter-link" href="solutions-20.html">Lời giải chương 20</a></li><li><a class="chapter-link" href="solutions-21.html">Lời giải chương 21</a></li><li><a class="chapter-link" href="solutions-22.html">Lời giải chương 22</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<div class="main-col">
+<header class="topbar"><button class="menu-btn" id="menu-btn" type="button" aria-label="Mục lục">☰</button><span class="crumb">Phần V · Chương 20</span><span class="tools"><button data-fs="-1" type="button" title="Chữ nhỏ hơn">A−</button><button data-fs="1" type="button" title="Chữ lớn hơn">A+</button><button data-theme-btn="light" type="button" title="Nền sáng">Sáng</button><button data-theme-btn="sepia" type="button" title="Nền sepia">Sepia</button><button data-theme-btn="dark" type="button" title="Nền tối">Tối</button></span></header>
 <main class="content">
 <article>
-<h1>Chương 20 — Project: Web server đơn giản</h1>
-<h2>Mục tiêu chương</h2>
+<header class="chapter-head"><div class="chapter-num">Chương 20</div><h1>Project: Web server đơn giản</h1></header><nav class="chapter-toc" aria-label="Trong chương này"><div class="toc-title">Trong chương này</div><ol><li><a href="#s20-1">20.1. HTTP trong 5 phút</a></li><li><a href="#s20-2">20.2. Kiến trúc</a></li><li><a href="#s20-3">20.3. Khung mã và các tiện ích</a></li><li><a href="#s20-4">20.4. Phản hồi và loại nội dung (MIME)</a></li><li><a href="#s20-5">20.5. Phân tích yêu cầu</a></li><li><a href="#s20-6">20.6. Phục vụ file tĩnh an toàn</a></li><li><a href="#s20-7">20.7. Router: route động</a></li><li><a href="#s20-8">20.8. Xử lý một kết nối</a></li><li><a href="#s20-9">20.9. Thread pool và hàng đợi có giới hạn</a></li><li><a href="#s20-10">20.10. main: khởi tạo, vòng lặp chấp nhận, tắt êm</a></li><li><a href="#s20-11">20.11. Biên dịch, chạy, kiểm thử</a></li><li><a href="#s20-12">20.12. Bảo mật và giới hạn — kiểm tra cuối cùng</a></li><li><a href="#s20-13">20.13. Hướng mở rộng</a></li><li><a href="#s20-14">20.14. Lỗi thường gặp</a></li><li><a href="#s20-15">20.15. Tóm tắt</a></li><li><a href="#s20-16">20.16. Bài tập</a></li></ol></nav>
+<h2 id="h-1">Mục tiêu chương</h2>
 <ul>
 <li>Xây một <strong>web server HTTP/1.1 nhỏ</strong> bằng C: phục vụ <strong>file tĩnh</strong> và vài <strong>route động</strong> (JSON API).</li>
 <li>Vận dụng kiến thức socket (chương 16), luồng (chương 15), file I/O (chương 12), xử lý lỗi (chương 13) và bảo mật (chương 18).</li>
@@ -24,16 +27,16 @@
 <blockquote>
 <p><strong>Môi trường:</strong> mã dùng POSIX (Linux, macOS, WSL). Trên Windows, chạy trong WSL hoặc chuyển sang Winsock theo bảng ở chương 16. Đây là <strong>server học tập</strong>: chưa có TLS, chưa xử lý đầy đủ HTTP; đừng phơi ra Internet công cộng.</p>
 </blockquote>
-<h2>20.1. HTTP trong 5 phút</h2>
+<h2 id="s20-1">20.1. HTTP trong 5 phút</h2>
 <p>HTTP là giao thức <strong>văn bản</strong> kiểu <strong>yêu cầu–phản hồi</strong> chạy trên TCP (mặc định cổng 80). Client gửi một <strong>yêu cầu</strong>, server trả một <strong>phản hồi</strong>.</p>
-<h3>Yêu cầu</h3>
+<h3 id="h-2">Yêu cầu</h3>
 <pre class="hljs"><code>GET /index.html HTTP/1.1\r\n            ← dòng yêu cầu: PHƯƠNG THỨC  ĐƯỜNG DẪN  PHIÊN BẢN
 Host: localhost:8080\r\n                ← các header, mỗi dòng &quot;Tên: giá trị&quot;
 User-Agent: curl/8.0\r\n
 Accept: */*\r\n
 \r\n                                    ← dòng trống kết thúc phần header
 </code></pre>
-<h3>Phản hồi</h3>
+<h3 id="h-3">Phản hồi</h3>
 <pre class="hljs"><code>HTTP/1.1 200 OK\r\n                     ← dòng trạng thái: PHIÊN BẢN  MÃ  LÝ DO
 Content-Type: text/html\r\n             ← header
 Content-Length: 44\r\n
@@ -46,8 +49,8 @@ Connection: close\r\n
 <li><code>Content-Length</code> cho client biết body dài bao nhiêu byte — đây chính là <strong>đóng khung</strong> (chương 16) của HTTP.</li>
 <li><code>Connection: close</code> báo server sẽ đóng kết nối sau khi trả lời (đơn giản hơn <em>keep-alive</em>).</li>
 </ul>
-<h3>Các mã trạng thái cần thiết</h3>
-<table>
+<h3 id="h-4">Các mã trạng thái cần thiết</h3>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Mã</th>
@@ -102,12 +105,12 @@ Connection: close\r\n
 <td>hàng đợi đầy</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Phạm vi ta hỗ trợ: phương thức <strong>GET</strong> và <strong>HEAD</strong> (HEAD như GET nhưng không có body), header đọc nhưng bỏ qua, không hỗ trợ body của yêu cầu, không nén, không keep-alive.</p>
 <p>Thử một server có sẵn để quan sát: <code>curl -v http://example.com/</code> hiện đầy đủ yêu cầu (<code>&gt;</code>) và phản hồi (<code>&lt;</code>).</p>
-<h2>20.2. Kiến trúc</h2>
+<h2 id="s20-2">20.2. Kiến trúc</h2>
 <p>Ba lựa chọn (chương 16):</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Kiến trúc</th>
@@ -136,7 +139,7 @@ Connection: close\r\n
 <td>Mã phức tạp (máy trạng thái)</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Ta chọn <strong>thread pool</strong>: cân bằng giữa đơn giản và an toàn tài nguyên. Sơ đồ:</p>
 <pre class="hljs"><code>                    ┌──────────────────────┐
   client ──┐        │  luồng chính         │       ┌─ worker 1 ─┐
@@ -151,7 +154,7 @@ Connection: close\r\n
                                                           └────────────┘
 </code></pre>
 <p>Luồng chính chỉ <strong>chấp nhận kết nối</strong> và bỏ <code>fd</code> vào hàng đợi; <strong>worker</strong> làm phần việc nặng. Nếu hàng đợi <strong>đầy</strong>, luồng chính trả <code>503</code> ngay và đóng kết nối — <strong>áp lực ngược (backpressure)</strong> thay vì để hàng đợi phình vô hạn.</p>
-<h2>20.3. Khung mã và các tiện ích</h2>
+<h2 id="s20-3">20.3. Khung mã và các tiện ích</h2>
 <p>Cấu trúc thư mục:</p>
 <pre class="hljs"><code>webserver/
 ├── server.c
@@ -165,10 +168,11 @@ Connection: close\r\n
 <span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;utf-8&quot;</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>C server<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;stylesheet&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;/style.css&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Xin chào từ máy chủ C!<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Giờ hiện tại: <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;/api/time&quot;</span>&gt;</span>/api/time<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
 </code></pre>
-<h3>Phần đầu: include, cấu hình, gửi đủ dữ liệu</h3>
+<h3 id="h-5">Phần đầu: include, cấu hình, gửi đủ dữ liệu</h3>
 <pre class="hljs"><code><span class="hljs-comment">// server.c</span>
-<span class="hljs-meta">#<span class="hljs-keyword">define</span> _POSIX_C_SOURCE 200809L</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> _XOPEN_SOURCE 700              <span class="hljs-comment">// POSIX.1-2008 + XSI (cần cho realpath)</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;arpa/inet.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/time.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;errno.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;netinet/in.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;poll.h&gt;</span></span>
@@ -206,7 +210,7 @@ Connection: close\r\n
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </code></pre>
-<h3>Ghi log</h3>
+<h3 id="h-6">Ghi log</h3>
 <pre class="hljs"><code><span class="hljs-comment">// Ghi 1 dòng log cho mỗi yêu cầu: thời gian, phương thức, đường dẫn, mã trạng thái, số byte body.</span>
 <span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">log_request</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *method, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *path, <span class="hljs-type">int</span> status, <span class="hljs-type">long</span> bytes)</span> {
     <span class="hljs-type">char</span> ts[<span class="hljs-number">32</span>];
@@ -218,8 +222,8 @@ Connection: close\r\n
 }
 </code></pre>
 <p>Cắt đường dẫn khi in (<code>%-30.30s</code>) để <strong>kẻ tấn công không thể làm nổ log</strong> bằng đường dẫn dài hoặc chứa ký tự điều khiển; thực tế nên lọc cả ký tự xuống dòng để chống <strong>log injection</strong>.</p>
-<h2>20.4. Phản hồi và loại nội dung (MIME)</h2>
-<h3>Gửi header</h3>
+<h2 id="s20-4">20.4. Phản hồi và loại nội dung (MIME)</h2>
+<h3 id="h-7">Gửi header</h3>
 <pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">char</span> *<span class="hljs-title function_">reason_phrase</span><span class="hljs-params">(<span class="hljs-type">int</span> status)</span> {
     <span class="hljs-keyword">switch</span> (status) {
         <span class="hljs-keyword">case</span> <span class="hljs-number">200</span>: <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;OK&quot;</span>;
@@ -256,7 +260,7 @@ Connection: close\r\n
     <span class="hljs-keyword">return</span> head_only ? <span class="hljs-number">0</span> : (<span class="hljs-type">long</span>)len;
 }
 </code></pre>
-<h3>Loại nội dung theo đuôi file</h3>
+<h3 id="h-8">Loại nội dung theo đuôi file</h3>
 <p>Trình duyệt dựa vào <code>Content-Type</code> để biết cách hiển thị. Gửi sai (ví dụ CSS với <code>text/plain</code>) khiến trình duyệt từ chối áp dụng.</p>
 <pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">char</span> *<span class="hljs-title function_">mime_type</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *path)</span> {
     <span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span> <span class="hljs-type">const</span> <span class="hljs-type">char</span> *ext, *type; } table[] = {
@@ -282,7 +286,7 @@ Connection: close\r\n
     <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;application/octet-stream&quot;</span>;            <span class="hljs-comment">// không biết: tải về thay vì hiển thị</span>
 }
 </code></pre>
-<h2>20.5. Phân tích yêu cầu</h2>
+<h2 id="s20-5">20.5. Phân tích yêu cầu</h2>
 <p>Đọc yêu cầu <strong>có giới hạn</strong> và <strong>theo giao thức</strong>: dữ liệu TCP đến từng mảnh nên phải lặp tới khi thấy <code>\r\n\r\n</code> (chương 16).</p>
 <pre class="hljs"><code><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span>
     <span class="hljs-type">char</span> method[<span class="hljs-number">8</span>];
@@ -307,7 +311,7 @@ Connection: close\r\n
 }
 </code></pre>
 <p><code>strstr</code> dừng ở byte NUL đầu tiên; dữ liệu độc hại có thể chèn NUL, nhưng lúc đó <code>strstr</code> chỉ thấy phần đầu — ta vẫn không đọc quá giới hạn <code>cap</code>, nên an toàn. (Server thật dùng cách quét tìm <code>\r\n\r\n</code> trên <code>len</code> byte thực nhận.)</p>
-<h3>Giải mã phần trăm (URL decoding)</h3>
+<h3 id="h-9">Giải mã phần trăm (URL decoding)</h3>
 <p>URL mã hóa ký tự đặc biệt dạng <code>%XX</code>: <code>/a%20b.txt</code> là <code>/a b.txt</code>. Phải <strong>giải mã trước khi kiểm tra an toàn</strong> — nếu không, kẻ tấn công gửi <code>%2e%2e/</code> (là <code>../</code>) để lách bộ lọc.</p>
 <pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">hexval</span><span class="hljs-params">(<span class="hljs-type">int</span> c)</span> {
     <span class="hljs-keyword">if</span> (c &gt;= <span class="hljs-string">&#x27;0&#x27;</span> &amp;&amp; c &lt;= <span class="hljs-string">&#x27;9&#x27;</span>) <span class="hljs-keyword">return</span> c - <span class="hljs-string">&#x27;0&#x27;</span>;
@@ -336,7 +340,7 @@ Connection: close\r\n
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </code></pre>
-<h3>Phân tích dòng yêu cầu</h3>
+<h3 id="h-10">Phân tích dòng yêu cầu</h3>
 <pre class="hljs"><code><span class="hljs-comment">// Trả 0 nếu OK, hoặc mã lỗi HTTP (400/414...).</span>
 <span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">parse_request</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *buf, Request *rq)</span> {
     <span class="hljs-type">char</span> target[<span class="hljs-number">1300</span>];
@@ -358,9 +362,9 @@ Connection: close\r\n
 }
 </code></pre>
 <p>Lưu ý phòng thủ ngay từ dòng <code>sscanf</code>: mọi <code>%s</code> đều có <strong>giới hạn độ rộng</strong> (chương 4, 18). Giới hạn kích thước từng trường để tránh tràn và từ chối yêu cầu quá dài bằng <code>414</code>.</p>
-<h2>20.6. Phục vụ file tĩnh an toàn</h2>
+<h2 id="s20-6">20.6. Phục vụ file tĩnh an toàn</h2>
 <p>Đây là chỗ dễ có lỗ hổng <strong>directory traversal</strong> nhất. Nếu server chỉ nối <code>&quot;./www&quot; + đường_dẫn</code> mà không kiểm tra, yêu cầu <code>GET /../../etc/passwd</code> sẽ đọc file ngoài thư mục web.</p>
-<h3>Các lớp phòng thủ</h3>
+<h3 id="h-11">Các lớp phòng thủ</h3>
 <ol>
 <li><strong>Giải mã trước, kiểm tra sau</strong> (đã làm ở <code>url_decode</code>).</li>
 <li><strong>Từ chối</strong> đường dẫn chứa thành phần <code>..</code>, ký tự <code>\</code>, hoặc byte điều khiển.</li>
@@ -443,7 +447,7 @@ Connection: close\r\n
 </code></pre>
 <p>Điểm nhấn về kiểm tra thư mục gốc: so sánh <strong>tiền tố</strong> phải kèm điều kiện ký tự kế là <code>/</code> hoặc kết thúc chuỗi. Nếu chỉ <code>strncmp</code>, thư mục <code>/srv/www-secret</code> sẽ &quot;khớp&quot; tiền tố <code>/srv/www</code>.</p>
 <p>Thư mục <code>www</code> được đọc từng khối 16 KB nên một file lớn không chiếm nhiều RAM. Trên Linux có thể dùng <code>sendfile()</code> để kernel chép trực tiếp file → socket không qua bộ nhớ người dùng (nhanh hơn); ta dùng <code>fread</code>/<code>send</code> vì di động và dễ hiểu.</p>
-<h2>20.7. Router: route động</h2>
+<h2 id="s20-7">20.7. Router: route động</h2>
 <p>Route là ánh xạ <strong>đường dẫn → hàm xử lý</strong>. Kiểm tra bảng route <strong>trước</strong>, rồi mới rơi về file tĩnh.</p>
 <pre class="hljs"><code><span class="hljs-keyword">typedef</span> <span class="hljs-title function_">long</span> <span class="hljs-params">(*Handler)</span><span class="hljs-params">(<span class="hljs-type">int</span> fd, <span class="hljs-type">const</span> Request *rq, <span class="hljs-type">int</span> head_only, <span class="hljs-type">int</span> *status_out)</span>;
 
@@ -479,7 +483,7 @@ Connection: close\r\n
 }
 </code></pre>
 <p>Với JSON có dữ liệu do người dùng cung cấp (ví dụ <code>/api/echo?msg=...</code>), <strong>bạn phải thoát ký tự đặc biệt</strong> (<code>&quot;</code>, <code>\</code>, ký tự điều khiển) khi chèn vào JSON; nếu không, kẻ tấn công phá cấu trúc JSON (<em>injection</em>). Bài tập 3 yêu cầu làm việc này.</p>
-<h2>20.8. Xử lý một kết nối</h2>
+<h2 id="s20-8">20.8. Xử lý một kết nối</h2>
 <pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">handle_connection</span><span class="hljs-params">(<span class="hljs-type">int</span> fd)</span> {
     <span class="hljs-comment">// Chống client chậm/treo chiếm mãi một worker</span>
     <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">timeval</span> <span class="hljs-title">tv</span> =</span> { .tv_sec = IO_TIMEOUT_S, .tv_usec = <span class="hljs-number">0</span> };
@@ -518,7 +522,7 @@ Connection: close\r\n
 }
 </code></pre>
 <p>Quy trình: <strong>giới hạn thời gian → đọc header có giới hạn → phân tích → kiểm tra phương thức → route/file → log</strong>. Mỗi bước có đường thoát lỗi rõ ràng và trả mã HTTP phù hợp; không có <code>exit()</code> nào trong đường xử lý yêu cầu (một yêu cầu lỗi <strong>không được</strong> làm sập server).</p>
-<h2>20.9. Thread pool và hàng đợi có giới hạn</h2>
+<h2 id="s20-9">20.9. Thread pool và hàng đợi có giới hạn</h2>
 <p>Ta dùng lại mẫu <strong>bounded queue</strong> của chương 15, chứa các <code>fd</code>.</p>
 <pre class="hljs"><code><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span>
     <span class="hljs-type">int</span>    fds[QUEUE_CAP];
@@ -575,7 +579,7 @@ Connection: close\r\n
     <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
 }
 </code></pre>
-<h2>20.10. <code>main</code>: khởi tạo, vòng lặp chấp nhận, tắt êm</h2>
+<h2 id="s20-10">20.10. <code>main</code>: khởi tạo, vòng lặp chấp nhận, tắt êm</h2>
 <pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">on_signal</span><span class="hljs-params">(<span class="hljs-type">int</span> sig)</span> { (<span class="hljs-type">void</span>)sig; g_stop = <span class="hljs-number">1</span>; }     <span class="hljs-comment">// chỉ đặt cờ (chương 13)</span>
 
 <span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> *argv[])</span> {
@@ -658,7 +662,7 @@ Connection: close\r\n
 <li><strong>Thứ tự tắt:</strong> đóng socket lắng nghe → đóng queue → join worker (worker xử lý nốt việc rồi thoát khi <code>queue_get</code> trả -1).</li>
 <li>Không có biến toàn cục thay đổi ngoài <code>g_stop</code> và hàng đợi có khóa; <code>g_root</code> chỉ đọc sau khi khởi động, nên các worker đọc an toàn.</li>
 </ul>
-<h2>20.11. Biên dịch, chạy, kiểm thử</h2>
+<h2 id="s20-11">20.11. Biên dịch, chạy, kiểm thử</h2>
 <p><code>Makefile</code>:</p>
 <pre class="hljs"><code>CC      := gcc
 CFLAGS  := -std=c11 -Wall -Wextra -Wpedantic -Wshadow -O2 -g -D_FORTIFY_SOURCE=2 -fstack-protector-strong
@@ -701,8 +705,8 @@ wrk -t2 -c100 -d10s http://127.0.0.1:8080/
 <pre class="hljs"><code><span class="hljs-built_in">head</span> -c 100000 /dev/urandom | nc 127.0.0.1 8080          <span class="hljs-comment"># không được crash</span>
 python3 -c <span class="hljs-string">&quot;print(&#x27;GET /&#x27; + &#x27;a&#x27;*5000 + &#x27; HTTP/1.1\r\n\r\n&#x27;, end=&#x27;&#x27;)&quot;</span> | nc 127.0.0.1 8080    <span class="hljs-comment"># 414</span>
 </code></pre>
-<h2>20.12. Bảo mật và giới hạn — kiểm tra cuối cùng</h2>
-<table>
+<h2 id="s20-12">20.12. Bảo mật và giới hạn — kiểm tra cuối cùng</h2>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Nguy cơ</th>
@@ -751,9 +755,9 @@ python3 -c <span class="hljs-string">&quot;print(&#x27;GET /&#x27; + &#x27;a&#x2
 <td>Đặt sau reverse proxy có TLS (nginx, Caddy)</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Đây là mã học tập; nếu triển khai thật, hãy dùng server đã được kiểm chứng (nginx, Caddy...) hoặc ít nhất bổ sung: TLS, giới hạn tốc độ theo IP, xử lý <code>Range</code>, <code>If-Modified-Since</code>, <code>keep-alive</code>, chunked encoding, và fuzz bộ phân tích (chương 18).</p>
-<h2>20.13. Hướng mở rộng</h2>
+<h2 id="s20-13">20.13. Hướng mở rộng</h2>
 <ul>
 <li><strong>Keep-alive:</strong> cho phép nhiều yêu cầu trên một kết nối (vòng lặp đọc yêu cầu, hết thời gian chờ nhàn rỗi).</li>
 <li><strong><code>epoll</code> event loop:</strong> thay thread pool bằng vòng lặp sự kiện non-blocking, máy trạng thái cho mỗi kết nối (đọc header → xử lý → ghi phản hồi); dùng <code>sendfile</code>.</li>
@@ -764,8 +768,8 @@ python3 -c <span class="hljs-string">&quot;print(&#x27;GET /&#x27; + &#x27;a&#x2
 <li><strong>Cấu hình:</strong> đọc file cấu hình, hỗ trợ nhiều thư mục/route, <code>Host</code> ảo.</li>
 <li><strong>TLS:</strong> liên kết OpenSSL/mbedTLS; hoặc để proxy làm.</li>
 </ul>
-<h2>20.14. Lỗi thường gặp</h2>
-<table>
+<h2 id="s20-14">20.14. Lỗi thường gặp</h2>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Lỗi</th>
@@ -825,8 +829,8 @@ python3 -c <span class="hljs-string">&quot;print(&#x27;GET /&#x27; + &#x27;a&#x2
 <td><code>queue_close</code> + <code>pthread_join</code></td>
 </tr>
 </tbody>
-</table>
-<h2>20.15. Tóm tắt</h2>
+</table></div>
+<h2 id="s20-15">20.15. Tóm tắt</h2>
 <ul>
 <li>HTTP là giao thức văn bản: dòng yêu cầu + header + dòng trống; phản hồi có dòng trạng thái, header (<code>Content-Length</code>, <code>Content-Type</code>), body.</li>
 <li>Phân tích yêu cầu <strong>có giới hạn</strong> ở mọi trường; <strong>giải mã URL trước, kiểm tra an toàn sau</strong>.</li>
@@ -835,7 +839,7 @@ python3 -c <span class="hljs-string">&quot;print(&#x27;GET /&#x27; + &#x27;a&#x2
 <li>Tắt êm: cờ <code>sig_atomic_t</code>, <code>poll</code> timeout, đóng queue, join worker.</li>
 <li>Kiểm thử bằng <code>curl</code>, <code>ab</code>/<code>wrk</code>, ASan/TSan và dữ liệu rác.</li>
 </ul>
-<h2>20.16. Bài tập</h2>
+<h2 id="s20-16">20.16. Bài tập</h2>
 <ol>
 <li>Chạy server, dùng <code>curl -v</code> để quan sát yêu cầu/phản hồi. Xác minh <code>Content-Length</code> bằng <code>wc -c</code> trên file, và HEAD trả cùng độ dài nhưng không có body.</li>
 <li>Thêm route <code>/api/echo?msg=...</code> trả JSON <code>{&quot;msg&quot;:&quot;...&quot;}</code> với <strong>thoát ký tự JSON</strong> đúng (<code>&quot;</code>, <code>\</code>, xuống dòng, ký tự điều khiển). Kiểm thử với chuỗi có dấu nháy và unicode.</li>
@@ -851,8 +855,26 @@ python3 -c <span class="hljs-string">&quot;print(&#x27;GET /&#x27; + &#x27;a&#x2
 <p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-20">code/chapter-20</a></p>
 
 </article>
-<div class="chapter-nav"><a class="nav-prev" href="chapter-19.html">&larr; Project: Trình biên dịch / Interpreter mini</a><a class="nav-next" href="chapter-21.html">Testing & CI cho C &rarr;</a></div>
+<nav class="chapter-nav" aria-label="Điều hướng chương"><a class="nav-prev" href="chapter-19.html"><small>← Trước</small>Project: Trình biên dịch / Interpreter mini</a><a class="nav-next" href="chapter-21.html"><small>Tiếp →</small>Testing &amp; CI cho C</a></nav>
 </main>
 </div>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,store=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
+  function setTheme(t){if(t==='light')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);store('theme',t);
+    document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.setAttribute('aria-pressed',String((b.dataset.themeBtn===t)||(t==='light'&&b.dataset.themeBtn==='light')))})}
+  var cur=root.getAttribute('data-theme')||'light';setTheme(cur);
+  document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.addEventListener('click',function(){setTheme(b.dataset.themeBtn)})});
+  var fs=parseInt(getComputedStyle(root).getPropertyValue('--fs'))||19;
+  document.querySelectorAll('[data-fs]').forEach(function(b){b.addEventListener('click',function(){fs=Math.min(26,Math.max(14,fs+parseInt(b.dataset.fs)));root.style.setProperty('--fs',fs+'px');store('fs',fs)})});
+  var mb=document.getElementById('menu-btn');if(mb)mb.addEventListener('click',function(){document.body.classList.toggle('nav-open')});
+  document.addEventListener('click',function(e){if(document.body.classList.contains('nav-open')&&!e.target.closest('#sidebar')&&e.target.id!=='menu-btn')document.body.classList.remove('nav-open')});
+  document.querySelectorAll('pre').forEach(function(pre){var b=document.createElement('button');b.className='copy-btn';b.type='button';b.textContent='Sao chép';
+    b.addEventListener('click',function(){var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Đã chép'},function(){b.textContent='Lỗi'});setTimeout(function(){b.textContent='Sao chép'},1500)});pre.appendChild(b)});
+  var a=document.querySelector('.chapter-link.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'center'});
+})();
+</script>
 </body>
 </html>

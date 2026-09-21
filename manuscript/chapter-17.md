@@ -341,6 +341,7 @@ int main(void) {
     sink = sum;
     double t_col = now_seconds() - t0;
 
+    (void)sink;
     printf("theo hang: %.1f ms\ntheo cot : %.1f ms (cham hon %.1fx)\n",
            t_row * 1e3, t_col * 1e3, t_col / t_row);
     free(m);

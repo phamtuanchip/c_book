@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lời giải chương 6 — Lập trình C — Từ cơ bản đến nâng cao</title>
+<script>try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.setAttribute('data-theme',t);var f=localStorage.getItem('fs');if(f)document.documentElement.style.setProperty('--fs',f+'px')}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar" id="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Phần I — Nhập môn</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp &amp; cấu trúc chương trình C</a></li></ul></li><li class="part"><div class="part-title">Phần II — Nền tảng ngôn ngữ</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm &amp; phạm vi biến (Functions &amp; Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng &amp; chuỗi (Arrays &amp; Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li></ul></li><li class="part"><div class="part-title">Phần III — Bộ nhớ, dữ liệu, xây dựng</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O &amp; thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi &amp; ngoại lệ trong C</a></li></ul></li><li class="part"><div class="part-title">Phần IV — Kỹ thuật nâng cao</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý &amp; macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng &amp; đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa &amp; profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật &amp; an toàn bộ nhớ</a></li></ul></li><li class="part"><div class="part-title">Phần V — Dự án và phát hành</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing &amp; CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging &amp; deploy</a></li></ul></li><li class="part"><div class="part-title">Phụ lục — Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li><li><a class="chapter-link" href="solutions-02.html">Lời giải chương 2</a></li><li><a class="chapter-link" href="solutions-03.html">Lời giải chương 3</a></li><li><a class="chapter-link" href="solutions-04.html">Lời giải chương 4</a></li><li><a class="chapter-link" href="solutions-05.html">Lời giải chương 5</a></li><li><a class="chapter-link active" href="solutions-06.html">Lời giải chương 6</a></li><li><a class="chapter-link" href="solutions-07.html">Lời giải chương 7</a></li><li><a class="chapter-link" href="solutions-08.html">Lời giải chương 8</a></li><li><a class="chapter-link" href="solutions-09.html">Lời giải chương 9</a></li><li><a class="chapter-link" href="solutions-10.html">Lời giải chương 10</a></li><li><a class="chapter-link" href="solutions-11.html">Lời giải chương 11</a></li><li><a class="chapter-link" href="solutions-12.html">Lời giải chương 12</a></li><li><a class="chapter-link" href="solutions-13.html">Lời giải chương 13</a></li><li><a class="chapter-link" href="solutions-14.html">Lời giải chương 14</a></li><li><a class="chapter-link" href="solutions-15.html">Lời giải chương 15</a></li><li><a class="chapter-link" href="solutions-16.html">Lời giải chương 16</a></li><li><a class="chapter-link" href="solutions-17.html">Lời giải chương 17</a></li><li><a class="chapter-link" href="solutions-18.html">Lời giải chương 18</a></li><li><a class="chapter-link" href="solutions-19.html">Lời giải chương 19</a></li><li><a class="chapter-link" href="solutions-20.html">Lời giải chương 20</a></li><li><a class="chapter-link" href="solutions-21.html">Lời giải chương 21</a></li><li><a class="chapter-link" href="solutions-22.html">Lời giải chương 22</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<div class="main-col">
+<header class="topbar"><button class="menu-btn" id="menu-btn" type="button" aria-label="Mục lục">☰</button><span class="crumb">Lời giải chương 6</span><span class="tools"><button data-fs="-1" type="button" title="Chữ nhỏ hơn">A−</button><button data-fs="1" type="button" title="Chữ lớn hơn">A+</button><button data-theme-btn="light" type="button" title="Nền sáng">Sáng</button><button data-theme-btn="sepia" type="button" title="Nền sepia">Sepia</button><button data-theme-btn="dark" type="button" title="Nền tối">Tối</button></span></header>
+<main class="content">
+<article>
+<header class="chapter-head"><div class="chapter-num">Chương 6</div><h1>Lời giải bài tập</h1></header><nav class="chapter-toc" aria-label="Trong chương này"><div class="toc-title">Trong chương này</div><ol><li><a href="#h-1">Bài 1: max3 và min/max qua con trỏ</a></li><li><a href="#h-2">Bài 2: swap đúng và sai</a></li><li><a href="#h-3">Bài 3: năm nhuận và số ngày trong tháng</a></li><li><a href="#h-4">Bài 4: next_id bằng static so với biến toàn cục</a></li><li><a href="#h-5">Bài 5: lũy thừa đệ quy</a></li><li><a href="#h-6">Bài 6: đảo chuỗi và kiểm tra đối xứng đệ quy</a></li><li><a href="#h-7">Bài 7: tìm lỗi make_greeting</a></li><li><a href="#h-8">Bài 8: qsort giảm dần và sắp xếp chuỗi</a></li><li><a href="#h-9">Bài 9: máy tính dùng bảng con trỏ hàm</a></li></ol></nav>
+<h2 id="h-1">Bài 1: <code>max3</code> và min/max qua con trỏ</h2>
+<pre class="hljs"><code><span class="hljs-comment">// max3.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">max3</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b, <span class="hljs-type">int</span> c)</span> {
+    <span class="hljs-type">int</span> m = a;
+    <span class="hljs-keyword">if</span> (b &gt; m) m = b;
+    <span class="hljs-keyword">if</span> (c &gt; m) m = c;
+    <span class="hljs-keyword">return</span> m;
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">min_max3</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b, <span class="hljs-type">int</span> c, <span class="hljs-type">int</span> *min, <span class="hljs-type">int</span> *max)</span> {
+    *min = *max = a;
+    <span class="hljs-keyword">if</span> (b &lt; *min) *min = b;
+    <span class="hljs-keyword">if</span> (b &gt; *max) *max = b;
+    <span class="hljs-keyword">if</span> (c &lt; *min) *min = c;
+    <span class="hljs-keyword">if</span> (c &gt; *max) *max = c;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> lo, hi;
+    min_max3(<span class="hljs-number">4</span>, <span class="hljs-number">-2</span>, <span class="hljs-number">9</span>, &amp;lo, &amp;hi);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;max3 = %d, min = %d, max = %d\n&quot;</span>, max3(<span class="hljs-number">4</span>, <span class="hljs-number">-2</span>, <span class="hljs-number">9</span>), lo, hi);   <span class="hljs-comment">// 9, -2, 9</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<h2 id="h-2">Bài 2: <code>swap</code> đúng và sai</h2>
+<pre class="hljs"><code><span class="hljs-comment">// swap_demo.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">swap_wrong</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span> {     <span class="hljs-comment">// hoán đổi BẢN SAO: không ảnh hưởng người gọi</span>
+    <span class="hljs-type">int</span> t = a; a = b; b = t;
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">swap_int</span><span class="hljs-params">(<span class="hljs-type">int</span> *a, <span class="hljs-type">int</span> *b)</span> {
+    <span class="hljs-type">int</span> t = *a; *a = *b; *b = t;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> x = <span class="hljs-number">1</span>, y = <span class="hljs-number">2</span>;
+    swap_wrong(x, y);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;sau swap_wrong: %d %d\n&quot;</span>, x, y);    <span class="hljs-comment">// 1 2</span>
+    swap_int(&amp;x, &amp;y);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;sau swap_int:   %d %d\n&quot;</span>, x, y);    <span class="hljs-comment">// 2 1</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>C truyền tham số <strong>theo giá trị</strong>: <code>swap_wrong</code> nhận hai bản sao và đổi chúng, còn <code>x</code>, <code>y</code> của <code>main</code> không đổi.</p>
+<h2 id="h-3">Bài 3: năm nhuận và số ngày trong tháng</h2>
+<pre class="hljs"><code><span class="hljs-comment">// calendar.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdbool.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">static</span> <span class="hljs-type">bool</span> <span class="hljs-title function_">is_leap_year</span><span class="hljs-params">(<span class="hljs-type">int</span> y)</span> {
+    <span class="hljs-keyword">return</span> (y % <span class="hljs-number">4</span> == <span class="hljs-number">0</span> &amp;&amp; y % <span class="hljs-number">100</span> != <span class="hljs-number">0</span>) || (y % <span class="hljs-number">400</span> == <span class="hljs-number">0</span>);
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">days_in_month</span><span class="hljs-params">(<span class="hljs-type">int</span> m, <span class="hljs-type">int</span> y)</span> {
+    <span class="hljs-keyword">switch</span> (m) {
+        <span class="hljs-keyword">case</span> <span class="hljs-number">4</span>: <span class="hljs-keyword">case</span> <span class="hljs-number">6</span>: <span class="hljs-keyword">case</span> <span class="hljs-number">9</span>: <span class="hljs-keyword">case</span> <span class="hljs-number">11</span>: <span class="hljs-keyword">return</span> <span class="hljs-number">30</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-number">2</span>: <span class="hljs-keyword">return</span> is_leap_year(y) ? <span class="hljs-number">29</span> : <span class="hljs-number">28</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-number">1</span>: <span class="hljs-keyword">case</span> <span class="hljs-number">3</span>: <span class="hljs-keyword">case</span> <span class="hljs-number">5</span>: <span class="hljs-keyword">case</span> <span class="hljs-number">7</span>: <span class="hljs-keyword">case</span> <span class="hljs-number">8</span>: <span class="hljs-keyword">case</span> <span class="hljs-number">10</span>: <span class="hljs-keyword">case</span> <span class="hljs-number">12</span>: <span class="hljs-keyword">return</span> <span class="hljs-number">31</span>;
+        <span class="hljs-keyword">default</span>: <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    }
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;2000: %d, 1900: %d, 2024: %d\n&quot;</span>, is_leap_year(<span class="hljs-number">2000</span>), is_leap_year(<span class="hljs-number">1900</span>), is_leap_year(<span class="hljs-number">2024</span>));   <span class="hljs-comment">// 1 0 1</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;thang 2/2024 co %d ngay\n&quot;</span>, days_in_month(<span class="hljs-number">2</span>, <span class="hljs-number">2024</span>));                                            <span class="hljs-comment">// 29</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<h2 id="h-4">Bài 4: <code>next_id</code> bằng <code>static</code> so với biến toàn cục</h2>
+<pre class="hljs"><code><span class="hljs-comment">// next_id.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">next_id</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">static</span> <span class="hljs-type">int</span> id = <span class="hljs-number">0</span>;            <span class="hljs-comment">// giữ giá trị giữa các lần gọi, chỉ khởi tạo một lần</span>
+    <span class="hljs-keyword">return</span> ++id;
+}
+
+<span class="hljs-type">int</span> g_id = <span class="hljs-number">0</span>;                     <span class="hljs-comment">// phiên bản toàn cục</span>
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">next_id_global</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> { <span class="hljs-keyword">return</span> ++g_id; }
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> a = next_id();
+    <span class="hljs-type">int</span> b = next_id();
+    <span class="hljs-type">int</span> c = next_id();
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d %d %d\n&quot;</span>, a, b, c);                 <span class="hljs-comment">// 1 2 3</span>
+    a = next_id_global();
+    b = next_id_global();
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d %d\n&quot;</span>, a, b);                       <span class="hljs-comment">// 1 2</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Lưu ý: ta gọi <code>next_id()</code> trong từng câu lệnh riêng vì nếu để ba lời gọi trong cùng một <code>printf</code>, thứ tự đánh giá đối số là <strong>không xác định</strong> (kết quả có thể là <code>1 2 3</code> hoặc <code>3 2 1</code>).</p>
+<ul>
+<li><strong><code>static</code> cục bộ:</strong> dữ liệu chỉ nhìn thấy trong hàm → không ai vô tình sửa từ bên ngoài. Vẫn không an toàn với đa luồng và làm hàm khó kiểm thử (có trạng thái ẩn).</li>
+<li><strong>Toàn cục:</strong> mọi hàm đều đọc/sửa được (dễ sai, khó theo dõi); cho phép reset trong kiểm thử. Ưu tiên cách thứ nhất, hoặc truyền một <code>struct</code> chứa bộ đếm.</li>
+</ul>
+<h2 id="h-5">Bài 5: lũy thừa đệ quy</h2>
+<pre class="hljs"><code><span class="hljs-comment">// power.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-comment">// O(e): nhân e lần</span>
+<span class="hljs-type">static</span> <span class="hljs-type">long</span> <span class="hljs-title function_">power_slow</span><span class="hljs-params">(<span class="hljs-type">long</span> base, <span class="hljs-type">unsigned</span> <span class="hljs-built_in">exp</span>)</span> {
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">exp</span> == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">return</span> base * power_slow(base, <span class="hljs-built_in">exp</span> - <span class="hljs-number">1</span>);
+}
+
+<span class="hljs-comment">// O(log e): power(b, e) = power(b, e/2)^2 (nhân thêm b nếu e lẻ)</span>
+<span class="hljs-type">static</span> <span class="hljs-type">long</span> <span class="hljs-title function_">power_fast</span><span class="hljs-params">(<span class="hljs-type">long</span> base, <span class="hljs-type">unsigned</span> <span class="hljs-built_in">exp</span>)</span> {
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">exp</span> == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    <span class="hljs-type">long</span> half = power_fast(base, <span class="hljs-built_in">exp</span> / <span class="hljs-number">2</span>);
+    <span class="hljs-keyword">return</span> (<span class="hljs-built_in">exp</span> % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>) ? half * half : half * half * base;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%ld %ld\n&quot;</span>, power_slow(<span class="hljs-number">3</span>, <span class="hljs-number">13</span>), power_fast(<span class="hljs-number">3</span>, <span class="hljs-number">13</span>));    <span class="hljs-comment">// 1594323 1594323</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Chạy tay <code>power_fast(3, 13)</code>: 13 → 6 → 3 → 1 → 0, chỉ 5 lời gọi thay vì 14. (Cả hai bản chưa kiểm tra tràn; với <code>long</code> 32 bit sẽ tràn sớm.)</p>
+<h2 id="h-6">Bài 6: đảo chuỗi và kiểm tra đối xứng đệ quy</h2>
+<pre class="hljs"><code><span class="hljs-comment">// recursion_strings.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;ctype.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">reverse_rec</span><span class="hljs-params">(<span class="hljs-type">char</span> *s, <span class="hljs-type">size_t</span> lo, <span class="hljs-type">size_t</span> hi)</span> {    <span class="hljs-comment">// đảo đoạn s[lo..hi]</span>
+    <span class="hljs-keyword">if</span> (lo &gt;= hi) <span class="hljs-keyword">return</span>;
+    <span class="hljs-type">char</span> t = s[lo]; s[lo] = s[hi]; s[hi] = t;
+    reverse_rec(s, lo + <span class="hljs-number">1</span>, hi - <span class="hljs-number">1</span>);
+}
+
+<span class="hljs-comment">// Bỏ qua ký tự không phải chữ/số và phân biệt hoa/thường không quan trọng</span>
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">is_palindrome</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *s, <span class="hljs-type">size_t</span> lo, <span class="hljs-type">size_t</span> hi)</span> {
+    <span class="hljs-keyword">while</span> (lo &lt; hi &amp;&amp; !<span class="hljs-built_in">isalnum</span>((<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>)s[lo])) lo++;
+    <span class="hljs-keyword">while</span> (lo &lt; hi &amp;&amp; !<span class="hljs-built_in">isalnum</span>((<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>)s[hi])) hi--;
+    <span class="hljs-keyword">if</span> (lo &gt;= hi) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">tolower</span>((<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>)s[lo]) != <span class="hljs-built_in">tolower</span>((<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>)s[hi])) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">return</span> is_palindrome(s, lo + <span class="hljs-number">1</span>, hi - <span class="hljs-number">1</span>);
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">char</span> s[] = <span class="hljs-string">&quot;abcdef&quot;</span>;
+    reverse_rec(s, <span class="hljs-number">0</span>, <span class="hljs-built_in">strlen</span>(s) - <span class="hljs-number">1</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%s\n&quot;</span>, s);                                                        <span class="hljs-comment">// fedcba</span>
+
+    <span class="hljs-type">const</span> <span class="hljs-type">char</span> *p = <span class="hljs-string">&quot;A man, a plan, a canal: Panama&quot;</span>;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, is_palindrome(p, <span class="hljs-number">0</span>, <span class="hljs-built_in">strlen</span>(p) - <span class="hljs-number">1</span>));                       <span class="hljs-comment">// 1</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Cẩn thận <code>hi - 1</code> với <code>size_t</code> khi <code>hi = 0</code> (quay vòng); điều kiện <code>lo &gt;= hi</code> ở đầu hàm chặn trước trường hợp đó.</p>
+<h2 id="h-7">Bài 7: tìm lỗi <code>make_greeting</code></h2>
+<pre class="hljs"><code><span class="hljs-type">char</span> *<span class="hljs-title function_">make_greeting</span><span class="hljs-params">(<span class="hljs-type">char</span> *name)</span> {
+    <span class="hljs-type">char</span> buf[<span class="hljs-number">64</span>];
+    <span class="hljs-built_in">sprintf</span>(buf, <span class="hljs-string">&quot;Xin chao %s&quot;</span>, name);
+    <span class="hljs-keyword">return</span> buf;
+}
+</code></pre>
+<p>Hai lỗi: (1) <strong>trả về địa chỉ biến cục bộ</strong> <code>buf</code> (biến mất khi hàm kết thúc); (2) <code>sprintf</code> <strong>không giới hạn kích thước</strong> — <code>name</code> dài hơn ~52 ký tự sẽ tràn <code>buf</code>. Bản sửa:</p>
+<pre class="hljs"><code><span class="hljs-comment">// greeting.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-comment">// Trả về chuỗi cấp phát bằng malloc; NGƯỜI GỌI phải free. NULL nếu hết bộ nhớ hoặc name == NULL.</span>
+<span class="hljs-type">static</span> <span class="hljs-type">char</span> *<span class="hljs-title function_">make_greeting</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *name)</span> {
+    <span class="hljs-keyword">if</span> (!name) <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+    <span class="hljs-type">int</span> n = <span class="hljs-built_in">snprintf</span>(<span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, <span class="hljs-string">&quot;Xin chao %s&quot;</span>, name);        <span class="hljs-comment">// đo độ dài cần thiết</span>
+    <span class="hljs-keyword">if</span> (n &lt; <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+    <span class="hljs-type">char</span> *out = <span class="hljs-built_in">malloc</span>((<span class="hljs-type">size_t</span>)n + <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">if</span> (!out) <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+    <span class="hljs-built_in">snprintf</span>(out, (<span class="hljs-type">size_t</span>)n + <span class="hljs-number">1</span>, <span class="hljs-string">&quot;Xin chao %s&quot;</span>, name);
+    <span class="hljs-keyword">return</span> out;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">char</span> *g = make_greeting(<span class="hljs-string">&quot;An&quot;</span>);
+    <span class="hljs-keyword">if</span> (g) { <span class="hljs-built_in">puts</span>(g); <span class="hljs-built_in">free</span>(g); }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<h2 id="h-8">Bài 8: <code>qsort</code> giảm dần và sắp xếp chuỗi</h2>
+<pre class="hljs"><code><span class="hljs-comment">// qsort_demo.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">cmp_desc</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">void</span> *a, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *b)</span> {
+    <span class="hljs-type">int</span> x = *(<span class="hljs-type">const</span> <span class="hljs-type">int</span> *)a, y = *(<span class="hljs-type">const</span> <span class="hljs-type">int</span> *)b;
+    <span class="hljs-keyword">return</span> (x &lt; y) - (x &gt; y);                                  <span class="hljs-comment">// đảo dấu -&gt; giảm dần</span>
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">cmp_str</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">void</span> *a, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *b)</span> {
+    <span class="hljs-type">const</span> <span class="hljs-type">char</span> *x = *(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *<span class="hljs-type">const</span> *)a;                   <span class="hljs-comment">// phần tử là &quot;con trỏ tới chuỗi&quot;</span>
+    <span class="hljs-type">const</span> <span class="hljs-type">char</span> *y = *(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *<span class="hljs-type">const</span> *)b;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">strcmp</span>(x, y);
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">int</span> a[] = {<span class="hljs-number">5</span>, <span class="hljs-number">2</span>, <span class="hljs-number">9</span>, <span class="hljs-number">1</span>, <span class="hljs-number">7</span>};
+    qsort(a, <span class="hljs-number">5</span>, <span class="hljs-keyword">sizeof</span> a[<span class="hljs-number">0</span>], cmp_desc);
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; i++) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d &quot;</span>, a[i]);           <span class="hljs-comment">// 9 7 5 2 1</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n&quot;</span>);
+
+    <span class="hljs-type">const</span> <span class="hljs-type">char</span> *names[] = {<span class="hljs-string">&quot;Cuong&quot;</span>, <span class="hljs-string">&quot;An&quot;</span>, <span class="hljs-string">&quot;Binh&quot;</span>};
+    qsort(names, <span class="hljs-number">3</span>, <span class="hljs-keyword">sizeof</span> names[<span class="hljs-number">0</span>], cmp_str);
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">3</span>; i++) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%s &quot;</span>, names[i]);       <span class="hljs-comment">// An Binh Cuong</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n&quot;</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Điểm dễ sai: với mảng chuỗi, hàm so sánh nhận <strong>con trỏ tới phần tử</strong> (tức <code>char **</code>), nên phải ép <code>const char *const *</code> rồi giải tham chiếu một lần.</p>
+<h2 id="h-9">Bài 9: máy tính dùng bảng con trỏ hàm</h2>
+<pre class="hljs"><code><span class="hljs-comment">// calc_table.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-title function_">double</span> <span class="hljs-params">(*BinOp)</span><span class="hljs-params">(<span class="hljs-type">double</span>, <span class="hljs-type">double</span>)</span>;
+
+<span class="hljs-type">static</span> <span class="hljs-type">double</span> <span class="hljs-title function_">op_add</span><span class="hljs-params">(<span class="hljs-type">double</span> a, <span class="hljs-type">double</span> b)</span> { <span class="hljs-keyword">return</span> a + b; }
+<span class="hljs-type">static</span> <span class="hljs-type">double</span> <span class="hljs-title function_">op_sub</span><span class="hljs-params">(<span class="hljs-type">double</span> a, <span class="hljs-type">double</span> b)</span> { <span class="hljs-keyword">return</span> a - b; }
+<span class="hljs-type">static</span> <span class="hljs-type">double</span> <span class="hljs-title function_">op_mul</span><span class="hljs-params">(<span class="hljs-type">double</span> a, <span class="hljs-type">double</span> b)</span> { <span class="hljs-keyword">return</span> a * b; }
+<span class="hljs-type">static</span> <span class="hljs-type">double</span> <span class="hljs-title function_">op_div</span><span class="hljs-params">(<span class="hljs-type">double</span> a, <span class="hljs-type">double</span> b)</span> { <span class="hljs-keyword">return</span> b != <span class="hljs-number">0</span> ? a / b : <span class="hljs-number">0</span>; }
+
+<span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span> <span class="hljs-type">char</span> sym; BinOp fn; } TABLE[] = {
+    { <span class="hljs-string">&#x27;+&#x27;</span>, op_add }, { <span class="hljs-string">&#x27;-&#x27;</span>, op_sub }, { <span class="hljs-string">&#x27;*&#x27;</span>, op_mul }, { <span class="hljs-string">&#x27;/&#x27;</span>, op_div },
+};
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">double</span> a, b;
+    <span class="hljs-type">char</span> op;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%lf %c %lf&quot;</span>, &amp;a, &amp;op, &amp;b) != <span class="hljs-number">3</span>) { <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;cu phap: so toan_tu so\n&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">sizeof</span> TABLE / <span class="hljs-keyword">sizeof</span> TABLE[<span class="hljs-number">0</span>]; i++) {
+        <span class="hljs-keyword">if</span> (TABLE[i].sym == op) {
+            <span class="hljs-keyword">if</span> (op == <span class="hljs-string">&#x27;/&#x27;</span> &amp;&amp; b == <span class="hljs-number">0</span>) { <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;chia cho 0\n&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;= %g\n&quot;</span>, TABLE[i].fn(a, b));
+            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+        }
+    }
+    <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;toan tu khong ho tro: %c\n&quot;</span>, op);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+}
+</code></pre>
+<p>Thêm toán tử mới chỉ cần viết một hàm và thêm một dòng vào <code>TABLE</code>, không sửa logic tra cứu.</p>
+
+</article>
+<nav class="chapter-nav" aria-label="Điều hướng chương"><a class="nav-prev" href="solutions-05.html"><small>← Trước</small>Lời giải chương 5</a><a class="nav-next" href="solutions-07.html"><small>Tiếp →</small>Lời giải chương 7</a></nav>
+</main>
+</div>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,store=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
+  function setTheme(t){if(t==='light')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);store('theme',t);
+    document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.setAttribute('aria-pressed',String((b.dataset.themeBtn===t)||(t==='light'&&b.dataset.themeBtn==='light')))})}
+  var cur=root.getAttribute('data-theme')||'light';setTheme(cur);
+  document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.addEventListener('click',function(){setTheme(b.dataset.themeBtn)})});
+  var fs=parseInt(getComputedStyle(root).getPropertyValue('--fs'))||19;
+  document.querySelectorAll('[data-fs]').forEach(function(b){b.addEventListener('click',function(){fs=Math.min(26,Math.max(14,fs+parseInt(b.dataset.fs)));root.style.setProperty('--fs',fs+'px');store('fs',fs)})});
+  var mb=document.getElementById('menu-btn');if(mb)mb.addEventListener('click',function(){document.body.classList.toggle('nav-open')});
+  document.addEventListener('click',function(e){if(document.body.classList.contains('nav-open')&&!e.target.closest('#sidebar')&&e.target.id!=='menu-btn')document.body.classList.remove('nav-open')});
+  document.querySelectorAll('pre').forEach(function(pre){var b=document.createElement('button');b.className='copy-btn';b.type='button';b.textContent='Sao chép';
+    b.addEventListener('click',function(){var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Đã chép'},function(){b.textContent='Lỗi'});setTimeout(function(){b.textContent='Sao chép'},1500)});pre.appendChild(b)});
+  var a=document.querySelector('.chapter-link.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'center'});
+})();
+</script>
+</body>
+</html>

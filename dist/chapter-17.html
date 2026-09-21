@@ -4,15 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tối ưu hóa & profiling — Lập trình C — Từ cơ bản đến nâng cao</title>
+<script>try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.setAttribute('data-theme',t);var f=localStorage.getItem('fs');if(f)document.documentElement.style.setProperty('--fs',f+'px')}catch(e){}</script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="layout">
-<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link active" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<nav class="sidebar" id="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Phần I — Nhập môn</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp &amp; cấu trúc chương trình C</a></li></ul></li><li class="part"><div class="part-title">Phần II — Nền tảng ngôn ngữ</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm &amp; phạm vi biến (Functions &amp; Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng &amp; chuỗi (Arrays &amp; Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li></ul></li><li class="part"><div class="part-title">Phần III — Bộ nhớ, dữ liệu, xây dựng</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O &amp; thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi &amp; ngoại lệ trong C</a></li></ul></li><li class="part"><div class="part-title">Phần IV — Kỹ thuật nâng cao</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý &amp; macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng &amp; đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link active" href="chapter-17.html">17. Tối ưu hóa &amp; profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật &amp; an toàn bộ nhớ</a></li></ul></li><li class="part"><div class="part-title">Phần V — Dự án và phát hành</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing &amp; CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging &amp; deploy</a></li></ul></li><li class="part"><div class="part-title">Phụ lục — Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li><li><a class="chapter-link" href="solutions-02.html">Lời giải chương 2</a></li><li><a class="chapter-link" href="solutions-03.html">Lời giải chương 3</a></li><li><a class="chapter-link" href="solutions-04.html">Lời giải chương 4</a></li><li><a class="chapter-link" href="solutions-05.html">Lời giải chương 5</a></li><li><a class="chapter-link" href="solutions-06.html">Lời giải chương 6</a></li><li><a class="chapter-link" href="solutions-07.html">Lời giải chương 7</a></li><li><a class="chapter-link" href="solutions-08.html">Lời giải chương 8</a></li><li><a class="chapter-link" href="solutions-09.html">Lời giải chương 9</a></li><li><a class="chapter-link" href="solutions-10.html">Lời giải chương 10</a></li><li><a class="chapter-link" href="solutions-11.html">Lời giải chương 11</a></li><li><a class="chapter-link" href="solutions-12.html">Lời giải chương 12</a></li><li><a class="chapter-link" href="solutions-13.html">Lời giải chương 13</a></li><li><a class="chapter-link" href="solutions-14.html">Lời giải chương 14</a></li><li><a class="chapter-link" href="solutions-15.html">Lời giải chương 15</a></li><li><a class="chapter-link" href="solutions-16.html">Lời giải chương 16</a></li><li><a class="chapter-link" href="solutions-17.html">Lời giải chương 17</a></li><li><a class="chapter-link" href="solutions-18.html">Lời giải chương 18</a></li><li><a class="chapter-link" href="solutions-19.html">Lời giải chương 19</a></li><li><a class="chapter-link" href="solutions-20.html">Lời giải chương 20</a></li><li><a class="chapter-link" href="solutions-21.html">Lời giải chương 21</a></li><li><a class="chapter-link" href="solutions-22.html">Lời giải chương 22</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<div class="main-col">
+<header class="topbar"><button class="menu-btn" id="menu-btn" type="button" aria-label="Mục lục">☰</button><span class="crumb">Phần IV · Chương 17</span><span class="tools"><button data-fs="-1" type="button" title="Chữ nhỏ hơn">A−</button><button data-fs="1" type="button" title="Chữ lớn hơn">A+</button><button data-theme-btn="light" type="button" title="Nền sáng">Sáng</button><button data-theme-btn="sepia" type="button" title="Nền sepia">Sepia</button><button data-theme-btn="dark" type="button" title="Nền tối">Tối</button></span></header>
 <main class="content">
 <article>
-<h1>Chương 17 — Tối ưu hóa &amp; profiling</h1>
-<h2>Mục tiêu chương</h2>
+<header class="chapter-head"><div class="chapter-num">Chương 17</div><h1>Tối ưu hóa &amp; profiling</h1></header><nav class="chapter-toc" aria-label="Trong chương này"><div class="toc-title">Trong chương này</div><ol><li><a href="#s17-1">17.1. Nguyên tắc: đo trước khi tối ưu</a></li><li><a href="#s17-2">17.2. Đo thời gian trong chương trình</a></li><li><a href="#s17-3">17.3. Phương pháp benchmark đúng</a></li><li><a href="#s17-4">17.4. Profiling: tìm điểm nghẽn</a></li><li><a href="#s17-5">17.5. Bộ nhớ đệm (cache) và tính cục bộ</a></li><li><a href="#s17-6">17.6. Dự đoán nhánh và mã không nhánh</a></li><li><a href="#s17-7">17.7. Cờ tối ưu của compiler</a></li><li><a href="#s17-8">17.8. Các tối ưu phổ biến ở mức mã</a></li><li><a href="#s17-9">17.9. So sánh thuật toán sắp xếp — thí nghiệm</a></li><li><a href="#s17-10">17.10. Khi nào KHÔNG nên tối ưu?</a></li><li><a href="#s17-11">17.11. Lỗi thường gặp khi tối ưu</a></li><li><a href="#s17-12">17.12. Tóm tắt</a></li><li><a href="#s17-13">17.13. Bài tập</a></li></ol></nav>
+<h2 id="h-1">Mục tiêu chương</h2>
 <ul>
 <li>Áp dụng quy trình đúng: <strong>đo → tìm điểm nghẽn → tối ưu → đo lại</strong>, thay vì đoán.</li>
 <li>Đo thời gian chính xác trong C (<code>clock_gettime</code>, <code>clock</code>) và tránh các sai lầm khi benchmark.</li>
@@ -22,7 +25,7 @@
 <li>Biết các cờ tối ưu của compiler (<code>-O2</code>, <code>-O3</code>, <code>-march=native</code>, LTO, PGO) và cách kiểm tra kết quả.</li>
 <li>Nhận ra khi nào <strong>không</strong> nên tối ưu.</li>
 </ul>
-<h2>17.1. Nguyên tắc: đo trước khi tối ưu</h2>
+<h2 id="s17-1">17.1. Nguyên tắc: đo trước khi tối ưu</h2>
 <p>Donald Knuth: <em>&quot;Tối ưu hóa sớm là gốc rễ của mọi điều xấu&quot;</em> (premature optimization is the root of all evil). Đầy đủ hơn, ông nói nên bỏ qua các tối ưu nhỏ trong khoảng 97% thời gian, nhưng <strong>đừng bỏ lỡ 3% còn lại</strong> — nơi mà chương trình thật sự tốn thời gian.</p>
 <p>Bài học thực hành:</p>
 <ol>
@@ -33,7 +36,7 @@
 <li><strong>Giữ kiểm thử</strong> để chắc rằng tối ưu không làm sai kết quả.</li>
 </ol>
 <p>Định luật Amdahl nhắc vì sao phải nhắm đúng chỗ: nếu một phần chiếm <code>p</code> tổng thời gian và bạn làm nó nhanh gấp <code>s</code> lần, tổng tốc độ chỉ tăng <code>1 / ((1-p) + p/s)</code>. Tăng tốc phần chiếm 5% thời gian lên vô hạn cũng chỉ giúp chương trình nhanh hơn ~5%.</p>
-<h3>Hệ thống tầng thứ tự ưu tiên</h3>
+<h3 id="h-2">Hệ thống tầng thứ tự ưu tiên</h3>
 <p>Lợi ích lớn nhất đến từ trên xuống:</p>
 <ol>
 <li><strong>Thuật toán và cấu trúc dữ liệu</strong> (O(n²) → O(n log n)): hàng trăm–nghìn lần.</li>
@@ -42,9 +45,9 @@
 <li><strong>Cờ compiler</strong> (<code>-O2</code>): thường 2–5 lần so với <code>-O0</code>.</li>
 <li><strong>Vi tối ưu / SIMD / song song</strong>: tùy chỗ.</li>
 </ol>
-<h2>17.2. Đo thời gian trong chương trình</h2>
-<h3>Các đồng hồ</h3>
-<table>
+<h2 id="s17-2">17.2. Đo thời gian trong chương trình</h2>
+<h3 id="h-3">Các đồng hồ</h3>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Hàm</th>
@@ -79,9 +82,9 @@
 <td>Windows</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Thời gian thực (wall-clock)</strong> là thời gian người dùng cảm nhận; <strong>thời gian CPU</strong> là thời gian CPU thực sự chạy mã của bạn (không tính lúc chờ I/O hoặc bị lập lịch ra). Với mã tính toán một luồng chúng gần bằng nhau; với I/O hoặc đa luồng thì khác nhau.</p>
-<h3>Bộ đo tiện dụng</h3>
+<h3 id="h-4">Bộ đo tiện dụng</h3>
 <pre class="hljs"><code><span class="hljs-comment">// timer.h</span>
 <span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> TIMER_H</span>
 <span class="hljs-meta">#<span class="hljs-keyword">define</span> TIMER_H</span>
@@ -103,14 +106,14 @@ do_work();
 <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;mat %.3f ms\n&quot;</span>, (t1 - t0) * <span class="hljs-number">1000.0</span>);
 </code></pre>
 <p>Nếu không có <code>clock_gettime</code> (Windows/MSVC), <code>clock()</code> là phương án di động (<code>(double)(clock() - start) / CLOCKS_PER_SEC</code>).</p>
-<h3>Công cụ dòng lệnh: <code>time</code></h3>
+<h3 id="h-5">Công cụ dòng lệnh: <code>time</code></h3>
 <pre class="hljs"><code><span class="hljs-keyword">time</span> ./prog
 <span class="hljs-comment"># real  0m1.234s    thời gian thực</span>
 <span class="hljs-comment"># user  0m1.200s    thời gian CPU chạy mã của bạn</span>
 <span class="hljs-comment"># sys   0m0.030s    thời gian CPU trong nhân hệ điều hành (I/O, cấp phát...)</span>
 </code></pre>
 <p><code>real</code> ≫ <code>user + sys</code> nghĩa là chương trình <strong>chờ</strong> (I/O, khóa, mạng); <code>sys</code> lớn nghĩa là nhiều lời gọi hệ thống.</p>
-<h2>17.3. Phương pháp benchmark đúng</h2>
+<h2 id="s17-3">17.3. Phương pháp benchmark đúng</h2>
 <p>Benchmark sai còn tệ hơn không có benchmark vì cho kết luận sai. Các nguyên tắc:</p>
 <ol>
 <li><strong>Chạy nhiều lần</strong> và lấy <strong>trung vị/min</strong>, kèm độ lệch, không lấy một lần duy nhất. Máy có nhiễu (tiến trình khác, tần số CPU thay đổi).</li>
@@ -156,13 +159,13 @@ sink = r;
     <span class="hljs-built_in">free</span>(t);
 }
 </code></pre>
-<h2>17.4. Profiling: tìm điểm nghẽn</h2>
+<h2 id="s17-4">17.4. Profiling: tìm điểm nghẽn</h2>
 <p><strong>Profiler</strong> cho biết chương trình dành thời gian ở <strong>hàm/dòng</strong> nào. Hai kiểu:</p>
 <ul>
 <li><strong>Lấy mẫu (sampling):</strong> dừng chương trình định kỳ (hàng trăm–nghìn lần/giây) và ghi lại đang chạy hàm nào. Chi phí thấp, kết quả thống kê tốt (perf, gprof phần nào).</li>
 <li><strong>Đo vết (instrumentation):</strong> chèn mã đếm/ghi khi mỗi hàm được gọi; chính xác về số lần gọi nhưng chậm và làm sai lệch (callgrind).</li>
 </ul>
-<h3>Chương trình mẫu để profile</h3>
+<h3 id="h-6">Chương trình mẫu để profile</h3>
 <pre class="hljs"><code><span class="hljs-comment">// profile_demo.c — cố ý có điểm nghẽn</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
@@ -195,7 +198,7 @@ sink = r;
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </code></pre>
-<h3><code>gprof</code></h3>
+<h3 id="h-7"><code>gprof</code></h3>
 <pre class="hljs"><code>gcc -std=c11 -O2 -g -pg profile_demo.c -o profile_demo      <span class="hljs-comment"># -pg: chèn mã đo</span>
 ./profile_demo                                              <span class="hljs-comment"># sinh gmon.out</span>
 gprof ./profile_demo gmon.out | <span class="hljs-built_in">head</span> -20
@@ -208,7 +211,7 @@ gprof ./profile_demo gmon.out | <span class="hljs-built_in">head</span> -20
   1.2      0.86     0.01        1    10.00    10.00  checksum
 </code></pre>
 <p>Cách đọc: <code>% time</code> phần trăm thời gian; <code>self</code> thời gian trong chính hàm đó (không tính hàm nó gọi); <code>calls</code> số lần gọi. Ở đây <code>count_duplicates</code> chiếm gần như toàn bộ thời gian — đó là điểm cần sửa. Hạn chế của <code>gprof</code>: bị lệch khi hàm được inline, độ phân giải thấp (0,01 s), tốt cho chương trình chạy đủ lâu.</p>
-<h3><code>perf</code> (Linux) — công cụ mạnh nhất</h3>
+<h3 id="h-8"><code>perf</code> (Linux) — công cụ mạnh nhất</h3>
 <pre class="hljs"><code>gcc -std=c11 -O2 -g -fno-omit-frame-pointer profile_demo.c -o profile_demo
 perf <span class="hljs-built_in">stat</span> ./profile_demo              <span class="hljs-comment"># thống kê tổng: chu kỳ, lệnh, cache-miss, branch-miss</span>
 perf record -g ./profile_demo         <span class="hljs-comment"># lấy mẫu kèm ngăn xếp gọi</span>
@@ -222,22 +225,22 @@ perf annotate count_duplicates        <span class="hljs-comment"># xem từng d�
        1,234,567  branch-misses
 </code></pre>
 <p><strong>Số lệnh trên mỗi chu kỳ (IPC)</strong> thấp (&lt; 1) gợi ý chương trình <strong>chờ bộ nhớ</strong> (cache-miss); IPC cao (2–4) gợi ý CPU-bound. Đây là gợi ý để chọn hướng tối ưu.</p>
-<h3>Callgrind + KCachegrind (Valgrind)</h3>
+<h3 id="h-9">Callgrind + KCachegrind (Valgrind)</h3>
 <pre class="hljs"><code>valgrind --tool=callgrind ./profile_demo
 callgrind_annotate callgrind.out.&lt;pid&gt; | <span class="hljs-built_in">head</span> -30
 kcachegrind callgrind.out.&lt;pid&gt;       <span class="hljs-comment"># giao diện đồ họa (Linux)</span>
 </code></pre>
 <p>Cho <strong>số lệnh chính xác</strong> và <strong>đồ thị gọi hàm</strong>; chậm 20–50 lần nhưng <strong>kết quả ổn định, lặp lại được</strong> (không phụ thuộc nhiễu hệ thống) — rất tốt để so sánh trước/sau.</p>
-<h3>Flame graph</h3>
+<h3 id="h-10">Flame graph</h3>
 <p>Biểu diễn trực quan kết quả <code>perf record -g</code>: mỗi ô là một hàm, <strong>độ rộng = tỷ lệ thời gian</strong>, xếp chồng theo ngăn xếp gọi. Các &quot;tảng&quot; rộng là điểm nghẽn. (Công cụ của Brendan Gregg: <code>stackcollapse-perf.pl</code>, <code>flamegraph.pl</code>.)</p>
-<h3>Trên Windows/macOS</h3>
+<h3 id="h-11">Trên Windows/macOS</h3>
 <ul>
 <li>macOS: <strong>Instruments</strong> (Time Profiler), hoặc <code>sample &lt;pid&gt;</code>.</li>
 <li>Windows: <strong>Visual Studio Performance Profiler</strong>, <strong>Windows Performance Analyzer</strong>, hoặc chạy trong <strong>WSL2</strong> để dùng <code>perf</code>.</li>
 </ul>
-<h3>Tìm điểm nghẽn bộ nhớ</h3>
+<h3 id="h-12">Tìm điểm nghẽn bộ nhớ</h3>
 <p>Ngoài thời gian, hãy đo bộ nhớ: <code>valgrind --tool=massif ./prog</code> (theo dõi heap theo thời gian, <code>ms_print massif.out.&lt;pid&gt;</code>); <code>heaptrack</code> cho công cụ trực quan; AddressSanitizer cũng cho thống kê.</p>
-<h3>Thí nghiệm: sửa điểm nghẽn bằng thuật toán tốt hơn</h3>
+<h3 id="h-13">Thí nghiệm: sửa điểm nghẽn bằng thuật toán tốt hơn</h3>
 <p>Với <code>count_duplicates</code> ở trên (O(n²)), n = 30.000 mất ~0,9 giây. Cách thay đổi thuật toán: <strong>sắp xếp</strong> rồi đếm các phần tử liền kề bằng nhau — O(n log n):</p>
 <pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">cmp_int</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">void</span> *a, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *b)</span> {
     <span class="hljs-type">int</span> x = *(<span class="hljs-type">const</span> <span class="hljs-type">int</span> *)a, y = *(<span class="hljs-type">const</span> <span class="hljs-type">int</span> *)b;
@@ -265,7 +268,7 @@ kcachegrind callgrind.out.&lt;pid&gt;       <span class="hljs-comment"># giao di
 </code></pre>
 <p>Với n = 30.000: từ ~0,9 s xuống vài mili giây (nhanh hơn ~200 lần). <strong>Đây là điều mà cờ compiler hay vi tối ưu không thể làm được.</strong> Kiểm chứng rằng hai hàm cho <strong>cùng kết quả</strong> trên nhiều đầu vào.</p>
 <p>Một cách khác, O(n) trung bình: dùng <strong>bảng băm</strong> đếm tần suất (chương 10). Bảng so sánh:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Cách</th>
@@ -295,10 +298,10 @@ kcachegrind callgrind.out.&lt;pid&gt;       <span class="hljs-comment"># giao di
 <td>O(K)</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Lựa chọn tùy ràng buộc, ví dụ khi giá trị chỉ trong <code>0..99999</code> thì mảng đếm <code>int count[100000]</code> là nhanh và đơn giản nhất.</p>
-<h2>17.5. Bộ nhớ đệm (cache) và tính cục bộ</h2>
-<h3>Vấn đề: CPU nhanh hơn RAM rất nhiều</h3>
+<h2 id="s17-5">17.5. Bộ nhớ đệm (cache) và tính cục bộ</h2>
+<h3 id="h-14">Vấn đề: CPU nhanh hơn RAM rất nhiều</h3>
 <p>Truy cập RAM mất ~100 ns (hàng trăm chu kỳ); truy cập thanh ghi/cache L1 chỉ ~1 ns. CPU dùng các <strong>tầng cache</strong> (L1 ~32 KB, L2 ~256 KB–1 MB, L3 nhiều MB) chứa dữ liệu gần đây.</p>
 <pre class="hljs"><code>Thanh ghi  → L1 cache → L2 → L3 → RAM → Đĩa
   nhanh nhất ─────────────────────────► chậm nhất, lớn nhất
@@ -309,7 +312,7 @@ kcachegrind callgrind.out.&lt;pid&gt;       <span class="hljs-comment"># giao di
 <li><strong>Cục bộ thời gian (temporal locality):</strong> dùng lại dữ liệu vừa dùng — nó còn nằm trong cache.</li>
 </ul>
 <p><strong>Cache-miss</strong> (dữ liệu không có trong cache) là một trong những nguyên nhân hàng đầu khiến chương trình chậm hơn kỳ vọng nhiều lần dù số phép tính như nhau.</p>
-<h3>Thí nghiệm: duyệt ma trận theo hàng và theo cột</h3>
+<h3 id="h-15">Thí nghiệm: duyệt ma trận theo hàng và theo cột</h3>
 <p>C lưu ma trận <strong>theo hàng</strong> (row-major). Duyệt theo hàng đi qua bộ nhớ <strong>liên tiếp</strong>; duyệt theo cột <strong>nhảy cóc</strong> mỗi bước cách nhau <code>cols * sizeof(int)</code> byte.</p>
 <pre class="hljs"><code><span class="hljs-comment">// cache_demo.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">define</span> _POSIX_C_SOURCE 200809L</span>
@@ -341,6 +344,7 @@ kcachegrind callgrind.out.&lt;pid&gt;       <span class="hljs-comment"># giao di
     sink = sum;
     <span class="hljs-type">double</span> t_col = now_seconds() - t0;
 
+    (<span class="hljs-type">void</span>)sink;
     <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;theo hang: %.1f ms\ntheo cot : %.1f ms (cham hon %.1fx)\n&quot;</span>,
            t_row * <span class="hljs-number">1e3</span>, t_col * <span class="hljs-number">1e3</span>, t_col / t_row);
     <span class="hljs-built_in">free</span>(m);
@@ -348,7 +352,7 @@ kcachegrind callgrind.out.&lt;pid&gt;       <span class="hljs-comment"># giao di
 }
 </code></pre>
 <p>Kết quả điển hình với <code>-O2</code>: <strong>theo cột chậm hơn 5–20 lần</strong> dù thực hiện đúng cùng số phép cộng. Chỉ đổi thứ tự hai vòng lặp là một tối ưu miễn phí. (Compiler đôi khi tự đổi thứ tự — <em>loop interchange</em> — nên nếu bạn thấy hai kết quả bằng nhau, thử <code>-O0</code> hoặc thêm phép phụ thuộc.)</p>
-<h3>Bố cục dữ liệu: AoS và SoA</h3>
+<h3 id="h-16">Bố cục dữ liệu: AoS và SoA</h3>
 <p><strong>AoS (Array of Structures)</strong> — mảng các struct — cách viết tự nhiên:</p>
 <pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ParticleAoS</span> {</span> <span class="hljs-type">float</span> x, y, z; <span class="hljs-type">float</span> vx, vy, vz; <span class="hljs-type">int</span> id; <span class="hljs-type">char</span> name[<span class="hljs-number">32</span>]; };
 <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ParticleAoS</span> <span class="hljs-title">ps</span>[<span class="hljs-title">N</span>];</span>
@@ -363,7 +367,7 @@ kcachegrind callgrind.out.&lt;pid&gt;       <span class="hljs-comment"># giao di
 <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) p.x[i] += p.vx[i] * dt;
 </code></pre>
 <p>Khi vòng lặp nóng chỉ dùng <strong>một vài trường</strong>, SoA dùng cache hiệu quả hơn nhiều và cho phép compiler dùng <strong>SIMD</strong> (xử lý nhiều số một lệnh). Khi bạn thường dùng <strong>mọi trường của một phần tử cùng lúc</strong>, AoS lại tốt hơn. Đây là quyết định phụ thuộc mẫu truy cập — hãy đo.</p>
-<h3>Các kỹ thuật thân thiện cache khác</h3>
+<h3 id="h-17">Các kỹ thuật thân thiện cache khác</h3>
 <ul>
 <li><strong>Thu nhỏ dữ liệu:</strong> dùng kiểu nhỏ nhất đủ dùng (<code>uint8_t</code>, <code>int32_t</code>), sắp xếp trường struct để giảm padding (chương 10). Nhiều phần tử/dòng cache hơn.</li>
 <li><strong>Cấp phát liên tục:</strong> mảng thay vì danh sách liên kết. Duyệt danh sách liên kết nhảy giữa các địa chỉ ngẫu nhiên gây cache-miss ở mỗi nút; <code>Vec</code> (mảng động) thường thắng danh sách liên kết cả khi chèn/xóa giữa.</li>
@@ -371,7 +375,7 @@ kcachegrind callgrind.out.&lt;pid&gt;       <span class="hljs-comment"># giao di
 <li><strong>Tránh false sharing</strong> (đa luồng): hai luồng ghi vào hai biến <strong>khác nhau nhưng cùng dòng cache</strong> khiến dòng bị chuyển qua lại giữa các nhân. Đệm mỗi biến ra 64 byte (<code>_Alignas(64)</code>).</li>
 <li><strong>Prefetch:</strong> <code>__builtin_prefetch(&amp;a[i + 16])</code> gợi ý CPU nạp trước; hiếm khi cần vì phần cứng đã tự prefetch cho mẫu truy cập tuần tự.</li>
 </ul>
-<h2>17.6. Dự đoán nhánh và mã không nhánh</h2>
+<h2 id="s17-6">17.6. Dự đoán nhánh và mã không nhánh</h2>
 <p>CPU thực hiện lệnh theo <strong>đường ống (pipeline)</strong> và <strong>đoán trước</strong> kết quả của mỗi <code>if</code>. Đoán sai (branch misprediction) tốn ~15–20 chu kỳ. Với điều kiện <strong>ngẫu nhiên</strong>, dự đoán rất khó.</p>
 <p>Thí nghiệm kinh điển: tổng các phần tử ≥ 128 trong mảng byte <strong>ngẫu nhiên</strong> so với mảng <strong>đã sắp xếp</strong>:</p>
 <pre class="hljs"><code><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++)
@@ -382,9 +386,9 @@ kcachegrind callgrind.out.&lt;pid&gt;       <span class="hljs-comment"># giao di
 sum += ~t &amp; data[i];
 </code></pre>
 <p>Compiler thường tự chuyển sang lệnh <code>cmov</code> (di chuyển có điều kiện) khi có thể. Đây là <strong>vi tối ưu</strong> — đo trước khi làm.</p>
-<h2>17.7. Cờ tối ưu của compiler</h2>
-<h3>Các mức</h3>
-<table>
+<h2 id="s17-7">17.7. Cờ tối ưu của compiler</h2>
+<h3 id="h-18">Các mức</h3>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Cờ</th>
@@ -421,8 +425,8 @@ sum += ~t &amp; data[i];
 <td><code>-O3</code> + bỏ qua các quy tắc số thực chặt chẽ (<code>-ffast-math</code>): <strong>có thể đổi kết quả tính toán</strong> (NaN, thứ tự cộng); chỉ dùng khi hiểu rõ hậu quả.</td>
 </tr>
 </tbody>
-</table>
-<h3>Các cờ hữu ích khác</h3>
+</table></div>
+<h3 id="h-19">Các cờ hữu ích khác</h3>
 <pre class="hljs"><code>-march=native         <span class="hljs-comment"># dùng mọi lệnh CPU hiện tại (AVX2...). Bản nhị phân KHÔNG chạy trên CPU cũ hơn!</span>
 -flto                 <span class="hljs-comment"># tối ưu lúc liên kết (Link-Time Optimization): inline xuyên file .c</span>
 -funroll-loops        <span class="hljs-comment"># trải vòng lặp</span>
@@ -430,19 +434,19 @@ sum += ~t &amp; data[i];
 -fprofile-generate / -fprofile-use   <span class="hljs-comment"># PGO: tối ưu theo dữ liệu chạy thực</span>
 -DNDEBUG              <span class="hljs-comment"># tắt assert</span>
 </code></pre>
-<h3>Tối ưu theo hồ sơ chạy (PGO)</h3>
+<h3 id="h-20">Tối ưu theo hồ sơ chạy (PGO)</h3>
 <pre class="hljs"><code>gcc -O2 -fprofile-generate prog.c -o prog          <span class="hljs-comment"># 1) biên dịch bản đo</span>
 ./prog &lt; workload.txt                              <span class="hljs-comment"># 2) chạy với dữ liệu điển hình -&gt; sinh .gcda</span>
 gcc -O2 -fprofile-use prog.c -o prog               <span class="hljs-comment"># 3) biên dịch lại dùng số liệu thực</span>
 </code></pre>
 <p>Compiler biết nhánh nào hay chạy, hàm nào nóng, nên bố trí mã và inline tốt hơn: thường cải thiện 5–30%.</p>
-<h3>Kiểm chứng compiler đã làm gì</h3>
+<h3 id="h-21">Kiểm chứng compiler đã làm gì</h3>
 <pre class="hljs"><code>gcc -O2 -S -fverbose-asm prog.c -o prog.s     <span class="hljs-comment"># xem assembly</span>
 gcc -O2 -fopt-info-vec-optimized prog.c       <span class="hljs-comment"># in các vòng lặp đã được vector hóa</span>
 gcc -O2 -fopt-info-inline-missed prog.c       <span class="hljs-comment"># các chỗ inline thất bại</span>
 </code></pre>
 <p>Trang <strong><a href="http://godbolt.org">godbolt.org</a></strong> (Compiler Explorer) cho phép xem assembly của mã C ngay trên web với nhiều compiler/cờ — tuyệt vời để học.</p>
-<h3>Giúp compiler tối ưu</h3>
+<h3 id="h-22">Giúp compiler tối ưu</h3>
 <ul>
 <li><strong><code>const</code></strong> và <strong><code>restrict</code></strong> cho con trỏ không chồng lấn: <code>void add(float *restrict out, const float *restrict a, const float *restrict b, size_t n)</code> cho phép vector hóa vì compiler biết <code>out</code> không trùng <code>a</code>, <code>b</code>.</li>
 <li><strong><code>static</code></strong> cho hàm nội bộ để compiler inline dễ hơn.</li>
@@ -451,8 +455,8 @@ gcc -O2 -fopt-info-inline-missed prog.c       <span class="hljs-comment"># các 
 <li>Dùng <strong><code>__builtin_expect</code></strong> (<code>likely</code>/<code>unlikely</code>) chỉ khi profile chứng minh.</li>
 <li><strong>Tránh UB:</strong> tràn số có dấu khiến compiler suy diễn sai; dùng biến chỉ số kiểu <code>size_t</code>/<code>int</code> nhất quán.</li>
 </ul>
-<h2>17.8. Các tối ưu phổ biến ở mức mã</h2>
-<table>
+<h2 id="s17-8">17.8. Các tối ưu phổ biến ở mức mã</h2>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Vấn đề</th>
@@ -501,14 +505,14 @@ gcc -O2 -fopt-info-inline-missed prog.c       <span class="hljs-comment"># các 
 <td>Tự viết sắp xếp cho kiểu cụ thể (đo trước)</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Ví dụ lỗi O(n²) ẩn:</p>
 <pre class="hljs"><code><span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-built_in">strlen</span>(s); i++) {   <span class="hljs-comment">// strlen chạy lại mỗi vòng: tổng O(n²)</span>
     <span class="hljs-keyword">if</span> (s[i] == <span class="hljs-string">&#x27; &#x27;</span>) count++;
 }
 </code></pre>
 <p>Compiler đôi khi giấu bớt nếu chứng minh <code>s</code> không đổi, nhưng đừng dựa vào đó.</p>
-<h2>17.9. So sánh thuật toán sắp xếp — thí nghiệm</h2>
+<h2 id="s17-9">17.9. So sánh thuật toán sắp xếp — thí nghiệm</h2>
 <pre class="hljs"><code><span class="hljs-comment">// sort_bench.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">define</span> _POSIX_C_SOURCE 200809L</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
@@ -592,7 +596,7 @@ gcc -O2 -fopt-info-inline-missed prog.c       <span class="hljs-comment"># các 
 }
 </code></pre>
 <p>Điều thường thấy: <code>quicksort</code> chuyên biệt cho <code>int</code> nhanh hơn <code>qsort</code> của libc (vì hàm so sánh được inline, không gọi qua con trỏ hàm); mergesort ổn định nhưng dùng thêm bộ nhớ. Nhưng <strong>hãy tự đo trên máy bạn</strong>, đừng tin số liệu trong sách.</p>
-<h2>17.10. Khi nào KHÔNG nên tối ưu?</h2>
+<h2 id="s17-10">17.10. Khi nào KHÔNG nên tối ưu?</h2>
 <ul>
 <li><strong>Khi chưa đo.</strong> Đừng tối ưu chỗ bạn &quot;cảm thấy&quot; chậm.</li>
 <li><strong>Khi đã đạt mục tiêu hiệu năng.</strong></li>
@@ -602,8 +606,8 @@ gcc -O2 -fopt-info-inline-missed prog.c       <span class="hljs-comment"># các 
 <li><strong>Khi bottleneck nằm ngoài CPU</strong> (mạng, đĩa, cơ sở dữ liệu): tối ưu vòng lặp C vô nghĩa.</li>
 </ul>
 <p>Nếu buộc phải làm mã khó đọc hơn để nhanh hơn, hãy <strong>giữ phiên bản đơn giản</strong> làm chuẩn kiểm tra và <strong>ghi chú</strong> vì sao.</p>
-<h2>17.11. Lỗi thường gặp khi tối ưu</h2>
-<table>
+<h2 id="s17-11">17.11. Lỗi thường gặp khi tối ưu</h2>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Sai lầm</th>
@@ -658,8 +662,8 @@ gcc -O2 -fopt-info-inline-missed prog.c       <span class="hljs-comment"># các 
 <td>Đo</td>
 </tr>
 </tbody>
-</table>
-<h2>17.12. Tóm tắt</h2>
+</table></div>
+<h2 id="s17-12">17.12. Tóm tắt</h2>
 <ul>
 <li>Quy trình: <strong>đo → tìm hotspot → sửa → đo lại</strong>; đừng tối ưu trước khi có số liệu.</li>
 <li>Đo bằng <code>clock_gettime(CLOCK_MONOTONIC)</code>, benchmark nhiều lần với dữ liệu cố định, dùng kết quả để không bị compiler xóa.</li>
@@ -668,7 +672,7 @@ gcc -O2 -fopt-info-inline-missed prog.c       <span class="hljs-comment"># các 
 <li>Duyệt bộ nhớ liên tiếp nhanh hơn nhiều; SoA thân thiện cache khi chỉ dùng vài trường; tránh false sharing.</li>
 <li><code>-O2</code> cho bản phát hành; <code>-O3</code>, <code>-march=native</code>, LTO, PGO có thể giúp nhưng phải đo; <code>-Ofast</code> thay đổi ngữ nghĩa số thực.</li>
 </ul>
-<h2>17.13. Bài tập</h2>
+<h2 id="s17-13">17.13. Bài tập</h2>
 <ol>
 <li>Chạy <code>profile_demo.c</code> với <code>gprof</code> và <code>perf</code>; xác định hàm nóng. Viết <code>count_duplicates_fast</code> bằng ba cách (sắp xếp, mảng đếm, bảng băm), kiểm chứng kết quả giống nhau và lập bảng thời gian với n = 10⁴, 10⁵, 10⁶.</li>
 <li>Chạy <code>cache_demo.c</code> với <code>-O0</code>, <code>-O2</code>, <code>-O3</code>; ghi lại tỷ lệ theo cột / theo hàng. Thử kích thước <code>N</code> nhỏ (256) và lớn (8192) và giải thích khác biệt theo kích thước cache.</li>
@@ -683,8 +687,26 @@ gcc -O2 -fopt-info-inline-missed prog.c       <span class="hljs-comment"># các 
 <p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-17">code/chapter-17</a></p>
 
 </article>
-<div class="chapter-nav"><a class="nav-prev" href="chapter-16.html">&larr; Mạng cơ bản (sockets)</a><a class="nav-next" href="chapter-18.html">Bảo mật & an toàn bộ nhớ &rarr;</a></div>
+<nav class="chapter-nav" aria-label="Điều hướng chương"><a class="nav-prev" href="chapter-16.html"><small>← Trước</small>Mạng cơ bản (sockets)</a><a class="nav-next" href="chapter-18.html"><small>Tiếp →</small>Bảo mật &amp; an toàn bộ nhớ</a></nav>
 </main>
 </div>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,store=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
+  function setTheme(t){if(t==='light')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);store('theme',t);
+    document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.setAttribute('aria-pressed',String((b.dataset.themeBtn===t)||(t==='light'&&b.dataset.themeBtn==='light')))})}
+  var cur=root.getAttribute('data-theme')||'light';setTheme(cur);
+  document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.addEventListener('click',function(){setTheme(b.dataset.themeBtn)})});
+  var fs=parseInt(getComputedStyle(root).getPropertyValue('--fs'))||19;
+  document.querySelectorAll('[data-fs]').forEach(function(b){b.addEventListener('click',function(){fs=Math.min(26,Math.max(14,fs+parseInt(b.dataset.fs)));root.style.setProperty('--fs',fs+'px');store('fs',fs)})});
+  var mb=document.getElementById('menu-btn');if(mb)mb.addEventListener('click',function(){document.body.classList.toggle('nav-open')});
+  document.addEventListener('click',function(e){if(document.body.classList.contains('nav-open')&&!e.target.closest('#sidebar')&&e.target.id!=='menu-btn')document.body.classList.remove('nav-open')});
+  document.querySelectorAll('pre').forEach(function(pre){var b=document.createElement('button');b.className='copy-btn';b.type='button';b.textContent='Sao chép';
+    b.addEventListener('click',function(){var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Đã chép'},function(){b.textContent='Lỗi'});setTimeout(function(){b.textContent='Sao chép'},1500)});pre.appendChild(b)});
+  var a=document.querySelector('.chapter-link.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'center'});
+})();
+</script>
 </body>
 </html>

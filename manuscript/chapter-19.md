@@ -574,9 +574,17 @@ static int emit(Program *p, Instr in) {
     return 0;
 }
 
-static int slot_of(Program *p, const char *name) {
+// Tìm slot của biến đã có; -1 nếu chưa có
+static int slot_find(const Program *p, const char *name) {
     for (size_t i = 0; i < p->nnames; i++)
         if (strcmp(p->names[i], name) == 0) return (int)i;
+    return -1;
+}
+
+// Tìm hoặc tạo slot (dùng khi GÁN)
+static int slot_of(Program *p, const char *name) {
+    int s = slot_find(p, name);
+    if (s >= 0) return s;
     if (p->nnames == MAX_VARS) return -1;
     snprintf(p->names[p->nnames], sizeof p->names[0], "%s", name);
     return (int)p->nnames++;
@@ -587,7 +595,7 @@ static int compile(const Node *n, Program *p) {
     switch (n->kind) {
         case N_NUM:  return emit(p, (Instr){ .op = OP_PUSH, .num = n->num });
         case N_VAR: {
-            int s = slot_of(p, n->name);
+            int s = slot_find(p, n->name);               // ĐỌC biến chưa có là lỗi (giống evaluator)
             return s < 0 ? -1 : emit(p, (Instr){ .op = OP_LOAD, .slot = s });
         }
         case N_NEG:
@@ -643,6 +651,28 @@ static int run(const Program *p, double vars[], double *result, const char **err
     *result = stack[0];
     return 0;
 }
+
+// Chạy một câu lệnh bằng VM nhưng dùng chung biến với Env, để so sánh với eval()
+static int vm_eval(const Node *ast, Env *env, double *out, const char **err) {
+    Program *p = calloc(1, sizeof *p);                 // Program khá lớn: cấp phát trên heap
+    if (!p) { *err = "het bo nho"; return -1; }
+    double vars[MAX_VARS] = {0};
+    for (size_t i = 0; i < env->count; i++) {          // nạp biến hiện có vào các slot đầu tiên
+        snprintf(p->names[i], sizeof p->names[i], "%s", env->vars[i].name);
+        vars[i] = env->vars[i].value;
+    }
+    p->nnames = env->count;
+
+    int rc = -1;
+    if (compile(ast, p) != 0)      *err = "bien chua duoc dinh nghia (hoac chuong trinh qua dai)";
+    else if (run(p, vars, out, err) == 0) {
+        rc = 0;
+        for (size_t i = 0; i < p->nnames; i++)         // ghi ngược giá trị biến vào Env
+            if (env_set(env, p->names[i], vars[i]) != 0) { *err = "qua nhieu bien"; rc = -1; break; }
+    }
+    free(p);
+    return rc;
+}
 ```
 
 Điểm đáng chú ý:
@@ -651,7 +681,7 @@ static int run(const Program *p, double vars[], double *result, const char **err
 - Vòng lặp `run` là "trái tim" của mọi VM: **fetch–decode–execute**. Các VM thực tế dùng kỹ thuật như *computed goto* để nhanh hơn.
 - Hằng số lưu trực tiếp trong lệnh; VM thực tế có bảng hằng và lệnh có độ dài thay đổi.
 - Một bất biến cần kiểm tra: sau khi chạy xong một biểu thức, ngăn xếp có **đúng 1** phần tử.
-- Ở bản này, trạng thái biến giữa các dòng REPL thuộc mảng `vars` chung với các `slot` được duy trì qua `Program` — xem cách ghép trong mục 19.7 (dùng `Env` với evaluator; phần VM là bài tập nâng cao).
+- `vm_eval` bọc `compile` + `run` để dùng chung `Env` với evaluator: chạy `./calc --vm` để REPL dùng VM, và **so sánh kết quả hai cách** (kiểm thử vi sai, mục 19.8).
 
 ## 19.7. Chương trình hoàn chỉnh (REPL)
 
@@ -666,8 +696,10 @@ Ghép tất cả thành `calc.c`. Bạn đã có các phần: kiểu token, `lex
 /* ... dán vào: TokType, Token, Lexer, lex_next ... */
 /* ... dán vào: Node, node_new, node_free, node_binop, Parser, advance, fail, parse_* , parse_line ... */
 /* ... dán vào: Var, Env, env_find, env_set, eval ... */
+/* ... dán vào (tùy chọn): OpCode, Instr, Program, emit, slot_find, slot_of, compile, run, vm_eval ... */
 
-int main(void) {
+int main(int argc, char *argv[]) {
+    int use_vm = argc > 1 && strcmp(argv[1], "--vm") == 0;      // ./calc --vm: chạy bằng bytecode VM
     Env env;
     memset(&env, 0, sizeof env);
 
@@ -678,7 +710,9 @@ int main(void) {
         if (!fgets(line, sizeof line, stdin)) break;                 // EOF (Ctrl+D / Ctrl+Z)
 
         line[strcspn(line, "\r\n")] = '\0';
-        if (line[0] == '\0') continue;
+        const char *s = line;
+        while (isspace((unsigned char)*s)) s++;
+        if (*s == '\0' || *s == '#') continue;                       // dòng trống hoặc chỉ có comment
         if (strcmp(line, "quit") == 0 || strcmp(line, "exit") == 0) break;
 
         char err[96];
@@ -691,8 +725,9 @@ int main(void) {
 
         double value;
         const char *rt_err = NULL;
-        if (eval(ast, &env, &value, &rt_err) == 0) printf("= %g\n", value);
-        else                                       printf("loi: %s\n", rt_err);
+        int ok = use_vm ? vm_eval(ast, &env, &value, &rt_err) : eval(ast, &env, &value, &rt_err);
+        if (ok == 0) printf("= %g\n", value);
+        else         printf("loi: %s\n", rt_err);
 
         node_free(ast);                                              // luôn giải phóng cây sau mỗi dòng
     }

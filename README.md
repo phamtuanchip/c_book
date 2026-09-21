@@ -1,127 +1,99 @@
 # Học lập trình C — Từ cơ bản đến nâng cao
+
 **Đọc online (GitHub Pages): https://phamtuanchip.github.io/c_book/**
 
-## Mục tiêu
-
-Bộ sách dạy lập trình C đầy đủ, từ cơ bản đến nâng cao, hướng tới xuất bản trên Amazon KDP.
+Giáo trình lập trình C bằng tiếng Việt: từ chương trình đầu tiên đến con trỏ, quản lý bộ nhớ, đa luồng, socket, bảo mật, kiểm thử, và hai dự án hoàn chỉnh (trình thông dịch mini, web server). Mỗi chương giải thích khái niệm từng bước, có sơ đồ bộ nhớ, bảng lỗi thường gặp, ví dụ chạy được và bài tập có lời giải.
 
 ## Độc giả mục tiêu
 
-- Người mới bắt đầu (chưa biết lập trình)
-- Sinh viên khoa CNTT/Điện tử muốn học sâu về C
-- Lập trình viên muốn ôn lại nền tảng hoặc chuyển sang ngôn ngữ hệ thống
+- Người mới bắt đầu (chưa biết lập trình).
+- Sinh viên CNTT / Điện tử muốn học sâu về C và hệ thống.
+- Lập trình viên muốn ôn nền tảng hoặc chuyển sang ngôn ngữ hệ thống.
 
-## Nội dung sách (22 chương)
+## Nội dung (22 chương + lời giải)
 
-1. Lời tựa và hướng dẫn sử dụng sách
-2. Khái niệm cơ bản về lập trình máy tính: dữ liệu, biến, kiểu dữ liệu, luồng điều khiển, hàm
-3. Ngôn ngữ máy và lịch sử C: từ máy tới Assembly, lịch sử C và định hướng thiết kế
-4. Môi trường phát triển: GCC/MinGW/MSYS2 trên Windows, GCC trên Linux, clang trên macOS
-5. Cú pháp cơ bản và cấu trúc chương trình C
-6. Con trỏ, quản lý bộ nhớ, struct, liên kết danh sách, file I/O
-7. Lập trình có cấu trúc và mô-đun: header, makefile, tổ chức dự án
-8. Kỹ thuật nâng cao: macro, tiền xử lý, multi-threading (POSIX), socket cơ bản
-9. Debugging và testing: gdb, valgrind, unit test
-10. Best practices: an toàn bộ nhớ, phong cách mã, tối ưu hóa
-11–22. Ứng dụng thực tế, mini project, phụ lục
+| Phần | Chương |
+|---|---|
+| **I. Nhập môn** | 1. Giới thiệu và chương trình C đầu tiên · 2. Máy tính và lập trình cơ bản · 3. Lịch sử và triết lý của C · 4. Cú pháp & cấu trúc chương trình |
+| **II. Nền tảng ngôn ngữ** | 5. Điều khiển luồng · 6. Hàm & phạm vi biến · 7. Mảng & chuỗi · 8. Con trỏ chi tiết |
+| **III. Bộ nhớ, dữ liệu, xây dựng** | 9. Quản lý bộ nhớ và lỗi phổ biến · 10. Struct, union, enum · 11. Header, Makefile, build systems · 12. File I/O & thao tác hệ thống · 13. Xử lý lỗi |
+| **IV. Kỹ thuật nâng cao** | 14. Tiền xử lý & macro · 15. Đa luồng & đồng bộ · 16. Mạng cơ bản (sockets) · 17. Tối ưu hóa & profiling · 18. Bảo mật & an toàn bộ nhớ |
+| **V. Dự án và phát hành** | 19. Trình biên dịch / interpreter mini · 20. Web server đơn giản · 21. Testing & CI · 22. Packaging & deploy |
+| **Phụ lục** | Lời giải bài tập của cả 22 chương |
 
 ## Cấu trúc repository
 
+```text
+manuscript/            nguồn sách (Markdown): chapter-01.md … chapter-22.md
+manuscript/solutions/  lời giải: chapter-NN-solutions.md
+code/chapter-NN/       ví dụ của từng chương (trích tự động từ bản thảo, kèm Makefile + README)
+code/solutions/        mã trong phần lời giải
+code/manifest.json     danh sách chương trình để kiểm tra biên dịch
+tools/                 build-html.js (trang web), extract-code.js, check-code.js, bookgen/ (EPUB/PDF)
+dist/                  trang HTML đã build (xuất bản lên GitHub Pages)
+formats/               EPUB, PDF, bìa, font
+kdp/                   metadata, checklist, hướng dẫn Amazon KDP
+scripts/               generate_book.py (điểm vào để sinh EPUB/PDF)
+.github/workflows/     GitHub Actions: deploy Pages, kiểm tra mã trong sách
 ```
-/manuscript   — nguồn sách (Markdown, chapter-01.md … chapter-22.md)
-/code         — mã nguồn ví dụ theo chương (với Makefile và README)
-/assets       — hình ảnh, sơ đồ, biểu đồ
-/formats      — file xuất (book.epub, book.pdf, styles.css, fonts/)
-/kdp          — metadata, checklist, hướng dẫn Amazon KDP
-/tools/bookgen — Python package sinh sách (epub/pdf/cover/package)
-/scripts      — entry point wrapper: generate_book.py
+
+## Quy trình làm việc
+
+Bản thảo trong `manuscript/` là **nguồn duy nhất**. Mã trong `code/` được sinh từ đó để sách và mã luôn khớp nhau.
+
+```bash
+npm install                     # lần đầu: cài markdown-it, highlight.js
+npm run build:html              # bản thảo → dist/ (trang web kiểu sách)
+npm run extract:code            # bản thảo → code/ (trích ví dụ, Makefile, README)
+npm run check:code              # biên dịch mọi ví dụ (mặc định CC=gcc)
 ```
+
+- Ví dụ đầy đủ trong sách là khối ` ```c ` có **dòng đầu** dạng `// ten_file.c`; script trích ra file cùng tên. Khối có ghi chú `(phần chính…)`/`(ý tưởng)` bị bỏ qua. `calc.c` (chương 19) và `server.c` (chương 20) được ghép từ nhiều khối.
+- **Đừng sửa trực tiếp trong `code/`** — sửa trong `manuscript/` rồi chạy `npm run extract:code`.
+- Kiểm tra bằng compiler khác hoặc biên dịch chéo: `CC="clang" node tools/check-code.js`, `CC="zig cc -target x86_64-linux-musl" node tools/check-code.js`. Thêm `WARN=1` để coi cảnh báo là lỗi.
+- Trang web tự cập nhật khi push lên `main` (workflow `pages.yml`).
+
+### Trang web
+
+Giao diện kiểu sách: chữ có chân, cột đọc hẹp, mục lục theo phần, mục lục trong chương, bảng kiểu sách in, ba chế độ nền **Sáng / Sepia / Tối** (nhớ lựa chọn), chỉnh cỡ chữ, nút sao chép mã, điều hướng chương trước/sau và stylesheet cho in ấn (Ctrl+P).
 
 ## Sinh sách EPUB và PDF (Python)
 
-Toàn bộ quy trình build được thực hiện bằng Python. Không cần shell script hay PowerShell.
-
-### Yêu cầu
-
-| Công cụ | Mục đích | Cài đặt |
-|---------|----------|---------|
-| Python 3.8+ | chạy build script | python.org |
-| pandoc | convert Markdown → EPUB/PDF | pandoc.org |
-| TeX engine (lualatex/xelatex) | tạo PDF | MiKTeX / TeX Live |
-| Pillow (tùy chọn) | sinh ảnh bìa | `pip install pillow` |
+Yêu cầu: Python 3.8+, [pandoc](https://pandoc.org), một TeX engine (lualatex/xelatex) để tạo PDF, Pillow (tùy chọn, để sinh ảnh bìa).
 
 ```bash
-pip install -r requirements.txt   # cài Pillow (tùy chọn)
+pip install -r requirements.txt
+
+python scripts/generate_book.py epub      # formats/book.epub
+python scripts/generate_book.py pdf       # formats/book.pdf
+python scripts/generate_book.py cover     # formats/cover.png (cần Pillow)
+python scripts/generate_book.py codezip   # formats/code_samples.zip
+python scripts/generate_book.py package   # formats/kdp_upload_package.zip
 ```
 
-### Lệnh build
+`tools/bookgen/generator.py` gom `manuscript/chapter-*.md` theo thứ tự, tiền xử lý Markdown, gọi pandoc để tạo EPUB3/PDF và đọc metadata từ `kdp/metadata.yaml`.
 
-Chạy từ thư mục gốc repo:
+## Môi trường lập trình C
 
-```bash
-# Sinh EPUB
-python scripts/generate_book.py epub
+- **Windows:** MSYS2 (`pacman -S mingw-w64-ucrt-x86_64-toolchain make gdb`) hoặc **WSL** (khuyến nghị cho chương 15–16, 20 vì dùng POSIX).
+- **Linux:** `sudo apt install build-essential gdb valgrind`.
+- **macOS:** `xcode-select --install` (clang) và `brew install make`.
+- Trình soạn thảo: VS Code (extension C/C++), CLion, Vim/Emacs.
 
-# Sinh PDF
-python scripts/generate_book.py pdf
+Biên dịch mọi ví dụ trong sách với `-std=c11 -Wall -Wextra`.
 
-# Sinh ảnh bìa (cần Pillow)
-python scripts/generate_book.py cover
+## Xuất bản Amazon KDP
 
-# Đóng gói code mẫu thành ZIP
-python scripts/generate_book.py codezip
-
-# Đóng gói upload KDP (epub + cover + metadata)
-python scripts/generate_book.py package
-```
-
-File đầu ra nằm trong `/formats/`:
-- `formats/book.epub`
-- `formats/book.pdf`
-- `formats/cover.png`
-- `formats/code_samples.zip`
-- `formats/kdp_upload_package.zip`
-
-### Tùy chỉnh
-
-```bash
-# Chỉ định đường dẫn output
-python scripts/generate_book.py epub --output my_book.epub
-
-# Chỉ định repo root khác
-python scripts/generate_book.py pdf --repo /path/to/repo
-```
-
-### Cách hoạt động
-
-`tools/bookgen/generator.py` (class `BookGenerator`):
-- Thu thập các file `manuscript/chapter-*.md` theo thứ tự
-- Tiền xử lý markdown: normalize unicode, tự động fence code C, xử lý ký tự đặc biệt
-- Gọi `pandoc` với tham số phù hợp để sinh EPUB3 hoặc PDF (qua lualatex)
-- Nhúng font từ `formats/fonts/*.ttf` vào EPUB nếu có
-- Đọc metadata từ `kdp/metadata.yaml`
-
-## Cài đặt môi trường lập trình C
-
-- **Windows**: cài MSYS2 — `pacman -S mingw-w64-x86_64-gcc make gdb`
-- **Linux**: `sudo apt install build-essential gdb valgrind`
-- **macOS**: `brew install gcc gdb`
-- **Editor**: VSCode (extension C/C++), CLion, Vim/Emacs
-
-## Chuẩn xuất bản Amazon KDP
-
-- Format: EPUB3 (upload trực tiếp) hoặc KPF (qua Kindle Create)
-- Quy trình: build EPUB → kiểm tra bằng Kindle Previewer → upload lên KDP
-- Metadata, từ khóa, bìa: xem `/kdp/`
+Định dạng EPUB3 (tải trực tiếp) hoặc KPF (qua Kindle Create). Quy trình: build EPUB → kiểm tra bằng Kindle Previewer / `epubcheck` → tải lên KDP. Metadata, từ khóa, bìa và danh sách kiểm tra nằm trong `kdp/` (xem thêm mục 22.11 của sách).
 
 ## Đóng góp
 
-Gửi PR hoặc issue qua GitHub cho bất kỳ phần nào: nội dung, sửa lỗi, code mẫu.
+Gửi issue hoặc PR cho nội dung, lỗi chính tả, hoặc mã ví dụ. Khi sửa mã, sửa trong bản thảo, chạy `npm run extract:code && npm run check:code` và kèm kết quả.
 
 ## Bản quyền
 
-- Code: MIT License
-- Nội dung sách: Creative Commons CC BY-NC
+- Mã nguồn: MIT License.
+- Nội dung sách: Creative Commons CC BY-NC.
 
 ## Liên hệ
 

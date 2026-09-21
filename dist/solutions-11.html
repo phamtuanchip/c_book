@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lời giải chương 11 — Lập trình C — Từ cơ bản đến nâng cao</title>
+<script>try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.setAttribute('data-theme',t);var f=localStorage.getItem('fs');if(f)document.documentElement.style.setProperty('--fs',f+'px')}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar" id="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Phần I — Nhập môn</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp &amp; cấu trúc chương trình C</a></li></ul></li><li class="part"><div class="part-title">Phần II — Nền tảng ngôn ngữ</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm &amp; phạm vi biến (Functions &amp; Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng &amp; chuỗi (Arrays &amp; Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li></ul></li><li class="part"><div class="part-title">Phần III — Bộ nhớ, dữ liệu, xây dựng</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O &amp; thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi &amp; ngoại lệ trong C</a></li></ul></li><li class="part"><div class="part-title">Phần IV — Kỹ thuật nâng cao</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý &amp; macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng &amp; đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa &amp; profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật &amp; an toàn bộ nhớ</a></li></ul></li><li class="part"><div class="part-title">Phần V — Dự án và phát hành</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing &amp; CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging &amp; deploy</a></li></ul></li><li class="part"><div class="part-title">Phụ lục — Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li><li><a class="chapter-link" href="solutions-02.html">Lời giải chương 2</a></li><li><a class="chapter-link" href="solutions-03.html">Lời giải chương 3</a></li><li><a class="chapter-link" href="solutions-04.html">Lời giải chương 4</a></li><li><a class="chapter-link" href="solutions-05.html">Lời giải chương 5</a></li><li><a class="chapter-link" href="solutions-06.html">Lời giải chương 6</a></li><li><a class="chapter-link" href="solutions-07.html">Lời giải chương 7</a></li><li><a class="chapter-link" href="solutions-08.html">Lời giải chương 8</a></li><li><a class="chapter-link" href="solutions-09.html">Lời giải chương 9</a></li><li><a class="chapter-link" href="solutions-10.html">Lời giải chương 10</a></li><li><a class="chapter-link active" href="solutions-11.html">Lời giải chương 11</a></li><li><a class="chapter-link" href="solutions-12.html">Lời giải chương 12</a></li><li><a class="chapter-link" href="solutions-13.html">Lời giải chương 13</a></li><li><a class="chapter-link" href="solutions-14.html">Lời giải chương 14</a></li><li><a class="chapter-link" href="solutions-15.html">Lời giải chương 15</a></li><li><a class="chapter-link" href="solutions-16.html">Lời giải chương 16</a></li><li><a class="chapter-link" href="solutions-17.html">Lời giải chương 17</a></li><li><a class="chapter-link" href="solutions-18.html">Lời giải chương 18</a></li><li><a class="chapter-link" href="solutions-19.html">Lời giải chương 19</a></li><li><a class="chapter-link" href="solutions-20.html">Lời giải chương 20</a></li><li><a class="chapter-link" href="solutions-21.html">Lời giải chương 21</a></li><li><a class="chapter-link" href="solutions-22.html">Lời giải chương 22</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<div class="main-col">
+<header class="topbar"><button class="menu-btn" id="menu-btn" type="button" aria-label="Mục lục">☰</button><span class="crumb">Lời giải chương 11</span><span class="tools"><button data-fs="-1" type="button" title="Chữ nhỏ hơn">A−</button><button data-fs="1" type="button" title="Chữ lớn hơn">A+</button><button data-theme-btn="light" type="button" title="Nền sáng">Sáng</button><button data-theme-btn="sepia" type="button" title="Nền sepia">Sepia</button><button data-theme-btn="dark" type="button" title="Nền tối">Tối</button></span></header>
+<main class="content">
+<article>
+<header class="chapter-head"><div class="chapter-num">Chương 11</div><h1>Lời giải bài tập</h1></header><nav class="chapter-toc" aria-label="Trong chương này"><div class="toc-title">Trong chương này</div><ol><li><a href="#h-1">Bài 1: tách máy tính thành calc.h / calc.c / main.c</a></li><li><a href="#h-2">Bài 2: định nghĩa biến trong header</a></li><li><a href="#h-3">Bài 3: Makefile cho dự án 3 module</a></li><li><a href="#h-4">Bài 4: mục tiêu asan và release</a></li><li><a href="#h-5">Bài 5: thư viện tĩnh libutils.a</a></li><li><a href="#h-6">Bài 6: thư viện động</a></li><li><a href="#h-7">Bài 7: CMakeLists.txt tương đương</a></li><li><a href="#h-8">Bài 8: format và lint</a></li></ol></nav>
+<p>Các bài chương này chủ yếu là <strong>thực hành với công cụ build</strong>; lời giải dưới dạng file mẫu và kết quả cần quan sát. Mã của dự án <code>geometry</code> nằm ở <code>code/chapter-11/</code>.</p>
+<h2 id="h-1">Bài 1: tách máy tính thành <code>calc.h</code> / <code>calc.c</code> / <code>main.c</code></h2>
+<p>Dùng ba file ở lời giải chương 4 (bài 7). Để thấy lỗi <code>redefinition</code>, đặt trong <code>calc.h</code> một định nghĩa kiểu <strong>không có include guard</strong> và include header hai lần:</p>
+<pre class="hljs"><code><span class="hljs-comment">/* bad_guard.h (KHÔNG có include guard) */</span>
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span> <span class="hljs-type">int</span> x; } Point;
+</code></pre>
+<pre class="hljs"><code><span class="hljs-comment">/* guard_demo.c */</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;bad_guard.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;bad_guard.h&quot;</span>      <span class="hljs-comment">// lỗi: &quot;conflicting types for &#x27;Point&#x27;&quot; / &quot;redefinition of typedef&quot;</span></span>
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> { Point p = {<span class="hljs-number">1</span>}; <span class="hljs-keyword">return</span> p.x - <span class="hljs-number">1</span>; }
+</code></pre>
+<p>Thêm <code>#ifndef BAD_GUARD_H / #define BAD_GUARD_H / ... / #endif</code> vào header thì lỗi biến mất.</p>
+<h2 id="h-2">Bài 2: định nghĩa biến trong header</h2>
+<pre class="hljs"><code><span class="hljs-comment">/* counter.h */</span>
+<span class="hljs-type">int</span> counter = <span class="hljs-number">0</span>;                 <span class="hljs-comment">// SAI: định nghĩa trong header</span>
+</code></pre>
+<p>Hai file <code>.c</code> cùng <code>#include &quot;counter.h&quot;</code> sẽ tạo hai định nghĩa của <code>counter</code> → linker: <code>multiple definition of 'counter'</code>. Sửa:</p>
+<pre class="hljs"><code><span class="hljs-comment">/* counter.h */</span>
+<span class="hljs-keyword">extern</span> <span class="hljs-type">int</span> counter;              <span class="hljs-comment">// KHAI BÁO</span>
+
+<span class="hljs-comment">// counter.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;counter.h&quot;</span></span>
+<span class="hljs-type">int</span> counter = <span class="hljs-number">0</span>;                 <span class="hljs-comment">// ĐỊNH NGHĨA — đúng một nơi</span>
+</code></pre>
+<p>(Từ GCC 10 mặc định <code>-fno-common</code> nên lỗi hiện rõ; với bản cũ hơn, biến chưa khởi tạo có thể &quot;lọt&quot; qua nhờ <em>common symbols</em>.)</p>
+<h2 id="h-3">Bài 3: Makefile cho dự án 3 module</h2>
+<p>Cấu trúc: <code>src/{math.c,utils.c,main.c}</code>, <code>include/{math_utils.h,utils.h}</code>. Dùng lại Makefile ở mục 11.5 (đã có quy tắc mẫu, <code>-MMD -MP</code>, <code>all</code>, <code>clean</code>, <code>run</code>). Kiểm chứng theo dõi header:</p>
+<pre class="hljs"><code>make                           <span class="hljs-comment"># biên dịch tất cả</span>
+<span class="hljs-built_in">touch</span> include/utils.h
+make                           <span class="hljs-comment"># chỉ biên dịch lại các .c có #include &quot;utils.h&quot; (nhờ file .d)</span>
+<span class="hljs-built_in">touch</span> src/math.c
+make                           <span class="hljs-comment"># chỉ biên dịch math.c và liên kết lại</span>
+</code></pre>
+<p>Nếu sửa header mà <code>make</code> không biên dịch lại gì, bạn đã quên <code>-include $(DEPS)</code> hoặc <code>-MMD</code>.</p>
+<h2 id="h-4">Bài 4: mục tiêu <code>asan</code> và <code>release</code></h2>
+<pre class="hljs"><code><span class="hljs-section">release: CFLAGS += -O2 -DNDEBUG</span>
+<span class="hljs-section">release: clean all</span>
+
+<span class="hljs-section">asan: CFLAGS += -O1 -g -fsanitize=address,undefined -fno-omit-frame-pointer</span>
+<span class="hljs-section">asan: LDFLAGS += -fsanitize=address,undefined</span>
+<span class="hljs-section">asan: clean all</span>
+</code></pre>
+<p>Dùng <strong>target-specific variables</strong> (<code>target: VAR += ...</code>) để cờ chỉ áp dụng khi đích đó được chọn (và các phụ thuộc của nó).</p>
+<h2 id="h-5">Bài 5: thư viện tĩnh <code>libutils.a</code></h2>
+<pre class="hljs"><code>gcc -std=c11 -Iinclude -c src/utils.c -o build/utils.o
+ar rcs build/libutils.a build/utils.o
+gcc -std=c11 -Iinclude src/main.c -Lbuild -lutils -o build/app
+</code></pre>
+<p>Nhớ đặt <code>-lutils</code> <strong>sau</strong> file nguồn/<code>.o</code> cần nó. Kiểm tra nội dung thư viện: <code>ar t build/libutils.a</code>, <code>nm build/libutils.a</code>.</p>
+<h2 id="h-6">Bài 6: thư viện động</h2>
+<pre class="hljs"><code>gcc -fPIC -Iinclude -c src/utils.c -o build/utils.o
+gcc -shared build/utils.o -o build/libutils.so
+gcc -Iinclude src/main.c -Lbuild -lutils -o build/app
+LD_LIBRARY_PATH=build ./build/app          <span class="hljs-comment"># chạy được</span>
+<span class="hljs-built_in">mv</span> build/libutils.so build/libutils.so.bak
+LD_LIBRARY_PATH=build ./build/app          <span class="hljs-comment"># error while loading shared libraries: libutils.so: cannot open shared object file</span>
+</code></pre>
+<p>Lỗi này xảy ra <strong>lúc chạy</strong> (loader không tìm thấy <code>.so</code>), khác với lỗi liên kết lúc build.</p>
+<h2 id="h-7">Bài 7: <code>CMakeLists.txt</code> tương đương</h2>
+<p>Xem <code>code/chapter-11/CMakeLists.txt</code>. Điểm cần kiểm tra: <code>cmake -S . -B build &amp;&amp; cmake --build build &amp;&amp; ctest --test-dir build</code>; <code>target_include_directories(... PUBLIC include)</code> để mọi target liên kết tới thư viện tự nhận đường dẫn header.</p>
+<h2 id="h-8">Bài 8: <code>format</code> và <code>lint</code></h2>
+<pre class="hljs"><code>SRCS_ALL := <span class="hljs-variable">$(<span class="hljs-built_in">wildcard</span> src/*.c include/*.h)</span>
+
+<span class="hljs-meta"><span class="hljs-keyword">.PHONY</span>: format lint</span>
+<span class="hljs-section">format:</span>
+	clang-format -i <span class="hljs-variable">$(SRCS_ALL)</span>
+
+<span class="hljs-section">lint:</span>
+	cppcheck --enable=warning,style,performance --error-exitcode=1 --inline-suppr src/
+	clang-tidy <span class="hljs-variable">$(<span class="hljs-built_in">wildcard</span> src/*.c)</span> -- -std=c11 -Iinclude
+</code></pre>
+<p><code>--error-exitcode=1</code> để <code>make lint</code> thất bại khi có phát hiện — cần cho CI.</p>
+
+</article>
+<nav class="chapter-nav" aria-label="Điều hướng chương"><a class="nav-prev" href="solutions-10.html"><small>← Trước</small>Lời giải chương 10</a><a class="nav-next" href="solutions-12.html"><small>Tiếp →</small>Lời giải chương 12</a></nav>
+</main>
+</div>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,store=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
+  function setTheme(t){if(t==='light')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);store('theme',t);
+    document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.setAttribute('aria-pressed',String((b.dataset.themeBtn===t)||(t==='light'&&b.dataset.themeBtn==='light')))})}
+  var cur=root.getAttribute('data-theme')||'light';setTheme(cur);
+  document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.addEventListener('click',function(){setTheme(b.dataset.themeBtn)})});
+  var fs=parseInt(getComputedStyle(root).getPropertyValue('--fs'))||19;
+  document.querySelectorAll('[data-fs]').forEach(function(b){b.addEventListener('click',function(){fs=Math.min(26,Math.max(14,fs+parseInt(b.dataset.fs)));root.style.setProperty('--fs',fs+'px');store('fs',fs)})});
+  var mb=document.getElementById('menu-btn');if(mb)mb.addEventListener('click',function(){document.body.classList.toggle('nav-open')});
+  document.addEventListener('click',function(e){if(document.body.classList.contains('nav-open')&&!e.target.closest('#sidebar')&&e.target.id!=='menu-btn')document.body.classList.remove('nav-open')});
+  document.querySelectorAll('pre').forEach(function(pre){var b=document.createElement('button');b.className='copy-btn';b.type='button';b.textContent='Sao chép';
+    b.addEventListener('click',function(){var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Đã chép'},function(){b.textContent='Lỗi'});setTimeout(function(){b.textContent='Sao chép'},1500)});pre.appendChild(b)});
+  var a=document.querySelector('.chapter-link.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'center'});
+})();
+</script>
+</body>
+</html>

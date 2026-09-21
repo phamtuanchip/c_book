@@ -1,20 +1,27 @@
-Chapter 8 code samples
+# Mã nguồn chương 8
 
-Files:
-- pointer_examples.c: basic pointer usage and pointer arithmetic
-- qsort_cmp.c: comparator function used with qsort
-- Makefile: build targets
+Chương 8 — Con trỏ chi tiết (Pointers Deep Dive)
 
-Build:
-- make
+Các file dưới đây được **trích tự động từ bản thảo** (`manuscript/chapter-08.md`) bằng `node tools/extract-code.js`, nên luôn khớp với nội dung sách. Đừng sửa trực tiếp ở đây — hãy sửa trong bản thảo rồi chạy lại script.
 
-Or:
-- gcc -Wall -Wextra -std=c11 -o pointer_examples pointer_examples.c
-- gcc -Wall -Wextra -std=c11 -o qsort_cmp qsort_cmp.c
+## Các file
 
-Run:
-- ./pointer_examples
-- ./qsort_cmp
+| File | Mô tả |
+|---|---|
+| `ptr_practice.c` | Đảo mảng và tìm chuỗi con bằng con trỏ |
 
-Notes:
-- Study cmp_int signature: it matches qsort comparator type.
+## Biên dịch và chạy
+
+```bash
+make            # build tất cả
+make asan       # build với AddressSanitizer + UBSan (Linux/macOS/WSL)
+make clean
+```
+
+Hoặc thủ công, ví dụ:
+
+```bash
+gcc -std=c11 -Wall -Wextra -g -o ptr_practice ptr_practice.c -lm
+```
+
+Đọc lại chương: https://github.com/phamtuanchip/c_book/blob/main/manuscript/chapter-08.md

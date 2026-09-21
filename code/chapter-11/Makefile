@@ -1,16 +1,39 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -std=c11
+# ---- Cấu hình ----
+CC      := gcc
+CFLAGS  := -std=c11 -Wall -Wextra -Wpedantic -g -O0 -Iinclude
+LDFLAGS :=
+LDLIBS  := -lm
 
-all: main
+SRC_DIR   := src
+BUILD_DIR := build
+TARGET    := $(BUILD_DIR)/app
 
-module.o: module.c module.h
-	$(CC) $(CFLAGS) -c module.c -o module.o
+SRCS := $(wildcard $(SRC_DIR)/*.c)                     # mọi file .c trong src/
+OBJS := $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRCS))
+DEPS := $(OBJS:.o=.d)                                  # file phụ thuộc tự sinh
 
-main.o: main.c module.h
-	$(CC) $(CFLAGS) -c main.c -o main.o
+# ---- Mục tiêu ----
+.PHONY: all clean run test
 
-main: main.o module.o
-	$(CC) $(CFLAGS) -o main main.o module.o
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
+
+# Quy tắc mẫu: mỗi src/X.c -> build/X.o
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
+
+$(BUILD_DIR):
+	mkdir -p $@
+
+run: $(TARGET)
+	./$(TARGET)
+
+test: $(TARGET)
+	./tests/run_tests.sh
 
 clean:
-	rm -f *.o main
+	rm -rf $(BUILD_DIR)
+
+-include $(DEPS)

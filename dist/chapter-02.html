@@ -4,15 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Máy tính và lập trình cơ bản — Lập trình C — Từ cơ bản đến nâng cao</title>
+<script>try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.setAttribute('data-theme',t);var f=localStorage.getItem('fs');if(f)document.documentElement.style.setProperty('--fs',f+'px')}catch(e){}</script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="layout">
-<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link active" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<nav class="sidebar" id="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Phần I — Nhập môn</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link active" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp &amp; cấu trúc chương trình C</a></li></ul></li><li class="part"><div class="part-title">Phần II — Nền tảng ngôn ngữ</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm &amp; phạm vi biến (Functions &amp; Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng &amp; chuỗi (Arrays &amp; Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li></ul></li><li class="part"><div class="part-title">Phần III — Bộ nhớ, dữ liệu, xây dựng</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O &amp; thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi &amp; ngoại lệ trong C</a></li></ul></li><li class="part"><div class="part-title">Phần IV — Kỹ thuật nâng cao</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý &amp; macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng &amp; đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa &amp; profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật &amp; an toàn bộ nhớ</a></li></ul></li><li class="part"><div class="part-title">Phần V — Dự án và phát hành</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing &amp; CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging &amp; deploy</a></li></ul></li><li class="part"><div class="part-title">Phụ lục — Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li><li><a class="chapter-link" href="solutions-02.html">Lời giải chương 2</a></li><li><a class="chapter-link" href="solutions-03.html">Lời giải chương 3</a></li><li><a class="chapter-link" href="solutions-04.html">Lời giải chương 4</a></li><li><a class="chapter-link" href="solutions-05.html">Lời giải chương 5</a></li><li><a class="chapter-link" href="solutions-06.html">Lời giải chương 6</a></li><li><a class="chapter-link" href="solutions-07.html">Lời giải chương 7</a></li><li><a class="chapter-link" href="solutions-08.html">Lời giải chương 8</a></li><li><a class="chapter-link" href="solutions-09.html">Lời giải chương 9</a></li><li><a class="chapter-link" href="solutions-10.html">Lời giải chương 10</a></li><li><a class="chapter-link" href="solutions-11.html">Lời giải chương 11</a></li><li><a class="chapter-link" href="solutions-12.html">Lời giải chương 12</a></li><li><a class="chapter-link" href="solutions-13.html">Lời giải chương 13</a></li><li><a class="chapter-link" href="solutions-14.html">Lời giải chương 14</a></li><li><a class="chapter-link" href="solutions-15.html">Lời giải chương 15</a></li><li><a class="chapter-link" href="solutions-16.html">Lời giải chương 16</a></li><li><a class="chapter-link" href="solutions-17.html">Lời giải chương 17</a></li><li><a class="chapter-link" href="solutions-18.html">Lời giải chương 18</a></li><li><a class="chapter-link" href="solutions-19.html">Lời giải chương 19</a></li><li><a class="chapter-link" href="solutions-20.html">Lời giải chương 20</a></li><li><a class="chapter-link" href="solutions-21.html">Lời giải chương 21</a></li><li><a class="chapter-link" href="solutions-22.html">Lời giải chương 22</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<div class="main-col">
+<header class="topbar"><button class="menu-btn" id="menu-btn" type="button" aria-label="Mục lục">☰</button><span class="crumb">Phần I · Chương 2</span><span class="tools"><button data-fs="-1" type="button" title="Chữ nhỏ hơn">A−</button><button data-fs="1" type="button" title="Chữ lớn hơn">A+</button><button data-theme-btn="light" type="button" title="Nền sáng">Sáng</button><button data-theme-btn="sepia" type="button" title="Nền sepia">Sepia</button><button data-theme-btn="dark" type="button" title="Nền tối">Tối</button></span></header>
 <main class="content">
 <article>
-<h1>Chương 2 — Máy tính và lập trình cơ bản</h1>
-<h2>Mục tiêu chương</h2>
+<header class="chapter-head"><div class="chapter-num">Chương 2</div><h1>Máy tính và lập trình cơ bản</h1></header><nav class="chapter-toc" aria-label="Trong chương này"><div class="toc-title">Trong chương này</div><ol><li><a href="#s2-1">2.1. Bit, byte và hệ nhị phân</a></li><li><a href="#s2-2">2.2. Số nguyên có dấu và bù hai</a></li><li><a href="#s2-3">2.3. Số thực (dấu phẩy động)</a></li><li><a href="#s2-4">2.4. Ký tự và bảng mã</a></li><li><a href="#s2-5">2.5. Kích thước kiểu dữ liệu và sizeof</a></li><li><a href="#s2-6">2.6. Endianness — thứ tự byte trong bộ nhớ</a></li><li><a href="#s2-7">2.7. Bộ nhớ của một chương trình đang chạy</a></li><li><a href="#s2-8">2.8. Bức tranh về assembly và stack frame</a></li><li><a href="#s2-9">2.9. An toàn khi làm việc với bộ nhớ</a></li><li><a href="#s2-10">2.10. Thực hành</a></li><li><a href="#s2-11">2.11. Lỗi thường gặp</a></li><li><a href="#s2-12">2.12. Tóm tắt</a></li><li><a href="#s2-13">2.13. Bài tập</a></li></ol></nav>
+<h2 id="h-1">Mục tiêu chương</h2>
 <ul>
 <li>Hiểu máy tính lưu trữ mọi thứ (số, chữ, hình ảnh) bằng <strong>bit</strong> và <strong>byte</strong> như thế nào.</li>
 <li>Đổi qua lại giữa hệ thập phân, nhị phân và thập lục phân.</li>
@@ -22,15 +25,15 @@
 <li>Biết <code>sizeof</code> trả về gì và vì sao kích thước kiểu dữ liệu phụ thuộc nền tảng.</li>
 </ul>
 <p>Nếu chương 1 dạy bạn <em>gõ</em> chương trình, chương này dạy bạn <em>máy tính nhìn chương trình đó ra sao</em>. Những khái niệm ở đây là nền của toàn bộ phần con trỏ và bộ nhớ về sau.</p>
-<h2>2.1. Bit, byte và hệ nhị phân</h2>
-<h3>Bit và byte</h3>
+<h2 id="s2-1">2.1. Bit, byte và hệ nhị phân</h2>
+<h3 id="h-2">Bit và byte</h3>
 <ul>
 <li><strong>Bit</strong> (<em>binary digit</em>) là đơn vị thông tin nhỏ nhất, chỉ có hai giá trị <code>0</code> hoặc <code>1</code>. Phần cứng dùng hai mức điện áp để biểu diễn chúng.</li>
 <li><strong>Byte</strong> là nhóm <strong>8 bit</strong>. Byte là đơn vị nhỏ nhất mà chương trình C có thể đánh địa chỉ.</li>
 <li>Một byte biểu diễn được 2⁸ = <strong>256</strong> giá trị khác nhau (từ 0 đến 255 nếu không có dấu).</li>
 </ul>
 <p>Các đơn vị lớn hơn:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Đơn vị</th>
@@ -51,8 +54,8 @@
 <td>1 tỷ byte (hoặc 1 GiB = 2³⁰ byte)</td>
 </tr>
 </tbody>
-</table>
-<h3>Hệ nhị phân hoạt động thế nào</h3>
+</table></div>
+<h3 id="h-3">Hệ nhị phân hoạt động thế nào</h3>
 <p>Hệ thập phân dùng 10 chữ số; mỗi vị trí có &quot;trọng số&quot; là lũy thừa của 10. Hệ nhị phân làm y hệt, nhưng với 2:</p>
 <pre class="hljs"><code>Số nhị phân 1011 gồm các bit, từ phải sang trái có trọng số 1, 2, 4, 8:
 
@@ -69,7 +72,7 @@
 Kết quả: 1101
 </code></pre>
 <p>Kiểm tra: 8 + 4 + 0 + 1 = 13.</p>
-<h3>Hệ thập lục phân (hexadecimal)</h3>
+<h3 id="h-4">Hệ thập lục phân (hexadecimal)</h3>
 <p>Số nhị phân dài rất khó đọc. Vì <strong>4 bit = đúng 1 chữ số hex</strong> nên lập trình viên dùng hệ 16 (chữ số <code>0–9</code> và <code>A–F</code>, với <code>A</code>=10, ..., <code>F</code>=15) để viết gọn:</p>
 <pre class="hljs"><code>Nhị phân:   1111 0000 1010 0101
 Hex:           F    0    A    5      →  0xF0A5
@@ -78,7 +81,7 @@ Hex:           F    0    A    5      →  0xF0A5
 <blockquote>
 <p><strong>Cẩn thận:</strong> <code>int x = 010;</code> là số <strong>8</strong>, không phải 10, vì số bắt đầu bằng <code>0</code> là hệ bát phân. Đây là nguồn lỗi thú vị khi bạn định &quot;căn số cho thẳng hàng&quot;.</p>
 </blockquote>
-<h3>Chương trình in số ở nhiều hệ</h3>
+<h3 id="h-5">Chương trình in số ở nhiều hệ</h3>
 <pre class="hljs"><code><span class="hljs-comment">// bases.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 
@@ -91,7 +94,7 @@ Hex:           F    0    A    5      →  0xF0A5
 }
 </code></pre>
 <p>Kết quả: <code>255</code>, <code>ff (FF, 0xff)</code>, <code>377</code>.</p>
-<h2>2.2. Số nguyên có dấu và bù hai</h2>
+<h2 id="s2-2">2.2. Số nguyên có dấu và bù hai</h2>
 <p>Với <strong>số nguyên không dấu (unsigned)</strong> n bit, các giá trị từ 0 đến 2ⁿ − 1. Với 8 bit là 0..255.</p>
 <p>Với <strong>số nguyên có dấu (signed)</strong>, gần như mọi máy tính hiện nay dùng phương pháp <strong>bù hai (two's complement)</strong>. Bit cao nhất là <strong>bit dấu</strong>: <code>0</code> là số không âm, <code>1</code> là số âm.</p>
 <p>Cách tính giá trị: bit dấu có trọng số <strong>âm</strong>. Ví dụ với 8 bit, trọng số từ trái sang phải là −128, 64, 32, 16, 8, 4, 2, 1.</p>
@@ -107,8 +110,8 @@ Hex:           F    0    A    5      →  0xF0A5
 cộng 1   1111 1011  =  -5
 </code></pre>
 <p>Vì sao dùng bù hai? Vì phép cộng phần cứng dùng <strong>chung một mạch</strong> cho cả số âm và số dương: <code>5 + (-5)</code> cho <code>0000 0101 + 1111 1011 = 1 0000 0000</code>, bit thứ 9 bị bỏ đi, còn <code>0000 0000</code> = 0.</p>
-<h3>Khoảng giá trị</h3>
-<table>
+<h3 id="h-6">Khoảng giá trị</h3>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Số bit</th>
@@ -138,8 +141,8 @@ cộng 1   1111 1011  =  -5
 <td>0 … 1,84×10¹⁹</td>
 </tr>
 </tbody>
-</table>
-<h3>Tràn số (overflow)</h3>
+</table></div>
+<h3 id="h-7">Tràn số (overflow)</h3>
 <p>Điều gì xảy ra khi vượt khoảng giá trị?</p>
 <ul>
 <li>Với <strong>số không dấu</strong>, C định nghĩa rõ: giá trị &quot;quay vòng&quot; (modulo 2ⁿ). <code>255 + 1</code> trong <code>unsigned char</code> là <code>0</code>.</li>
@@ -165,9 +168,9 @@ cộng 1   1111 1011  =  -5
 }
 </code></pre>
 <p><code>&lt;limits.h&gt;</code> cung cấp các hằng như <code>INT_MIN</code>, <code>INT_MAX</code>, <code>CHAR_BIT</code> (số bit trong một byte, thường là 8).</p>
-<h2>2.3. Số thực (dấu phẩy động)</h2>
+<h2 id="s2-3">2.3. Số thực (dấu phẩy động)</h2>
 <p>Số thực như 3,14 được lưu theo chuẩn <strong>IEEE 754</strong>, gồm ba phần: <strong>dấu</strong>, <strong>số mũ</strong> và <strong>phần định trị (mantissa)</strong>, tương tự ký hiệu khoa học <code>1.5 × 10³</code>, nhưng cơ số là 2.</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Kiểu</th>
@@ -192,7 +195,7 @@ cộng 1   1111 1011  =  -5
 <td>nhiều hơn</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Điều <strong>cực kỳ quan trọng</strong>: đa số số thập phân <strong>không biểu diễn chính xác</strong> trong hệ nhị phân, giống như 1/3 không viết chính xác được bằng thập phân hữu hạn.</p>
 <pre class="hljs"><code><span class="hljs-comment">// float_trap.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
@@ -212,11 +215,11 @@ cộng 1   1111 1011  =  -5
 </code></pre>
 <p>Biên dịch: <code>gcc -std=c11 -Wall -Wextra float_trap.c -o float_trap -lm</code> (<code>-lm</code> để liên kết thư viện toán <code>fabs</code>).</p>
 <p><strong>Quy tắc:</strong> <em>không bao giờ so sánh hai số thực bằng <code>==</code>.</em> Hãy so sánh giá trị tuyệt đối của hiệu với một ngưỡng sai số. Với tiền tệ, hãy lưu số nguyên (đơn vị nhỏ nhất, ví dụ đồng hoặc xu) thay vì <code>double</code>.</p>
-<h2>2.4. Ký tự và bảng mã</h2>
+<h2 id="s2-4">2.4. Ký tự và bảng mã</h2>
 <p>Máy tính chỉ hiểu số, nên ký tự được lưu dưới dạng <strong>mã số</strong> theo một bảng mã.</p>
-<h3>ASCII</h3>
+<h3 id="h-8">ASCII</h3>
 <p><strong>ASCII</strong> là bảng mã 7 bit gồm 128 ký tự (mã 0–127). Vài mã đáng nhớ:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Ký tự</th>
@@ -256,7 +259,7 @@ cộng 1   1111 1011  =  -5
 <td>Ký tự null</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Trong C, kiểu <code>char</code> thực chất là một <strong>số nguyên nhỏ</strong> (1 byte). <code>'A'</code> chính là số 65:</p>
 <pre class="hljs"><code><span class="hljs-comment">// char_is_number.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
@@ -278,14 +281,14 @@ cộng 1   1111 1011  =  -5
 }
 </code></pre>
 <p>Mẹo <code>digit - '0'</code> hoạt động vì các chữ số có mã liên tiếp.</p>
-<h3>Unicode và UTF-8</h3>
+<h3 id="h-9">Unicode và UTF-8</h3>
 <p>ASCII không đủ cho tiếng Việt, tiếng Trung, emoji... <strong>Unicode</strong> gán mỗi ký tự một <em>code point</em> (ví dụ <code>ệ</code> là U+1EC7). <strong>UTF-8</strong> là cách mã hóa Unicode thành byte, độ dài <strong>1 đến 4 byte</strong> mỗi ký tự:</p>
 <ul>
 <li>Ký tự ASCII (<code>A</code>, <code>1</code>) chiếm 1 byte, giống hệt ASCII.</li>
 <li>Chữ có dấu tiếng Việt thường chiếm 2 hoặc 3 byte. <code>ệ</code> chiếm 3 byte.</li>
 </ul>
 <p>Hệ quả cho người viết C: <code>strlen(&quot;Việt&quot;)</code> trả về số <strong>byte</strong>, không phải số ký tự; nó cho 6 chứ không phải 4. Chương 7 sẽ quay lại vấn đề này.</p>
-<h3>Thư viện <code>&lt;ctype.h&gt;</code></h3>
+<h3 id="h-10">Thư viện <code>&lt;ctype.h&gt;</code></h3>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;ctype.h&gt;</span></span>
 
 <span class="hljs-built_in">isdigit</span>(c)   <span class="hljs-comment">// c là chữ số &#x27;0&#x27;..&#x27;9&#x27;?</span>
@@ -295,7 +298,7 @@ cộng 1   1111 1011  =  -5
 <span class="hljs-built_in">tolower</span>(c)   <span class="hljs-comment">// đổi thành chữ thường</span>
 </code></pre>
 <p>Các hàm này nhận <code>int</code>. Khi truyền <code>char</code> có thể âm, hãy ép sang <code>unsigned char</code>: <code>isdigit((unsigned char)c)</code>.</p>
-<h2>2.5. Kích thước kiểu dữ liệu và <code>sizeof</code></h2>
+<h2 id="s2-5">2.5. Kích thước kiểu dữ liệu và <code>sizeof</code></h2>
 <p>Toán tử <code>sizeof</code> cho biết một kiểu hoặc biến chiếm <strong>bao nhiêu byte</strong>. Kết quả có kiểu <code>size_t</code> (số nguyên không dấu), in bằng <code>%zu</code>.</p>
 <pre class="hljs"><code><span class="hljs-comment">// sizes.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
@@ -319,7 +322,7 @@ cộng 1   1111 1011  =  -5
 }
 </code></pre>
 <p>Chuẩn C chỉ đảm bảo: <code>sizeof(char)</code> là 1 và <code>sizeof(short) ≤ sizeof(int) ≤ sizeof(long) ≤ sizeof(long long)</code>. Số byte cụ thể <strong>tùy nền tảng</strong>:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Kiểu</th>
@@ -349,10 +352,10 @@ cộng 1   1111 1011  =  -5
 <td>8</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Điểm khác biệt của <code>long</code> là bẫy kinh điển khi chuyển mã giữa Windows và Linux. Vì vậy, khi cần độ rộng cố định, hãy dùng các kiểu trong <code>&lt;stdint.h&gt;</code>: <code>int8_t</code>, <code>uint8_t</code>, <code>int16_t</code>, <code>int32_t</code>, <code>uint32_t</code>, <code>int64_t</code>, <code>uint64_t</code>. Khi cần một số đo kích thước hoặc chỉ số mảng, dùng <code>size_t</code>.</p>
 <p>Mẹo hay: <code>sizeof(arr) / sizeof(arr[0])</code> cho số phần tử của <strong>mảng</strong> (chỉ đúng khi <code>arr</code> là mảng thực sự, không phải con trỏ — xem chương 7 và 8).</p>
-<h2>2.6. Endianness — thứ tự byte trong bộ nhớ</h2>
+<h2 id="s2-6">2.6. Endianness — thứ tự byte trong bộ nhớ</h2>
 <p>Một <code>int</code> 32 bit gồm 4 byte. Vậy 4 byte đó nằm trong bộ nhớ theo thứ tự nào? Có hai cách:</p>
 <ul>
 <li><strong>Little-endian:</strong> byte <em>ít quan trọng nhất</em> (LSB) lưu ở địa chỉ thấp nhất. Dùng bởi x86, x86-64, đa số ARM.</li>
@@ -379,7 +382,7 @@ Big-endian:       12    34    56    78
 }
 </code></pre>
 <p>Trên PC/laptop thông thường bạn sẽ thấy <code>78 56 34 12</code> — little-endian. Đây là lần đầu bạn dùng con trỏ; đừng lo nếu chưa hiểu hết, chương 8 sẽ giải thích. Điều cần nhớ: <strong>endianness quan trọng khi ghi dữ liệu nhị phân ra file hoặc gửi qua mạng</strong> giữa các máy khác nhau.</p>
-<h2>2.7. Bộ nhớ của một chương trình đang chạy</h2>
+<h2 id="s2-7">2.7. Bộ nhớ của một chương trình đang chạy</h2>
 <p>Khi chương trình chạy, hệ điều hành cấp cho nó một không gian bộ nhớ ảo, chia thành các vùng. Sơ đồ (địa chỉ thấp ở trên, cao ở dưới; chi tiết bố trí phụ thuộc hệ điều hành):</p>
 <pre class="hljs"><code>địa chỉ thấp
 ┌──────────────────────────┐
@@ -397,19 +400,19 @@ Big-endian:       12    34    56    78
 └──────────────────────────┘
 địa chỉ cao
 </code></pre>
-<h3>Stack (ngăn xếp)</h3>
+<h3 id="h-11">Stack (ngăn xếp)</h3>
 <ul>
 <li>Lưu <strong>biến cục bộ</strong>, <strong>tham số</strong> và <strong>địa chỉ trở về</strong> của mỗi lần gọi hàm.</li>
 <li>Mỗi lần gọi hàm tạo ra một <strong>stack frame</strong>; khi hàm kết thúc, frame bị hủy. Do đó biến cục bộ <strong>tự động</strong> biến mất.</li>
 <li>Rất nhanh (chỉ dịch chuyển một thanh ghi), nhưng dung lượng <strong>hạn chế</strong> (thường 1–8 MB). Khai báo mảng cục bộ quá lớn hoặc đệ quy quá sâu gây <strong>stack overflow</strong>.</li>
 </ul>
-<h3>Heap (vùng cấp phát động)</h3>
+<h3 id="h-12">Heap (vùng cấp phát động)</h3>
 <ul>
 <li>Bộ nhớ bạn xin bằng <code>malloc</code>/<code>calloc</code>, và <strong>phải tự trả</strong> bằng <code>free</code>.</li>
 <li>Tồn tại cho đến khi bạn <code>free</code> (không mất khi hàm kết thúc), dung lượng lớn.</li>
 <li>Chậm hơn stack, và nếu quên <code>free</code> sẽ gây <strong>rò rỉ bộ nhớ (memory leak)</strong>.</li>
 </ul>
-<h3>Minh họa</h3>
+<h3 id="h-13">Minh họa</h3>
 <pre class="hljs"><code><span class="hljs-comment">// memory_regions.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
@@ -448,7 +451,7 @@ Big-endian:       12    34    56    78
 }
 </code></pre>
 <p>Chương 9 sẽ đi sâu vào quản lý bộ nhớ động.</p>
-<h2>2.8. Bức tranh về assembly và stack frame</h2>
+<h2 id="s2-8">2.8. Bức tranh về assembly và stack frame</h2>
 <p>Bạn không cần viết assembly, nhưng nhìn qua nó giúp hiểu C &quot;dịch&quot; thành gì. Tạo file:</p>
 <pre class="hljs"><code><span class="hljs-comment">// add.c</span>
 <span class="hljs-type">int</span> <span class="hljs-title function_">add</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span> {
@@ -471,7 +474,7 @@ Big-endian:       12    34    56    78
     ret                ; quay về nơi gọi; giá trị trả về nằm trong eax
 </code></pre>
 <p>Ý chính: tham số truyền qua thanh ghi (theo quy ước gọi hàm của nền tảng), biến cục bộ nằm ở địa chỉ tương đối so với <code>rbp</code> trên stack, và giá trị trả về đặt trong thanh ghi <code>eax</code>. Đây là lý do trả về <strong>địa chỉ của biến cục bộ</strong> là lỗi: frame đã biến mất (xem chương 6 và 9).</p>
-<h2>2.9. An toàn khi làm việc với bộ nhớ</h2>
+<h2 id="s2-9">2.9. An toàn khi làm việc với bộ nhớ</h2>
 <p>Ba thói quen phải hình thành ngay:</p>
 <ol>
 <li><strong>Giới hạn khi đọc chuỗi:</strong> dùng <code>fgets(buf, sizeof buf, stdin)</code>, không dùng <code>gets</code>.</li>
@@ -483,8 +486,8 @@ Big-endian:       12    34    56    78
 
 <span class="hljs-type">int</span> y = <span class="hljs-number">0</span>;           <span class="hljs-comment">// đúng</span>
 </code></pre>
-<h2>2.10. Thực hành</h2>
-<h3>Thực hành 1: đổi số nguyên sang chuỗi nhị phân</h3>
+<h2 id="s2-10">2.10. Thực hành</h2>
+<h3 id="h-14">Thực hành 1: đổi số nguyên sang chuỗi nhị phân</h3>
 <pre class="hljs"><code><span class="hljs-comment">// bin_convert.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdint.h&gt;</span></span>
@@ -506,7 +509,7 @@ Big-endian:       12    34    56    78
 }
 </code></pre>
 <p>Điểm học được: <code>n &gt;&gt; i</code> dịch bit sang phải <code>i</code> vị trí; <code>&amp; 1</code> giữ lại bit thấp nhất. Bạn sẽ gặp lại các toán tử bit ở chương 4.</p>
-<h3>Thực hành 2: bảng ASCII</h3>
+<h3 id="h-15">Thực hành 2: bảng ASCII</h3>
 <pre class="hljs"><code><span class="hljs-comment">// ascii_table.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;ctype.h&gt;</span></span>
@@ -519,7 +522,7 @@ Big-endian:       12    34    56    78
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </code></pre>
-<h3>Thực hành 3: <code>malloc</code>, <code>realloc</code>, <code>free</code></h3>
+<h3 id="h-16">Thực hành 3: <code>malloc</code>, <code>realloc</code>, <code>free</code></h3>
 <pre class="hljs"><code><span class="hljs-comment">// demo_malloc.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
@@ -546,8 +549,8 @@ Big-endian:       12    34    56    78
 }
 </code></pre>
 <p>Trên Linux kiểm tra rò rỉ: <code>gcc -g -o demo demo_malloc.c &amp;&amp; valgrind --leak-check=full ./demo</code>. Kết quả mong đợi: <code>All heap blocks were freed -- no leaks are possible</code>.</p>
-<h2>2.11. Lỗi thường gặp</h2>
-<table>
+<h2 id="s2-11">2.11. Lỗi thường gặp</h2>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Lỗi</th>
@@ -592,8 +595,8 @@ Big-endian:       12    34    56    78
 <td>Thêm <code>-lm</code></td>
 </tr>
 </tbody>
-</table>
-<h2>2.12. Tóm tắt</h2>
+</table></div>
+<h2 id="s2-12">2.12. Tóm tắt</h2>
 <ul>
 <li>Mọi dữ liệu là các bit; 8 bit = 1 byte; hex là cách viết gọn của nhị phân.</li>
 <li>Số âm dùng bù hai; tràn số có dấu là hành vi không xác định.</li>
@@ -602,7 +605,7 @@ Big-endian:       12    34    56    78
 <li><code>sizeof</code> cho kích thước theo byte; dùng <code>&lt;stdint.h&gt;</code> khi cần kích thước cố định.</li>
 <li>Stack chứa biến cục bộ (tự động); heap chứa dữ liệu cấp phát bằng <code>malloc</code> (phải <code>free</code>).</li>
 </ul>
-<h2>2.13. Bài tập</h2>
+<h2 id="s2-13">2.13. Bài tập</h2>
 <ol>
 <li>Đổi bằng tay các số sau sang nhị phân và hex: 10, 100, 255. Kiểm tra bằng chương trình <code>bases.c</code>.</li>
 <li>Viết tay biểu diễn bù hai 8 bit của −1, −10, −128. Xác nhận bằng <code>print_binary</code>.</li>
@@ -615,8 +618,26 @@ Big-endian:       12    34    56    78
 <p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-02">code/chapter-02</a></p>
 
 </article>
-<div class="chapter-nav"><a class="nav-prev" href="chapter-01.html">&larr; Giới thiệu và chương trình C đầu tiên</a><a class="nav-next" href="chapter-03.html">Lịch sử và triết lý của ngôn ngữ C &rarr;</a></div>
+<nav class="chapter-nav" aria-label="Điều hướng chương"><a class="nav-prev" href="chapter-01.html"><small>← Trước</small>Giới thiệu và chương trình C đầu tiên</a><a class="nav-next" href="chapter-03.html"><small>Tiếp →</small>Lịch sử và triết lý của ngôn ngữ C</a></nav>
 </main>
 </div>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,store=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
+  function setTheme(t){if(t==='light')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);store('theme',t);
+    document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.setAttribute('aria-pressed',String((b.dataset.themeBtn===t)||(t==='light'&&b.dataset.themeBtn==='light')))})}
+  var cur=root.getAttribute('data-theme')||'light';setTheme(cur);
+  document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.addEventListener('click',function(){setTheme(b.dataset.themeBtn)})});
+  var fs=parseInt(getComputedStyle(root).getPropertyValue('--fs'))||19;
+  document.querySelectorAll('[data-fs]').forEach(function(b){b.addEventListener('click',function(){fs=Math.min(26,Math.max(14,fs+parseInt(b.dataset.fs)));root.style.setProperty('--fs',fs+'px');store('fs',fs)})});
+  var mb=document.getElementById('menu-btn');if(mb)mb.addEventListener('click',function(){document.body.classList.toggle('nav-open')});
+  document.addEventListener('click',function(e){if(document.body.classList.contains('nav-open')&&!e.target.closest('#sidebar')&&e.target.id!=='menu-btn')document.body.classList.remove('nav-open')});
+  document.querySelectorAll('pre').forEach(function(pre){var b=document.createElement('button');b.className='copy-btn';b.type='button';b.textContent='Sao chép';
+    b.addEventListener('click',function(){var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Đã chép'},function(){b.textContent='Lỗi'});setTimeout(function(){b.textContent='Sao chép'},1500)});pre.appendChild(b)});
+  var a=document.querySelector('.chapter-link.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'center'});
+})();
+</script>
 </body>
 </html>

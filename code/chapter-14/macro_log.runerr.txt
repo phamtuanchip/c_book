@@ -1,8 +1,0 @@
-﻿cmd.exe : C:\Users\phamt\project\c_book\code\chapter-14\macro_log.c:8: INFO: Program started
-At line:30 char:13
-+             & cmd /c $cmdline > $runOut 2> $runErr
-+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : NotSpecified: (C:\Users\phamt\...Program started:String) [], RemoteException
-    + FullyQualifiedErrorId : NativeCommandError
- 
-C:\Users\phamt\project\c_book\code\chapter-14\macro_log.c:10: DEBUG: x = 5

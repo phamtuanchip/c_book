@@ -5,6 +5,7 @@
 ## Bài 1: in tên, năm sinh, quê quán
 
 ```c
+// hello_info.c
 #include <stdio.h>
 
 int main(void) {
@@ -20,6 +21,7 @@ int main(void) {
 ## Bài 2: đọc tên bằng `fgets` và chào
 
 ```c
+// greet_name.c
 #include <stdio.h>
 #include <string.h>
 
@@ -41,10 +43,12 @@ int main(void) {
 ## Bài 3: bốn phép toán, xử lý chia cho 0
 
 ```c
+// arith_safe.c
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
 #include <errno.h>
+#include <string.h>
 
 // Đọc một số nguyên từ một dòng; trả 0 nếu hợp lệ
 static int read_int(const char *prompt, int *out) {
@@ -55,7 +59,7 @@ static int read_int(const char *prompt, int *out) {
     char *end;
     errno = 0;
     long v = strtol(buf, &end, 10);
-    if (end == buf || (*end != '\n' && *end != '\0')) return -1;   // không phải số / có ký tự thừa
+    if (end == buf || strpbrk(buf, "0123456789") == NULL || (*end != '\n' && *end != '\0')) return -1;   // không phải số / có ký tự thừa
     if (errno == ERANGE || v < INT_MIN || v > INT_MAX) return -1;  // ngoài phạm vi int
     *out = (int)v;
     return 0;
@@ -89,6 +93,7 @@ int main(void) {
 ## Bài 4: độ dài chuỗi bằng `strlen` và bằng vòng lặp
 
 ```c
+// strlen_demo.c
 #include <stdio.h>
 #include <string.h>
 

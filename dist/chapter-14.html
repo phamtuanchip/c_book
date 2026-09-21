@@ -4,15 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tiền xử lý & macro nâng cao — Lập trình C — Từ cơ bản đến nâng cao</title>
+<script>try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.setAttribute('data-theme',t);var f=localStorage.getItem('fs');if(f)document.documentElement.style.setProperty('--fs',f+'px')}catch(e){}</script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="layout">
-<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link active" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<nav class="sidebar" id="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Phần I — Nhập môn</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp &amp; cấu trúc chương trình C</a></li></ul></li><li class="part"><div class="part-title">Phần II — Nền tảng ngôn ngữ</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm &amp; phạm vi biến (Functions &amp; Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng &amp; chuỗi (Arrays &amp; Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li></ul></li><li class="part"><div class="part-title">Phần III — Bộ nhớ, dữ liệu, xây dựng</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O &amp; thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi &amp; ngoại lệ trong C</a></li></ul></li><li class="part"><div class="part-title">Phần IV — Kỹ thuật nâng cao</div><ul class="chapter-list"><li><a class="chapter-link active" href="chapter-14.html">14. Tiền xử lý &amp; macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng &amp; đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa &amp; profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật &amp; an toàn bộ nhớ</a></li></ul></li><li class="part"><div class="part-title">Phần V — Dự án và phát hành</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing &amp; CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging &amp; deploy</a></li></ul></li><li class="part"><div class="part-title">Phụ lục — Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li><li><a class="chapter-link" href="solutions-02.html">Lời giải chương 2</a></li><li><a class="chapter-link" href="solutions-03.html">Lời giải chương 3</a></li><li><a class="chapter-link" href="solutions-04.html">Lời giải chương 4</a></li><li><a class="chapter-link" href="solutions-05.html">Lời giải chương 5</a></li><li><a class="chapter-link" href="solutions-06.html">Lời giải chương 6</a></li><li><a class="chapter-link" href="solutions-07.html">Lời giải chương 7</a></li><li><a class="chapter-link" href="solutions-08.html">Lời giải chương 8</a></li><li><a class="chapter-link" href="solutions-09.html">Lời giải chương 9</a></li><li><a class="chapter-link" href="solutions-10.html">Lời giải chương 10</a></li><li><a class="chapter-link" href="solutions-11.html">Lời giải chương 11</a></li><li><a class="chapter-link" href="solutions-12.html">Lời giải chương 12</a></li><li><a class="chapter-link" href="solutions-13.html">Lời giải chương 13</a></li><li><a class="chapter-link" href="solutions-14.html">Lời giải chương 14</a></li><li><a class="chapter-link" href="solutions-15.html">Lời giải chương 15</a></li><li><a class="chapter-link" href="solutions-16.html">Lời giải chương 16</a></li><li><a class="chapter-link" href="solutions-17.html">Lời giải chương 17</a></li><li><a class="chapter-link" href="solutions-18.html">Lời giải chương 18</a></li><li><a class="chapter-link" href="solutions-19.html">Lời giải chương 19</a></li><li><a class="chapter-link" href="solutions-20.html">Lời giải chương 20</a></li><li><a class="chapter-link" href="solutions-21.html">Lời giải chương 21</a></li><li><a class="chapter-link" href="solutions-22.html">Lời giải chương 22</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<div class="main-col">
+<header class="topbar"><button class="menu-btn" id="menu-btn" type="button" aria-label="Mục lục">☰</button><span class="crumb">Phần IV · Chương 14</span><span class="tools"><button data-fs="-1" type="button" title="Chữ nhỏ hơn">A−</button><button data-fs="1" type="button" title="Chữ lớn hơn">A+</button><button data-theme-btn="light" type="button" title="Nền sáng">Sáng</button><button data-theme-btn="sepia" type="button" title="Nền sepia">Sepia</button><button data-theme-btn="dark" type="button" title="Nền tối">Tối</button></span></header>
 <main class="content">
 <article>
-<h1>Chương 14 — Tiền xử lý &amp; macro nâng cao</h1>
-<h2>Mục tiêu chương</h2>
+<header class="chapter-head"><div class="chapter-num">Chương 14</div><h1>Tiền xử lý &amp; macro nâng cao</h1></header><nav class="chapter-toc" aria-label="Trong chương này"><div class="toc-title">Trong chương này</div><ol><li><a href="#s14-1">14.1. Bộ tiền xử lý làm gì?</a></li><li><a href="#s14-2">14.2. Macro dạng đối tượng và dạng hàm</a></li><li><a href="#s14-3">14.3. Các bẫy kinh điển của macro</a></li><li><a href="#s14-4">14.4. Chuỗi hóa # và nối token ##</a></li><li><a href="#s14-5">14.5. Macro biến thiên (variadic)</a></li><li><a href="#s14-6">14.6. X-macro — một danh sách, nhiều sản phẩm</a></li><li><a href="#s14-7">14.7. Thay thế macro bằng cơ chế tốt hơn</a></li><li><a href="#s14-8">14.8. Biên dịch có điều kiện</a></li><li><a href="#s14-9">14.9. Ví dụ hoàn chỉnh: bộ dò lỗi nhẹ</a></li><li><a href="#s14-10">14.10. Lỗi thường gặp</a></li><li><a href="#s14-11">14.11. Tóm tắt</a></li><li><a href="#s14-12">14.12. Bài tập</a></li></ol></nav>
+<h2 id="h-1">Mục tiêu chương</h2>
 <ul>
 <li>Hiểu <strong>bộ tiền xử lý</strong> làm gì, ở giai đoạn nào, và nó chỉ thao tác trên <strong>văn bản</strong>.</li>
 <li>Viết macro có tham số đúng cách, tránh các bẫy: thiếu ngoặc, đánh giá nhiều lần, <code>;</code> thừa, tên trùng.</li>
@@ -21,7 +24,7 @@
 <li>Biên dịch có điều kiện (<code>#if</code>, <code>#ifdef</code>), macro định sẵn, kiểm tra tính năng/nền tảng.</li>
 <li>Biết khi nào nên dùng hàm <code>static inline</code>, <code>_Generic</code>, <code>enum</code> thay cho macro.</li>
 </ul>
-<h2>14.1. Bộ tiền xử lý làm gì?</h2>
+<h2 id="s14-1">14.1. Bộ tiền xử lý làm gì?</h2>
 <p>Trước khi compiler dịch mã, <strong>bộ tiền xử lý (preprocessor)</strong> biến đổi mã nguồn dạng văn bản:</p>
 <ol>
 <li>Ghép các dòng kết thúc bằng <code>\</code> (nối dòng).</li>
@@ -35,8 +38,8 @@
 gcc -E -P main.c &gt; out.i <span class="hljs-comment"># bỏ các dòng #line, ghi ra file</span>
 </code></pre>
 <p><code>gcc -E</code> là <strong>công cụ gỡ lỗi macro số một</strong>: khi macro cho kết quả kỳ lạ, hãy nhìn xem nó mở rộng thành gì.</p>
-<h3>Các chỉ thị chính</h3>
-<table>
+<h3 id="h-2">Các chỉ thị chính</h3>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Chỉ thị</th>
@@ -77,9 +80,9 @@ gcc -E -P main.c &gt; out.i <span class="hljs-comment"># bỏ các dòng #line, 
 <td>hiếm dùng</td>
 </tr>
 </tbody>
-</table>
-<h2>14.2. Macro dạng đối tượng và dạng hàm</h2>
-<h3>Macro dạng đối tượng (object-like)</h3>
+</table></div>
+<h2 id="s14-2">14.2. Macro dạng đối tượng và dạng hàm</h2>
+<h3 id="h-3">Macro dạng đối tượng (object-like)</h3>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> MAX_USERS 100</span>
 <span class="hljs-meta">#<span class="hljs-keyword">define</span> VERSION   <span class="hljs-string">&quot;1.2.0&quot;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">define</span> PI        3.14159265358979323846</span>
@@ -88,13 +91,13 @@ gcc -E -P main.c &gt; out.i <span class="hljs-comment"># bỏ các dòng #line, 
 </code></pre>
 <p>Bộ tiền xử lý thay thế <strong>từng token</strong> <code>MAX_USERS</code> bằng <code>100</code>. Không có kiểu, không có <code>;</code>. Đừng viết <code>#define MAX_USERS = 100;</code> (dấu <code>=</code> và <code>;</code> sẽ đi theo vào mã!).</p>
 <p>Với hằng số, ưu tiên <code>enum { MAX_USERS = 100 };</code> hoặc <code>static const</code>: có kiểu, xuất hiện trong debugger, theo phạm vi.</p>
-<h3>Macro dạng hàm (function-like)</h3>
+<h3 id="h-4">Macro dạng hàm (function-like)</h3>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> SQUARE(x) ((x) * (x))</span>
 <span class="hljs-meta">#<span class="hljs-keyword">define</span> MAX(a, b) ((a) &gt; (b) ? (a) : (b))</span>
 </code></pre>
 <p><strong>Không được có khoảng trắng giữa tên macro và dấu <code>(</code></strong> trong định nghĩa: <code>#define SQUARE (x) ...</code> là macro dạng đối tượng mở rộng thành <code>(x) ...</code>.</p>
-<h2>14.3. Các bẫy kinh điển của macro</h2>
-<h3>Bẫy 1: thiếu ngoặc</h3>
+<h2 id="s14-3">14.3. Các bẫy kinh điển của macro</h2>
+<h3 id="h-5">Bẫy 1: thiếu ngoặc</h3>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> DOUBLE(x) x * 2</span>
 <span class="hljs-type">int</span> r = DOUBLE(<span class="hljs-number">3</span> + <span class="hljs-number">4</span>);        <span class="hljs-comment">// mở rộng: 3 + 4 * 2 = 11  (mong đợi 14)</span>
 </code></pre>
@@ -104,7 +107,7 @@ gcc -E -P main.c &gt; out.i <span class="hljs-comment"># bỏ các dòng #line, 
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> ADD(a, b) (a) + (b)</span>
 <span class="hljs-type">int</span> r = ADD(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>) * <span class="hljs-number">3</span>;        <span class="hljs-comment">// 1 + 2 * 3 = 7 (mong đợi 9)   -&gt; phải là ((a) + (b))</span>
 </code></pre>
-<h3>Bẫy 2: đánh giá tham số nhiều lần</h3>
+<h3 id="h-6">Bẫy 2: đánh giá tham số nhiều lần</h3>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> MAX(a, b) ((a) &gt; (b) ? (a) : (b))</span>
 
 <span class="hljs-type">int</span> i = <span class="hljs-number">5</span>, j = <span class="hljs-number">3</span>;
@@ -120,7 +123,7 @@ gcc -E -P main.c &gt; out.i <span class="hljs-comment"># bỏ các dòng #line, 
 <ul>
 <li>Hoặc dùng <code>_Generic</code> (C11), xem 14.7.</li>
 </ul>
-<h3>Bẫy 3: macro nhiều câu lệnh và dấu <code>;</code></h3>
+<h3 id="h-7">Bẫy 3: macro nhiều câu lệnh và dấu <code>;</code></h3>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> SWAP(a, b) int t = a; a = b; b = t;</span>
 
 <span class="hljs-keyword">if</span> (x &gt; y)
@@ -136,19 +139,19 @@ gcc -E -P main.c &gt; out.i <span class="hljs-comment"># bỏ các dòng #line, 
     ...
 </code></pre>
 <p>Mẫu <code>do { ... } while (0)</code> là chuẩn mực cho macro nhiều lệnh.</p>
-<h3>Bẫy 4: va chạm tên (không có phạm vi)</h3>
+<h3 id="h-8">Bẫy 4: va chạm tên (không có phạm vi)</h3>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> SWAP(a, b) do { int t = (a); (a) = (b); (b) = t; } while (0)</span>
 
 <span class="hljs-type">int</span> t = <span class="hljs-number">1</span>, u = <span class="hljs-number">2</span>;
 SWAP(t, u);                   <span class="hljs-comment">// int t = (t); ... -&gt; biến t trong macro che t bên ngoài -&gt; sai</span>
 </code></pre>
 <p>Đặt tên biến nội bộ khó trùng (<code>_t</code>, <code>swap_tmp__</code>) hoặc tránh macro và dùng hàm.</p>
-<h3>Bẫy 5: macro không có kiểu và bị nhân đôi mã</h3>
+<h3 id="h-9">Bẫy 5: macro không có kiểu và bị nhân đôi mã</h3>
 <p>Vì là văn bản, <code>MAX(&quot;a&quot;, 5)</code> không gặp lỗi kiểu ở macro mà ở vị trí sử dụng, với thông báo lỗi khó đọc. Và mỗi lần dùng sinh ra một bản mã mới (phình mã).</p>
-<h3>Bẫy 6: đệ quy macro và tên trùng hàm</h3>
+<h3 id="h-10">Bẫy 6: đệ quy macro và tên trùng hàm</h3>
 <p>Macro <strong>không đệ quy</strong>: tên macro không được mở rộng lại bên trong chính nó. Và nếu một macro trùng tên với hàm/biến (ví dụ <code>#define min(a,b)</code>), nó có thể phá vỡ mã trong header hệ thống. Đặt tên macro bằng <strong>CHỮ HOA</strong> (quy ước) để dễ nhận ra.</p>
-<h2>14.4. Chuỗi hóa <code>#</code> và nối token <code>##</code></h2>
-<h3><code>#</code> — biến tham số thành chuỗi</h3>
+<h2 id="s14-4">14.4. Chuỗi hóa <code>#</code> và nối token <code>##</code></h2>
+<h3 id="h-11"><code>#</code> — biến tham số thành chuỗi</h3>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> STR(x) #x</span>
 <span class="hljs-meta">#<span class="hljs-keyword">define</span> SHOW(expr) printf(#expr <span class="hljs-string">&quot; = %d\n&quot;</span>, (expr))</span>
 
@@ -163,7 +166,7 @@ SHOW(<span class="hljs-number">3</span> + <span class="hljs-number">4</span>);  
 
 <span class="hljs-type">const</span> <span class="hljs-type">char</span> *v = <span class="hljs-string">&quot;v&quot;</span> STR(VERSION_MAJOR);   <span class="hljs-comment">// &quot;v2&quot; (nếu chỉ dùng #x trực tiếp sẽ ra &quot;VERSION_MAJOR&quot;)</span>
 </code></pre>
-<h3><code>##</code> — nối hai token thành một</h3>
+<h3 id="h-12"><code>##</code> — nối hai token thành một</h3>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> CONCAT(a, b) a##b</span>
 <span class="hljs-type">int</span> <span class="hljs-title function_">CONCAT</span><span class="hljs-params">(var, <span class="hljs-number">1</span>)</span> = <span class="hljs-number">10</span>;            <span class="hljs-comment">// int var1 = 10;</span>
 
@@ -191,9 +194,9 @@ DEFINE_VEC(<span class="hljs-type">int</span>)          <span class="hljs-commen
 DEFINE_VEC(<span class="hljs-type">double</span>)       <span class="hljs-comment">// sinh Vec_double và Vec_double_push</span>
 </code></pre>
 <p>Nhược điểm: mã khó đọc, lỗi báo ở dòng macro, khó debug. Dùng có chừng mực.</p>
-<h3>Nối dòng bằng <code>\</code></h3>
+<h3 id="h-13">Nối dòng bằng <code>\</code></h3>
 <p>Ký tự <code>\</code> ở cuối dòng nối dòng tiếp theo; <strong>không được có khoảng trắng sau <code>\</code></strong>.</p>
-<h2>14.5. Macro biến thiên (variadic)</h2>
+<h2 id="s14-5">14.5. Macro biến thiên (variadic)</h2>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> LOG(fmt, ...) fprintf(stderr, <span class="hljs-string">&quot;[%s:%d] &quot;</span> fmt <span class="hljs-string">&quot;\n&quot;</span>, __FILE__, __LINE__, __VA_ARGS__)</span>
 
 LOG(<span class="hljs-string">&quot;x = %d, y = %d&quot;</span>, x, y);       <span class="hljs-comment">// OK</span>
@@ -207,14 +210,14 @@ LOG(<span class="hljs-string">&quot;khoi dong&quot;</span>);                  <s
 <span class="hljs-meta">#<span class="hljs-keyword">define</span> LOG2(...) fprintf(stderr, <span class="hljs-string">&quot;[%s:%d] &quot;</span> __VA_ARGS__, __FILE__, __LINE__)</span>
 </code></pre>
 <p>(C23 chuẩn hóa <code>__VA_OPT__(,)</code>.) Macro biến thiên thường dùng cho log và debug.</p>
-<h3>Đếm số đối số (kỹ thuật nâng cao)</h3>
+<h3 id="h-14">Đếm số đối số (kỹ thuật nâng cao)</h3>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> COUNT_ARGS(...) COUNT_ARGS_(__VA_ARGS__, 5, 4, 3, 2, 1, 0)</span>
 <span class="hljs-meta">#<span class="hljs-keyword">define</span> COUNT_ARGS_(_1, _2, _3, _4, _5, N, ...) N</span>
 
 <span class="hljs-type">int</span> n = COUNT_ARGS(a, b, c);    <span class="hljs-comment">// 3</span>
 </code></pre>
 <p>Mẹo này đẩy dãy số về phía sau tùy số đối số thật; hữu ích để &quot;nạp chồng&quot; macro theo số lượng đối số.</p>
-<h2>14.6. X-macro — một danh sách, nhiều sản phẩm</h2>
+<h2 id="s14-6">14.6. X-macro — một danh sách, nhiều sản phẩm</h2>
 <p><strong>Vấn đề:</strong> bạn có một danh sách (mã lỗi, lệnh, kiểu token) cần dùng ở <strong>nhiều nơi</strong>: một <code>enum</code>, một bảng chuỗi tên, một bảng hàm xử lý. Nếu viết tay từng nơi, thêm một mục phải sửa 3 chỗ và dễ lệch nhau.</p>
 <p><strong>X-macro:</strong> viết danh sách <strong>một lần</strong> dưới dạng macro gọi <code>X(...)</code> cho mỗi mục; rồi định nghĩa <code>X</code> khác nhau tùy mục đích và &quot;mở rộng&quot; danh sách.</p>
 <pre class="hljs"><code><span class="hljs-comment">// Danh sách duy nhất</span>
@@ -241,7 +244,7 @@ LOG(<span class="hljs-string">&quot;khoi dong&quot;</span>);                  <s
 }
 </code></pre>
 <p>Sau tiền xử lý, <code>ERROR_LIST(AS_ENUM)</code> thành <code>ERR_OK, ERR_IO, ERR_OOM, ERR_PARSE,</code>; enum, bảng chuỗi và bảng tên luôn đồng bộ. <strong>Thêm một mã lỗi mới chỉ cần thêm một dòng</strong> vào <code>ERROR_LIST</code>.</p>
-<h3>X-macro cho lệnh CLI</h3>
+<h3 id="h-15">X-macro cho lệnh CLI</h3>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> COMMANDS(X)                                   \
     X(help,   <span class="hljs-string">&quot;hien tro giup&quot;</span>)                        \
     X(start,  <span class="hljs-string">&quot;khoi dong dich vu&quot;</span>)                    \
@@ -269,15 +272,15 @@ COMMANDS(DECL)
 }
 </code></pre>
 <p>Thêm lệnh mới: thêm một dòng vào <code>COMMANDS</code> và viết hàm <code>cmd_xxx</code>. Nếu quên viết hàm, compiler báo lỗi ngay (chưa định nghĩa) — tốt hơn nhiều so với để bảng và enum lệch nhau âm thầm.</p>
-<h2>14.7. Thay thế macro bằng cơ chế tốt hơn</h2>
-<h3><code>static inline</code> thay macro tính toán</h3>
+<h2 id="s14-7">14.7. Thay thế macro bằng cơ chế tốt hơn</h2>
+<h3 id="h-16"><code>static inline</code> thay macro tính toán</h3>
 <pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-type">int</span> <span class="hljs-title function_">max_int</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span> { <span class="hljs-keyword">return</span> a &gt; b ? a : b; }
 </code></pre>
 <p>An toàn (một lần tính đối số), có kiểm tra kiểu, thấy được trong debugger. Compiler thường chèn thân hàm tại chỗ gọi (inlining) nên <strong>không chậm hơn</strong> macro.</p>
-<h3><code>enum</code> thay <code>#define</code> cho hằng nguyên</h3>
+<h3 id="h-17"><code>enum</code> thay <code>#define</code> cho hằng nguyên</h3>
 <pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">enum</span> {</span> BUFFER_SIZE = <span class="hljs-number">4096</span>, MAX_RETRIES = <span class="hljs-number">3</span> };
 </code></pre>
-<h3><code>_Generic</code> (C11) — chọn theo kiểu</h3>
+<h3 id="h-18"><code>_Generic</code> (C11) — chọn theo kiểu</h3>
 <p><code>_Generic(expr, kiểu1: giá_trị1, kiểu2: giá_trị2, default: ...)</code> chọn biểu thức dựa vào <strong>kiểu</strong> của <code>expr</code> lúc biên dịch:</p>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> ABS(x) _Generic((x),         \
     int:    abs,                     \
@@ -296,7 +299,7 @@ COMMANDS(DECL)
 <span class="hljs-built_in">puts</span>(TYPE_NAME(<span class="hljs-number">2.0</span>));      <span class="hljs-comment">// double</span>
 </code></pre>
 <p>Đây là cách C hiện đại tạo &quot;hàm nạp chồng&quot; (như <code>tgmath.h</code>).</p>
-<h3>Khi nào macro vẫn là lựa chọn đúng?</h3>
+<h3 id="h-19">Khi nào macro vẫn là lựa chọn đúng?</h3>
 <ul>
 <li>Điều kiện biên dịch (<code>#ifdef</code>).</li>
 <li>Chuỗi hóa/nối token (<code>#</code>, <code>##</code>).</li>
@@ -306,14 +309,14 @@ COMMANDS(DECL)
 </ul>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))   <span class="hljs-comment">// chỉ dùng cho MẢNG thật, không phải con trỏ</span></span>
 </code></pre>
-<h2>14.8. Biên dịch có điều kiện</h2>
+<h2 id="s14-8">14.8. Biên dịch có điều kiện</h2>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">if</span> defined(DEBUG)</span>
     <span class="hljs-meta">#<span class="hljs-keyword">define</span> TRACE(...) fprintf(stderr, __VA_ARGS__)</span>
 <span class="hljs-meta">#<span class="hljs-keyword">else</span></span>
     <span class="hljs-meta">#<span class="hljs-keyword">define</span> TRACE(...) ((void)0)</span>
 <span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
 </code></pre>
-<h3><code>#if</code> với biểu thức hằng</h3>
+<h3 id="h-20"><code>#if</code> với biểu thức hằng</h3>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> VERSION 3</span>
 
 <span class="hljs-meta">#<span class="hljs-keyword">if</span> VERSION &gt;= 3</span>
@@ -326,8 +329,8 @@ COMMANDS(DECL)
 </code></pre>
 <p><code>#if</code> chỉ tính <strong>biểu thức nguyên hằng</strong>: macro chưa định nghĩa được xem là <code>0</code>; không dùng được <code>sizeof</code>, ép kiểu. <code>defined(X)</code> (hoặc <code>defined X</code>) trả 1 nếu <code>X</code> được định nghĩa.</p>
 <p>Tắt tạm một đoạn mã (kể cả có chứa comment): <code>#if 0 ... #endif</code>.</p>
-<h3>Macro định sẵn (predefined)</h3>
-<table>
+<h3 id="h-21">Macro định sẵn (predefined)</h3>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Macro</th>
@@ -376,9 +379,9 @@ COMMANDS(DECL)
 <td>tắt <code>assert</code> nếu được định nghĩa</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Xem toàn bộ macro compiler định nghĩa sẵn: <code>gcc -dM -E - &lt; /dev/null</code>.</p>
-<h3>Mã cho nhiều nền tảng</h3>
+<h3 id="h-22">Mã cho nhiều nền tảng</h3>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">if</span> defined(_WIN32)</span>
     <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;windows.h&gt;</span></span>
     <span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">sleep_ms</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> ms)</span> { Sleep(ms); }
@@ -390,20 +393,20 @@ COMMANDS(DECL)
 <span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
 </code></pre>
 <p>Giữ mã phụ thuộc nền tảng <strong>gom vào một chỗ</strong> (một file/một lớp bọc) thay vì rải <code>#ifdef</code> khắp nơi — mã sẽ dễ đọc hơn nhiều.</p>
-<h3>Feature test macros</h3>
+<h3 id="h-23">Feature test macros</h3>
 <p>Nhiều hàm POSIX (<code>strdup</code>, <code>getline</code>, <code>clock_gettime</code>) chỉ được khai báo khi bạn yêu cầu, đặc biệt với <code>-std=c11</code> nghiêm ngặt. Đặt <strong>trước mọi <code>#include</code></strong>:</p>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> _POSIX_C_SOURCE 200809L</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;time.h&gt;</span></span>
 </code></pre>
 <p>Nếu không, bạn nhận cảnh báo <code>implicit declaration of function 'strdup'</code>.</p>
-<h3><code>#pragma</code></h3>
+<h3 id="h-24"><code>#pragma</code></h3>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">pragma</span> once                      <span class="hljs-comment">// include guard ngắn gọn (không phải chuẩn nhưng rất phổ biến)</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack(push, 1)             <span class="hljs-comment">// bỏ padding trong struct</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack(pop)</span>
 </code></pre>
 <p>C99 còn có <code>_Pragma(&quot;...&quot;)</code> để dùng <code>#pragma</code> bên trong macro.</p>
-<h3>Include guard và kiểm tra cấu hình</h3>
+<h3 id="h-25">Include guard và kiểm tra cấu hình</h3>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> CONFIG_H</span>
 <span class="hljs-meta">#<span class="hljs-keyword">define</span> CONFIG_H</span>
 <span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
@@ -414,7 +417,7 @@ COMMANDS(DECL)
 <span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
 </code></pre>
 <p>Cũng nên dùng <code>_Static_assert</code> (chương 13) cho kiểm tra dựa trên kích thước/kiểu.</p>
-<h2>14.9. Ví dụ hoàn chỉnh: bộ dò lỗi nhẹ</h2>
+<h2 id="s14-9">14.9. Ví dụ hoàn chỉnh: bộ dò lỗi nhẹ</h2>
 <pre class="hljs"><code><span class="hljs-comment">// tiny_test.h — khung kiểm thử tối giản dựa trên macro</span>
 <span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> TINY_TEST_H</span>
 <span class="hljs-meta">#<span class="hljs-keyword">define</span> TINY_TEST_H</span>
@@ -463,8 +466,8 @@ COMMANDS(DECL)
 3 kiem tra, 1 that bai
 </code></pre>
 <p>Ví dụ này dùng đủ kỹ thuật: <code>do { } while (0)</code>, <code>#cond</code> (chuỗi hóa biểu thức), <code>__FILE__</code>/<code>__LINE__</code>, biến cục bộ <code>_a</code>/<code>_e</code> để <strong>đánh giá đối số đúng một lần</strong>. Chương 21 dùng tiếp ý tưởng này.</p>
-<h2>14.10. Lỗi thường gặp</h2>
-<table>
+<h2 id="s14-10">14.10. Lỗi thường gặp</h2>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Lỗi</th>
@@ -519,8 +522,8 @@ COMMANDS(DECL)
 <td>Định nghĩa trước mọi <code>#include</code></td>
 </tr>
 </tbody>
-</table>
-<h2>14.11. Tóm tắt</h2>
+</table></div>
+<h2 id="s14-11">14.11. Tóm tắt</h2>
 <ul>
 <li>Bộ tiền xử lý làm việc trên văn bản; dùng <code>gcc -E</code> để xem kết quả mở rộng.</li>
 <li>Macro cần ngoặc quanh tham số và cả biểu thức; tránh đối số có tác dụng phụ; dùng <code>do { } while (0)</code> cho macro nhiều câu lệnh.</li>
@@ -529,7 +532,7 @@ COMMANDS(DECL)
 <li>Ưu tiên <code>static inline</code>, <code>enum</code>, <code>_Generic</code>, <code>const</code>; giữ macro cho điều kiện biên dịch, chuỗi hóa, vị trí nguồn.</li>
 <li>Biên dịch có điều kiện dựa trên nền tảng/tính năng; gom mã phụ thuộc nền tảng vào một chỗ.</li>
 </ul>
-<h2>14.12. Bài tập</h2>
+<h2 id="s14-12">14.12. Bài tập</h2>
 <ol>
 <li>Viết macro <code>SWAP(type, a, b)</code> an toàn và chứng minh nó dùng đúng trong <code>if/else</code> không ngoặc nhọn.</li>
 <li>Viết <code>MIN</code>, <code>MAX</code>, <code>CLAMP(x, lo, hi)</code> bằng macro; chỉ ra điều gì hỏng với <code>CLAMP(i++, 0, 10)</code>; sau đó viết lại bằng <code>static inline</code> hoặc <code>_Generic</code>.</li>
@@ -544,8 +547,26 @@ COMMANDS(DECL)
 <p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-14">code/chapter-14</a></p>
 
 </article>
-<div class="chapter-nav"><a class="nav-prev" href="chapter-13.html">&larr; Xử lý lỗi & ngoại lệ trong C</a><a class="nav-next" href="chapter-15.html">Đa luồng & đồng bộ (POSIX threads) &rarr;</a></div>
+<nav class="chapter-nav" aria-label="Điều hướng chương"><a class="nav-prev" href="chapter-13.html"><small>← Trước</small>Xử lý lỗi &amp; ngoại lệ trong C</a><a class="nav-next" href="chapter-15.html"><small>Tiếp →</small>Đa luồng &amp; đồng bộ (POSIX threads)</a></nav>
 </main>
 </div>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,store=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
+  function setTheme(t){if(t==='light')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);store('theme',t);
+    document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.setAttribute('aria-pressed',String((b.dataset.themeBtn===t)||(t==='light'&&b.dataset.themeBtn==='light')))})}
+  var cur=root.getAttribute('data-theme')||'light';setTheme(cur);
+  document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.addEventListener('click',function(){setTheme(b.dataset.themeBtn)})});
+  var fs=parseInt(getComputedStyle(root).getPropertyValue('--fs'))||19;
+  document.querySelectorAll('[data-fs]').forEach(function(b){b.addEventListener('click',function(){fs=Math.min(26,Math.max(14,fs+parseInt(b.dataset.fs)));root.style.setProperty('--fs',fs+'px');store('fs',fs)})});
+  var mb=document.getElementById('menu-btn');if(mb)mb.addEventListener('click',function(){document.body.classList.toggle('nav-open')});
+  document.addEventListener('click',function(e){if(document.body.classList.contains('nav-open')&&!e.target.closest('#sidebar')&&e.target.id!=='menu-btn')document.body.classList.remove('nav-open')});
+  document.querySelectorAll('pre').forEach(function(pre){var b=document.createElement('button');b.className='copy-btn';b.type='button';b.textContent='Sao chép';
+    b.addEventListener('click',function(){var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Đã chép'},function(){b.textContent='Lỗi'});setTimeout(function(){b.textContent='Sao chép'},1500)});pre.appendChild(b)});
+  var a=document.querySelector('.chapter-link.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'center'});
+})();
+</script>
 </body>
 </html>

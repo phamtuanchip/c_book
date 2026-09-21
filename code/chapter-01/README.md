@@ -1,27 +1,29 @@
-Chapter 1 code samples
+# Mã nguồn chương 1
 
-Files:
-- hello.c: Hello World example
-- hello_name.c: Prompt for name and greet the user
-- arithmetic.c: Read two integers and print sum, diff, product, quotient
-- input_validation.c: Safe integer input using fgets + strtol
-- Makefile: build targets
+Chương 1 — Giới thiệu và chương trình C đầu tiên
 
-Build (Linux/macOS, MSYS2):
-- make
+Các file dưới đây được **trích tự động từ bản thảo** (`manuscript/chapter-01.md`) bằng `node tools/extract-code.js`, nên luôn khớp với nội dung sách. Đừng sửa trực tiếp ở đây — hãy sửa trong bản thảo rồi chạy lại script.
 
-Or build manually:
-- gcc -o hello hello.c
-- gcc -o hello_name hello_name.c
-- gcc -o arithmetic arithmetic.c
-- gcc -o input_validation input_validation.c
+## Các file
 
-Run:
-- ./hello
-- ./hello_name
-- ./arithmetic
-- ./input_validation
+| File | Mô tả |
+|---|---|
+| `hello.c` | Chương trình đầu tiên: in "Hello, World!" |
+| `hello_name.c` | Đọc tên bằng fgets và chào |
+| `arithmetic.c` | Bốn phép toán với hai số nguyên, xử lý chia cho 0 |
 
-Notes:
-- Use -Wall -Wextra when compiling to see warnings.
-- On Windows with MinGW, executables have .exe extension.
+## Biên dịch và chạy
+
+```bash
+make            # build tất cả
+make asan       # build với AddressSanitizer + UBSan (Linux/macOS/WSL)
+make clean
+```
+
+Hoặc thủ công, ví dụ:
+
+```bash
+gcc -std=c11 -Wall -Wextra -g -o hello hello.c -lm
+```
+
+Đọc lại chương: https://github.com/phamtuanchip/c_book/blob/main/manuscript/chapter-01.md

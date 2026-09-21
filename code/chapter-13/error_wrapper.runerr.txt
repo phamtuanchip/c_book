@@ -1,7 +1,0 @@
-﻿cmd.exe : Usage: C:\Users\phamt\project\c_book\code\chapter-13\error_wrapper.exe file
-At line:30 char:13
-+             & cmd /c $cmdline > $runOut 2> $runErr
-+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : NotSpecified: (Usage: C:\Users...rapper.exe file:String) [], RemoteException
-    + FullyQualifiedErrorId : NativeCommandError
- 

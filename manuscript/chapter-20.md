@@ -111,8 +111,9 @@ webserver/
 
 ```c
 // server.c
-#define _POSIX_C_SOURCE 200809L
+#define _XOPEN_SOURCE 700              // POSIX.1-2008 + XSI (cần cho realpath)
 #include <arpa/inet.h>
+#include <sys/time.h>
 #include <errno.h>
 #include <netinet/in.h>
 #include <poll.h>

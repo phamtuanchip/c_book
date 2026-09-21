@@ -4,15 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Đa luồng & đồng bộ (POSIX threads) — Lập trình C — Từ cơ bản đến nâng cao</title>
+<script>try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.setAttribute('data-theme',t);var f=localStorage.getItem('fs');if(f)document.documentElement.style.setProperty('--fs',f+'px')}catch(e){}</script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="layout">
-<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link active" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<nav class="sidebar" id="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Phần I — Nhập môn</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp &amp; cấu trúc chương trình C</a></li></ul></li><li class="part"><div class="part-title">Phần II — Nền tảng ngôn ngữ</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm &amp; phạm vi biến (Functions &amp; Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng &amp; chuỗi (Arrays &amp; Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li></ul></li><li class="part"><div class="part-title">Phần III — Bộ nhớ, dữ liệu, xây dựng</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O &amp; thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi &amp; ngoại lệ trong C</a></li></ul></li><li class="part"><div class="part-title">Phần IV — Kỹ thuật nâng cao</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý &amp; macro nâng cao</a></li><li><a class="chapter-link active" href="chapter-15.html">15. Đa luồng &amp; đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa &amp; profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật &amp; an toàn bộ nhớ</a></li></ul></li><li class="part"><div class="part-title">Phần V — Dự án và phát hành</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing &amp; CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging &amp; deploy</a></li></ul></li><li class="part"><div class="part-title">Phụ lục — Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li><li><a class="chapter-link" href="solutions-02.html">Lời giải chương 2</a></li><li><a class="chapter-link" href="solutions-03.html">Lời giải chương 3</a></li><li><a class="chapter-link" href="solutions-04.html">Lời giải chương 4</a></li><li><a class="chapter-link" href="solutions-05.html">Lời giải chương 5</a></li><li><a class="chapter-link" href="solutions-06.html">Lời giải chương 6</a></li><li><a class="chapter-link" href="solutions-07.html">Lời giải chương 7</a></li><li><a class="chapter-link" href="solutions-08.html">Lời giải chương 8</a></li><li><a class="chapter-link" href="solutions-09.html">Lời giải chương 9</a></li><li><a class="chapter-link" href="solutions-10.html">Lời giải chương 10</a></li><li><a class="chapter-link" href="solutions-11.html">Lời giải chương 11</a></li><li><a class="chapter-link" href="solutions-12.html">Lời giải chương 12</a></li><li><a class="chapter-link" href="solutions-13.html">Lời giải chương 13</a></li><li><a class="chapter-link" href="solutions-14.html">Lời giải chương 14</a></li><li><a class="chapter-link" href="solutions-15.html">Lời giải chương 15</a></li><li><a class="chapter-link" href="solutions-16.html">Lời giải chương 16</a></li><li><a class="chapter-link" href="solutions-17.html">Lời giải chương 17</a></li><li><a class="chapter-link" href="solutions-18.html">Lời giải chương 18</a></li><li><a class="chapter-link" href="solutions-19.html">Lời giải chương 19</a></li><li><a class="chapter-link" href="solutions-20.html">Lời giải chương 20</a></li><li><a class="chapter-link" href="solutions-21.html">Lời giải chương 21</a></li><li><a class="chapter-link" href="solutions-22.html">Lời giải chương 22</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<div class="main-col">
+<header class="topbar"><button class="menu-btn" id="menu-btn" type="button" aria-label="Mục lục">☰</button><span class="crumb">Phần IV · Chương 15</span><span class="tools"><button data-fs="-1" type="button" title="Chữ nhỏ hơn">A−</button><button data-fs="1" type="button" title="Chữ lớn hơn">A+</button><button data-theme-btn="light" type="button" title="Nền sáng">Sáng</button><button data-theme-btn="sepia" type="button" title="Nền sepia">Sepia</button><button data-theme-btn="dark" type="button" title="Nền tối">Tối</button></span></header>
 <main class="content">
 <article>
-<h1>Chương 15 — Đa luồng &amp; đồng bộ (POSIX threads)</h1>
-<h2>Mục tiêu chương</h2>
+<header class="chapter-head"><div class="chapter-num">Chương 15</div><h1>Đa luồng &amp; đồng bộ (POSIX threads)</h1></header><nav class="chapter-toc" aria-label="Trong chương này"><div class="toc-title">Trong chương này</div><ol><li><a href="#s15-1">15.1. Tiến trình và luồng</a></li><li><a href="#s15-2">15.2. Tạo và chờ luồng</a></li><li><a href="#s15-3">15.3. Race condition — điều gì xảy ra khi không đồng bộ</a></li><li><a href="#s15-4">15.4. Mutex — khóa loại trừ tương hỗ</a></li><li><a href="#s15-5">15.5. Biến điều kiện (condition variable)</a></li><li><a href="#s15-6">15.6. Producer–Consumer với bộ đệm giới hạn</a></li><li><a href="#s15-7">15.7. Deadlock (khóa chết)</a></li><li><a href="#s15-8">15.8. Thao tác nguyên tử (&lt;stdatomic.h&gt;, C11)</a></li><li><a href="#s15-9">15.9. Các công cụ đồng bộ khác</a></li><li><a href="#s15-10">15.10. Hàm an toàn với luồng (thread-safe)</a></li><li><a href="#s15-11">15.11. Công cụ gỡ lỗi đa luồng</a></li><li><a href="#s15-12">15.12. Trên Windows và C11 &lt;threads.h&gt;</a></li><li><a href="#s15-13">15.13. Lỗi thường gặp</a></li><li><a href="#s15-14">15.14. Tóm tắt</a></li><li><a href="#s15-15">15.15. Bài tập</a></li></ol></nav>
+<h2 id="h-1">Mục tiêu chương</h2>
 <ul>
 <li>Hiểu <strong>tiến trình</strong> và <strong>luồng (thread)</strong> khác nhau ra sao, và khi nào nên dùng đa luồng.</li>
 <li>Tạo và chờ luồng bằng <code>pthread_create</code>/<code>pthread_join</code>; truyền tham số và nhận kết quả an toàn.</li>
@@ -25,7 +28,7 @@
 <blockquote>
 <p><strong>Môi trường:</strong> mã trong chương dùng POSIX threads (Linux, macOS, WSL, hoặc MSYS2/MinGW có <code>winpthreads</code>). Biên dịch với <code>-pthread</code>: <code>gcc -std=c11 -Wall -Wextra -g -pthread prog.c -o prog</code>. Trong <code>-std=c11</code> nghiêm ngặt có thể cần <code>#define _POSIX_C_SOURCE 200809L</code> ở đầu file.</p>
 </blockquote>
-<h2>15.1. Tiến trình và luồng</h2>
+<h2 id="s15-1">15.1. Tiến trình và luồng</h2>
 <ul>
 <li><strong>Tiến trình (process):</strong> một chương trình đang chạy, có <strong>không gian địa chỉ riêng</strong> (bộ nhớ, file mở...). Các tiến trình cách ly nhau; giao tiếp qua IPC (pipe, socket, shared memory).</li>
 <li><strong>Luồng (thread):</strong> một dòng thực thi <strong>bên trong tiến trình</strong>. Các luồng của cùng tiến trình <strong>dùng chung</strong> bộ nhớ heap, biến toàn cục, file mở; mỗi luồng có <strong>stack và thanh ghi riêng</strong>.</li>
@@ -49,13 +52,13 @@
 <li><strong>Chia sẻ dữ liệu dễ</strong> (nhanh hơn IPC giữa các tiến trình).</li>
 </ol>
 <p>Cái giá: <strong>bộ nhớ chung</strong> nghĩa là <strong>có thể xảy ra lỗi đồng bộ</strong> — nhóm lỗi khó tái hiện và khó gỡ nhất. Quy tắc: <em>chỉ dùng đa luồng khi thật sự cần, và giữ dữ liệu chia sẻ ở mức tối thiểu</em>.</p>
-<h3>Đồng thời (concurrency) và song song (parallelism)</h3>
+<h3 id="h-2">Đồng thời (concurrency) và song song (parallelism)</h3>
 <ul>
 <li><strong>Đồng thời:</strong> nhiều việc được <strong>tiến triển xen kẽ</strong> (có thể trên một nhân).</li>
 <li><strong>Song song:</strong> nhiều việc <strong>chạy cùng lúc</strong> trên nhiều nhân.</li>
 </ul>
 <p>Thứ tự luồng chạy do <strong>bộ lập lịch của hệ điều hành</strong> quyết định, bạn <strong>không kiểm soát</strong> và nó <strong>thay đổi giữa các lần chạy</strong>. Đó là gốc rễ của mọi vấn đề bên dưới.</p>
-<h2>15.2. Tạo và chờ luồng</h2>
+<h2 id="s15-2">15.2. Tạo và chờ luồng</h2>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;pthread.h&gt;</span></span>
 
 <span class="hljs-type">int</span> <span class="hljs-title function_">pthread_create</span><span class="hljs-params">(<span class="hljs-type">pthread_t</span> *thread, <span class="hljs-type">const</span> <span class="hljs-type">pthread_attr_t</span> *attr,
@@ -94,7 +97,7 @@
 }
 </code></pre>
 <p>Chạy nhiều lần bạn sẽ thấy <strong>thứ tự dòng in ra khác nhau</strong> — đúng như đã nói.</p>
-<h3>Truyền tham số: cẩn thận về vòng đời</h3>
+<h3 id="h-3">Truyền tham số: cẩn thận về vòng đời</h3>
 <p>Lỗi rất phổ biến: truyền địa chỉ của biến <strong>có thể hết hiệu lực</strong> trước khi luồng đọc nó.</p>
 <pre class="hljs"><code><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">4</span>; i++) {
     pthread_create(&amp;threads[i], <span class="hljs-literal">NULL</span>, worker, &amp;i);    <span class="hljs-comment">// SAI: mọi luồng đọc cùng biến i, mà i đang thay đổi</span>
@@ -106,7 +109,7 @@
 <li>Hoặc <strong>cấp phát struct trên heap</strong> và để luồng <code>free</code> (chuyển quyền sở hữu).</li>
 <li>Tuyệt đối <strong>không truyền địa chỉ biến cục bộ của hàm đã return</strong>.</li>
 </ol>
-<h3>Truyền nhiều tham số và nhận kết quả bằng struct</h3>
+<h3 id="h-4">Truyền nhiều tham số và nhận kết quả bằng struct</h3>
 <pre class="hljs"><code><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span>
     <span class="hljs-type">int</span>    id;
     <span class="hljs-type">const</span> <span class="hljs-type">int</span> *data;
@@ -174,7 +177,7 @@
 }
 </code></pre>
 <p>Đây là mẫu <strong>tốt nhất</strong> để dùng đa luồng: <strong>chia dữ liệu thành phần không giao nhau</strong>, mỗi luồng xử lý phần của mình, rồi <strong>gộp kết quả</strong> sau <code>join</code>. Khi không có dữ liệu chia sẻ có thể ghi, không cần khóa.</p>
-<h3>Trả về giá trị từ luồng</h3>
+<h3 id="h-5">Trả về giá trị từ luồng</h3>
 <pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-type">void</span> *<span class="hljs-title function_">compute</span><span class="hljs-params">(<span class="hljs-type">void</span> *arg)</span> {
     <span class="hljs-type">long</span> *result = <span class="hljs-built_in">malloc</span>(<span class="hljs-keyword">sizeof</span> *result);
     <span class="hljs-keyword">if</span> (!result) <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
@@ -186,12 +189,12 @@
 pthread_join(tid, &amp;ret);
 <span class="hljs-keyword">if</span> (ret) { <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%ld\n&quot;</span>, *(<span class="hljs-type">long</span> *)ret); <span class="hljs-built_in">free</span>(ret); }
 </code></pre>
-<h3><code>detach</code> và vòng đời luồng</h3>
+<h3 id="h-6"><code>detach</code> và vòng đời luồng</h3>
 <p>Mỗi luồng tạo ra <strong>phải được <code>pthread_join</code> hoặc <code>pthread_detach</code></strong>, nếu không tài nguyên của nó không được giải phóng (rò rỉ). <code>pthread_detach(tid)</code> cho luồng &quot;tự dọn dẹp khi kết thúc&quot; và không thể join.</p>
 <p>Luồng kết thúc khi: hàm luồng <code>return</code>, gọi <code>pthread_exit(retval)</code>, hoặc bị hủy. Nếu <strong>luồng chính</strong> thoát (<code>return</code> từ <code>main</code>/<code>exit</code>) thì <strong>toàn bộ tiến trình kết thúc</strong>, kể cả các luồng khác đang chạy — vì vậy hãy <code>join</code> trước khi thoát.</p>
-<h2>15.3. Race condition — điều gì xảy ra khi không đồng bộ</h2>
+<h2 id="s15-3">15.3. Race condition — điều gì xảy ra khi không đồng bộ</h2>
 <p><strong>Race condition (điều kiện chạy đua):</strong> kết quả phụ thuộc vào <strong>thứ tự thực hiện xen kẽ</strong> của các luồng khi nhiều luồng truy cập cùng dữ liệu và ít nhất một luồng <strong>ghi</strong>.</p>
-<h3>Ví dụ có thể tái hiện</h3>
+<h3 id="h-7">Ví dụ có thể tái hiện</h3>
 <pre class="hljs"><code><span class="hljs-comment">// race.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">define</span> _POSIX_C_SOURCE 200809L</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;pthread.h&gt;</span></span>
@@ -218,7 +221,7 @@ pthread_join(tid, &amp;ret);
 }
 </code></pre>
 <p>Chạy vài lần: bạn sẽ nhận các giá trị như <code>1187342</code>, <code>1354021</code>... <strong>luôn nhỏ hơn 2.000.000 và khác nhau mỗi lần</strong>.</p>
-<h3>Vì sao?</h3>
+<h3 id="h-8">Vì sao?</h3>
 <p><code>counter++</code> trông là một phép toán nhưng CPU thực hiện <strong>ba bước</strong>: (1) đọc <code>counter</code> vào thanh ghi, (2) cộng 1, (3) ghi lại. Hai luồng có thể xen kẽ:</p>
 <pre class="hljs"><code>Thời gian │ Luồng A            │ Luồng B            │ counter
 ──────────┼────────────────────┼────────────────────┼────────
@@ -231,7 +234,7 @@ pthread_join(tid, &amp;ret);
 </code></pre>
 <p>Hai lần tăng nhưng kết quả chỉ tăng 1: <strong>cập nhật bị mất (lost update)</strong>. Vùng mã mà nhiều luồng không được cùng lúc vào gọi là <strong>vùng găng (critical section)</strong>.</p>
 <p>Race condition <strong>nguy hiểm</strong> vì: xảy ra ngẫu nhiên, có thể biến mất khi thêm <code>printf</code> để gỡ lỗi (Heisenbug), có thể chỉ xuất hiện trên máy khách hàng nhiều nhân, và luôn là hành vi không xác định theo chuẩn C11 (<em>data race</em>).</p>
-<h2>15.4. Mutex — khóa loại trừ tương hỗ</h2>
+<h2 id="s15-4">15.4. Mutex — khóa loại trừ tương hỗ</h2>
 <p><strong>Mutex (mutual exclusion)</strong> là khóa: tại một thời điểm <strong>chỉ một luồng</strong> giữ nó. Luồng khác gọi <code>lock</code> sẽ <strong>bị chặn</strong> cho đến khi luồng giữ khóa gọi <code>unlock</code>.</p>
 <pre class="hljs"><code><span class="hljs-type">pthread_mutex_t</span> m = PTHREAD_MUTEX_INITIALIZER;     <span class="hljs-comment">// khởi tạo tĩnh</span>
 <span class="hljs-comment">// hoặc: pthread_mutex_init(&amp;m, NULL); ... pthread_mutex_destroy(&amp;m);</span>
@@ -255,7 +258,7 @@ pthread_mutex_unlock(&amp;m);
 }
 </code></pre>
 <p>Kết quả luôn là <code>2000000</code>.</p>
-<h3>Quy tắc dùng mutex</h3>
+<h3 id="h-9">Quy tắc dùng mutex</h3>
 <ol>
 <li><strong>Mỗi dữ liệu chia sẻ được bảo vệ bởi một mutex xác định.</strong> Ghi rõ trong mã (comment &quot;counter được bảo vệ bởi counter_lock&quot;). Mọi truy cập — <strong>cả đọc lẫn ghi</strong> — đều phải giữ khóa.</li>
 <li><strong>Giữ khóa càng ngắn càng tốt.</strong> Không làm I/O, không <code>sleep</code>, không gọi hàm lạ trong khi giữ khóa.</li>
@@ -264,7 +267,7 @@ pthread_mutex_unlock(&amp;m);
 <li>Không <code>unlock</code> mutex mà bạn không giữ.</li>
 <li>Kiểm tra giá trị trả về khi cần độ tin cậy cao (<code>pthread_mutex_lock</code> có thể trả <code>EINVAL</code>, <code>EDEADLK</code>...).</li>
 </ol>
-<h3>Đóng gói dữ liệu cùng mutex của nó</h3>
+<h3 id="h-10">Đóng gói dữ liệu cùng mutex của nó</h3>
 <p>Cách tốt nhất để không quên khóa: đặt mutex <strong>cùng struct</strong> với dữ liệu và chỉ truy cập qua hàm:</p>
 <pre class="hljs"><code><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span>
     <span class="hljs-type">pthread_mutex_t</span> lock;
@@ -287,7 +290,7 @@ pthread_mutex_unlock(&amp;m);
     <span class="hljs-keyword">return</span> v;
 }
 </code></pre>
-<h3>Chi phí của khóa và cách giảm</h3>
+<h3 id="h-11">Chi phí của khóa và cách giảm</h3>
 <p>Khóa làm luồng <strong>chờ nhau</strong>, giảm song song. Nếu mọi luồng liên tục tranh cùng một khóa, chương trình đa luồng có thể chậm hơn đơn luồng. Cách giảm:</p>
 <ul>
 <li><strong>Gộp công việc cục bộ:</strong> mỗi luồng cộng vào biến cục bộ, chỉ khóa <strong>một lần</strong> ở cuối để cộng vào tổng chung.</li>
@@ -295,7 +298,7 @@ pthread_mutex_unlock(&amp;m);
 <li>Dùng thao tác <strong>nguyên tử</strong> (15.8) cho bộ đếm/cờ đơn giản.</li>
 <li>Chia nhỏ khóa (nhiều khóa cho nhiều phần dữ liệu) — cẩn thận deadlock.</li>
 </ul>
-<h2>15.5. Biến điều kiện (condition variable)</h2>
+<h2 id="s15-5">15.5. Biến điều kiện (condition variable)</h2>
 <p>Mutex giải quyết &quot;không vào cùng lúc&quot;. <strong>Biến điều kiện</strong> giải quyết &quot;<strong>chờ một sự kiện</strong> xảy ra&quot;: luồng ngủ cho đến khi luồng khác báo hiệu điều kiện đã thay đổi — thay vì <strong>chờ bận (busy-wait)</strong> lãng phí CPU.</p>
 <pre class="hljs"><code><span class="hljs-type">pthread_cond_t</span> c = PTHREAD_COND_INITIALIZER;
 
@@ -303,7 +306,7 @@ pthread_mutex_unlock(&amp;m);
 <span class="hljs-type">int</span> <span class="hljs-title function_">pthread_cond_signal</span><span class="hljs-params">(<span class="hljs-type">pthread_cond_t</span> *c)</span>;                     <span class="hljs-comment">// đánh thức một luồng đang chờ</span>
 <span class="hljs-type">int</span> <span class="hljs-title function_">pthread_cond_broadcast</span><span class="hljs-params">(<span class="hljs-type">pthread_cond_t</span> *c)</span>;                  <span class="hljs-comment">// đánh thức tất cả</span>
 </code></pre>
-<h3>Mẫu chuẩn — luôn dùng <strong>vòng lặp <code>while</code></strong> kiểm tra điều kiện</h3>
+<h3 id="h-12">Mẫu chuẩn — luôn dùng <strong>vòng lặp <code>while</code></strong> kiểm tra điều kiện</h3>
 <pre class="hljs"><code>pthread_mutex_lock(&amp;m);
 <span class="hljs-keyword">while</span> (!condition) {                   <span class="hljs-comment">// KHÔNG dùng if</span>
     pthread_cond_wait(&amp;c, &amp;m);
@@ -317,7 +320,7 @@ pthread_mutex_unlock(&amp;m);
 <li><strong>Cạnh tranh:</strong> giữa lúc bị đánh thức và lúc giành lại được khóa, luồng khác có thể đã lấy mất thứ bạn cần, nên phải kiểm tra lại.</li>
 </ol>
 <p>Và bắt buộc: điều kiện được <strong>bảo vệ bởi cùng mutex</strong>; người báo hiệu phải <strong>thay đổi điều kiện khi giữ mutex</strong> rồi <code>signal</code>.</p>
-<h2>15.6. Producer–Consumer với bộ đệm giới hạn</h2>
+<h2 id="s15-6">15.6. Producer–Consumer với bộ đệm giới hạn</h2>
 <p>Bài toán kinh điển: <strong>producer</strong> tạo dữ liệu bỏ vào hàng đợi; <strong>consumer</strong> lấy ra xử lý. Hàng đợi có sức chứa giới hạn: producer phải <strong>chờ khi đầy</strong>, consumer phải <strong>chờ khi rỗng</strong>.</p>
 <p>Ta dùng queue vòng (chương 10), thêm một mutex và <strong>hai</strong> biến điều kiện: <code>not_full</code>, <code>not_empty</code>.</p>
 <pre class="hljs"><code><span class="hljs-comment">// producer_consumer.c</span>
@@ -451,7 +454,7 @@ pthread_mutex_unlock(&amp;m);
 <li><strong>Cách kết thúc sạch sẽ:</strong> đặt cờ <code>closed</code> và <code>broadcast</code> để consumer thoát khi hết dữ liệu. Thiếu bước này, consumer sẽ ngủ mãi (chương trình treo).</li>
 <li>Thứ tự kết thúc quan trọng: <code>join</code> producer, <code>close</code>, rồi <code>join</code> consumer.</li>
 </ul>
-<h2>15.7. Deadlock (khóa chết)</h2>
+<h2 id="s15-7">15.7. Deadlock (khóa chết)</h2>
 <p><strong>Deadlock</strong> xảy ra khi hai (hoặc nhiều) luồng <strong>chờ nhau mãi mãi</strong>, mỗi luồng giữ một khóa mà luồng kia cần.</p>
 <pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-type">pthread_mutex_t</span> A = PTHREAD_MUTEX_INITIALIZER;
 <span class="hljs-type">static</span> <span class="hljs-type">pthread_mutex_t</span> B = PTHREAD_MUTEX_INITIALIZER;
@@ -478,7 +481,9 @@ pthread_mutex_unlock(&amp;m);
 Luồng 2: chờ ◄── A ◄─── giữ B       → vòng chờ, không ai tiến được
 </code></pre>
 <p>Deadlock cần đủ <strong>bốn điều kiện Coffman</strong>: loại trừ tương hỗ, giữ-và-chờ, không chiếm quyền, <strong>chờ vòng tròn</strong>. Phá bất kỳ điều kiện nào là ngăn được deadlock. Cách thực tế nhất:</p>
-<h2>1. <strong>Thứ tự khóa nhất quán (lock ordering):</strong> quy ước toàn dự án — luôn khóa A trước B. Có thể sắp theo địa chỉ mutex khi cần khóa hai đối tượng cùng loại:</h2>
+<ol>
+<li><strong>Thứ tự khóa nhất quán (lock ordering):</strong> quy ước toàn dự án — luôn khóa A trước B. Có thể sắp theo địa chỉ mutex khi cần khóa hai đối tượng cùng loại:</li>
+</ol>
 <pre class="hljs"><code><span class="hljs-type">void</span> <span class="hljs-title function_">lock_pair</span><span class="hljs-params">(<span class="hljs-type">pthread_mutex_t</span> *x, <span class="hljs-type">pthread_mutex_t</span> *y)</span> {
     <span class="hljs-keyword">if</span> (x == y) { pthread_mutex_lock(x); <span class="hljs-keyword">return</span>; }
     <span class="hljs-keyword">if</span> (x &lt; y) { pthread_mutex_lock(x); pthread_mutex_lock(y); }
@@ -497,7 +502,7 @@ Luồng 2: chờ ◄── A ◄─── giữ B       → vòng chờ, không 
 <li><strong>Starvation (đói):</strong> một luồng không bao giờ được lấy khóa.</li>
 <li><strong>Priority inversion:</strong> luồng ưu tiên thấp giữ khóa khiến luồng ưu tiên cao bị chặn.</li>
 </ul>
-<h2>15.8. Thao tác nguyên tử (<code>&lt;stdatomic.h&gt;</code>, C11)</h2>
+<h2 id="s15-8">15.8. Thao tác nguyên tử (<code>&lt;stdatomic.h&gt;</code>, C11)</h2>
 <p>Với dữ liệu đơn giản (bộ đếm, cờ), có thể dùng <strong>kiểu nguyên tử</strong> — CPU bảo đảm thao tác không bị xen ngang — không cần mutex.</p>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdatomic.h&gt;</span></span>
 
@@ -512,17 +517,17 @@ atomic_store(&amp;stop, <span class="hljs-literal">true</span>);
 <p><code>atomic_long counter; counter++;</code> cũng nguyên tử. Bộ đếm race ở trên sửa bằng một dòng đổi kiểu và không cần khóa. Nhanh hơn mutex nhiều cho thao tác đơn lẻ.</p>
 <p>Hạn chế: chỉ bảo vệ <strong>một biến</strong>; nếu bất biến liên quan <strong>nhiều biến</strong>, vẫn cần mutex. Thứ tự bộ nhớ (<code>memory_order_*</code>) là chủ đề nâng cao; mặc định <code>memory_order_seq_cst</code> an toàn nhất.</p>
 <p><code>volatile</code> <strong>không</strong> thay thế nguyên tử/khóa cho đồng bộ luồng.</p>
-<h2>15.9. Các công cụ đồng bộ khác</h2>
-<h3>Khóa đọc–ghi (<code>pthread_rwlock_t</code>)</h3>
+<h2 id="s15-9">15.9. Các công cụ đồng bộ khác</h2>
+<h3 id="h-13">Khóa đọc–ghi (<code>pthread_rwlock_t</code>)</h3>
 <p>Nhiều luồng đọc đồng thời, nhưng ghi phải độc quyền:</p>
 <pre class="hljs"><code><span class="hljs-type">pthread_rwlock_t</span> rw = PTHREAD_RWLOCK_INITIALIZER;
 pthread_rwlock_rdlock(&amp;rw);  <span class="hljs-comment">/* đọc */</span>  pthread_rwlock_unlock(&amp;rw);
 pthread_rwlock_wrlock(&amp;rw);  <span class="hljs-comment">/* ghi  */</span>  pthread_rwlock_unlock(&amp;rw);
 </code></pre>
 <p>Hữu ích khi đọc nhiều hơn ghi rất nhiều; nhưng có chi phí riêng nên đo trước khi dùng.</p>
-<h3>Semaphore (<code>&lt;semaphore.h&gt;</code>, POSIX)</h3>
+<h3 id="h-14">Semaphore (<code>&lt;semaphore.h&gt;</code>, POSIX)</h3>
 <p>Bộ đếm đồng bộ: <code>sem_wait</code> giảm (chờ nếu 0), <code>sem_post</code> tăng. Dùng để giới hạn số luồng dùng một tài nguyên hoặc báo hiệu sự kiện.</p>
-<h3><code>pthread_once</code> và dữ liệu cục bộ luồng</h3>
+<h3 id="h-15"><code>pthread_once</code> và dữ liệu cục bộ luồng</h3>
 <pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-type">pthread_once_t</span> once = PTHREAD_ONCE_INIT;
 <span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">init_once</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> { <span class="hljs-comment">/* khởi tạo đúng một lần dù nhiều luồng gọi */</span> }
 pthread_once(&amp;once, init_once);
@@ -531,17 +536,17 @@ pthread_once(&amp;once, init_once);
 <pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-keyword">_Thread_local</span> <span class="hljs-type">int</span> tls_counter = <span class="hljs-number">0</span>;      <span class="hljs-comment">// C11 (hoặc __thread trên gcc)</span>
 </code></pre>
 <p>Ví dụ điển hình: <code>errno</code> là thread-local.</p>
-<h3>Barrier (<code>pthread_barrier_t</code>)</h3>
+<h3 id="h-16">Barrier (<code>pthread_barrier_t</code>)</h3>
 <p>Cho mọi luồng chờ nhau tại một điểm rồi cùng tiếp tục — hữu ích cho tính toán song song theo giai đoạn.</p>
-<h2>15.10. Hàm an toàn với luồng (thread-safe)</h2>
+<h2 id="s15-10">15.10. Hàm an toàn với luồng (thread-safe)</h2>
 <p>Một hàm <strong>thread-safe</strong> cho kết quả đúng khi nhiều luồng gọi đồng thời. Những thứ <strong>không</strong> thread-safe:</p>
 <ul>
 <li>Hàm dùng <strong>biến tĩnh/toàn cục nội bộ</strong>: <code>strtok</code>, <code>localtime</code>, <code>asctime</code>, <code>rand</code>, <code>strerror</code>.</li>
 <li>Hàm trả con trỏ tới bộ đệm tĩnh.</li>
 </ul>
 <p>Dùng bản <strong>reentrant</strong>: <code>strtok_r</code>, <code>localtime_r</code>, <code>rand_r</code>, <code>strerror_r</code>. Và nhớ: các hàm thư viện chuẩn như <code>printf</code>, <code>malloc</code> là thread-safe (nội bộ có khóa), nhưng <strong>chuỗi các lời gọi</strong> không nguyên tử: hai luồng in cùng lúc có thể trộn lẫn <em>giữa các lời gọi</em> (mỗi lời gọi <code>printf</code> riêng lẻ thì không bị xé nhỏ).</p>
-<h2>15.11. Công cụ gỡ lỗi đa luồng</h2>
-<h3>ThreadSanitizer (TSan)</h3>
+<h2 id="s15-11">15.11. Công cụ gỡ lỗi đa luồng</h2>
+<h3 id="h-17">ThreadSanitizer (TSan)</h3>
 <pre class="hljs"><code>gcc -std=c11 -g -O1 -fsanitize=thread -pthread race.c -o race
 ./race
 </code></pre>
@@ -554,21 +559,21 @@ pthread_once(&amp;once, init_once);
   Location is global &#x27;counter&#x27; of size 8 at 0x000000601040 (race+0x...)
 </code></pre>
 <p>TSan cho biết <strong>hai truy cập xung đột, biến nào, luồng nào, dòng nào</strong>. Nó rất hiệu quả; nên chạy toàn bộ kiểm thử đa luồng dưới TSan. (Không dùng chung với <code>-fsanitize=address</code> trong cùng bản build.)</p>
-<h3>Helgrind (Valgrind)</h3>
+<h3 id="h-18">Helgrind (Valgrind)</h3>
 <pre class="hljs"><code>valgrind --tool=helgrind ./prog
 </code></pre>
 <p>Phát hiện race và cả <strong>lỗi thứ tự khóa</strong> (tiềm ẩn deadlock). Chậm hơn TSan nhưng không cần biên dịch lại.</p>
-<h3>Gỡ lỗi deadlock</h3>
+<h3 id="h-19">Gỡ lỗi deadlock</h3>
 <p>Khi chương trình <strong>treo</strong>, dùng <code>gdb -p &lt;pid&gt;</code> rồi <code>thread apply all bt</code> để xem mọi luồng đang chờ ở đâu; hai luồng cùng ở <code>pthread_mutex_lock</code> giữ khóa của nhau là dấu hiệu.</p>
-<h3>Mẹo thiết kế</h3>
+<h3 id="h-20">Mẹo thiết kế</h3>
 <ul>
 <li><strong>Hạn chế dữ liệu chia sẻ có thể ghi</strong>; ưu tiên truyền thông điệp (queue) và dữ liệu bất biến.</li>
 <li><strong>Tài liệu hóa</strong> khóa nào bảo vệ dữ liệu nào và thứ tự khóa.</li>
 <li>Kiểm thử với <strong>số luồng lớn hơn số nhân</strong> và bằng vòng lặp dài để tăng xác suất lộ lỗi; chạy nhiều lần, dưới TSan.</li>
 <li>Đừng &quot;sửa&quot; race bằng <code>sleep</code>.</li>
 </ul>
-<h2>15.12. Trên Windows và C11 <code>&lt;threads.h&gt;</code></h2>
-<table>
+<h2 id="s15-12">15.12. Trên Windows và C11 <code>&lt;threads.h&gt;</code></h2>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Khái niệm</th>
@@ -603,7 +608,7 @@ pthread_once(&amp;once, init_once);
 <td><code>cnd_t</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Ví dụ C11 (đa nền tảng khi thư viện hỗ trợ; MSVC và glibc mới có, một số nơi như macOS thì chưa):</p>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;threads.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
@@ -622,8 +627,8 @@ pthread_once(&amp;once, init_once);
 }
 </code></pre>
 <p>Nếu cần chạy trên Windows với MinGW-w64, <code>winpthreads</code> cho phép dùng chính mã pthread; hoặc dùng WSL. Với mã thật sự đa nền tảng, xem xét thư viện bọc như <em>tinycthread</em> hoặc CMake <code>find_package(Threads)</code>.</p>
-<h2>15.13. Lỗi thường gặp</h2>
-<table>
+<h2 id="s15-13">15.13. Lỗi thường gặp</h2>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Lỗi</th>
@@ -688,8 +693,8 @@ pthread_once(&amp;once, init_once);
 <td>Nguyên tử/mutex</td>
 </tr>
 </tbody>
-</table>
-<h2>15.14. Tóm tắt</h2>
+</table></div>
+<h2 id="s15-14">15.14. Tóm tắt</h2>
 <ul>
 <li>Luồng cùng tiến trình chia sẻ bộ nhớ, có stack riêng; thứ tự chạy không xác định.</li>
 <li>Tạo bằng <code>pthread_create</code>, chờ bằng <code>pthread_join</code>; truyền tham số sao cho còn hiệu lực khi luồng chạy.</li>
@@ -698,7 +703,7 @@ pthread_once(&amp;once, init_once);
 <li><strong>Deadlock</strong> tránh bằng thứ tự khóa nhất quán, giữ ít khóa, <code>trylock</code>.</li>
 <li>Kiểm tra bằng <strong>TSan/Helgrind</strong>; ưu tiên thiết kế ít chia sẻ.</li>
 </ul>
-<h2>15.15. Bài tập</h2>
+<h2 id="s15-15">15.15. Bài tập</h2>
 <ol>
 <li>Chạy <code>race.c</code> nhiều lần, ghi lại kết quả; sửa bằng mutex, sau đó bằng <code>atomic_long</code>; đo và so sánh thời gian (dùng <code>time</code>) cho 4 luồng × 10 triệu lần tăng.</li>
 <li>Sửa <code>race.c</code> để mỗi luồng cộng vào biến cục bộ và chỉ khóa <strong>một lần</strong> ở cuối. So sánh thời gian với các phiên bản trước.</li>
@@ -713,8 +718,26 @@ pthread_once(&amp;once, init_once);
 <p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-15">code/chapter-15</a></p>
 
 </article>
-<div class="chapter-nav"><a class="nav-prev" href="chapter-14.html">&larr; Tiền xử lý & macro nâng cao</a><a class="nav-next" href="chapter-16.html">Mạng cơ bản (sockets) &rarr;</a></div>
+<nav class="chapter-nav" aria-label="Điều hướng chương"><a class="nav-prev" href="chapter-14.html"><small>← Trước</small>Tiền xử lý &amp; macro nâng cao</a><a class="nav-next" href="chapter-16.html"><small>Tiếp →</small>Mạng cơ bản (sockets)</a></nav>
 </main>
 </div>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,store=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
+  function setTheme(t){if(t==='light')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);store('theme',t);
+    document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.setAttribute('aria-pressed',String((b.dataset.themeBtn===t)||(t==='light'&&b.dataset.themeBtn==='light')))})}
+  var cur=root.getAttribute('data-theme')||'light';setTheme(cur);
+  document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.addEventListener('click',function(){setTheme(b.dataset.themeBtn)})});
+  var fs=parseInt(getComputedStyle(root).getPropertyValue('--fs'))||19;
+  document.querySelectorAll('[data-fs]').forEach(function(b){b.addEventListener('click',function(){fs=Math.min(26,Math.max(14,fs+parseInt(b.dataset.fs)));root.style.setProperty('--fs',fs+'px');store('fs',fs)})});
+  var mb=document.getElementById('menu-btn');if(mb)mb.addEventListener('click',function(){document.body.classList.toggle('nav-open')});
+  document.addEventListener('click',function(e){if(document.body.classList.contains('nav-open')&&!e.target.closest('#sidebar')&&e.target.id!=='menu-btn')document.body.classList.remove('nav-open')});
+  document.querySelectorAll('pre').forEach(function(pre){var b=document.createElement('button');b.className='copy-btn';b.type='button';b.textContent='Sao chép';
+    b.addEventListener('click',function(){var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Đã chép'},function(){b.textContent='Lỗi'});setTimeout(function(){b.textContent='Sao chép'},1500)});pre.appendChild(b)});
+  var a=document.querySelector('.chapter-link.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'center'});
+})();
+</script>
 </body>
 </html>

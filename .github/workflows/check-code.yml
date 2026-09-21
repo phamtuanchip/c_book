@@ -1,0 +1,24 @@
+name: Check code
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Ma trong code/ phai khop ban thao
+        run: |
+          node tools/extract-code.js
+          git diff --exit-code -- code || (echo "code/ khong khop manuscript: chay npm run extract:code" && exit 1)
+      - name: Bien dich moi vi du (gcc, coi canh bao la loi voi chuong chinh)
+        run: CC=gcc node tools/check-code.js

@@ -4,15 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Packaging & deploy — Lập trình C — Từ cơ bản đến nâng cao</title>
+<script>try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.setAttribute('data-theme',t);var f=localStorage.getItem('fs');if(f)document.documentElement.style.setProperty('--fs',f+'px')}catch(e){}</script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="layout">
-<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link active" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<nav class="sidebar" id="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Phần I — Nhập môn</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp &amp; cấu trúc chương trình C</a></li></ul></li><li class="part"><div class="part-title">Phần II — Nền tảng ngôn ngữ</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm &amp; phạm vi biến (Functions &amp; Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng &amp; chuỗi (Arrays &amp; Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li></ul></li><li class="part"><div class="part-title">Phần III — Bộ nhớ, dữ liệu, xây dựng</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O &amp; thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi &amp; ngoại lệ trong C</a></li></ul></li><li class="part"><div class="part-title">Phần IV — Kỹ thuật nâng cao</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý &amp; macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng &amp; đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa &amp; profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật &amp; an toàn bộ nhớ</a></li></ul></li><li class="part"><div class="part-title">Phần V — Dự án và phát hành</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing &amp; CI cho C</a></li><li><a class="chapter-link active" href="chapter-22.html">22. Packaging &amp; deploy</a></li></ul></li><li class="part"><div class="part-title">Phụ lục — Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li><li><a class="chapter-link" href="solutions-02.html">Lời giải chương 2</a></li><li><a class="chapter-link" href="solutions-03.html">Lời giải chương 3</a></li><li><a class="chapter-link" href="solutions-04.html">Lời giải chương 4</a></li><li><a class="chapter-link" href="solutions-05.html">Lời giải chương 5</a></li><li><a class="chapter-link" href="solutions-06.html">Lời giải chương 6</a></li><li><a class="chapter-link" href="solutions-07.html">Lời giải chương 7</a></li><li><a class="chapter-link" href="solutions-08.html">Lời giải chương 8</a></li><li><a class="chapter-link" href="solutions-09.html">Lời giải chương 9</a></li><li><a class="chapter-link" href="solutions-10.html">Lời giải chương 10</a></li><li><a class="chapter-link" href="solutions-11.html">Lời giải chương 11</a></li><li><a class="chapter-link" href="solutions-12.html">Lời giải chương 12</a></li><li><a class="chapter-link" href="solutions-13.html">Lời giải chương 13</a></li><li><a class="chapter-link" href="solutions-14.html">Lời giải chương 14</a></li><li><a class="chapter-link" href="solutions-15.html">Lời giải chương 15</a></li><li><a class="chapter-link" href="solutions-16.html">Lời giải chương 16</a></li><li><a class="chapter-link" href="solutions-17.html">Lời giải chương 17</a></li><li><a class="chapter-link" href="solutions-18.html">Lời giải chương 18</a></li><li><a class="chapter-link" href="solutions-19.html">Lời giải chương 19</a></li><li><a class="chapter-link" href="solutions-20.html">Lời giải chương 20</a></li><li><a class="chapter-link" href="solutions-21.html">Lời giải chương 21</a></li><li><a class="chapter-link" href="solutions-22.html">Lời giải chương 22</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<div class="main-col">
+<header class="topbar"><button class="menu-btn" id="menu-btn" type="button" aria-label="Mục lục">☰</button><span class="crumb">Phần V · Chương 22</span><span class="tools"><button data-fs="-1" type="button" title="Chữ nhỏ hơn">A−</button><button data-fs="1" type="button" title="Chữ lớn hơn">A+</button><button data-theme-btn="light" type="button" title="Nền sáng">Sáng</button><button data-theme-btn="sepia" type="button" title="Nền sepia">Sepia</button><button data-theme-btn="dark" type="button" title="Nền tối">Tối</button></span></header>
 <main class="content">
 <article>
-<h1>Chương 22 — Packaging &amp; deploy</h1>
-<h2>Mục tiêu chương</h2>
+<header class="chapter-head"><div class="chapter-num">Chương 22</div><h1>Packaging &amp; deploy</h1></header><nav class="chapter-toc" aria-label="Trong chương này"><div class="toc-title">Trong chương này</div><ol><li><a href="#s22-1">22.1. Phát hành phần mềm nghĩa là gì?</a></li><li><a href="#s22-2">22.2. Chuẩn bị dự án</a></li><li><a href="#s22-3">22.3. Cài đặt: PREFIX, DESTDIR và install trong Makefile</a></li><li><a href="#s22-4">22.4. Gói nguồn: make dist, tarball và zip</a></li><li><a href="#s22-5">22.5. Liên kết tĩnh và động — chọn cái nào để phân phối?</a></li><li><a href="#s22-6">22.6. Biên dịch chéo (cross-compilation)</a></li><li><a href="#s22-7">22.7. Nhị phân Linux tĩnh với musl</a></li><li><a href="#s22-8">22.8. Đóng gói bằng CPack, .deb, .rpm, Docker</a></li><li><a href="#s22-9">22.9. Ký số và chuỗi cung ứng</a></li><li><a href="#s22-10">22.10. Tự động phát hành với GitHub Actions và Releases</a></li><li><a href="#s22-11">22.11. Áp dụng cho chính cuốn sách này: phát hành sách</a></li><li><a href="#s22-12">22.12. Danh sách kiểm tra phát hành</a></li><li><a href="#s22-13">22.13. Lỗi thường gặp</a></li><li><a href="#s22-14">22.14. Tóm tắt</a></li><li><a href="#s22-15">22.15. Bài tập</a></li></ol></nav>
+<h2 id="h-1">Mục tiêu chương</h2>
 <ul>
 <li>Chuẩn bị một dự án C để <strong>phát hành</strong>: đánh phiên bản, cấu trúc thư mục, giấy phép, tài liệu.</li>
 <li>Viết mục tiêu <strong><code>install</code>/<code>uninstall</code>/<code>dist</code></strong> trong Makefile (hỗ trợ <code>PREFIX</code> và <code>DESTDIR</code>) và cài đặt qua CMake.</li>
@@ -23,7 +26,7 @@
 <li>Đóng gói bằng <strong>Docker (multi-stage)</strong>, <code>.deb</code>/<code>.rpm</code> (CPack/fpm), và biết các kênh phân phối khác (Homebrew, AUR, vcpkg/Conan).</li>
 <li>Áp dụng cho chính cuốn sách này: quy trình sinh EPUB/PDF và chuẩn bị hồ sơ <strong>Amazon KDP</strong>.</li>
 </ul>
-<h2>22.1. Phát hành phần mềm nghĩa là gì?</h2>
+<h2 id="s22-1">22.1. Phát hành phần mềm nghĩa là gì?</h2>
 <p>Mã chạy được trên máy bạn chưa phải là <strong>sản phẩm</strong>. Người dùng cần:</p>
 <ol>
 <li><strong>Một cách lấy phần mềm</strong> (tải file, cài qua trình quản lý gói, container).</li>
@@ -33,8 +36,8 @@
 <li><strong>Có tài liệu và giấy phép</strong> rõ ràng.</li>
 </ol>
 <p>Quy trình đề xuất: <strong>đánh phiên bản → build sạch có thể lặp lại → kiểm thử → đóng gói → ký/checksum → công bố → ghi lại thay đổi</strong>. Chương này đi qua từng bước.</p>
-<h2>22.2. Chuẩn bị dự án</h2>
-<h3>Cấu trúc thư mục điển hình</h3>
+<h2 id="s22-2">22.2. Chuẩn bị dự án</h2>
+<h3 id="h-2">Cấu trúc thư mục điển hình</h3>
 <pre class="hljs"><code>myapp/
 ├── LICENSE                 # giấy phép (MIT, Apache-2.0, GPL...)
 ├── README.md               # giới thiệu, cách build, cách dùng
@@ -48,9 +51,9 @@
 ├── docs/                   # tài liệu, man page (myapp.1)
 └── scripts/                # script build/phát hành
 </code></pre>
-<h3>Đánh phiên bản theo Semantic Versioning (SemVer)</h3>
+<h3 id="h-3">Đánh phiên bản theo Semantic Versioning (SemVer)</h3>
 <p>Định dạng <strong><code>MAJOR.MINOR.PATCH</code></strong> (ví dụ <code>1.4.2</code>):</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Thay đổi</th>
@@ -75,7 +78,7 @@
 <td><code>1.5.0</code> → <code>2.0.0</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Phiên bản trước khi ổn định: <code>0.y.z</code>. Phiên bản thử: <code>1.0.0-rc.1</code>.</p>
 <p><strong>Nhúng phiên bản vào chương trình</strong> (một nguồn duy nhất, không sao chép thủ công):</p>
 <pre class="hljs"><code>VERSION := <span class="hljs-variable">$(<span class="hljs-built_in">shell</span> cat VERSION)</span>
@@ -94,9 +97,9 @@ CFLAGS  += -DAPP_VERSION=\<span class="hljs-string">&quot;<span class="hljs-vari
 }
 </code></pre>
 <p>Bổ sung thông tin commit: <code>-DAPP_COMMIT=\&quot;$(shell git rev-parse --short HEAD 2&gt;/dev/null || echo unknown)\&quot;</code>. Lỗi nhận từ người dùng kèm <code>myapp --version</code> sẽ cho bạn biết chính xác bản nào.</p>
-<h3>Giấy phép</h3>
+<h3 id="h-4">Giấy phép</h3>
 <p>Không có giấy phép, mã <strong>mặc định là &quot;mọi quyền được bảo lưu&quot;</strong> — người khác không được phép dùng. Chọn một giấy phép và đặt file <code>LICENSE</code>:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Giấy phép</th>
@@ -121,9 +124,9 @@ CFLAGS  += -DAPP_VERSION=\<span class="hljs-string">&quot;<span class="hljs-vari
 <td>Copyleft yếu cho thư viện: được liên kết từ phần mềm đóng nếu liên kết động</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Nếu bạn dùng thư viện bên thứ ba, kiểm tra <strong>giấy phép của chúng có tương thích</strong> với giấy phép của bạn không, và giữ các thông báo bản quyền cần thiết (file <code>THIRD_PARTY_NOTICES</code>).</p>
-<h3>CHANGELOG</h3>
+<h3 id="h-5">CHANGELOG</h3>
 <p>Theo định dạng &quot;Keep a Changelog&quot;: mỗi phiên bản có mục <code>Added</code>, <code>Changed</code>, <code>Fixed</code>, <code>Removed</code>, <code>Security</code>:</p>
 <pre class="hljs"><code><span class="hljs-section">## [1.2.0] - 2026-03-15</span>
 <span class="hljs-section">### Added</span>
@@ -131,7 +134,7 @@ CFLAGS  += -DAPP_VERSION=\<span class="hljs-string">&quot;<span class="hljs-vari
 <span class="hljs-section">### Fixed</span>
 <span class="hljs-bullet">-</span> Rò rỉ bộ nhớ khi đọc file rỗng (#42).
 </code></pre>
-<h2>22.3. Cài đặt: <code>PREFIX</code>, <code>DESTDIR</code> và <code>install</code> trong Makefile</h2>
+<h2 id="s22-3">22.3. Cài đặt: <code>PREFIX</code>, <code>DESTDIR</code> và <code>install</code> trong Makefile</h2>
 <p>Người dùng nguồn quen với <code>make &amp;&amp; sudo make install</code>. Quy ước:</p>
 <ul>
 <li><strong><code>PREFIX</code></strong> (mặc định <code>/usr/local</code>): nơi cài <strong>khi chạy thật</strong>.</li>
@@ -183,7 +186,7 @@ clean:
 make DESTDIR=/tmp/pkgroot install       <span class="hljs-comment"># gom file để đóng gói, kiểm tra bằng: find /tmp/pkgroot -type f</span>
 </code></pre>
 <p>Tôn trọng biến môi trường <code>CC</code>, <code>CFLAGS</code>, <code>LDFLAGS</code> (viết <code>?=</code> và <code>+=</code>) để người đóng gói của các bản phân phối (Debian, Fedora, Homebrew) truyền cờ của họ.</p>
-<h3>Cài đặt bằng CMake</h3>
+<h3 id="h-6">Cài đặt bằng CMake</h3>
 <pre class="hljs"><code><span class="hljs-keyword">include</span>(GNUInstallDirs)                       <span class="hljs-comment"># CMAKE_INSTALL_BINDIR = bin, ...</span>
 
 <span class="hljs-keyword">install</span>(TARGETS myapp RUNTIME DESTINATION <span class="hljs-variable">${CMAKE_INSTALL_BINDIR}</span>)
@@ -194,7 +197,7 @@ make DESTDIR=/tmp/pkgroot install       <span class="hljs-comment"># gom file đ
 cmake --build build
 DESTDIR=/tmp/pkgroot cmake --install build
 </code></pre>
-<h3>Thư viện: header công khai và <code>pkg-config</code></h3>
+<h3 id="h-7">Thư viện: header công khai và <code>pkg-config</code></h3>
 <p>Nếu dự án là <strong>thư viện</strong>, hãy cài thêm header, file <code>.a</code>/<code>.so</code>, và tệp mô tả <code>pkg-config</code> để người khác dùng <code>pkg-config --cflags --libs mylib</code>:</p>
 <pre class="hljs"><code># mylib.pc
 prefix=/usr/local
@@ -208,9 +211,9 @@ Libs: -L${libdir} -lmylib
 Cflags: -I${includedir}
 </code></pre>
 <p>Với thư viện dùng chung <code>.so</code>, quản lý <strong>SONAME</strong> và phiên bản ABI (<code>libmylib.so.1.2.0</code> → <code>libmylib.so.1</code> → <code>libmylib.so</code>); chỉ tăng MAJOR khi phá vỡ ABI.</p>
-<h2>22.4. Gói nguồn: <code>make dist</code>, tarball và zip</h2>
+<h2 id="s22-4">22.4. Gói nguồn: <code>make dist</code>, tarball và zip</h2>
 <p>Gói nguồn cho phép người khác tự build. Nên chứa <strong>chỉ mã nguồn, tài liệu, file build</strong> — không chứa <code>build/</code>, <code>.git</code>, file tạm.</p>
-<h3>Cách đáng tin cậy: <code>git archive</code></h3>
+<h3 id="h-8">Cách đáng tin cậy: <code>git archive</code></h3>
 <pre class="hljs"><code>DISTNAME := <span class="hljs-variable">$(NAME)</span>-<span class="hljs-variable">$(VERSION)</span>
 
 <span class="hljs-section">dist:</span>
@@ -228,22 +231,22 @@ Cflags: -I${includedir}
 <pre class="hljs"><code>tar --exclude=<span class="hljs-string">&#x27;./build&#x27;</span> --exclude=<span class="hljs-string">&#x27;./.git&#x27;</span> --exclude=<span class="hljs-string">&#x27;./dist&#x27;</span> \
     --transform <span class="hljs-string">&quot;s,^\.,myapp-1.2.0,&quot;</span> -czf dist/myapp-1.2.0.tar.gz .
 </code></pre>
-<h3>Kiểm tra gói nguồn xây được từ đầu</h3>
+<h3 id="h-9">Kiểm tra gói nguồn xây được từ đầu</h3>
 <p>Sai lầm phổ biến: quên đưa một file vào gói, và chỉ phát hiện khi người dùng báo. Kiểm thử:</p>
 <pre class="hljs"><code><span class="hljs-built_in">rm</span> -rf /tmp/verify &amp;&amp; <span class="hljs-built_in">mkdir</span> /tmp/verify &amp;&amp; <span class="hljs-built_in">cd</span> /tmp/verify
 tar xzf ~/myapp/dist/myapp-1.2.0.tar.gz
 <span class="hljs-built_in">cd</span> myapp-1.2.0 &amp;&amp; make &amp;&amp; make <span class="hljs-built_in">test</span> &amp;&amp; make DESTDIR=/tmp/verify/root install
 </code></pre>
 <p>Nếu thành công trong môi trường sạch, gói nguồn đầy đủ.</p>
-<h3>Checksum</h3>
+<h3 id="h-10">Checksum</h3>
 <pre class="hljs"><code><span class="hljs-built_in">sha256sum</span> myapp-1.2.0.tar.gz &gt; SHA256SUMS      <span class="hljs-comment"># Linux</span>
 shasum -a 256 myapp-1.2.0.tar.gz &gt; SHA256SUMS  <span class="hljs-comment"># macOS</span>
 <span class="hljs-comment"># Người dùng kiểm tra:</span>
 <span class="hljs-built_in">sha256sum</span> -c SHA256SUMS
 </code></pre>
 <p>Checksum chứng minh file không <strong>bị hỏng khi tải</strong> — nhưng nếu kẻ tấn công thay được file thì cũng thay được checksum cùng chỗ; muốn chống giả mạo cần <strong>chữ ký</strong> (mục 22.9).</p>
-<h2>22.5. Liên kết tĩnh và động — chọn cái nào để phân phối?</h2>
-<table>
+<h2 id="s22-5">22.5. Liên kết tĩnh và động — chọn cái nào để phân phối?</h2>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th></th>
@@ -278,8 +281,8 @@ shasum -a 256 myapp-1.2.0.tar.gz &gt; SHA256SUMS  <span class="hljs-comment"># m
 <td>Ít hơn nhiều</td>
 </tr>
 </tbody>
-</table>
-<h3>Kiểm tra phụ thuộc động</h3>
+</table></div>
+<h3 id="h-11">Kiểm tra phụ thuộc động</h3>
 <pre class="hljs"><code>ldd ./myapp                 <span class="hljs-comment"># Linux: liệt kê thư viện chia sẻ cần thiết</span>
 otool -L ./myapp            <span class="hljs-comment"># macOS</span>
 objdump -p myapp.exe | grep <span class="hljs-string">&quot;DLL Name&quot;</span>      <span class="hljs-comment"># Windows (MinGW)</span>
@@ -290,24 +293,24 @@ file ./myapp                <span class="hljs-comment"># kiến trúc: &quot;ELF
 libm.so.6 =&gt; /lib/x86_64-linux-gnu/libm.so.6
 libc.so.6 =&gt; /lib/x86_64-linux-gnu/libc.so.6
 </code></pre>
-<h3>Vấn đề tương thích <code>glibc</code> khi phát hành nhị phân Linux</h3>
+<h3 id="h-12">Vấn đề tương thích <code>glibc</code> khi phát hành nhị phân Linux</h3>
 <p>Nhị phân build trên bản Linux <strong>mới</strong> dùng các ký hiệu <code>glibc</code> mới, nên <strong>không chạy trên bản cũ hơn</strong> (lỗi <code>version 'GLIBC_2.34' not found</code>). Cách xử lý:</p>
 <ol>
 <li><strong>Build trên hệ cũ nhất bạn muốn hỗ trợ</strong> (ví dụ container Ubuntu 20.04 hoặc CentOS/manylinux) — nhị phân đó chạy được trên bản mới hơn.</li>
 <li><strong>Liên kết tĩnh hoàn toàn với <code>musl</code></strong> (mục 22.7) — không phụ thuộc <code>glibc</code>.</li>
 <li>Phát hành bằng <strong>container/AppImage/Flatpak</strong> kèm sẵn thư viện.</li>
 </ol>
-<h3>Liên kết tĩnh một phần và hoàn toàn</h3>
+<h3 id="h-13">Liên kết tĩnh một phần và hoàn toàn</h3>
 <pre class="hljs"><code>gcc -O2 main.c -o myapp -static                  <span class="hljs-comment"># tĩnh hoàn toàn (với glibc có cảnh báo về getaddrinfo, dlopen, NSS)</span>
 gcc -O2 main.c -o myapp -static-libgcc           <span class="hljs-comment"># chỉ libgcc</span>
 gcc -O2 main.c -o myapp -Wl,-Bstatic -lfoo -Wl,-Bdynamic   <span class="hljs-comment"># tĩnh riêng libfoo</span>
 </code></pre>
 <p><strong>Chú ý giấy phép:</strong> liên kết tĩnh với thư viện <strong>LGPL</strong> có thể buộc bạn cung cấp cách người dùng thay thế thư viện đó; xem điều khoản.</p>
-<h2>22.6. Biên dịch chéo (cross-compilation)</h2>
+<h2 id="s22-6">22.6. Biên dịch chéo (cross-compilation)</h2>
 <p>Máy <strong>build</strong> (host) khác máy <strong>chạy</strong> (target): ví dụ build file <code>.exe</code> Windows trên Linux/macOS, hoặc file ARM trên máy x86.</p>
-<h3>Khái niệm</h3>
+<h3 id="h-14">Khái niệm</h3>
 <p>Một <strong>toolchain</strong> đi kèm bộ tiền tố <strong>triple</strong>: <code>kiến_trúc-nhà_cung_cấp-hệ_điều_hành-abi</code>:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Triple</th>
@@ -340,9 +343,9 @@ gcc -O2 main.c -o myapp -Wl,-Bstatic -lfoo -Wl,-Bdynamic   <span class="hljs-com
 <td>Vi điều khiển ARM (bare-metal)</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Trình biên dịch có tiền tố tương ứng: <code>x86_64-w64-mingw32-gcc</code>, <code>aarch64-linux-gnu-gcc</code>...</p>
-<h3>Windows từ Linux/macOS: MinGW-w64</h3>
+<h3 id="h-15">Windows từ Linux/macOS: MinGW-w64</h3>
 <pre class="hljs"><code><span class="hljs-comment"># Debian/Ubuntu</span>
 <span class="hljs-built_in">sudo</span> apt install mingw-w64
 
@@ -352,13 +355,13 @@ file build/myapp.exe        <span class="hljs-comment"># PE32+ executable (conso
 wine build/myapp.exe        <span class="hljs-comment"># (tùy chọn) thử nhanh bằng Wine</span>
 </code></pre>
 <p>Không có <code>-static</code>, <code>.exe</code> có thể cần <code>libgcc_s_seh-1.dll</code>, <code>libwinpthread-1.dll</code> đi kèm; kiểm tra bằng <code>objdump -p</code>. Nhớ rằng mã dùng API POSIX (<code>fork</code>, <code>poll</code>, <code>pthread</code> trực tiếp) sẽ <strong>không biên dịch được</strong> cho Windows nếu không có lớp tương thích (chương 16, 15).</p>
-<h3>Linux ARM từ x86</h3>
+<h3 id="h-16">Linux ARM từ x86</h3>
 <pre class="hljs"><code><span class="hljs-built_in">sudo</span> apt install gcc-aarch64-linux-gnu
 aarch64-linux-gnu-gcc -O2 src/*.c -Iinclude -o build/myapp-arm64
 file build/myapp-arm64      <span class="hljs-comment"># ELF 64-bit ... ARM aarch64</span>
 qemu-aarch64 -L /usr/aarch64-linux-gnu build/myapp-arm64      <span class="hljs-comment"># thử bằng QEMU user-mode</span>
 </code></pre>
-<h3>Cross-compile với Make và CMake</h3>
+<h3 id="h-17">Cross-compile với Make và CMake</h3>
 <p>Make dùng biến <code>CC</code>: <code>make CC=x86_64-w64-mingw32-gcc</code>. Đừng để Makefile hard-code <code>gcc</code>, và tránh gọi chương trình vừa build (bước sinh mã) bằng compiler đích.</p>
 <p><strong>CMake toolchain file</strong> <code>mingw-w64.cmake</code>:</p>
 <pre class="hljs"><code><span class="hljs-keyword">set</span>(CMAKE_SYSTEM_NAME Windows)
@@ -373,14 +376,14 @@ qemu-aarch64 -L /usr/aarch64-linux-gnu build/myapp-arm64      <span class="hljs-
 <pre class="hljs"><code>cmake -S . -B build-win -DCMAKE_TOOLCHAIN_FILE=mingw-w64.cmake -DCMAKE_BUILD_TYPE=Release
 cmake --build build-win
 </code></pre>
-<h3>Zig như một compiler chéo tiện lợi</h3>
+<h3 id="h-18">Zig như một compiler chéo tiện lợi</h3>
 <p><code>zig cc</code> là bản đóng gói <code>clang</code> kèm thư viện chuẩn của nhiều đích, cho phép cross-compile chỉ với <strong>một công cụ</strong>:</p>
 <pre class="hljs"><code>zig cc -target x86_64-windows-gnu  -O2 src/*.c -Iinclude -o build/myapp.exe
 zig cc -target aarch64-linux-musl  -O2 src/*.c -Iinclude -o build/myapp-arm64
 zig cc -target x86_64-linux-gnu.2.17 -O2 src/*.c -Iinclude -o build/myapp    <span class="hljs-comment"># nhắm glibc 2.17 (chạy trên hệ cũ)</span>
 </code></pre>
 <p>Tiện đặc biệt để nhắm <strong>phiên bản <code>glibc</code> thấp</strong> mà không cần container cũ.</p>
-<h2>22.7. Nhị phân Linux tĩnh với <code>musl</code></h2>
+<h2 id="s22-7">22.7. Nhị phân Linux tĩnh với <code>musl</code></h2>
 <p><strong>musl</strong> là thư viện C chuẩn gọn, thiết kế cho liên kết tĩnh. Nhị phân tĩnh với musl <strong>chạy trên hầu như mọi bản Linux</strong> cùng kiến trúc, không lo phiên bản <code>glibc</code>.</p>
 <pre class="hljs"><code><span class="hljs-built_in">sudo</span> apt install musl-tools
 musl-gcc -std=c11 -O2 -static src/*.c -Iinclude -o build/myapp-static
@@ -389,15 +392,15 @@ file build/myapp-static          <span class="hljs-comment"># &quot;statically l
 </code></pre>
 <p>Trên Alpine Linux (mặc định dùng musl), build bằng <code>gcc</code> bình thường trong container Alpine: <code>docker run --rm -v &quot;$PWD&quot;:/src -w /src alpine:3 sh -c &quot;apk add build-base &amp;&amp; make CFLAGS='-O2 -static'&quot;</code>.</p>
 <p>Lưu ý khi dùng musl: một số hành vi khác <code>glibc</code> (định dạng <code>printf</code> cho một số trường hợp, <code>getaddrinfo</code>/NSS đơn giản hơn, không hỗ trợ một số mở rộng GNU); hiệu năng <code>malloc</code> mặc định của musl thấp hơn nên có thể cần thay allocator. <strong>Kiểm thử bản musl riêng</strong>.</p>
-<h3>Giảm kích thước và loại bỏ thông tin gỡ lỗi</h3>
+<h3 id="h-19">Giảm kích thước và loại bỏ thông tin gỡ lỗi</h3>
 <pre class="hljs"><code>gcc -Os -ffunction-sections -fdata-sections -Wl,--gc-sections main.c -o myapp     <span class="hljs-comment"># bỏ hàm/dữ liệu không dùng</span>
 strip --strip-unneeded myapp                                                       <span class="hljs-comment"># bỏ bảng ký hiệu</span>
 <span class="hljs-comment"># hoặc giữ ký hiệu ở file riêng để debug sau:</span>
 objcopy --only-keep-debug myapp myapp.debug &amp;&amp; strip myapp &amp;&amp; objcopy --add-gnu-debuglink=myapp.debug myapp
 </code></pre>
 <p>Giữ file <code>.debug</code> của <strong>mỗi bản phát hành</strong> để đọc được stack trace khi người dùng báo crash.</p>
-<h2>22.8. Đóng gói bằng CPack, <code>.deb</code>, <code>.rpm</code>, Docker</h2>
-<h3>CPack (đi kèm CMake)</h3>
+<h2 id="s22-8">22.8. Đóng gói bằng CPack, <code>.deb</code>, <code>.rpm</code>, Docker</h2>
+<h3 id="h-20">CPack (đi kèm CMake)</h3>
 <pre class="hljs"><code><span class="hljs-keyword">set</span>(CPACK_PACKAGE_NAME <span class="hljs-string">&quot;myapp&quot;</span>)
 <span class="hljs-keyword">set</span>(CPACK_PACKAGE_VERSION <span class="hljs-variable">${PROJECT_VERSION}</span>)
 <span class="hljs-keyword">set</span>(CPACK_PACKAGE_CONTACT <span class="hljs-string">&quot;ban@example.com&quot;</span>)
@@ -411,12 +414,12 @@ dpkg-deb --info myapp-1.2.0-Linux.deb
 dpkg -c myapp-1.2.0-Linux.deb                      <span class="hljs-comment"># liệt kê file trong gói</span>
 </code></pre>
 <p>Với Windows, CPack có generator <code>NSIS</code>/<code>WIX</code> để tạo trình cài đặt <code>.exe</code>/<code>.msi</code>; với macOS: <code>DragNDrop</code> (<code>.dmg</code>).</p>
-<h3><code>fpm</code> — nhanh cho <code>.deb</code>/<code>.rpm</code> từ thư mục file</h3>
+<h3 id="h-21"><code>fpm</code> — nhanh cho <code>.deb</code>/<code>.rpm</code> từ thư mục file</h3>
 <pre class="hljs"><code>make DESTDIR=/tmp/pkgroot PREFIX=/usr install
 fpm -s <span class="hljs-built_in">dir</span> -t deb -n myapp -v 1.2.0 --description <span class="hljs-string">&quot;Ung dung vi du&quot;</span> -C /tmp/pkgroot .
 fpm -s <span class="hljs-built_in">dir</span> -t rpm -n myapp -v 1.2.0 -C /tmp/pkgroot .
 </code></pre>
-<h3>Docker: multi-stage build cho ảnh nhỏ</h3>
+<h3 id="h-22">Docker: multi-stage build cho ảnh nhỏ</h3>
 <p>Stage 1 dựng nhị phân với đầy đủ công cụ; stage 2 chỉ chứa nhị phân tĩnh — ảnh cuối chỉ vài MB, ít bề mặt tấn công.</p>
 <pre class="hljs"><code><span class="hljs-comment"># ---- build ----</span>
 <span class="hljs-keyword">FROM</span> alpine:<span class="hljs-number">3.20</span> AS build
@@ -436,8 +439,8 @@ docker run --<span class="hljs-built_in">rm</span> myapp:1.2.0 --version
 docker image <span class="hljs-built_in">ls</span> myapp            <span class="hljs-comment"># kiểm tra kích thước (thường vài trăm KB - vài MB)</span>
 </code></pre>
 <p><code>FROM scratch</code> là ảnh <strong>rỗng hoàn toàn</strong>; nhị phân phải <strong>tĩnh</strong> và không cần file hệ thống (chứng chỉ TLS, <code>/etc/passwd</code>...). Nếu cần, dùng <code>alpine</code> hoặc <code>gcr.io/distroless/static</code> để có sẵn chứng chỉ và tài khoản.</p>
-<h3>Các kênh phân phối khác</h3>
-<table>
+<h3 id="h-23">Các kênh phân phối khác</h3>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Kênh</th>
@@ -470,23 +473,23 @@ docker image <span class="hljs-built_in">ls</span> myapp            <span class=
 <td>Windows</td>
 </tr>
 </tbody>
-</table>
-<h2>22.9. Ký số và chuỗi cung ứng</h2>
+</table></div>
+<h2 id="s22-9">22.9. Ký số và chuỗi cung ứng</h2>
 <p>Người dùng tải nhị phân của bạn cần tin nó <strong>thật sự do bạn tạo và chưa bị sửa</strong>.</p>
-<h3>Chữ ký với GPG hoặc minisign</h3>
+<h3 id="h-24">Chữ ký với GPG hoặc minisign</h3>
 <pre class="hljs"><code>gpg --armor --detach-sign myapp-1.2.0.tar.gz            <span class="hljs-comment"># tạo myapp-1.2.0.tar.gz.asc</span>
 gpg --verify myapp-1.2.0.tar.gz.asc myapp-1.2.0.tar.gz  <span class="hljs-comment"># người dùng kiểm tra bằng khóa công khai của bạn</span>
 
 minisign -Sm myapp-1.2.0.tar.gz                          <span class="hljs-comment"># nhỏ gọn, hiện đại</span>
 </code></pre>
 <p>Công bố <strong>khóa công khai</strong> ở nơi đáng tin (README, trang web, keyserver). Ký <code>SHA256SUMS</code> cũng đủ. Trên Windows/macOS còn có <strong>ký mã (code signing)</strong> để hệ điều hành không cảnh báo &quot;nhà phát hành không xác định&quot; (chứng chỉ trả phí; macOS cần <em>notarization</em>).</p>
-<h3>Build có thể lặp lại (reproducible builds) và SBOM</h3>
+<h3 id="h-25">Build có thể lặp lại (reproducible builds) và SBOM</h3>
 <ul>
 <li><strong>Reproducible build:</strong> hai lần build cùng mã nguồn cho <strong>kết quả giống hệt từng byte</strong> → người khác xác minh được bản nhị phân khớp mã nguồn. Cần loại bỏ yếu tố thay đổi: <code>__DATE__</code>/<code>__TIME__</code>, đường dẫn tuyệt đối (<code>-ffile-prefix-map=$PWD=.</code>), thứ tự file, múi giờ; đặt <code>SOURCE_DATE_EPOCH</code>.</li>
 <li><strong>SBOM (Software Bill of Materials):</strong> danh sách phụ thuộc và phiên bản đi kèm bản phát hành, để người dùng biết bản của họ có chứa thư viện dính lỗ hổng nào (định dạng SPDX/CycloneDX).</li>
 <li><strong>Ghim phụ thuộc</strong> (phiên bản/hash) và theo dõi CVE của thư viện bạn dùng (chương 18).</li>
 </ul>
-<h2>22.10. Tự động phát hành với GitHub Actions và Releases</h2>
+<h2 id="s22-10">22.10. Tự động phát hành với GitHub Actions và Releases</h2>
 <p>Quy trình: bạn <strong>gắn tag</strong> <code>v1.2.0</code> và đẩy lên → CI <strong>build cho nhiều nền tảng</strong> → <strong>tạo Release</strong> đính kèm file.</p>
 <pre class="hljs"><code><span class="hljs-comment"># .github/workflows/release.yml</span>
 <span class="hljs-attr">name:</span> <span class="hljs-string">Release</span>
@@ -556,7 +559,7 @@ git push origin main --tags
 </code></pre>
 <p>GitHub tự chạy workflow; vài phút sau trang <strong>Releases</strong> có các file tải về. Người dùng tải file và kiểm tra <code>.sha256</code>.</p>
 <p><strong>Kiểm tra sau khi phát hành:</strong> tải chính file từ Release trên một máy sạch (hoặc container mới), kiểm tra checksum, chạy <code>--version</code> và một thao tác cơ bản.</p>
-<h2>22.11. Áp dụng cho chính cuốn sách này: phát hành sách</h2>
+<h2 id="s22-11">22.11. Áp dụng cho chính cuốn sách này: phát hành sách</h2>
 <p>Kho mã của sách này (<code>manuscript/</code>, <code>formats/</code>, <code>kdp/</code>, <code>tools/</code>) cũng là một dự án cần &quot;phát hành&quot;. Quy trình tương tự phần mềm:</p>
 <ol>
 <li><strong>Nguồn duy nhất:</strong> nội dung Markdown ở <code>manuscript/</code>.</li>
@@ -571,9 +574,9 @@ git push origin main --tags
 <li><strong>Đánh phiên bản và ghi thay đổi</strong> cho từng ấn bản (1.0, 1.1...) và có mục errata.</li>
 <li><strong>Đưa lên</strong> GitHub Pages (đọc trực tiếp), và Releases (tải EPUB/PDF).</li>
 </ol>
-<h3>Chuẩn bị hồ sơ Amazon KDP</h3>
+<h3 id="h-26">Chuẩn bị hồ sơ Amazon KDP</h3>
 <p>Thư mục <code>kdp/</code> chứa các thứ cần cho <strong>Kindle Direct Publishing</strong>:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Mục</th>
@@ -618,9 +621,9 @@ git push origin main --tags
 <td>Dùng công cụ <em>Previewer</em> của KDP để xem thử trên các thiết bị</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Các file <code>kdp/checklist.md</code>, <code>kdp/metadata.yaml</code>, <code>kdp/cover-guidelines.md</code> tóm tắt danh sách kiểm tra. Nguyên tắc: <strong>coi bản phát hành sách như bản phát hành phần mềm</strong> — có checklist, có kiểm thử, có phiên bản, và có quy trình cập nhật khi phát hiện lỗi.</p>
-<h2>22.12. Danh sách kiểm tra phát hành</h2>
+<h2 id="s22-12">22.12. Danh sách kiểm tra phát hành</h2>
 <ul>
 <li>[ ] <code>VERSION</code>, <code>CHANGELOG.md</code> đã cập nhật; SemVer đúng.</li>
 <li>[ ] Tất cả test đạt (ma trận nền tảng/compiler), sanitizer sạch, không cảnh báo.</li>
@@ -634,8 +637,8 @@ git push origin main --tags
 <li>[ ] Thử tải và chạy bản phát hành trên máy sạch.</li>
 <li>[ ] Có kênh nhận báo lỗi (issue tracker) và chính sách bảo mật (<code>SECURITY.md</code>).</li>
 </ul>
-<h2>22.13. Lỗi thường gặp</h2>
-<table>
+<h2 id="s22-13">22.13. Lỗi thường gặp</h2>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Lỗi</th>
@@ -700,8 +703,8 @@ git push origin main --tags
 <td>Tự động hóa bằng CI</td>
 </tr>
 </tbody>
-</table>
-<h2>22.14. Tóm tắt</h2>
+</table></div>
+<h2 id="s22-14">22.14. Tóm tắt</h2>
 <ul>
 <li>Phát hành nghiêm túc cần <strong>phiên bản (SemVer)</strong>, <strong>giấy phép</strong>, <strong>changelog</strong>, và <strong>quy trình lặp lại được</strong>.</li>
 <li>Makefile/CMake nên hỗ trợ <code>PREFIX</code>, <code>DESTDIR</code>, <code>install</code>, <code>uninstall</code>, <code>dist</code>; tôn trọng <code>CC</code>/<code>CFLAGS</code>/<code>LDFLAGS</code>.</li>
@@ -712,7 +715,7 @@ git push origin main --tags
 <li><strong>GitHub Actions</strong> tự build đa nền tảng và tạo <strong>Release</strong> khi gắn tag.</li>
 <li>Sách này cũng được phát hành theo quy trình như phần mềm: sinh EPUB/PDF tự động, kiểm thử mã, checklist KDP.</li>
 </ul>
-<h2>22.15. Bài tập</h2>
+<h2 id="s22-15">22.15. Bài tập</h2>
 <ol>
 <li>Thêm <code>install</code>, <code>uninstall</code>, <code>dist</code> và <code>--version</code> vào một dự án của bạn. Kiểm tra <code>make DESTDIR=/tmp/pkgroot PREFIX=/usr install</code> tạo cây thư mục đúng bằng <code>find /tmp/pkgroot -type f</code>.</li>
 <li>Tạo <code>myapp-X.Y.Z.tar.gz</code> bằng <code>git archive</code>, giải nén vào thư mục trống, <code>make &amp;&amp; make test</code>. Cố ý xóa một file nguồn khỏi git rồi quan sát lỗi để hiểu vì sao bước kiểm tra này cần thiết.</li>
@@ -728,8 +731,26 @@ git push origin main --tags
 <p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-22">code/chapter-22</a></p>
 
 </article>
-<div class="chapter-nav"><a class="nav-prev" href="chapter-21.html">&larr; Testing & CI cho C</a><span></span></div>
+<nav class="chapter-nav" aria-label="Điều hướng chương"><a class="nav-prev" href="chapter-21.html"><small>← Trước</small>Testing &amp; CI cho C</a><span></span></nav>
 </main>
 </div>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,store=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
+  function setTheme(t){if(t==='light')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);store('theme',t);
+    document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.setAttribute('aria-pressed',String((b.dataset.themeBtn===t)||(t==='light'&&b.dataset.themeBtn==='light')))})}
+  var cur=root.getAttribute('data-theme')||'light';setTheme(cur);
+  document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.addEventListener('click',function(){setTheme(b.dataset.themeBtn)})});
+  var fs=parseInt(getComputedStyle(root).getPropertyValue('--fs'))||19;
+  document.querySelectorAll('[data-fs]').forEach(function(b){b.addEventListener('click',function(){fs=Math.min(26,Math.max(14,fs+parseInt(b.dataset.fs)));root.style.setProperty('--fs',fs+'px');store('fs',fs)})});
+  var mb=document.getElementById('menu-btn');if(mb)mb.addEventListener('click',function(){document.body.classList.toggle('nav-open')});
+  document.addEventListener('click',function(e){if(document.body.classList.contains('nav-open')&&!e.target.closest('#sidebar')&&e.target.id!=='menu-btn')document.body.classList.remove('nav-open')});
+  document.querySelectorAll('pre').forEach(function(pre){var b=document.createElement('button');b.className='copy-btn';b.type='button';b.textContent='Sao chép';
+    b.addEventListener('click',function(){var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Đã chép'},function(){b.textContent='Lỗi'});setTimeout(function(){b.textContent='Sao chép'},1500)});pre.appendChild(b)});
+  var a=document.querySelector('.chapter-link.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'center'});
+})();
+</script>
 </body>
 </html>

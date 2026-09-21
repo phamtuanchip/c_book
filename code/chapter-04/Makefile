@@ -1,14 +1,23 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -std=c11
-TARGETS = macro_min min_inline
+# Build các ví dụ của chương 4. Dùng: make | make asan | make clean
+CC      ?= gcc
+CFLAGS  ?= -std=c11 -Wall -Wextra -g -O1
+LDLIBS  := -lm
+SRCS := $(wildcard src/*.c)
 
-all: $(TARGETS)
+.PHONY: all asan clean run
+all: build/app
 
-macro_min: macro_min.c
-	$(CC) $(CFLAGS) -o macro_min macro_min.c
+build/app: $(SRCS) | build
+	$(CC) $(CFLAGS) -Iinclude $(SRCS) -o $@ $(LDLIBS)
 
-min_inline: min_inline.c
-	$(CC) $(CFLAGS) -o min_inline min_inline.c
+build:
+	mkdir -p build
+
+run: build/app
+	./build/app
+
+asan: CFLAGS += -fsanitize=address,undefined -fno-omit-frame-pointer
+asan: clean all
 
 clean:
-	rm -f $(TARGETS)
+	rm -rf build

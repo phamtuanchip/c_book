@@ -4,15 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hàm & phạm vi biến (Functions & Scope) — Lập trình C — Từ cơ bản đến nâng cao</title>
+<script>try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.setAttribute('data-theme',t);var f=localStorage.getItem('fs');if(f)document.documentElement.style.setProperty('--fs',f+'px')}catch(e){}</script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="layout">
-<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link active" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<nav class="sidebar" id="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Phần I — Nhập môn</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp &amp; cấu trúc chương trình C</a></li></ul></li><li class="part"><div class="part-title">Phần II — Nền tảng ngôn ngữ</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link active" href="chapter-06.html">6. Hàm &amp; phạm vi biến (Functions &amp; Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng &amp; chuỗi (Arrays &amp; Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li></ul></li><li class="part"><div class="part-title">Phần III — Bộ nhớ, dữ liệu, xây dựng</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O &amp; thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi &amp; ngoại lệ trong C</a></li></ul></li><li class="part"><div class="part-title">Phần IV — Kỹ thuật nâng cao</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý &amp; macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng &amp; đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa &amp; profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật &amp; an toàn bộ nhớ</a></li></ul></li><li class="part"><div class="part-title">Phần V — Dự án và phát hành</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing &amp; CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging &amp; deploy</a></li></ul></li><li class="part"><div class="part-title">Phụ lục — Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li><li><a class="chapter-link" href="solutions-02.html">Lời giải chương 2</a></li><li><a class="chapter-link" href="solutions-03.html">Lời giải chương 3</a></li><li><a class="chapter-link" href="solutions-04.html">Lời giải chương 4</a></li><li><a class="chapter-link" href="solutions-05.html">Lời giải chương 5</a></li><li><a class="chapter-link" href="solutions-06.html">Lời giải chương 6</a></li><li><a class="chapter-link" href="solutions-07.html">Lời giải chương 7</a></li><li><a class="chapter-link" href="solutions-08.html">Lời giải chương 8</a></li><li><a class="chapter-link" href="solutions-09.html">Lời giải chương 9</a></li><li><a class="chapter-link" href="solutions-10.html">Lời giải chương 10</a></li><li><a class="chapter-link" href="solutions-11.html">Lời giải chương 11</a></li><li><a class="chapter-link" href="solutions-12.html">Lời giải chương 12</a></li><li><a class="chapter-link" href="solutions-13.html">Lời giải chương 13</a></li><li><a class="chapter-link" href="solutions-14.html">Lời giải chương 14</a></li><li><a class="chapter-link" href="solutions-15.html">Lời giải chương 15</a></li><li><a class="chapter-link" href="solutions-16.html">Lời giải chương 16</a></li><li><a class="chapter-link" href="solutions-17.html">Lời giải chương 17</a></li><li><a class="chapter-link" href="solutions-18.html">Lời giải chương 18</a></li><li><a class="chapter-link" href="solutions-19.html">Lời giải chương 19</a></li><li><a class="chapter-link" href="solutions-20.html">Lời giải chương 20</a></li><li><a class="chapter-link" href="solutions-21.html">Lời giải chương 21</a></li><li><a class="chapter-link" href="solutions-22.html">Lời giải chương 22</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<div class="main-col">
+<header class="topbar"><button class="menu-btn" id="menu-btn" type="button" aria-label="Mục lục">☰</button><span class="crumb">Phần II · Chương 6</span><span class="tools"><button data-fs="-1" type="button" title="Chữ nhỏ hơn">A−</button><button data-fs="1" type="button" title="Chữ lớn hơn">A+</button><button data-theme-btn="light" type="button" title="Nền sáng">Sáng</button><button data-theme-btn="sepia" type="button" title="Nền sepia">Sepia</button><button data-theme-btn="dark" type="button" title="Nền tối">Tối</button></span></header>
 <main class="content">
 <article>
-<h1>Chương 6 — Hàm &amp; phạm vi biến (Functions &amp; Scope)</h1>
-<h2>Mục tiêu chương</h2>
+<header class="chapter-head"><div class="chapter-num">Chương 6</div><h1>Hàm &amp; phạm vi biến (Functions &amp; Scope)</h1></header><nav class="chapter-toc" aria-label="Trong chương này"><div class="toc-title">Trong chương này</div><ol><li><a href="#s6-1">6.1. Vì sao cần hàm?</a></li><li><a href="#s6-2">6.2. Định nghĩa và gọi hàm</a></li><li><a href="#s6-3">6.3. Truyền tham số theo giá trị</a></li><li><a href="#s6-4">6.4. Giá trị trả về</a></li><li><a href="#s6-5">6.5. Phạm vi (scope)</a></li><li><a href="#s6-6">6.6. Thời gian sống (storage duration) và static</a></li><li><a href="#s6-7">6.7. Hàm gọi hàm: stack frame</a></li><li><a href="#s6-8">6.8. Đệ quy</a></li><li><a href="#s6-9">6.9. Con trỏ hàm (giới thiệu)</a></li><li><a href="#s6-10">6.10. Hàm nhận số đối số thay đổi (variadic)</a></li><li><a href="#s6-11">6.11. Quy tắc thiết kế hàm tốt</a></li><li><a href="#s6-12">6.12. Lỗi thường gặp</a></li><li><a href="#s6-13">6.13. Tóm tắt</a></li><li><a href="#s6-14">6.14. Bài tập</a></li></ol></nav>
+<h2 id="h-1">Mục tiêu chương</h2>
 <ul>
 <li>Hiểu hàm là gì, vì sao chia chương trình thành hàm và cách một lời gọi hàm hoạt động trong bộ nhớ.</li>
 <li>Viết hàm với tham số, giá trị trả về, prototype; hiểu <strong>truyền theo giá trị</strong>.</li>
@@ -21,7 +24,7 @@
 <li>Nhận biết và tránh các lỗi kinh điển: trả về địa chỉ biến cục bộ, biến toàn cục lạm dụng, đệ quy không có điều kiện dừng.</li>
 <li>Làm quen với con trỏ hàm và hàm nhận số lượng tham số thay đổi (variadic).</li>
 </ul>
-<h2>6.1. Vì sao cần hàm?</h2>
+<h2 id="s6-1">6.1. Vì sao cần hàm?</h2>
 <p>Hàm là một đoạn mã được <strong>đặt tên</strong>, có thể gọi nhiều lần với đầu vào khác nhau. Lợi ích:</p>
 <ol>
 <li><strong>Tái sử dụng:</strong> viết một lần, dùng nhiều nơi.</li>
@@ -30,8 +33,8 @@
 <li><strong>Trừu tượng hóa:</strong> người gọi chỉ cần biết hàm <em>làm gì</em>, không cần biết <em>làm thế nào</em>.</li>
 </ol>
 <p>Nguyên tắc: <strong>một hàm làm một việc</strong>, tên hàm là động từ mô tả việc đó (<code>calculate_average</code>, <code>is_valid_email</code>, <code>read_config</code>). Nếu bạn khó đặt tên hoặc phải dùng chữ &quot;và&quot; (<code>read_and_parse_and_print</code>), có lẽ hàm đang làm quá nhiều.</p>
-<h2>6.2. Định nghĩa và gọi hàm</h2>
-<h3>Cú pháp</h3>
+<h2 id="s6-2">6.2. Định nghĩa và gọi hàm</h2>
+<h3 id="h-2">Cú pháp</h3>
 <pre class="hljs"><code>kiểu_trả_về tên_hàm(kiểu1 tham_số<span class="hljs-number">1</span>, kiểu2 tham_số<span class="hljs-number">2</span>) {
     <span class="hljs-comment">// thân hàm</span>
     <span class="hljs-keyword">return</span> giá_trị;
@@ -53,7 +56,7 @@
 <li><strong>Tham số (parameter):</strong> biến khai báo trong định nghĩa hàm (<code>a</code>, <code>b</code>).</li>
 <li><strong>Đối số (argument):</strong> giá trị thực tế truyền vào khi gọi (<code>3.0</code>, <code>4.5</code>).</li>
 </ul>
-<h3>Hàm không trả về giá trị</h3>
+<h3 id="h-3">Hàm không trả về giá trị</h3>
 <p>Dùng <code>void</code>:</p>
 <pre class="hljs"><code><span class="hljs-type">void</span> <span class="hljs-title function_">print_line</span><span class="hljs-params">(<span class="hljs-type">int</span> n)</span> {
     <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) <span class="hljs-built_in">putchar</span>(<span class="hljs-string">&#x27;-&#x27;</span>);
@@ -61,11 +64,11 @@
 }
 </code></pre>
 <p>Có thể dùng <code>return;</code> (không kèm giá trị) để thoát sớm khỏi hàm <code>void</code>.</p>
-<h3>Hàm không có tham số: <code>(void)</code></h3>
+<h3 id="h-4">Hàm không có tham số: <code>(void)</code></h3>
 <pre class="hljs"><code><span class="hljs-type">int</span> <span class="hljs-title function_">get_answer</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> { <span class="hljs-keyword">return</span> <span class="hljs-number">42</span>; }
 </code></pre>
 <p>Trong C, <code>int f()</code> nghĩa là &quot;hàm nhận <strong>số lượng tham số không xác định</strong>&quot; (kiểu cũ, không kiểm tra), còn <code>int f(void)</code> nghĩa là <strong>không có tham số</strong>. Luôn dùng <code>(void)</code>.</p>
-<h3>Prototype (khai báo hàm)</h3>
+<h3 id="h-5">Prototype (khai báo hàm)</h3>
 <p>Compiler đọc từ trên xuống, nên hàm phải được <strong>khai báo trước khi gọi</strong>:</p>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 
@@ -81,7 +84,7 @@
 }
 </code></pre>
 <p>Prototype cho phép compiler kiểm tra số lượng và kiểu đối số ở mỗi lời gọi. Tên tham số trong prototype là tùy chọn (<code>int square(int);</code> cũng được) nhưng nên viết để có tài liệu. Prototype của hàm dùng chung được đặt trong file <code>.h</code>.</p>
-<h2>6.3. Truyền tham số theo giá trị</h2>
+<h2 id="s6-3">6.3. Truyền tham số theo giá trị</h2>
 <p>Trong C, mọi tham số <strong>được truyền theo giá trị (pass by value)</strong>: hàm nhận <strong>bản sao</strong> của đối số. Thay đổi bản sao <strong>không ảnh hưởng</strong> biến gốc.</p>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 
@@ -100,7 +103,7 @@
 <pre class="hljs"><code>trong ham: x = 6
 trong main: a = 5
 </code></pre>
-<h3>Muốn hàm sửa biến của người gọi? Truyền địa chỉ</h3>
+<h3 id="h-6">Muốn hàm sửa biến của người gọi? Truyền địa chỉ</h3>
 <p>Truyền <strong>con trỏ</strong> (địa chỉ của biến). Hàm vẫn nhận bản sao <em>của con trỏ</em>, nhưng bản sao đó trỏ vào cùng biến gốc nên ta sửa được nó:</p>
 <pre class="hljs"><code><span class="hljs-type">void</span> <span class="hljs-title function_">increment_ptr</span><span class="hljs-params">(<span class="hljs-type">int</span> *p)</span> {
     *p = *p + <span class="hljs-number">1</span>;         <span class="hljs-comment">// *p là &quot;giá trị tại địa chỉ p&quot;</span>
@@ -124,7 +127,7 @@ trong main: a = 5
 swap(&amp;x, &amp;y);            <span class="hljs-comment">// x = 2, y = 1</span>
 </code></pre>
 <p>Bạn đã dùng cơ chế này với <code>scanf(&quot;%d&quot;, &amp;n)</code> — <code>scanf</code> cần địa chỉ để ghi giá trị vào <code>n</code>. Chương 8 giải thích con trỏ chi tiết.</p>
-<h3>Trả về nhiều giá trị</h3>
+<h3 id="h-7">Trả về nhiều giá trị</h3>
 <p>Hàm C chỉ <code>return</code> một giá trị. Để &quot;trả về&quot; nhiều giá trị, dùng tham số con trỏ đầu ra hoặc <code>struct</code>:</p>
 <pre class="hljs"><code><span class="hljs-comment">// Cách 1: tham số đầu ra</span>
 <span class="hljs-type">void</span> <span class="hljs-title function_">min_max</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">int</span> a[], <span class="hljs-type">int</span> n, <span class="hljs-type">int</span> *min, <span class="hljs-type">int</span> *max)</span> {
@@ -139,24 +142,24 @@ swap(&amp;x, &amp;y);            <span class="hljs-comment">// x = 2, y = 1</spa
 <span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span> <span class="hljs-type">int</span> min, max; } MinMax;
 MinMax <span class="hljs-title function_">find_min_max</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">int</span> a[], <span class="hljs-type">int</span> n)</span>;
 </code></pre>
-<h3>Mảng là tham số: đặc biệt</h3>
+<h3 id="h-8">Mảng là tham số: đặc biệt</h3>
 <p>Khi truyền <strong>mảng</strong> cho hàm, thực chất hàm nhận <strong>con trỏ tới phần tử đầu</strong>, không phải bản sao mảng. Vì vậy hàm <strong>có thể sửa</strong> phần tử mảng gốc, và phải truyền thêm <strong>kích thước</strong>:</p>
 <pre class="hljs"><code><span class="hljs-type">void</span> <span class="hljs-title function_">fill_zero</span><span class="hljs-params">(<span class="hljs-type">int</span> a[], <span class="hljs-type">int</span> n)</span> {     <span class="hljs-comment">// int a[] thực chất là int *a</span>
     <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) a[i] = <span class="hljs-number">0</span>;
 }
 </code></pre>
 <p>Bên trong hàm, <code>sizeof(a)</code> là kích thước <strong>con trỏ</strong>, không phải mảng (bẫy kinh điển, xem chương 7). Nếu hàm không sửa mảng, khai báo <code>const</code>: <code>int sum(const int a[], int n)</code>.</p>
-<h2>6.4. Giá trị trả về</h2>
+<h2 id="s6-4">6.4. Giá trị trả về</h2>
 <ul>
 <li>Kiểu của biểu thức sau <code>return</code> được chuyển sang kiểu trả về của hàm.</li>
 <li>Hàm khác <code>void</code> <strong>phải</strong> trả về giá trị trên mọi đường thực thi. Nếu bạn dùng kết quả của hàm mà nó không <code>return</code>, hành vi là không xác định. <code>-Wall</code> cảnh báo <code>control reaches end of non-void function</code>.</li>
 <li>Giá trị trả về nên <strong>được kiểm tra</strong> nếu nó biểu thị lỗi (<code>fopen</code> trả <code>NULL</code>, <code>scanf</code> trả số mục đọc được).</li>
 </ul>
 <p>Quy ước phổ biến để báo lỗi: trả về <code>0</code> cho thành công, số âm hoặc <code>-1</code> cho lỗi; hoặc trả về con trỏ <code>NULL</code> khi lỗi. Chương 13 đi sâu vào xử lý lỗi.</p>
-<h2>6.5. Phạm vi (scope)</h2>
+<h2 id="s6-5">6.5. Phạm vi (scope)</h2>
 <p><strong>Phạm vi</strong> của một tên (biến, hàm) là vùng mã nguồn nơi tên đó có thể được dùng.</p>
-<h3>Bốn loại phạm vi trong C</h3>
-<table>
+<h3 id="h-9">Bốn loại phạm vi trong C</h3>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Phạm vi</th>
@@ -186,7 +189,7 @@ MinMax <span class="hljs-title function_">find_min_max</span><span class="hljs-p
 <td>tên tham số trong prototype</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 
 <span class="hljs-type">int</span> g = <span class="hljs-number">100</span>;                <span class="hljs-comment">// phạm vi file (biến toàn cục)</span>
@@ -206,7 +209,7 @@ MinMax <span class="hljs-title function_">find_min_max</span><span class="hljs-p
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </code></pre>
-<h3>Che khuất (shadowing)</h3>
+<h3 id="h-10">Che khuất (shadowing)</h3>
 <p>Biến trong khối trong có thể <strong>trùng tên</strong> với biến ở khối ngoài và <em>che</em> nó:</p>
 <pre class="hljs"><code><span class="hljs-type">int</span> x = <span class="hljs-number">10</span>;
 {
@@ -216,9 +219,9 @@ MinMax <span class="hljs-title function_">find_min_max</span><span class="hljs-p
 <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, x);           <span class="hljs-comment">// 10</span>
 </code></pre>
 <p>Shadowing hợp lệ nhưng dễ gây nhầm; bật <code>-Wshadow</code> để được cảnh báo.</p>
-<h2>6.6. Thời gian sống (storage duration) và <code>static</code></h2>
+<h2 id="s6-6">6.6. Thời gian sống (storage duration) và <code>static</code></h2>
 <p><strong>Thời gian sống</strong> là khoảng thời gian <strong>khi chương trình chạy</strong> mà biến tồn tại trong bộ nhớ. Đừng nhầm với phạm vi (phần mã nguồn có thể truy cập).</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Loại</th>
@@ -247,8 +250,8 @@ MinMax <span class="hljs-title function_">find_min_max</span><span class="hljs-p
 <td>rác (<code>calloc</code> thì 0)</td>
 </tr>
 </tbody>
-</table>
-<h3><code>static</code> cho biến cục bộ</h3>
+</table></div>
+<h3 id="h-11"><code>static</code> cho biến cục bộ</h3>
 <p><code>static</code> biến cục bộ <strong>giữ giá trị giữa các lần gọi hàm</strong>; nó được khởi tạo <strong>một lần</strong> duy nhất:</p>
 <pre class="hljs"><code><span class="hljs-type">int</span> <span class="hljs-title function_">next_id</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
     <span class="hljs-type">static</span> <span class="hljs-type">int</span> id = <span class="hljs-number">0</span>;     <span class="hljs-comment">// khởi tạo một lần; tồn tại suốt chương trình</span>
@@ -260,12 +263,12 @@ MinMax <span class="hljs-title function_">find_min_max</span><span class="hljs-p
 <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d %d %d\n&quot;</span>, next_id(), next_id(), next_id());
 </code></pre>
 <p>Phạm vi vẫn là bên trong hàm, nhưng thời gian sống là toàn chương trình. Lưu ý <code>static</code> cục bộ làm hàm <strong>không tái nhập được (not reentrant)</strong> và không an toàn với đa luồng (chương 15).</p>
-<h3><code>static</code> cho biến/hàm ở phạm vi file</h3>
+<h3 id="h-12"><code>static</code> cho biến/hàm ở phạm vi file</h3>
 <p>Với biến hoặc hàm ở phạm vi file, <code>static</code> có nghĩa khác: <strong>giới hạn tên trong file <code>.c</code> hiện tại</strong> (<em>internal linkage</em>). File khác không thể thấy hay gọi nó — giống như &quot;private&quot; trong các ngôn ngữ khác.</p>
 <pre class="hljs"><code><span class="hljs-comment">// counter.c</span>
 <span class="hljs-type">static</span> <span class="hljs-type">int</span> counter = <span class="hljs-number">0</span>;                 <span class="hljs-comment">// chỉ dùng được trong counter.c</span>
 <span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">log_msg</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *m)</span> {    <span class="hljs-comment">// hàm nội bộ</span>
-    <span class="hljs-comment">/* ... */</span>
+    (<span class="hljs-type">void</span>)m;   <span class="hljs-comment">/* ... ghi log ... */</span>
 }
 
 <span class="hljs-type">int</span> <span class="hljs-title function_">counter_next</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {                <span class="hljs-comment">// hàm công khai (external linkage)</span>
@@ -274,9 +277,9 @@ MinMax <span class="hljs-title function_">find_min_max</span><span class="hljs-p
 }
 </code></pre>
 <p><strong>Quy tắc:</strong> <em>mọi hàm và biến toàn cục không cần chia sẻ với file khác đều nên là <code>static</code>.</em> Điều này tránh xung đột tên và giúp compiler tối ưu.</p>
-<h3>Biến toàn cục và <code>extern</code></h3>
+<h3 id="h-13">Biến toàn cục và <code>extern</code></h3>
 <p>Biến toàn cục tồn tại suốt chương trình và mọi hàm đều truy cập được. Để dùng nó từ file khác, khai báo bằng <code>extern</code> (báo &quot;biến này được định nghĩa ở nơi khác&quot;):</p>
-<pre class="hljs"><code><span class="hljs-comment">// config.c</span>
+<pre class="hljs"><code><span class="hljs-comment">// ví dụ: định nghĩa và khai báo biến toàn cục</span>
 <span class="hljs-type">int</span> max_connections = <span class="hljs-number">100</span>;      <span class="hljs-comment">// ĐỊNH NGHĨA (cấp bộ nhớ) - chỉ ở một file</span>
 
 <span class="hljs-comment">// config.h</span>
@@ -293,12 +296,12 @@ MinMax <span class="hljs-title function_">find_min_max</span><span class="hljs-p
 <li>Không an toàn với đa luồng.</li>
 </ul>
 <p>Thay vào đó, hãy truyền dữ liệu qua tham số, hoặc gói trạng thái vào <code>struct</code> và truyền con trỏ tới nó.</p>
-<h3><code>const</code> và <code>register</code> (ngắn gọn)</h3>
+<h3 id="h-14"><code>const</code> và <code>register</code> (ngắn gọn)</h3>
 <ul>
 <li><code>const</code>: đối tượng không được sửa qua tên này. <code>const int MAX = 10;</code></li>
 <li><code>register</code>: gợi ý cho compiler cất biến vào thanh ghi. Compiler hiện đại tự quyết định nên từ khóa gần như không còn tác dụng; bạn cũng không thể lấy địa chỉ (<code>&amp;</code>) của biến <code>register</code>.</li>
 </ul>
-<h2>6.7. Hàm gọi hàm: stack frame</h2>
+<h2 id="s6-7">6.7. Hàm gọi hàm: stack frame</h2>
 <p>Khi bạn gọi một hàm, CPU/compiler tạo một <strong>stack frame</strong> trên stack chứa: đối số (hoặc chỗ lưu chúng), <strong>địa chỉ trở về</strong> (để biết chạy tiếp ở đâu sau khi hàm xong), và các <strong>biến cục bộ</strong>. Khi hàm <code>return</code>, frame bị bỏ.</p>
 <pre class="hljs"><code><span class="hljs-type">int</span> <span class="hljs-title function_">square</span><span class="hljs-params">(<span class="hljs-type">int</span> x)</span> { <span class="hljs-keyword">return</span> x * x; }
 
@@ -330,7 +333,7 @@ MinMax <span class="hljs-title function_">find_min_max</span><span class="hljs-p
 └────────────────────────────┘  ← thấp (đỉnh stack hiện tại)
 </code></pre>
 <p>Khi <code>square</code> trả về, frame của nó biến mất và <code>sa</code> nhận giá trị 9.</p>
-<h3>Lỗi kinh điển: trả về địa chỉ của biến cục bộ</h3>
+<h3 id="h-15">Lỗi kinh điển: trả về địa chỉ của biến cục bộ</h3>
 <p>Biến cục bộ nằm trong stack frame. Khi hàm kết thúc, vùng nhớ đó <em>được coi là trống</em> và sẽ bị ghi đè bởi lần gọi hàm tiếp theo. Con trỏ trỏ tới nó thành <strong>con trỏ treo (dangling pointer)</strong>.</p>
 <pre class="hljs"><code><span class="hljs-type">int</span> *<span class="hljs-title function_">bad</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
     <span class="hljs-type">int</span> x = <span class="hljs-number">42</span>;
@@ -366,13 +369,13 @@ MinMax <span class="hljs-title function_">find_min_max</span><span class="hljs-p
     <span class="hljs-keyword">return</span> buf;
 }
 </code></pre>
-<h2>6.8. Đệ quy</h2>
+<h2 id="s6-8">6.8. Đệ quy</h2>
 <p><strong>Đệ quy</strong> là hàm tự gọi chính nó. Mỗi hàm đệ quy cần:</p>
 <ol>
 <li><strong>Trường hợp cơ sở (base case):</strong> điều kiện dừng, không gọi đệ quy nữa.</li>
 <li><strong>Bước đệ quy:</strong> gọi lại chính nó với bài toán <strong>nhỏ hơn</strong>, tiến dần đến trường hợp cơ sở.</li>
 </ol>
-<h3>Ví dụ: giai thừa</h3>
+<h3 id="h-16">Ví dụ: giai thừa</h3>
 <pre class="hljs"><code><span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> <span class="hljs-type">long</span> <span class="hljs-title function_">factorial</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> n)</span> {
     <span class="hljs-keyword">if</span> (n &lt;= <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;              <span class="hljs-comment">// base case</span>
     <span class="hljs-keyword">return</span> n * factorial(n - <span class="hljs-number">1</span>);       <span class="hljs-comment">// bước đệ quy</span>
@@ -388,7 +391,7 @@ MinMax <span class="hljs-title function_">find_min_max</span><span class="hljs-p
              = 4 * 6 = 24
 </code></pre>
 <p>Mỗi lời gọi tạo một stack frame mới; chúng xếp chồng cho tới base case rồi lần lượt được &quot;tháo&quot; ra. Nếu thiếu base case hoặc bài toán không thu nhỏ, đệ quy vô hạn sẽ làm tràn stack (<strong>stack overflow</strong>, chương trình bị crash với <code>Segmentation fault</code>).</p>
-<h3>Ví dụ: Fibonacci — ngây thơ và cải tiến</h3>
+<h3 id="h-17">Ví dụ: Fibonacci — ngây thơ và cải tiến</h3>
 <pre class="hljs"><code><span class="hljs-comment">// Ngây thơ: độ phức tạp mũ, fib(40) mất vài giây vì tính lại rất nhiều lần</span>
 <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> <span class="hljs-title function_">fib_slow</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> n)</span> {
     <span class="hljs-keyword">if</span> (n &lt; <span class="hljs-number">2</span>) <span class="hljs-keyword">return</span> n;
@@ -407,20 +410,20 @@ MinMax <span class="hljs-title function_">find_min_max</span><span class="hljs-p
 }
 </code></pre>
 <p>Bài học: đệ quy thanh lịch nhưng có thể chậm nếu các bài toán con bị tính lặp lại. Lựa chọn thay thế: vòng lặp, hoặc <strong>ghi nhớ (memoization)</strong>.</p>
-<h3>Đệ quy đuôi</h3>
+<h3 id="h-18">Đệ quy đuôi</h3>
 <p>Nếu lời gọi đệ quy là <strong>việc cuối cùng</strong> hàm làm (<em>tail call</em>), compiler có thể biến nó thành vòng lặp khi tối ưu hóa (<code>-O2</code>), tránh tăng stack. Tuy nhiên chuẩn C <strong>không đảm bảo</strong> điều này, nên đừng dựa vào nó cho độ sâu lớn.</p>
 <pre class="hljs"><code><span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> <span class="hljs-type">long</span> <span class="hljs-title function_">fact_acc</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> n, <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> <span class="hljs-type">long</span> acc)</span> {
     <span class="hljs-keyword">if</span> (n &lt;= <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> acc;
     <span class="hljs-keyword">return</span> fact_acc(n - <span class="hljs-number">1</span>, n * acc);    <span class="hljs-comment">// lời gọi đuôi</span>
 }
 </code></pre>
-<h3>Khi nào dùng đệ quy?</h3>
+<h3 id="h-19">Khi nào dùng đệ quy?</h3>
 <ul>
 <li>Cấu trúc dữ liệu đệ quy tự nhiên: cây, danh sách liên kết, duyệt thư mục.</li>
 <li>Thuật toán chia để trị: sắp xếp trộn, tìm kiếm nhị phân, Tháp Hà Nội.</li>
 <li>Tránh khi độ sâu có thể rất lớn (hàng chục nghìn+) hoặc khi vòng lặp đơn giản hơn.</li>
 </ul>
-<h3>Tháp Hà Nội — ví dụ đệ quy đẹp</h3>
+<h3 id="h-20">Tháp Hà Nội — ví dụ đệ quy đẹp</h3>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 
 <span class="hljs-comment">// Chuyển n đĩa từ cọc &#x27;from&#x27; sang cọc &#x27;to&#x27;, dùng cọc &#x27;via&#x27; làm trung gian</span>
@@ -436,7 +439,7 @@ MinMax <span class="hljs-title function_">find_min_max</span><span class="hljs-p
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </code></pre>
-<h2>6.9. Con trỏ hàm (giới thiệu)</h2>
+<h2 id="s6-9">6.9. Con trỏ hàm (giới thiệu)</h2>
 <p>Tên hàm có thể được dùng như một <strong>giá trị</strong> — địa chỉ của mã hàm. Con trỏ hàm cho phép truyền hành vi như một tham số (&quot;callback&quot;).</p>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 
@@ -472,7 +475,7 @@ MinMax <span class="hljs-title function_">find_min_max</span><span class="hljs-p
 }
 </code></pre>
 <p>Chương 8 sẽ giải thích chi tiết <code>void *</code> và ép kiểu con trỏ.</p>
-<h2>6.10. Hàm nhận số đối số thay đổi (variadic)</h2>
+<h2 id="s6-10">6.10. Hàm nhận số đối số thay đổi (variadic)</h2>
 <p><code>printf</code> nhận số lượng đối số bất kỳ. Bạn có thể tự viết hàm như vậy bằng <code>&lt;stdarg.h&gt;</code>:</p>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdarg.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
@@ -495,7 +498,7 @@ MinMax <span class="hljs-title function_">find_min_max</span><span class="hljs-p
 }
 </code></pre>
 <p>Hạn chế: compiler <strong>không kiểm tra</strong> kiểu và số lượng đối số, nên rất dễ sai. Bạn phải có cách báo hàm biết có bao nhiêu đối số (như tham số <code>n</code> hoặc chuỗi định dạng). Sai kiểu ở <code>va_arg</code> là UB. Dùng có chừng mực.</p>
-<h2>6.11. Quy tắc thiết kế hàm tốt</h2>
+<h2 id="s6-11">6.11. Quy tắc thiết kế hàm tốt</h2>
 <ol>
 <li><strong>Ngắn:</strong> lý tưởng nằm gọn trong một màn hình (~30–50 dòng).</li>
 <li><strong>Một nhiệm vụ</strong>, tên rõ ràng.</li>
@@ -513,8 +516,8 @@ MinMax <span class="hljs-title function_">find_min_max</span><span class="hljs-p
  */</span>
 <span class="hljs-type">long</span> <span class="hljs-title function_">sum_array</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">int</span> *a, <span class="hljs-type">size_t</span> n)</span>;
 </code></pre>
-<h2>6.12. Lỗi thường gặp</h2>
-<table>
+<h2 id="s6-12">6.12. Lỗi thường gặp</h2>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Lỗi</th>
@@ -564,8 +567,8 @@ MinMax <span class="hljs-title function_">find_min_max</span><span class="hljs-p
 <td>Luôn <code>(void)</code></td>
 </tr>
 </tbody>
-</table>
-<h2>6.13. Tóm tắt</h2>
+</table></div>
+<h2 id="s6-13">6.13. Tóm tắt</h2>
 <ul>
 <li>Hàm gom mã tái sử dụng; C truyền tham số <strong>theo giá trị</strong>; dùng con trỏ để sửa biến của người gọi.</li>
 <li>Phạm vi (nơi thấy tên) khác thời gian sống (khi nào tồn tại). <code>static</code> cục bộ giữ giá trị giữa các lần gọi; <code>static</code> ở phạm vi file làm tên riêng tư.</li>
@@ -573,7 +576,7 @@ MinMax <span class="hljs-title function_">find_min_max</span><span class="hljs-p
 <li>Đệ quy cần base case và bước thu nhỏ; cân nhắc độ sâu và hiệu năng.</li>
 <li>Con trỏ hàm cho phép truyền hành vi (callback), ví dụ <code>qsort</code>.</li>
 </ul>
-<h2>6.14. Bài tập</h2>
+<h2 id="s6-14">6.14. Bài tập</h2>
 <ol>
 <li>Viết hàm <code>int max3(int a, int b, int c)</code>. Viết thêm phiên bản dùng con trỏ trả về hai giá trị: nhỏ nhất và lớn nhất.</li>
 <li>Viết hàm <code>void swap_int(int *a, int *b)</code> và kiểm tra. Sau đó thử viết <code>swap</code> nhận tham số <code>int a, int b</code> và giải thích vì sao không hoạt động.</li>
@@ -596,8 +599,26 @@ MinMax <span class="hljs-title function_">find_min_max</span><span class="hljs-p
 <p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-06">code/chapter-06</a></p>
 
 </article>
-<div class="chapter-nav"><a class="nav-prev" href="chapter-05.html">&larr; Điều khiển luồng (Control Flow)</a><a class="nav-next" href="chapter-07.html">Mảng & chuỗi (Arrays & Strings) &rarr;</a></div>
+<nav class="chapter-nav" aria-label="Điều hướng chương"><a class="nav-prev" href="chapter-05.html"><small>← Trước</small>Điều khiển luồng (Control Flow)</a><a class="nav-next" href="chapter-07.html"><small>Tiếp →</small>Mảng &amp; chuỗi (Arrays &amp; Strings)</a></nav>
 </main>
 </div>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,store=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
+  function setTheme(t){if(t==='light')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);store('theme',t);
+    document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.setAttribute('aria-pressed',String((b.dataset.themeBtn===t)||(t==='light'&&b.dataset.themeBtn==='light')))})}
+  var cur=root.getAttribute('data-theme')||'light';setTheme(cur);
+  document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.addEventListener('click',function(){setTheme(b.dataset.themeBtn)})});
+  var fs=parseInt(getComputedStyle(root).getPropertyValue('--fs'))||19;
+  document.querySelectorAll('[data-fs]').forEach(function(b){b.addEventListener('click',function(){fs=Math.min(26,Math.max(14,fs+parseInt(b.dataset.fs)));root.style.setProperty('--fs',fs+'px');store('fs',fs)})});
+  var mb=document.getElementById('menu-btn');if(mb)mb.addEventListener('click',function(){document.body.classList.toggle('nav-open')});
+  document.addEventListener('click',function(e){if(document.body.classList.contains('nav-open')&&!e.target.closest('#sidebar')&&e.target.id!=='menu-btn')document.body.classList.remove('nav-open')});
+  document.querySelectorAll('pre').forEach(function(pre){var b=document.createElement('button');b.className='copy-btn';b.type='button';b.textContent='Sao chép';
+    b.addEventListener('click',function(){var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Đã chép'},function(){b.textContent='Lỗi'});setTimeout(function(){b.textContent='Sao chép'},1500)});pre.appendChild(b)});
+  var a=document.querySelector('.chapter-link.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'center'});
+})();
+</script>
 </body>
 </html>

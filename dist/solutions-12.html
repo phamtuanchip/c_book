@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lời giải chương 12 — Lập trình C — Từ cơ bản đến nâng cao</title>
+<script>try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.setAttribute('data-theme',t);var f=localStorage.getItem('fs');if(f)document.documentElement.style.setProperty('--fs',f+'px')}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar" id="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Phần I — Nhập môn</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link" href="chapter-04.html">4. Cú pháp &amp; cấu trúc chương trình C</a></li></ul></li><li class="part"><div class="part-title">Phần II — Nền tảng ngôn ngữ</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm &amp; phạm vi biến (Functions &amp; Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng &amp; chuỗi (Arrays &amp; Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li></ul></li><li class="part"><div class="part-title">Phần III — Bộ nhớ, dữ liệu, xây dựng</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O &amp; thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi &amp; ngoại lệ trong C</a></li></ul></li><li class="part"><div class="part-title">Phần IV — Kỹ thuật nâng cao</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý &amp; macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng &amp; đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa &amp; profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật &amp; an toàn bộ nhớ</a></li></ul></li><li class="part"><div class="part-title">Phần V — Dự án và phát hành</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing &amp; CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging &amp; deploy</a></li></ul></li><li class="part"><div class="part-title">Phụ lục — Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li><li><a class="chapter-link" href="solutions-02.html">Lời giải chương 2</a></li><li><a class="chapter-link" href="solutions-03.html">Lời giải chương 3</a></li><li><a class="chapter-link" href="solutions-04.html">Lời giải chương 4</a></li><li><a class="chapter-link" href="solutions-05.html">Lời giải chương 5</a></li><li><a class="chapter-link" href="solutions-06.html">Lời giải chương 6</a></li><li><a class="chapter-link" href="solutions-07.html">Lời giải chương 7</a></li><li><a class="chapter-link" href="solutions-08.html">Lời giải chương 8</a></li><li><a class="chapter-link" href="solutions-09.html">Lời giải chương 9</a></li><li><a class="chapter-link" href="solutions-10.html">Lời giải chương 10</a></li><li><a class="chapter-link" href="solutions-11.html">Lời giải chương 11</a></li><li><a class="chapter-link active" href="solutions-12.html">Lời giải chương 12</a></li><li><a class="chapter-link" href="solutions-13.html">Lời giải chương 13</a></li><li><a class="chapter-link" href="solutions-14.html">Lời giải chương 14</a></li><li><a class="chapter-link" href="solutions-15.html">Lời giải chương 15</a></li><li><a class="chapter-link" href="solutions-16.html">Lời giải chương 16</a></li><li><a class="chapter-link" href="solutions-17.html">Lời giải chương 17</a></li><li><a class="chapter-link" href="solutions-18.html">Lời giải chương 18</a></li><li><a class="chapter-link" href="solutions-19.html">Lời giải chương 19</a></li><li><a class="chapter-link" href="solutions-20.html">Lời giải chương 20</a></li><li><a class="chapter-link" href="solutions-21.html">Lời giải chương 21</a></li><li><a class="chapter-link" href="solutions-22.html">Lời giải chương 22</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<div class="main-col">
+<header class="topbar"><button class="menu-btn" id="menu-btn" type="button" aria-label="Mục lục">☰</button><span class="crumb">Lời giải chương 12</span><span class="tools"><button data-fs="-1" type="button" title="Chữ nhỏ hơn">A−</button><button data-fs="1" type="button" title="Chữ lớn hơn">A+</button><button data-theme-btn="light" type="button" title="Nền sáng">Sáng</button><button data-theme-btn="sepia" type="button" title="Nền sepia">Sepia</button><button data-theme-btn="dark" type="button" title="Nền tối">Tối</button></span></header>
+<main class="content">
+<article>
+<header class="chapter-head"><div class="chapter-num">Chương 12</div><h1>Lời giải bài tập</h1></header><nav class="chapter-toc" aria-label="Trong chương này"><div class="toc-title">Trong chương này</div><ol><li><a href="#h-1">Bài 1: ghi 10 dòng rồi đọc lại</a></li><li><a href="#h-2">Bài 2: mycat và mywc</a></li><li><a href="#h-3">Bài 3: sao chép file và xác minh</a></li><li><a href="#h-4">Bài 4: ghép nhiều file</a></li><li><a href="#h-5">Bài 5: điểm trung bình từ CSV</a></li><li><a href="#h-6">Bài 6: lưu/đọc struct nhị phân theo định dạng tự quy định</a></li><li><a href="#h-7">Bài 7: tìm chuỗi trong file lớn (đúng ở ranh giới khối)</a></li><li><a href="#h-8">Bài 8: đảo thứ tự dòng của file</a></li><li><a href="#h-9">Bài 9: logger xoay vòng</a></li></ol></nav>
+<h2 id="h-1">Bài 1: ghi 10 dòng rồi đọc lại</h2>
+<pre class="hljs"><code><span class="hljs-comment">// write_read.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    FILE *f = fopen(<span class="hljs-string">&quot;lines.txt&quot;</span>, <span class="hljs-string">&quot;w&quot;</span>);                    <span class="hljs-comment">// &quot;w&quot;: xóa nội dung cũ nếu file đã có</span>
+    <span class="hljs-keyword">if</span> (!f) { perror(<span class="hljs-string">&quot;lines.txt&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= <span class="hljs-number">10</span>; i++) <span class="hljs-built_in">fprintf</span>(f, <span class="hljs-string">&quot;dong so %d\n&quot;</span>, i);
+    <span class="hljs-keyword">if</span> (fclose(f) != <span class="hljs-number">0</span>) { perror(<span class="hljs-string">&quot;fclose&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+
+    f = fopen(<span class="hljs-string">&quot;lines.txt&quot;</span>, <span class="hljs-string">&quot;r&quot;</span>);
+    <span class="hljs-keyword">if</span> (!f) { perror(<span class="hljs-string">&quot;lines.txt&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+    <span class="hljs-type">char</span> line[<span class="hljs-number">128</span>];
+    <span class="hljs-type">int</span> n = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">while</span> (fgets(line, <span class="hljs-keyword">sizeof</span> line, f)) {
+        line[<span class="hljs-built_in">strcspn</span>(line, <span class="hljs-string">&quot;\r\n&quot;</span>)] = <span class="hljs-string">&#x27;\0&#x27;</span>;
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%2d: %s\n&quot;</span>, ++n, line);
+    }
+    fclose(f);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Mở <code>&quot;w&quot;</code> lần thứ hai (ví dụ chạy lại chương trình mà chỉ ghi 3 dòng) sẽ <strong>xóa sạch</strong> nội dung cũ; muốn nối thêm phải dùng <code>&quot;a&quot;</code>.</p>
+<h2 id="h-2">Bài 2: <code>mycat</code> và <code>mywc</code></h2>
+<p><code>mywc</code> đã có ở mục 12.8 (<code>wc_lite.c</code>). <code>mycat</code> hỗ trợ nhiều file và stdin:</p>
+<pre class="hljs"><code><span class="hljs-comment">// mycat.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">cat_stream</span><span class="hljs-params">(FILE *in, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *name)</span> {
+    <span class="hljs-type">char</span> buf[<span class="hljs-number">8192</span>];
+    <span class="hljs-type">size_t</span> n;
+    <span class="hljs-keyword">while</span> ((n = fread(buf, <span class="hljs-number">1</span>, <span class="hljs-keyword">sizeof</span> buf, in)) &gt; <span class="hljs-number">0</span>)
+        <span class="hljs-keyword">if</span> (fwrite(buf, <span class="hljs-number">1</span>, n, <span class="hljs-built_in">stdout</span>) != n) { perror(<span class="hljs-string">&quot;stdout&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+    <span class="hljs-keyword">if</span> (ferror(in)) { perror(name); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> **argv)</span> {
+    <span class="hljs-keyword">if</span> (argc == <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> cat_stream(<span class="hljs-built_in">stdin</span>, <span class="hljs-string">&quot;stdin&quot;</span>);        <span class="hljs-comment">// không có đối số: đọc từ stdin</span>
+    <span class="hljs-type">int</span> rc = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt; argc; i++) {
+        FILE *f = fopen(argv[i], <span class="hljs-string">&quot;rb&quot;</span>);
+        <span class="hljs-keyword">if</span> (!f) { perror(argv[i]); rc = <span class="hljs-number">1</span>; <span class="hljs-keyword">continue</span>; }        <span class="hljs-comment">// báo lỗi rồi tiếp tục các file khác</span>
+        <span class="hljs-keyword">if</span> (cat_stream(f, argv[i])) rc = <span class="hljs-number">1</span>;
+        fclose(f);
+    }
+    <span class="hljs-keyword">return</span> rc;
+}
+</code></pre>
+<h2 id="h-3">Bài 3: sao chép file và xác minh</h2>
+<p><code>copy_file.c</code> (mục 12.4). Kiểm chứng bản sao giống hệt: <code>cmp a.bin b.bin &amp;&amp; echo GIONG</code> (Linux/macOS) hoặc <code>fc /b a.bin b.bin</code> (Windows CMD). Kiểm thử với file rỗng, file 1 byte, file đúng 8192 byte và 8193 byte (biên của bộ đệm), và file nhị phân có byte <code>0x00</code> và <code>0x1A</code>.</p>
+<h2 id="h-4">Bài 4: ghép nhiều file</h2>
+<p>Xem <code>merge_files.c</code> (mục 12.8): mở từng file nguồn, báo lỗi và tiếp tục nếu một file không mở được, trả mã thoát khác 0 nếu có lỗi bất kỳ.</p>
+<h2 id="h-5">Bài 5: điểm trung bình từ CSV</h2>
+<pre class="hljs"><code><span class="hljs-comment">// csv_scores.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;errno.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> **argv)</span> {
+    FILE *f = fopen(argc &gt; <span class="hljs-number">1</span> ? argv[<span class="hljs-number">1</span>] : <span class="hljs-string">&quot;scores.csv&quot;</span>, <span class="hljs-string">&quot;r&quot;</span>);
+    <span class="hljs-keyword">if</span> (!f) { perror(<span class="hljs-string">&quot;scores.csv&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+
+    <span class="hljs-type">char</span> line[<span class="hljs-number">256</span>], best_name[<span class="hljs-number">64</span>] = <span class="hljs-string">&quot;&quot;</span>;
+    <span class="hljs-type">double</span> sum = <span class="hljs-number">0</span>, best = <span class="hljs-number">-1</span>;
+    <span class="hljs-type">int</span> n = <span class="hljs-number">0</span>, lineno = <span class="hljs-number">0</span>, bad = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">while</span> (fgets(line, <span class="hljs-keyword">sizeof</span> line, f)) {
+        lineno++;
+        line[<span class="hljs-built_in">strcspn</span>(line, <span class="hljs-string">&quot;\r\n&quot;</span>)] = <span class="hljs-string">&#x27;\0&#x27;</span>;
+        <span class="hljs-keyword">if</span> (line[<span class="hljs-number">0</span>] == <span class="hljs-string">&#x27;\0&#x27;</span>) <span class="hljs-keyword">continue</span>;                                <span class="hljs-comment">// bỏ dòng trống</span>
+
+        <span class="hljs-type">char</span> *comma = <span class="hljs-built_in">strrchr</span>(line, <span class="hljs-string">&#x27;,&#x27;</span>);                             <span class="hljs-comment">// dấu phẩy cuối: tên có thể chứa dấu phẩy</span>
+        <span class="hljs-keyword">if</span> (!comma) { <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;dong %d: thieu dau phay\n&quot;</span>, lineno); bad++; <span class="hljs-keyword">continue</span>; }
+        *comma = <span class="hljs-string">&#x27;\0&#x27;</span>;
+
+        <span class="hljs-type">char</span> *end;
+        errno = <span class="hljs-number">0</span>;
+        <span class="hljs-type">double</span> score = strtod(comma + <span class="hljs-number">1</span>, &amp;end);
+        <span class="hljs-keyword">if</span> (end == comma + <span class="hljs-number">1</span> || *end != <span class="hljs-string">&#x27;\0&#x27;</span> || errno == ERANGE || score &lt; <span class="hljs-number">0</span> || score &gt; <span class="hljs-number">10</span>) {
+            <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;dong %d: diem khong hop le\n&quot;</span>, lineno);
+            bad++;
+            <span class="hljs-keyword">continue</span>;
+        }
+        sum += score;
+        n++;
+        <span class="hljs-keyword">if</span> (score &gt; best) { best = score; <span class="hljs-built_in">snprintf</span>(best_name, <span class="hljs-keyword">sizeof</span> best_name, <span class="hljs-string">&quot;%s&quot;</span>, line); }
+    }
+    fclose(f);
+
+    <span class="hljs-keyword">if</span> (n == <span class="hljs-number">0</span>) { <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;khong co du lieu hop le\n&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d hop le (%d loi), diem trung binh = %.2f, cao nhat: %s (%.1f)\n&quot;</span>, n, bad, sum / n, best_name, best);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<h2 id="h-6">Bài 6: lưu/đọc struct nhị phân theo định dạng tự quy định</h2>
+<p>Định dạng: magic <code>&quot;STU1&quot;</code> (4 byte), số bản ghi <code>uint32</code> little-endian, rồi mỗi bản ghi: <code>uint32</code> tuổi, <code>double</code> GPA lưu bằng <strong>bit pattern</strong> <code>uint64</code> little-endian, tên độ dài cố định 32 byte (đệm <code>\0</code>).</p>
+<pre class="hljs"><code><span class="hljs-comment">// student_file.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdint.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span> <span class="hljs-type">char</span> name[<span class="hljs-number">32</span>]; <span class="hljs-type">uint32_t</span> age; <span class="hljs-type">double</span> gpa; } Student;
+
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">put_u32</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> *b, <span class="hljs-type">uint32_t</span> v)</span> { <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">4</span>; i++) b[i] = (<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>)(v &gt;&gt; (<span class="hljs-number">8</span> * i)); }
+<span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">put_u64</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> *b, <span class="hljs-type">uint64_t</span> v)</span> { <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">8</span>; i++) b[i] = (<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>)(v &gt;&gt; (<span class="hljs-number">8</span> * i)); }
+<span class="hljs-type">static</span> <span class="hljs-type">uint32_t</span> <span class="hljs-title function_">get_u32</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> *b)</span> { <span class="hljs-type">uint32_t</span> v = <span class="hljs-number">0</span>; <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">3</span>; i &gt;= <span class="hljs-number">0</span>; i--) v = (v &lt;&lt; <span class="hljs-number">8</span>) | b[i]; <span class="hljs-keyword">return</span> v; }
+<span class="hljs-type">static</span> <span class="hljs-type">uint64_t</span> <span class="hljs-title function_">get_u64</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> *b)</span> { <span class="hljs-type">uint64_t</span> v = <span class="hljs-number">0</span>; <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">7</span>; i &gt;= <span class="hljs-number">0</span>; i--) v = (v &lt;&lt; <span class="hljs-number">8</span>) | b[i]; <span class="hljs-keyword">return</span> v; }
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">save</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *path, <span class="hljs-type">const</span> Student *s, <span class="hljs-type">uint32_t</span> n)</span> {
+    FILE *f = fopen(path, <span class="hljs-string">&quot;wb&quot;</span>);
+    <span class="hljs-keyword">if</span> (!f) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> hdr[<span class="hljs-number">8</span>];
+    <span class="hljs-built_in">memcpy</span>(hdr, <span class="hljs-string">&quot;STU1&quot;</span>, <span class="hljs-number">4</span>);
+    put_u32(hdr + <span class="hljs-number">4</span>, n);
+    <span class="hljs-type">int</span> ok = fwrite(hdr, <span class="hljs-number">1</span>, <span class="hljs-number">8</span>, f) == <span class="hljs-number">8</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">uint32_t</span> i = <span class="hljs-number">0</span>; ok &amp;&amp; i &lt; n; i++) {
+        <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> rec[<span class="hljs-number">44</span>] = {<span class="hljs-number">0</span>};                       <span class="hljs-comment">// 32 tên + 4 tuổi + 8 gpa</span>
+        <span class="hljs-built_in">memcpy</span>(rec, s[i].name, <span class="hljs-number">31</span>);                        <span class="hljs-comment">// 31 ký tự + &#x27;\0&#x27; luôn có</span>
+        put_u32(rec + <span class="hljs-number">32</span>, s[i].age);
+        <span class="hljs-type">uint64_t</span> bits;
+        <span class="hljs-built_in">memcpy</span>(&amp;bits, &amp;s[i].gpa, <span class="hljs-keyword">sizeof</span> bits);             <span class="hljs-comment">// lấy bit pattern của double (IEEE 754)</span>
+        put_u64(rec + <span class="hljs-number">36</span>, bits);
+        ok = fwrite(rec, <span class="hljs-number">1</span>, <span class="hljs-keyword">sizeof</span> rec, f) == <span class="hljs-keyword">sizeof</span> rec;
+    }
+    <span class="hljs-keyword">return</span> (fclose(f) == <span class="hljs-number">0</span> &amp;&amp; ok) ? <span class="hljs-number">0</span> : <span class="hljs-number">-1</span>;
+}
+
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">load</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *path, Student *out, <span class="hljs-type">uint32_t</span> cap, <span class="hljs-type">uint32_t</span> *n)</span> {
+    FILE *f = fopen(path, <span class="hljs-string">&quot;rb&quot;</span>);
+    <span class="hljs-keyword">if</span> (!f) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> hdr[<span class="hljs-number">8</span>];
+    <span class="hljs-keyword">if</span> (fread(hdr, <span class="hljs-number">1</span>, <span class="hljs-number">8</span>, f) != <span class="hljs-number">8</span> || <span class="hljs-built_in">memcmp</span>(hdr, <span class="hljs-string">&quot;STU1&quot;</span>, <span class="hljs-number">4</span>) != <span class="hljs-number">0</span>) { fclose(f); <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>; }
+    <span class="hljs-type">uint32_t</span> count = get_u32(hdr + <span class="hljs-number">4</span>);
+    <span class="hljs-keyword">if</span> (count &gt; cap) { fclose(f); <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>; }             <span class="hljs-comment">// không tin số lượng do file khai</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">uint32_t</span> i = <span class="hljs-number">0</span>; i &lt; count; i++) {
+        <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> rec[<span class="hljs-number">44</span>];
+        <span class="hljs-keyword">if</span> (fread(rec, <span class="hljs-number">1</span>, <span class="hljs-keyword">sizeof</span> rec, f) != <span class="hljs-keyword">sizeof</span> rec) { fclose(f); <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>; }
+        <span class="hljs-built_in">memcpy</span>(out[i].name, rec, <span class="hljs-number">32</span>);
+        out[i].name[<span class="hljs-number">31</span>] = <span class="hljs-string">&#x27;\0&#x27;</span>;
+        out[i].age = get_u32(rec + <span class="hljs-number">32</span>);
+        <span class="hljs-type">uint64_t</span> bits = get_u64(rec + <span class="hljs-number">36</span>);
+        <span class="hljs-built_in">memcpy</span>(&amp;out[i].gpa, &amp;bits, <span class="hljs-keyword">sizeof</span> bits);
+    }
+    fclose(f);
+    *n = count;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    Student in[<span class="hljs-number">2</span>] = { {<span class="hljs-string">&quot;An&quot;</span>, <span class="hljs-number">20</span>, <span class="hljs-number">3.5</span>}, {<span class="hljs-string">&quot;Binh&quot;</span>, <span class="hljs-number">21</span>, <span class="hljs-number">3.9</span>} }, out[<span class="hljs-number">4</span>];
+    <span class="hljs-type">uint32_t</span> n;
+    <span class="hljs-keyword">if</span> (save(<span class="hljs-string">&quot;stu.bin&quot;</span>, in, <span class="hljs-number">2</span>) != <span class="hljs-number">0</span> || load(<span class="hljs-string">&quot;stu.bin&quot;</span>, out, <span class="hljs-number">4</span>, &amp;n) != <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">uint32_t</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%s %u %.2f\n&quot;</span>, out[i].name, (<span class="hljs-type">unsigned</span>)out[i].age, out[i].gpa);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>File tạo ra giống hệt trên mọi máy (khác endianness, khác padding) — đó là mục tiêu của <strong>tuần tự hóa từng trường</strong>.</p>
+<h2 id="h-7">Bài 7: tìm chuỗi trong file lớn (đúng ở ranh giới khối)</h2>
+<pre class="hljs"><code><span class="hljs-comment">// stream_find.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> CHUNK 65536</span>
+
+<span class="hljs-comment">/* Đếm số lần xuất hiện của pat trong f mà không đọc hết vào bộ nhớ.
+   Giữ lại (len(pat)-1) byte cuối của khối trước để bắt mẫu bị cắt ở ranh giới. */</span>
+<span class="hljs-type">static</span> <span class="hljs-type">long</span> <span class="hljs-title function_">count_matches</span><span class="hljs-params">(FILE *f, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *pat)</span> {
+    <span class="hljs-type">size_t</span> m = <span class="hljs-built_in">strlen</span>(pat);
+    <span class="hljs-keyword">if</span> (m == <span class="hljs-number">0</span> || m &gt; CHUNK) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    <span class="hljs-type">static</span> <span class="hljs-type">char</span> buf[<span class="hljs-number">2</span> * CHUNK];              <span class="hljs-comment">// đủ chỗ cho phần đuôi giữ lại (&lt; CHUNK) + một khối mới</span>
+    <span class="hljs-type">size_t</span> keep = <span class="hljs-number">0</span>;                          <span class="hljs-comment">// số byte đã giữ lại ở đầu buf</span>
+    <span class="hljs-type">long</span> count = <span class="hljs-number">0</span>;
+    <span class="hljs-type">size_t</span> got;
+    <span class="hljs-keyword">while</span> ((got = fread(buf + keep, <span class="hljs-number">1</span>, CHUNK, f)) &gt; <span class="hljs-number">0</span>) {
+        <span class="hljs-type">size_t</span> total = keep + got;
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i + m &lt;= total; i++)
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">memcmp</span>(buf + i, pat, m) == <span class="hljs-number">0</span>) count++;      <span class="hljs-comment">// memcmp: file có thể chứa byte 0</span>
+        keep = m - <span class="hljs-number">1</span> &lt; total ? m - <span class="hljs-number">1</span> : total;
+        memmove(buf, buf + total - keep, keep);             <span class="hljs-comment">// giữ đuôi cho lần sau</span>
+        <span class="hljs-comment">/* lưu ý: một lần khớp nằm trọn trong phần đuôi (&lt; m) không thể bị đếm hai lần vì cần đủ m byte */</span>
+    }
+    <span class="hljs-keyword">return</span> count;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> **argv)</span> {
+    <span class="hljs-keyword">if</span> (argc != <span class="hljs-number">3</span>) { <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;cach dung: %s mau file\n&quot;</span>, argv[<span class="hljs-number">0</span>]); <span class="hljs-keyword">return</span> <span class="hljs-number">2</span>; }
+    FILE *f = fopen(argv[<span class="hljs-number">2</span>], <span class="hljs-string">&quot;rb&quot;</span>);
+    <span class="hljs-keyword">if</span> (!f) { perror(argv[<span class="hljs-number">2</span>]); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%ld\n&quot;</span>, count_matches(f, argv[<span class="hljs-number">1</span>]));
+    fclose(f);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Sai lầm cần tránh: <code>buf</code> phải rộng hơn <code>keep + CHUNK</code>; phần đuôi giữ lại <strong>ngắn hơn</strong> mẫu (<code>m − 1</code>) nên không thể chứa trọn một lần khớp, do đó không đếm trùng.</p>
+<h2 id="h-8">Bài 8: đảo thứ tự dòng của file</h2>
+<p>Cách đơn giản: đọc các dòng vào một mảng con trỏ động (hoặc danh sách liên kết), rồi in ngược.</p>
+<pre class="hljs"><code><span class="hljs-comment">// tac.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> **argv)</span> {
+    FILE *f = argc &gt; <span class="hljs-number">1</span> ? fopen(argv[<span class="hljs-number">1</span>], <span class="hljs-string">&quot;r&quot;</span>) : <span class="hljs-built_in">stdin</span>;
+    <span class="hljs-keyword">if</span> (!f) { perror(argv[<span class="hljs-number">1</span>]); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+
+    <span class="hljs-type">char</span> **lines = <span class="hljs-literal">NULL</span>;
+    <span class="hljs-type">size_t</span> n = <span class="hljs-number">0</span>, cap = <span class="hljs-number">0</span>;
+    <span class="hljs-type">char</span> buf[<span class="hljs-number">4096</span>];
+    <span class="hljs-keyword">while</span> (fgets(buf, <span class="hljs-keyword">sizeof</span> buf, f)) {
+        <span class="hljs-keyword">if</span> (n == cap) {
+            <span class="hljs-type">size_t</span> nc = cap ? cap * <span class="hljs-number">2</span> : <span class="hljs-number">64</span>;
+            <span class="hljs-type">char</span> **t = <span class="hljs-built_in">realloc</span>(lines, nc * <span class="hljs-keyword">sizeof</span> *t);
+            <span class="hljs-keyword">if</span> (!t) { perror(<span class="hljs-string">&quot;realloc&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+            lines = t; cap = nc;
+        }
+        lines[n] = <span class="hljs-built_in">malloc</span>(<span class="hljs-built_in">strlen</span>(buf) + <span class="hljs-number">1</span>);
+        <span class="hljs-keyword">if</span> (!lines[n]) { perror(<span class="hljs-string">&quot;malloc&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+        <span class="hljs-built_in">strcpy</span>(lines[n++], buf);
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = n; i-- &gt; <span class="hljs-number">0</span>; ) { <span class="hljs-built_in">fputs</span>(lines[i], <span class="hljs-built_in">stdout</span>); <span class="hljs-built_in">free</span>(lines[i]); }
+    <span class="hljs-built_in">free</span>(lines);
+    <span class="hljs-keyword">if</span> (f != <span class="hljs-built_in">stdin</span>) fclose(f);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>(Dòng dài hơn 4095 ký tự sẽ bị tách thành nhiều &quot;dòng&quot; — dùng <code>read_line</code> ở mục 12.3 nếu cần chính xác.) Với file rất lớn, cách tốt hơn là <code>fseek</code> từ cuối file lùi dần.</p>
+<h2 id="h-9">Bài 9: logger xoay vòng</h2>
+<pre class="hljs"><code><span class="hljs-comment">// rotating_log.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> MAX_BYTES (1024L * 1024L)</span>
+
+<span class="hljs-comment">/* Ghi một dòng vào path; nếu file đã &gt;= MAX_BYTES thì đổi tên thành path.1 và bắt đầu file mới. */</span>
+<span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">log_line</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *path, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *line)</span> {
+    FILE *f = fopen(path, <span class="hljs-string">&quot;a&quot;</span>);
+    <span class="hljs-keyword">if</span> (!f) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    <span class="hljs-type">long</span> size = ftell(f);                                   <span class="hljs-comment">// &quot;a&quot;: vị trí hiện tại là cuối file (trên hầu hết hệ thống)</span>
+    <span class="hljs-keyword">if</span> (size &lt; <span class="hljs-number">0</span>) { fclose(f); <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>; }
+    <span class="hljs-keyword">if</span> (size &gt;= MAX_BYTES) {
+        fclose(f);
+        <span class="hljs-type">char</span> old[<span class="hljs-number">512</span>];
+        <span class="hljs-built_in">snprintf</span>(old, <span class="hljs-keyword">sizeof</span> old, <span class="hljs-string">&quot;%s.1&quot;</span>, path);
+        remove(old);                                        <span class="hljs-comment">// rename đè có thể lỗi trên Windows nếu đích đã tồn tại</span>
+        <span class="hljs-keyword">if</span> (rename(path, old) != <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+        f = fopen(path, <span class="hljs-string">&quot;a&quot;</span>);
+        <span class="hljs-keyword">if</span> (!f) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    }
+    <span class="hljs-type">int</span> ok = <span class="hljs-built_in">fprintf</span>(f, <span class="hljs-string">&quot;%s\n&quot;</span>, line) &gt;= <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">return</span> (fclose(f) == <span class="hljs-number">0</span> &amp;&amp; ok) ? <span class="hljs-number">0</span> : <span class="hljs-number">-1</span>;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; i++) {
+        <span class="hljs-type">char</span> msg[<span class="hljs-number">64</span>];
+        <span class="hljs-built_in">snprintf</span>(msg, <span class="hljs-keyword">sizeof</span> msg, <span class="hljs-string">&quot;su kien %d&quot;</span>, i);
+        <span class="hljs-keyword">if</span> (log_line(<span class="hljs-string">&quot;app.log&quot;</span>, msg) != <span class="hljs-number">0</span>) { perror(<span class="hljs-string">&quot;log&quot;</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Mở/đóng file mỗi dòng đơn giản nhưng chậm; bản thực tế giữ <code>FILE *</code> mở và tự đếm số byte đã ghi. Với nhiều tiến trình cùng ghi cần khóa file hoặc dùng <code>syslog</code>.</p>
+
+</article>
+<nav class="chapter-nav" aria-label="Điều hướng chương"><a class="nav-prev" href="solutions-11.html"><small>← Trước</small>Lời giải chương 11</a><a class="nav-next" href="solutions-13.html"><small>Tiếp →</small>Lời giải chương 13</a></nav>
+</main>
+</div>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,store=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
+  function setTheme(t){if(t==='light')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);store('theme',t);
+    document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.setAttribute('aria-pressed',String((b.dataset.themeBtn===t)||(t==='light'&&b.dataset.themeBtn==='light')))})}
+  var cur=root.getAttribute('data-theme')||'light';setTheme(cur);
+  document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.addEventListener('click',function(){setTheme(b.dataset.themeBtn)})});
+  var fs=parseInt(getComputedStyle(root).getPropertyValue('--fs'))||19;
+  document.querySelectorAll('[data-fs]').forEach(function(b){b.addEventListener('click',function(){fs=Math.min(26,Math.max(14,fs+parseInt(b.dataset.fs)));root.style.setProperty('--fs',fs+'px');store('fs',fs)})});
+  var mb=document.getElementById('menu-btn');if(mb)mb.addEventListener('click',function(){document.body.classList.toggle('nav-open')});
+  document.addEventListener('click',function(e){if(document.body.classList.contains('nav-open')&&!e.target.closest('#sidebar')&&e.target.id!=='menu-btn')document.body.classList.remove('nav-open')});
+  document.querySelectorAll('pre').forEach(function(pre){var b=document.createElement('button');b.className='copy-btn';b.type='button';b.textContent='Sao chép';
+    b.addEventListener('click',function(){var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Đã chép'},function(){b.textContent='Lỗi'});setTimeout(function(){b.textContent='Sao chép'},1500)});pre.appendChild(b)});
+  var a=document.querySelector('.chapter-link.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'center'});
+})();
+</script>
+</body>
+</html>

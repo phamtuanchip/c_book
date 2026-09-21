@@ -4,15 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cú pháp & cấu trúc chương trình C — Lập trình C — Từ cơ bản đến nâng cao</title>
+<script>try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.setAttribute('data-theme',t);var f=localStorage.getItem('fs');if(f)document.documentElement.style.setProperty('--fs',f+'px')}catch(e){}</script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="layout">
-<nav class="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Các chương</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link active" href="chapter-04.html">4. Cú pháp & cấu trúc chương trình C</a></li><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm & phạm vi biến (Functions & Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng & chuỗi (Arrays & Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O & thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi & ngoại lệ trong C</a></li><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý & macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng & đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa & profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật & an toàn bộ nhớ</a></li><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing & CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging & deploy</a></li></ul></li><li class="part"><div class="part-title">Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<nav class="sidebar" id="sidebar"><div class="sidebar-title"><a href="index.html">Lập trình C — Từ cơ bản đến nâng cao</a></div><ul class="part-list"><li class="part"><div class="part-title">Phần I — Nhập môn</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-01.html">1. Giới thiệu và chương trình C đầu tiên</a></li><li><a class="chapter-link" href="chapter-02.html">2. Máy tính và lập trình cơ bản</a></li><li><a class="chapter-link" href="chapter-03.html">3. Lịch sử và triết lý của ngôn ngữ C</a></li><li><a class="chapter-link active" href="chapter-04.html">4. Cú pháp &amp; cấu trúc chương trình C</a></li></ul></li><li class="part"><div class="part-title">Phần II — Nền tảng ngôn ngữ</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-05.html">5. Điều khiển luồng (Control Flow)</a></li><li><a class="chapter-link" href="chapter-06.html">6. Hàm &amp; phạm vi biến (Functions &amp; Scope)</a></li><li><a class="chapter-link" href="chapter-07.html">7. Mảng &amp; chuỗi (Arrays &amp; Strings)</a></li><li><a class="chapter-link" href="chapter-08.html">8. Con trỏ chi tiết (Pointers Deep Dive)</a></li></ul></li><li class="part"><div class="part-title">Phần III — Bộ nhớ, dữ liệu, xây dựng</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-09.html">9. Quản lý bộ nhớ và lỗi phổ biến</a></li><li><a class="chapter-link" href="chapter-10.html">10. Struct, union, enum</a></li><li><a class="chapter-link" href="chapter-11.html">11. Header, Makefile, build systems</a></li><li><a class="chapter-link" href="chapter-12.html">12. File I/O &amp; thao tác hệ thống</a></li><li><a class="chapter-link" href="chapter-13.html">13. Xử lý lỗi &amp; ngoại lệ trong C</a></li></ul></li><li class="part"><div class="part-title">Phần IV — Kỹ thuật nâng cao</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-14.html">14. Tiền xử lý &amp; macro nâng cao</a></li><li><a class="chapter-link" href="chapter-15.html">15. Đa luồng &amp; đồng bộ (POSIX threads)</a></li><li><a class="chapter-link" href="chapter-16.html">16. Mạng cơ bản (sockets)</a></li><li><a class="chapter-link" href="chapter-17.html">17. Tối ưu hóa &amp; profiling</a></li><li><a class="chapter-link" href="chapter-18.html">18. Bảo mật &amp; an toàn bộ nhớ</a></li></ul></li><li class="part"><div class="part-title">Phần V — Dự án và phát hành</div><ul class="chapter-list"><li><a class="chapter-link" href="chapter-19.html">19. Project: Trình biên dịch / Interpreter mini</a></li><li><a class="chapter-link" href="chapter-20.html">20. Project: Web server đơn giản</a></li><li><a class="chapter-link" href="chapter-21.html">21. Testing &amp; CI cho C</a></li><li><a class="chapter-link" href="chapter-22.html">22. Packaging &amp; deploy</a></li></ul></li><li class="part"><div class="part-title">Phụ lục — Lời giải</div><ul class="chapter-list"><li><a class="chapter-link" href="solutions-01.html">Lời giải chương 1</a></li><li><a class="chapter-link" href="solutions-02.html">Lời giải chương 2</a></li><li><a class="chapter-link" href="solutions-03.html">Lời giải chương 3</a></li><li><a class="chapter-link" href="solutions-04.html">Lời giải chương 4</a></li><li><a class="chapter-link" href="solutions-05.html">Lời giải chương 5</a></li><li><a class="chapter-link" href="solutions-06.html">Lời giải chương 6</a></li><li><a class="chapter-link" href="solutions-07.html">Lời giải chương 7</a></li><li><a class="chapter-link" href="solutions-08.html">Lời giải chương 8</a></li><li><a class="chapter-link" href="solutions-09.html">Lời giải chương 9</a></li><li><a class="chapter-link" href="solutions-10.html">Lời giải chương 10</a></li><li><a class="chapter-link" href="solutions-11.html">Lời giải chương 11</a></li><li><a class="chapter-link" href="solutions-12.html">Lời giải chương 12</a></li><li><a class="chapter-link" href="solutions-13.html">Lời giải chương 13</a></li><li><a class="chapter-link" href="solutions-14.html">Lời giải chương 14</a></li><li><a class="chapter-link" href="solutions-15.html">Lời giải chương 15</a></li><li><a class="chapter-link" href="solutions-16.html">Lời giải chương 16</a></li><li><a class="chapter-link" href="solutions-17.html">Lời giải chương 17</a></li><li><a class="chapter-link" href="solutions-18.html">Lời giải chương 18</a></li><li><a class="chapter-link" href="solutions-19.html">Lời giải chương 19</a></li><li><a class="chapter-link" href="solutions-20.html">Lời giải chương 20</a></li><li><a class="chapter-link" href="solutions-21.html">Lời giải chương 21</a></li><li><a class="chapter-link" href="solutions-22.html">Lời giải chương 22</a></li></ul></li><li class="part"><div class="part-title">Mã nguồn</div><ul class="chapter-list"><li><a class="chapter-link" href="https://github.com/phamtuanchip/c_book/tree/main/code">Code mẫu trên GitHub</a></li></ul></li></ul></nav>
+<div class="main-col">
+<header class="topbar"><button class="menu-btn" id="menu-btn" type="button" aria-label="Mục lục">☰</button><span class="crumb">Phần I · Chương 4</span><span class="tools"><button data-fs="-1" type="button" title="Chữ nhỏ hơn">A−</button><button data-fs="1" type="button" title="Chữ lớn hơn">A+</button><button data-theme-btn="light" type="button" title="Nền sáng">Sáng</button><button data-theme-btn="sepia" type="button" title="Nền sepia">Sepia</button><button data-theme-btn="dark" type="button" title="Nền tối">Tối</button></span></header>
 <main class="content">
 <article>
-<h1>Chương 4 — Cú pháp &amp; cấu trúc chương trình C</h1>
-<h2>Mục tiêu chương</h2>
+<header class="chapter-head"><div class="chapter-num">Chương 4</div><h1>Cú pháp &amp; cấu trúc chương trình C</h1></header><nav class="chapter-toc" aria-label="Trong chương này"><div class="toc-title">Trong chương này</div><ol><li><a href="#s4-1">4.1. Token — &quot;từ vựng&quot; của C</a></li><li><a href="#s4-2">4.2. Kiểu dữ liệu cơ bản</a></li><li><a href="#s4-3">4.3. Biến và hằng</a></li><li><a href="#s4-4">4.4. Toán tử</a></li><li><a href="#s4-5">4.5. Độ ưu tiên và thứ tự kết hợp</a></li><li><a href="#s4-6">4.6. Chuyển đổi kiểu</a></li><li><a href="#s4-7">4.7. Nhập dữ liệu từ bàn phím</a></li><li><a href="#s4-8">4.8. Hàm — cái nhìn đầu tiên</a></li><li><a href="#s4-9">4.9. Tiền xử lý — cơ bản</a></li><li><a href="#s4-10">4.10. Macro so với hàm inline</a></li><li><a href="#s4-11">4.11. Tổ chức một dự án nhỏ nhiều file</a></li><li><a href="#s4-12">4.12. Lỗi thường gặp</a></li><li><a href="#s4-13">4.13. Tóm tắt</a></li><li><a href="#s4-14">4.14. Bài tập</a></li></ol></nav>
+<h2 id="h-1">Mục tiêu chương</h2>
 <ul>
 <li>Nắm vững các thành phần cơ bản của cú pháp: token, từ khóa, định danh, literal, toán tử.</li>
 <li>Khai báo, khởi tạo biến và hằng; hiểu <strong>phạm vi</strong> và <strong>thời gian sống</strong> cơ bản.</li>
@@ -21,9 +24,9 @@
 <li>Nhập dữ liệu an toàn với <code>scanf</code>/<code>fgets</code>/<code>strtol</code>.</li>
 <li>Biết cách tách chương trình thành nhiều file (header/source) và so sánh macro với hàm inline.</li>
 </ul>
-<h2>4.1. Token — &quot;từ vựng&quot; của C</h2>
+<h2 id="s4-1">4.1. Token — &quot;từ vựng&quot; của C</h2>
 <p>Compiler đọc mã nguồn và đầu tiên tách nó thành các <strong>token</strong> (đơn vị từ vựng nhỏ nhất). Có năm loại:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Loại token</th>
@@ -52,9 +55,9 @@
 <td><code>;</code>, <code>,</code>, <code>(</code>, <code>)</code>, <code>{</code>, <code>}</code>, <code>[</code>, <code>]</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Ví dụ <code>int total = price * 2;</code> gồm các token: <code>int</code> <code>total</code> <code>=</code> <code>price</code> <code>*</code> <code>2</code> <code>;</code>.</p>
-<h3>Quy tắc đặt tên (định danh)</h3>
+<h3 id="h-2">Quy tắc đặt tên (định danh)</h3>
 <ul>
 <li>Gồm chữ cái, chữ số và dấu gạch dưới <code>_</code>; <strong>không được bắt đầu bằng chữ số</strong>.</li>
 <li><strong>Phân biệt hoa/thường:</strong> <code>Count</code>, <code>count</code> và <code>COUNT</code> là ba tên khác nhau.</li>
@@ -62,7 +65,7 @@
 <li>Tránh tên bắt đầu bằng <code>_</code> theo sau là chữ hoa hoặc hai dấu <code>__</code> — dành riêng cho compiler/thư viện.</li>
 </ul>
 <p>Quy ước phổ biến trong C: dùng <code>snake_case</code> cho biến và hàm (<code>total_price</code>, <code>read_file</code>), <code>UPPER_CASE</code> cho macro và hằng (<code>MAX_SIZE</code>). Hãy chọn tên <strong>có ý nghĩa</strong>: <code>days_in_month</code> tốt hơn <code>d</code>. Ngoại lệ: biến đếm vòng lặp ngắn <code>i</code>, <code>j</code>, <code>k</code> là chuẩn mực.</p>
-<h3>Khoảng trắng và dấu chấm phẩy</h3>
+<h3 id="h-3">Khoảng trắng và dấu chấm phẩy</h3>
 <p>C không quan tâm đến khoảng trắng và xuống dòng (ngoại trừ để tách token), nên hai đoạn dưới là như nhau với compiler:</p>
 <pre class="hljs"><code><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>{<span class="hljs-type">int</span> a=<span class="hljs-number">1</span>;<span class="hljs-type">int</span> b=<span class="hljs-number">2</span>;<span class="hljs-keyword">return</span> a+b;}
 </code></pre>
@@ -74,9 +77,9 @@
 </code></pre>
 <p>Nhưng con người đọc đoạn sau dễ hơn nhiều. Hãy thụt lề nhất quán (4 dấu cách hoặc 1 tab) và đặt mỗi câu lệnh một dòng.</p>
 <p>Câu lệnh kết thúc bằng <code>;</code>. Khối lệnh gom nhiều câu lệnh trong <code>{ ... }</code>. Lưu ý dấu <code>;</code> <strong>không</strong> đặt sau <code>}</code> của thân hàm hay thân <code>if/for/while</code>.</p>
-<h2>4.2. Kiểu dữ liệu cơ bản</h2>
-<h3>Kiểu số nguyên</h3>
-<table>
+<h2 id="s4-2">4.2. Kiểu dữ liệu cơ bản</h2>
+<h3 id="h-4">Kiểu số nguyên</h3>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Kiểu</th>
@@ -121,10 +124,10 @@
 <td>Chỉ không âm, phạm vi gấp đôi</td>
 </tr>
 </tbody>
-</table>
-<h3>Kiểu số thực</h3>
+</table></div>
+<h3 id="h-5">Kiểu số thực</h3>
 <p><code>float</code> (~7 chữ số), <code>double</code> (~15 chữ số), <code>long double</code>. Mặc định hãy dùng <code>double</code>; literal <code>3.14</code> có kiểu <code>double</code>, còn <code>3.14f</code> mới là <code>float</code>.</p>
-<h3>Kiểu <code>_Bool</code> / <code>bool</code></h3>
+<h3 id="h-6">Kiểu <code>_Bool</code> / <code>bool</code></h3>
 <p>Từ C99, <code>_Bool</code> chứa 0 hoặc 1. Header <code>&lt;stdbool.h&gt;</code> cho phép viết <code>bool</code>, <code>true</code>, <code>false</code>:</p>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdbool.h&gt;</span></span>
 
@@ -133,12 +136,12 @@
 }
 </code></pre>
 <p>Bất kỳ giá trị nào gán vào <code>bool</code> đều được quy về 0 hoặc 1: <code>bool b = 42;</code> cho <code>b == 1</code>.</p>
-<h3>Kiểu có kích thước cố định</h3>
+<h3 id="h-7">Kiểu có kích thước cố định</h3>
 <p>Header <code>&lt;stdint.h&gt;</code> cung cấp <code>int8_t</code>, <code>uint8_t</code>, <code>int16_t</code>, <code>uint16_t</code>, <code>int32_t</code>, <code>uint32_t</code>, <code>int64_t</code>, <code>uint64_t</code>. Dùng chúng khi độ rộng quan trọng (định dạng file, giao thức mạng, thao tác bit). <code>size_t</code> là kiểu số nguyên không dấu dành cho kích thước và chỉ số; <code>ptrdiff_t</code> cho hiệu hai con trỏ.</p>
-<h3>Kiểu <code>void</code></h3>
+<h3 id="h-8">Kiểu <code>void</code></h3>
 <p><code>void</code> nghĩa là &quot;không có giá trị&quot;. Dùng cho hàm không trả về gì (<code>void print_hello(void)</code>) và cho con trỏ tổng quát <code>void *</code> (chương 8).</p>
-<h2>4.3. Biến và hằng</h2>
-<h3>Khai báo và khởi tạo</h3>
+<h2 id="s4-3">4.3. Biến và hằng</h2>
+<h3 id="h-9">Khai báo và khởi tạo</h3>
 <pre class="hljs"><code><span class="hljs-type">int</span> age;               <span class="hljs-comment">// khai báo, giá trị chưa xác định (rác) nếu là biến cục bộ</span>
 <span class="hljs-type">int</span> count = <span class="hljs-number">0</span>;         <span class="hljs-comment">// khai báo và khởi tạo</span>
 <span class="hljs-type">double</span> x = <span class="hljs-number">1.5</span>, y = <span class="hljs-number">2.5</span>;      <span class="hljs-comment">// nhiều biến cùng kiểu</span>
@@ -146,7 +149,7 @@
 </code></pre>
 <p>Khai báo là <em>nói với compiler biến này tồn tại và có kiểu gì</em>; khởi tạo là <em>gán giá trị đầu tiên</em>. <strong>Luôn khởi tạo biến cục bộ.</strong></p>
 <p>Biến <strong>toàn cục</strong> và <strong><code>static</code></strong> nếu không khởi tạo sẽ tự động bằng 0. Biến <strong>cục bộ</strong> thì <strong>không</strong>.</p>
-<h3>Hằng số</h3>
+<h3 id="h-10">Hằng số</h3>
 <p>Có ba cách tạo hằng:</p>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> MAX_USERS 100          <span class="hljs-comment">// macro: thay chữ trước khi biên dịch, không có kiểu</span></span>
 <span class="hljs-type">const</span> <span class="hljs-type">int</span> max_users = <span class="hljs-number">100</span>;     <span class="hljs-comment">// biến chỉ đọc, có kiểu, có phạm vi</span>
@@ -156,8 +159,8 @@
 <pre class="hljs"><code><span class="hljs-type">const</span> <span class="hljs-type">int</span> limit = <span class="hljs-number">10</span>;
 limit = <span class="hljs-number">20</span>;        <span class="hljs-comment">// LỖI biên dịch: gán cho biến const</span>
 </code></pre>
-<h3>Literal (giá trị viết trực tiếp)</h3>
-<table>
+<h3 id="h-11">Literal (giá trị viết trực tiếp)</h3>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Ví dụ</th>
@@ -207,10 +210,10 @@ limit = <span class="hljs-number">20</span>;        <span class="hljs-comment">/
 <td>chuỗi</td>
 </tr>
 </tbody>
-</table>
-<h2>4.4. Toán tử</h2>
-<h3>Toán tử số học</h3>
-<table>
+</table></div>
+<h2 id="s4-4">4.4. Toán tử</h2>
+<h3 id="h-12">Toán tử số học</h3>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Toán tử</th>
@@ -245,7 +248,7 @@ limit = <span class="hljs-number">20</span>;        <span class="hljs-comment">/
 <td></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Chia số nguyên:</strong> kết quả bị cắt phần thập phân (về phía 0): <code>7 / 2 = 3</code>, <code>-7 / 2 = -3</code>. Dấu của <code>%</code> theo số bị chia: <code>-7 % 3 = -1</code>. Chia hoặc lấy dư cho 0 là UB.</p>
 <p><strong>Tiền tố và hậu tố:</strong></p>
 <pre class="hljs"><code><span class="hljs-type">int</span> a = <span class="hljs-number">5</span>;
@@ -253,13 +256,13 @@ limit = <span class="hljs-number">20</span>;        <span class="hljs-comment">/
 <span class="hljs-type">int</span> c = ++a;   <span class="hljs-comment">// tiền tố: a = 7 trước, rồi c = 7</span>
 </code></pre>
 <p>Đừng dùng <code>++</code>/<code>--</code> hai lần lên cùng một biến trong một biểu thức (<code>i = i++ + ++i</code> là UB).</p>
-<h3>Toán tử so sánh</h3>
+<h3 id="h-13">Toán tử so sánh</h3>
 <p><code>==</code> bằng, <code>!=</code> khác, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>. Kết quả là <code>int</code> có giá trị <code>1</code> (đúng) hoặc <code>0</code> (sai).</p>
 <blockquote>
 <p><strong>Lỗi nổi tiếng:</strong> viết <code>if (x = 5)</code> (gán) thay vì <code>if (x == 5)</code> (so sánh). Cả hai đều biên dịch được! Câu đầu gán 5 vào <code>x</code> rồi luôn cho là &quot;đúng&quot;. <code>-Wall</code> sẽ cảnh báo. Một số lập trình viên viết <code>if (5 == x)</code> để lỗi gõ nhầm thành <code>5 = x</code> bị compiler bắt.</p>
 </blockquote>
-<h3>Toán tử logic</h3>
-<table>
+<h3 id="h-14">Toán tử logic</h3>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Toán tử</th>
@@ -284,15 +287,15 @@ limit = <span class="hljs-number">20</span>;        <span class="hljs-comment">/
 <td>Đảo giá trị</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Trong C, <strong>0 là sai, mọi giá trị khác 0 là đúng</strong>.</p>
 <p><strong>Đánh giá tắt (short-circuit):</strong> <code>a &amp;&amp; b</code> — nếu <code>a</code> sai thì <code>b</code> <strong>không được tính</strong>. <code>a || b</code> — nếu <code>a</code> đúng thì <code>b</code> không được tính. Điều này cho phép viết:</p>
 <pre class="hljs"><code><span class="hljs-keyword">if</span> (p != <span class="hljs-literal">NULL</span> &amp;&amp; p-&gt;value &gt; <span class="hljs-number">0</span>) { ... }   <span class="hljs-comment">// an toàn: p-&gt;value chỉ được đọc khi p khác NULL</span>
 <span class="hljs-keyword">if</span> (n != <span class="hljs-number">0</span> &amp;&amp; total / n &gt; <span class="hljs-number">10</span>) { ... }    <span class="hljs-comment">// an toàn: không chia cho 0</span>
 </code></pre>
-<h3>Toán tử bit</h3>
+<h3 id="h-15">Toán tử bit</h3>
 <p>Làm việc trên từng bit của số nguyên.</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Toán tử</th>
@@ -332,7 +335,7 @@ limit = <span class="hljs-number">20</span>;        <span class="hljs-comment">/
 <td><code>16 &gt;&gt; 2 = 4</code> (chia 2²)</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Các thao tác thông dụng với <strong>cờ bit (bit flag)</strong>:</p>
 <pre class="hljs"><code><span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> flags = <span class="hljs-number">0</span>;
 <span class="hljs-meta">#<span class="hljs-keyword">define</span> FLAG_READ   (1u &lt;&lt; 0)     <span class="hljs-comment">// 0001</span></span>
@@ -346,24 +349,24 @@ flags ^= FLAG_EXEC;               <span class="hljs-comment">// đảo bit: flag
 </code></pre>
 <p>Lưu ý: <code>&amp;</code> khác <code>&amp;&amp;</code>. <code>if (a &amp; b)</code> là AND bit, <code>if (a &amp;&amp; b)</code> là AND logic. Nhầm hai toán tử này biên dịch được nhưng cho kết quả sai (ví dụ <code>1 &amp; 2</code> là <code>0</code>, còn <code>1 &amp;&amp; 2</code> là <code>1</code>).</p>
 <p>Dịch bit với số âm hoặc số lượng dịch ≥ số bit của kiểu là UB / implementation-defined, nên hãy dùng kiểu <strong>không dấu</strong> khi dịch bit.</p>
-<h3>Toán tử gán</h3>
+<h3 id="h-16">Toán tử gán</h3>
 <p><code>=</code> gán; <code>+=</code>, <code>-=</code>, <code>*=</code>, <code>/=</code>, <code>%=</code>, <code>&amp;=</code>, <code>|=</code>, <code>^=</code>, <code>&lt;&lt;=</code>, <code>&gt;&gt;=</code> là dạng viết tắt: <code>x += 3</code> tương đương <code>x = x + 3</code>.</p>
 <p>Phép gán <strong>là một biểu thức có giá trị</strong>, nên <code>a = b = 0;</code> là hợp lệ (gán 0 vào <code>b</code> rồi gán kết quả cho <code>a</code>).</p>
-<h3>Toán tử điều kiện (ba ngôi)</h3>
+<h3 id="h-17">Toán tử điều kiện (ba ngôi)</h3>
 <pre class="hljs"><code><span class="hljs-type">int</span> max = (a &gt; b) ? a : b;        <span class="hljs-comment">// nếu a &gt; b thì max = a, ngược lại max = b</span>
 <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%s\n&quot;</span>, n % <span class="hljs-number">2</span> == <span class="hljs-number">0</span> ? <span class="hljs-string">&quot;chan&quot;</span> : <span class="hljs-string">&quot;le&quot;</span>);
 </code></pre>
 <p>Chỉ dùng cho biểu thức ngắn; nếu lồng nhiều tầng, hãy dùng <code>if/else</code>.</p>
-<h3>Toán tử <code>sizeof</code>, dấu phẩy, ép kiểu</h3>
+<h3 id="h-18">Toán tử <code>sizeof</code>, dấu phẩy, ép kiểu</h3>
 <ul>
 <li><code>sizeof x</code> hoặc <code>sizeof(type)</code>: kích thước theo byte, tính <strong>khi biên dịch</strong> (trừ VLA).</li>
 <li><code>(type)expr</code>: <strong>ép kiểu (cast)</strong> tường minh, ví dụ <code>(double)a / b</code>.</li>
 <li>Toán tử dấu phẩy <code>a, b</code>: đánh giá <code>a</code> rồi <code>b</code>, giá trị là <code>b</code>. Hiếm khi cần, thường thấy trong <code>for (i = 0, j = n - 1; i &lt; j; i++, j--)</code>.</li>
 </ul>
-<h2>4.5. Độ ưu tiên và thứ tự kết hợp</h2>
+<h2 id="s4-5">4.5. Độ ưu tiên và thứ tự kết hợp</h2>
 <p>Khi một biểu thức có nhiều toán tử, <strong>độ ưu tiên (precedence)</strong> quyết định toán tử nào tính trước; với các toán tử cùng mức, <strong>thứ tự kết hợp (associativity)</strong> quyết định trái sang phải hay ngược lại.</p>
 <p>Bảng rút gọn (từ ưu tiên cao xuống thấp):</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Mức</th>
@@ -448,7 +451,7 @@ flags ^= FLAG_EXEC;               <span class="hljs-comment">// đảo bit: flag
 <td>trái → phải</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Những bẫy phổ biến:</p>
 <pre class="hljs"><code><span class="hljs-keyword">if</span> (x &amp; <span class="hljs-number">1</span> == <span class="hljs-number">0</span>) { ... }     <span class="hljs-comment">// SAI: == ưu tiên hơn &amp;, nên thành x &amp; (1 == 0) = x &amp; 0</span>
 <span class="hljs-keyword">if</span> ((x &amp; <span class="hljs-number">1</span>) == <span class="hljs-number">0</span>) { ... }   <span class="hljs-comment">// ĐÚNG: dùng ngoặc</span>
@@ -456,8 +459,8 @@ flags ^= FLAG_EXEC;               <span class="hljs-comment">// đảo bit: flag
 <span class="hljs-type">int</span> r = a + b &lt;&lt; <span class="hljs-number">2</span>;         <span class="hljs-comment">// dịch trái ưu tiên thấp hơn +, thành (a + b) &lt;&lt; 2</span>
 </code></pre>
 <p><strong>Lời khuyên:</strong> <em>khi không chắc, hãy thêm dấu ngoặc.</em> Mã có ngoặc dư vẫn dễ đọc hơn mã phải nhớ bảng ưu tiên.</p>
-<h2>4.6. Chuyển đổi kiểu</h2>
-<h3>Chuyển đổi ngầm định</h3>
+<h2 id="s4-6">4.6. Chuyển đổi kiểu</h2>
+<h3 id="h-19">Chuyển đổi ngầm định</h3>
 <p>Khi một biểu thức trộn nhiều kiểu, C tự động chuyển đổi:</p>
 <ol>
 <li><strong>Thăng cấp nguyên (integer promotion):</strong> <code>char</code>, <code>short</code> được chuyển thành <code>int</code> trước khi tính toán.</li>
@@ -468,7 +471,7 @@ flags ^= FLAG_EXEC;               <span class="hljs-comment">// đảo bit: flag
 <span class="hljs-type">double</span> e = a / <span class="hljs-number">2.0</span>;       <span class="hljs-comment">// 2.0 là double -&gt; a chuyển thành 7.0 -&gt; kết quả 3.5</span>
 <span class="hljs-type">double</span> f = (<span class="hljs-type">double</span>)a / <span class="hljs-number">2</span>; <span class="hljs-comment">// ép a thành double trước -&gt; 3.5</span>
 </code></pre>
-<h3>Bẫy <code>signed</code> và <code>unsigned</code></h3>
+<h3 id="h-20">Bẫy <code>signed</code> và <code>unsigned</code></h3>
 <p>Khi trộn số có dấu và không dấu, số có dấu bị chuyển thành <strong>không dấu</strong>, và số âm trở thành số rất lớn:</p>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 
@@ -485,15 +488,15 @@ flags ^= FLAG_EXEC;               <span class="hljs-comment">// đảo bit: flag
 <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = n - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) { ... }   <span class="hljs-comment">// i &gt;= 0 luôn đúng với unsigned: vòng lặp vô hạn</span>
 </code></pre>
 <p>Quy tắc: <strong>tránh trộn số có dấu và không dấu</strong>; nếu bắt buộc, ép kiểu tường minh và kiểm tra giá trị trước.</p>
-<h3>Chuyển đổi làm mất dữ liệu</h3>
+<h3 id="h-21">Chuyển đổi làm mất dữ liệu</h3>
 <pre class="hljs"><code><span class="hljs-type">int</span> big = <span class="hljs-number">300</span>;
 <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> c = big;   <span class="hljs-comment">// 300 % 256 = 44: mất dữ liệu (thường có cảnh báo với -Wconversion)</span>
 <span class="hljs-type">double</span> d = <span class="hljs-number">3.99</span>;
 <span class="hljs-type">int</span> i = (<span class="hljs-type">int</span>)d;          <span class="hljs-comment">// i = 3: cắt bỏ phần thập phân, KHÔNG làm tròn</span>
 </code></pre>
 <p>Để làm tròn dùng <code>round()</code> trong <code>&lt;math.h&gt;</code>.</p>
-<h2>4.7. Nhập dữ liệu từ bàn phím</h2>
-<h3><code>scanf</code> — nhanh nhưng dễ sai</h3>
+<h2 id="s4-7">4.7. Nhập dữ liệu từ bàn phím</h2>
+<h3 id="h-22"><code>scanf</code> — nhanh nhưng dễ sai</h3>
 <pre class="hljs"><code><span class="hljs-type">int</span> age;
 <span class="hljs-type">double</span> height;
 <span class="hljs-type">char</span> word[<span class="hljs-number">32</span>];
@@ -520,12 +523,13 @@ flags ^= FLAG_EXEC;               <span class="hljs-comment">// đảo bit: flag
 <pre class="hljs"><code><span class="hljs-type">int</span> c;
 <span class="hljs-keyword">while</span> ((c = getchar()) != <span class="hljs-string">&#x27;\n&#x27;</span> &amp;&amp; c != EOF) { }   <span class="hljs-comment">// bỏ qua đến hết dòng</span>
 </code></pre>
-<h3>Cách an toàn hơn: <code>fgets</code> + <code>strtol</code></h3>
+<h3 id="h-23">Cách an toàn hơn: <code>fgets</code> + <code>strtol</code></h3>
 <p>Đọc cả dòng vào bộ đệm, rồi tự phân tích. Cách này kiểm soát được lỗi tốt hơn:</p>
 <pre class="hljs"><code><span class="hljs-comment">// read_int.c</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;errno.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;limits.h&gt;</span></span>
 
 <span class="hljs-comment">// Đọc một số nguyên từ stdin. Trả về 0 nếu thành công, -1 nếu lỗi.</span>
@@ -537,7 +541,7 @@ flags ^= FLAG_EXEC;               <span class="hljs-comment">// đảo bit: flag
     <span class="hljs-type">char</span> *end;
     errno = <span class="hljs-number">0</span>;
     <span class="hljs-type">long</span> v = strtol(buf, &amp;end, <span class="hljs-number">10</span>);          <span class="hljs-comment">// đổi chuỗi thành số, cơ số 10</span>
-    <span class="hljs-keyword">if</span> (end == buf) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;               <span class="hljs-comment">// không có chữ số nào</span>
+    <span class="hljs-keyword">if</span> (end == buf || <span class="hljs-built_in">strpbrk</span>(buf, <span class="hljs-string">&quot;0123456789&quot;</span>) == <span class="hljs-literal">NULL</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;   <span class="hljs-comment">// không có chữ số nào</span>
     <span class="hljs-keyword">if</span> (*end != <span class="hljs-string">&#x27;\n&#x27;</span> &amp;&amp; *end != <span class="hljs-string">&#x27;\0&#x27;</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;   <span class="hljs-comment">// còn ký tự lạ phía sau</span>
     <span class="hljs-keyword">if</span> (errno == ERANGE || v &lt; INT_MIN || v &gt; INT_MAX) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;   <span class="hljs-comment">// ngoài phạm vi int</span>
 
@@ -555,8 +559,8 @@ flags ^= FLAG_EXEC;               <span class="hljs-comment">// đảo bit: flag
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </code></pre>
-<p><code>strtol(s, &amp;end, base)</code> đổi chuỗi thành <code>long</code>, và đặt <code>end</code> tại ký tự đầu tiên không chuyển được — nhờ đó bạn phát hiện được đầu vào sai như <code>&quot;12abc&quot;</code>. Sẽ dùng lại <code>read_int</code> ở nhiều chương sau.</p>
-<h2>4.8. Hàm — cái nhìn đầu tiên</h2>
+<p><code>strtol(s, &amp;end, base)</code> đổi chuỗi thành <code>long</code>, và đặt <code>end</code> tại ký tự đầu tiên không chuyển được — nhờ đó bạn phát hiện được đầu vào sai như <code>&quot;12abc&quot;</code>. Ở dòng kiểm tra <code>end == buf</code> ta thêm <code>strpbrk(buf, &quot;0123456789&quot;) == NULL</code> vì hành vi khi <strong>không có chữ số nào</strong> khác nhau giữa các thư viện C: glibc đặt <code>end</code> bằng đầu chuỗi, còn musl (Alpine Linux) đặt <code>end</code> sau phần khoảng trắng đã bỏ qua, nên một dòng chỉ có dấu cách sẽ lọt qua kiểm tra nếu chỉ dựa vào <code>end == buf</code>. Sẽ dùng lại <code>read_int</code> ở nhiều chương sau.</p>
+<h2 id="s4-8">4.8. Hàm — cái nhìn đầu tiên</h2>
 <p>Hàm gom một dãy lệnh thành một đơn vị có tên, có thể tái sử dụng. (Chương 6 sẽ đi sâu; ở đây chỉ để bạn hiểu cấu trúc chương trình.)</p>
 <pre class="hljs"><code><span class="hljs-comment">// Định nghĩa (definition): có thân hàm</span>
 <span class="hljs-type">int</span> <span class="hljs-title function_">add</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span> {
@@ -578,7 +582,7 @@ flags ^= FLAG_EXEC;               <span class="hljs-comment">// đảo bit: flag
 </code></pre>
 <p>Nếu không có prototype (hay định nghĩa đứng trước lời gọi), compiler C hiện đại báo lỗi/cảnh báo. Prototype thường đặt trong file header <code>.h</code> (xem 4.10).</p>
 <p><strong>Tham số truyền theo giá trị:</strong> hàm nhận <strong>bản sao</strong> của đối số; sửa tham số trong hàm không ảnh hưởng biến gốc (chương 6 và 8 mở rộng).</p>
-<h2>4.9. Tiền xử lý — cơ bản</h2>
+<h2 id="s4-9">4.9. Tiền xử lý — cơ bản</h2>
 <p>Bộ tiền xử lý chạy trước compiler và làm việc trên <strong>văn bản</strong>.</p>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span>       <span class="hljs-comment">// chèn header hệ thống</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;mylib.h&quot;</span>       <span class="hljs-comment">// chèn header của dự án</span></span>
@@ -591,9 +595,9 @@ flags ^= FLAG_EXEC;               <span class="hljs-comment">// đảo bit: flag
 <span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
 </code></pre>
 <p>Định nghĩa macro từ dòng lệnh: <code>gcc -DDEBUG -DMAX=100 main.c</code>.</p>
-<h3>Include guard</h3>
+<h3 id="h-24">Include guard</h3>
 <p>Nếu một header bị <code>#include</code> hai lần trong cùng một file <code>.c</code> (trực tiếp hoặc gián tiếp), các định nghĩa bị lặp và gây lỗi. <strong>Include guard</strong> ngăn điều đó:</p>
-<pre class="hljs"><code><span class="hljs-comment">// math_utils.h</span>
+<pre class="hljs"><code><span class="hljs-comment">/* ví dụ include guard */</span>
 <span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> MATH_UTILS_H</span>
 <span class="hljs-meta">#<span class="hljs-keyword">define</span> MATH_UTILS_H</span>
 
@@ -603,8 +607,8 @@ flags ^= FLAG_EXEC;               <span class="hljs-comment">// đảo bit: flag
 <span class="hljs-meta">#<span class="hljs-keyword">endif</span> <span class="hljs-comment">/* MATH_UTILS_H */</span></span>
 </code></pre>
 <p>Lần include đầu, <code>MATH_UTILS_H</code> chưa được định nghĩa nên nội dung được đưa vào và macro được định nghĩa; các lần sau, <code>#ifndef</code> sai nên bị bỏ qua. (Nhiều compiler còn hỗ trợ <code>#pragma once</code>, tiện nhưng không thuộc chuẩn.)</p>
-<h2>4.10. Macro so với hàm inline</h2>
-<h3>Macro và mối nguy hiểm</h3>
+<h2 id="s4-10">4.10. Macro so với hàm inline</h2>
+<h3 id="h-25">Macro và mối nguy hiểm</h3>
 <p>Macro chỉ <strong>thay chữ</strong>, không có kiểu và không có phạm vi:</p>
 <pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> SQUARE(x) ((x) * (x))</span>
 
@@ -616,7 +620,7 @@ flags ^= FLAG_EXEC;               <span class="hljs-comment">// đảo bit: flag
 <span class="hljs-type">int</span> r3 = SQUARE(i++);       <span class="hljs-comment">// ((i++) * (i++)): i++ bị tính HAI lần -&gt; UB</span>
 </code></pre>
 <p>Nếu viết thiếu ngoặc, ví dụ <code>#define BAD(x) x * x</code>, thì <code>BAD(a + 1)</code> thành <code>a + 1 * a + 1</code> — sai hoàn toàn. Quy tắc: <strong>bọc mỗi tham số và cả biểu thức trong dấu ngoặc</strong>, và <strong>không truyền biểu thức có tác dụng phụ</strong> (<code>i++</code>, gọi hàm) vào macro.</p>
-<h3>Hàm inline</h3>
+<h3 id="h-26">Hàm inline</h3>
 <pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-type">int</span> <span class="hljs-title function_">square_int</span><span class="hljs-params">(<span class="hljs-type">int</span> x)</span> {
     <span class="hljs-keyword">return</span> x * x;
 }
@@ -627,7 +631,7 @@ flags ^= FLAG_EXEC;               <span class="hljs-comment">// đảo bit: flag
 <li>Viết <code>static inline</code> trong header là cách dùng phổ biến và an toàn.</li>
 </ul>
 <p><strong>Kết luận:</strong> dùng hàm <code>static inline</code> thay macro cho phép tính; chỉ dùng macro cho việc mà hàm không làm được (điều kiện <code>#ifdef</code>, chuyển chuỗi bằng <code>#</code>, <code>__FILE__</code>/<code>__LINE__</code>...). Chương 14 đi sâu vào macro.</p>
-<h2>4.11. Tổ chức một dự án nhỏ nhiều file</h2>
+<h2 id="s4-11">4.11. Tổ chức một dự án nhỏ nhiều file</h2>
 <p>Khi chương trình lớn dần, hãy tách thành các <strong>module</strong>: mỗi module có file header (<code>.h</code> — <em>giao diện</em>: prototype, kiểu) và file source (<code>.c</code> — <em>cài đặt</em>).</p>
 <pre class="hljs"><code>project/
 ├── include/
@@ -638,7 +642,8 @@ flags ^= FLAG_EXEC;               <span class="hljs-comment">// đảo bit: flag
 └── Makefile
 </code></pre>
 <p><code>include/math_utils.h</code>:</p>
-<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> MATH_UTILS_H</span>
+<pre class="hljs"><code><span class="hljs-comment">// include/math_utils.h</span>
+<span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> MATH_UTILS_H</span>
 <span class="hljs-meta">#<span class="hljs-keyword">define</span> MATH_UTILS_H</span>
 
 <span class="hljs-type">int</span> <span class="hljs-title function_">add</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span>;
@@ -647,13 +652,15 @@ flags ^= FLAG_EXEC;               <span class="hljs-comment">// đảo bit: flag
 <span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
 </code></pre>
 <p><code>src/math_utils.c</code>:</p>
-<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;math_utils.h&quot;</span></span>
+<pre class="hljs"><code><span class="hljs-comment">// src/math_utils.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;math_utils.h&quot;</span></span>
 
 <span class="hljs-type">int</span> <span class="hljs-title function_">add</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span>   { <span class="hljs-keyword">return</span> a + b; }
 <span class="hljs-type">int</span> <span class="hljs-title function_">square</span><span class="hljs-params">(<span class="hljs-type">int</span> x)</span>       { <span class="hljs-keyword">return</span> x * x; }
 </code></pre>
 <p><code>src/main.c</code>:</p>
-<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<pre class="hljs"><code><span class="hljs-comment">// src/main.c</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;math_utils.h&quot;</span></span>
 
 <span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
@@ -669,8 +676,8 @@ gcc main.o math_utils.o -o app
 ./app
 </code></pre>
 <p><code>-Iinclude</code> chỉ cho compiler tìm header trong thư mục <code>include</code>. Việc này được tự động hóa bằng <code>Makefile</code> ở chương 11.</p>
-<h2>4.12. Lỗi thường gặp</h2>
-<table>
+<h2 id="s4-12">4.12. Lỗi thường gặp</h2>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Lỗi</th>
@@ -725,8 +732,8 @@ gcc main.o math_utils.o -o app
 <td>Nhìn kỹ; <code>-Wall</code> cảnh báo</td>
 </tr>
 </tbody>
-</table>
-<h2>4.13. Tóm tắt</h2>
+</table></div>
+<h2 id="s4-13">4.13. Tóm tắt</h2>
 <ul>
 <li>Chương trình gồm các token: từ khóa, định danh, literal, toán tử, dấu phân cách.</li>
 <li>Luôn khởi tạo biến; ưu tiên <code>const</code>/<code>enum</code> hơn <code>#define</code> cho hằng.</li>
@@ -735,7 +742,7 @@ gcc main.o math_utils.o -o app
 <li>Nhập dữ liệu: kiểm tra giá trị trả về của <code>scanf</code>; ưu tiên <code>fgets</code> + <code>strtol</code> cho dữ liệu đáng tin.</li>
 <li>Tách module bằng header (giao diện) + source (cài đặt), có include guard; ưu tiên <code>static inline</code> hơn macro.</li>
 </ul>
-<h2>4.14. Bài tập</h2>
+<h2 id="s4-14">4.14. Bài tập</h2>
 <ol>
 <li>Viết chương trình nhập bán kính (số thực), in chu vi và diện tích với 2 chữ số thập phân. Dùng <code>const double PI</code>.</li>
 <li>Viết chương trình đổi nhiệt độ Celsius sang Fahrenheit (<code>F = C * 9 / 5 + 32</code>). Thử với <code>9 / 5</code> và <code>9.0 / 5</code> để thấy khác biệt.</li>
@@ -749,8 +756,26 @@ gcc main.o math_utils.o -o app
 <p>Mã nguồn mẫu: <a href="https://github.com/phamtuanchip/c_book/tree/main/code/chapter-04">code/chapter-04</a></p>
 
 </article>
-<div class="chapter-nav"><a class="nav-prev" href="chapter-03.html">&larr; Lịch sử và triết lý của ngôn ngữ C</a><a class="nav-next" href="chapter-05.html">Điều khiển luồng (Control Flow) &rarr;</a></div>
+<nav class="chapter-nav" aria-label="Điều hướng chương"><a class="nav-prev" href="chapter-03.html"><small>← Trước</small>Lịch sử và triết lý của ngôn ngữ C</a><a class="nav-next" href="chapter-05.html"><small>Tiếp →</small>Điều khiển luồng (Control Flow)</a></nav>
 </main>
 </div>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,store=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
+  function setTheme(t){if(t==='light')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);store('theme',t);
+    document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.setAttribute('aria-pressed',String((b.dataset.themeBtn===t)||(t==='light'&&b.dataset.themeBtn==='light')))})}
+  var cur=root.getAttribute('data-theme')||'light';setTheme(cur);
+  document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.addEventListener('click',function(){setTheme(b.dataset.themeBtn)})});
+  var fs=parseInt(getComputedStyle(root).getPropertyValue('--fs'))||19;
+  document.querySelectorAll('[data-fs]').forEach(function(b){b.addEventListener('click',function(){fs=Math.min(26,Math.max(14,fs+parseInt(b.dataset.fs)));root.style.setProperty('--fs',fs+'px');store('fs',fs)})});
+  var mb=document.getElementById('menu-btn');if(mb)mb.addEventListener('click',function(){document.body.classList.toggle('nav-open')});
+  document.addEventListener('click',function(e){if(document.body.classList.contains('nav-open')&&!e.target.closest('#sidebar')&&e.target.id!=='menu-btn')document.body.classList.remove('nav-open')});
+  document.querySelectorAll('pre').forEach(function(pre){var b=document.createElement('button');b.className='copy-btn';b.type='button';b.textContent='Sao chép';
+    b.addEventListener('click',function(){var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Đã chép'},function(){b.textContent='Lỗi'});setTimeout(function(){b.textContent='Sao chép'},1500)});pre.appendChild(b)});
+  var a=document.querySelector('.chapter-link.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'center'});
+})();
+</script>
 </body>
 </html>

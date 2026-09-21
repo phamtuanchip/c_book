@@ -1,14 +1,17 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -std=c11
-TARGETS = pointer_examples qsort_cmp
+# Build các ví dụ của chương 8. Dùng: make | make asan | make clean
+CC      ?= gcc
+CFLAGS  ?= -std=c11 -Wall -Wextra -g -O1
+LDLIBS  := -lm
+PROGS   := ptr_practice
 
-all: $(TARGETS)
+.PHONY: all asan clean
+all: $(PROGS)
 
-pointer_examples: pointer_examples.c
-	$(CC) $(CFLAGS) -o pointer_examples pointer_examples.c
+%: %.c
+	$(CC) $(CFLAGS) $< -o $@ $(LDLIBS)
 
-qsort_cmp: qsort_cmp.c
-	$(CC) $(CFLAGS) -o qsort_cmp qsort_cmp.c
+asan: CFLAGS += -fsanitize=address,undefined -fno-omit-frame-pointer
+asan: clean all
 
 clean:
-	rm -f $(TARGETS)
+	rm -f $(PROGS) *.exe
